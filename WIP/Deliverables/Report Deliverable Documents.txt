@@ -2,7 +2,7 @@
 Report 1:
  - Project Introduction
  - Project Plan (Schedule, Project Plan in MS Word, CM Plan)
- - SRS
+ - SRS => User
  - Q&A Sheet bang tieng Nhat
  - Progress Report cho giai doan 1 (bang tieng Nhat)
  - SRS , PP Review check list
@@ -13,7 +13,6 @@ Report 2:
  - Class/Component Design
  - Progress Report cho giai doan 2 (bang tieng Nhat)
  - Design review checklists
- 
  Report 3:
  - Test Plan
  - Test Cases (System Test case, Integration test cases)
