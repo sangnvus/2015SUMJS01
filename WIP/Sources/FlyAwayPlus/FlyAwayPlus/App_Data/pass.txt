@@ -1,0 +1,43 @@
+sa/flyAwayPlus#001
+Haicon232\haicon2321993
+
+========================================================================================================
+---Web function----
+	add/delete/edit/search
+	create room/ invite/ kick/ .......
+	chang password/ forget password
+	paging
+	login/ logout
+---Web function----
+
+
+========================================================================================================
+----Socail Network-----
+	facebook integration/ Google+
+	post bai/ sync tren ca 2 site
+	like/comment
+	sharing
+	notification/ new feeds
+	add friends/ follow/ tagging
+	timeline (format css)
+----Socail Network-----
+
+========================================================================================================
+----Common function----
+	upload file
+	google map api
+	current location and finding around
+	send mail
+
+	real-time action
+----Common function----
+
+
+
+
+
+=======================================
+App Secret: 23aacf540a138ebcad87f1ee1825fc05
+AppID: 974195839291185
+Api Version: v2.3
+=======================================

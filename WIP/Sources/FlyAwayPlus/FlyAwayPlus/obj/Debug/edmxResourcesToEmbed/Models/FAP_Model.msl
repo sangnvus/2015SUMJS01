@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FlyAwayPlusModelStoreContainer" CdmEntityContainer="FlyAwayPlusEntities">
+    <EntitySetMapping Name="FAP_USER">
+      <EntityTypeMapping TypeName="FlyAwayPlusModel.FAP_USER">
+        <MappingFragment StoreEntitySet="FAP_USER">
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <h2>Register</h2>
+    <div class="col-md-7">
+        <p>Test</p>
+    </div>
+    @using (Html.BeginForm("Register", "FapAccount", FormMethod.Post, new { @class = "col-md-5", EncType = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="row col-md-12 form-group">
+                <label for="idRegisterEmail" class="col-md-5 control-label">Username</label>
+                <div class="col-md-7">
+                    <input type="text" name="username" class="form-control" id="idRegisterEmail" placeholder="Username" />
+                </div>
+            </div>
+
+            <div class="row col-md-12 form-group">
+                <label for="idRegisterPassword" class="col-md-5 control-label">Password</label>
+                <div class="col-md-7">
+                    <input type="password" name="password" class="form-control" id="idRegisterPassword" placeholder="Password" />
+                </div>
+            </div>
+
+            <div class="row col-md-12 form-group">
+                <label for="idRegisterConfirmPassword" class="col-md-5 control-label">Confirm Password</label>
+                <div class="col-md-7">
+                    <input type="password" name="confirmPassword" class="form-control" id="idRegisterConfirmPassword" placeholder="Confirm Password" />
+                </div>
+            </div>
+
+            <div class="row form-group col-md-12">
+                <label for="exampleInputFile">File input</label>
+                <input type="file" name="file" id="exampleInputFile">
+                <p class="help-block">Example block-level help text here.</p>
+            </div>
+
+            <div class="row col-md-12 form-group">
+                <div class="col-md-7">
+                    <input type="submit" value="Get Started" class="form-control btn btn-block btn-danger" id="idRegisterSubmit" />
+                </div>
+            </div>
+
+            <p>Or Sign up with</p>
+            @using (Html.BeginForm("AuthenFacebook", "FapAccount", FormMethod.Post))
+            {
+            }
+            @using (Html.BeginForm("AuthenFacebook", "FapAccount", FormMethod.Post))
+            {
+                <div class="row col-md-12 text-center form-group">
+                    <div class="col-md-7">
+                        <button class="btn btn-block btn-primary btn-social btn-facebook">
+                            <i class="fa fa-facebook"></i> Sign in with Facebook
+                        </button>
+                    </div>
+                </div>
+            }
+
+            @using (Html.BeginForm("AuthenFacebook", "FapAccount", FormMethod.Post))
+            {
+                <div class="row col-md-12 text-center form-group">
+                    <div class="col-md-7">
+                        <button class="btn btn-block btn-danger btn-social btn-google">
+                            <i class="fa fa-google"></i> Sign in with Google
+                        </button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    }
+</div>
