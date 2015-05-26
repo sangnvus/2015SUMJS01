@@ -22,14 +22,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Fly Away Plus", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("FAP", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Place", "About", "Home")</li>
+                    <li>@Html.ActionLink("Room", "Contact", "Home")</li>
                 </ul>
+
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="btn-group nav-search-box" role="group" aria-label="Search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search for anything...">
+                        </div>
+                        <button type="button" class="btn btn-default pull-right" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -38,7 +50,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Fly Away Plus</p>
+            <p>&copy; 2015 - Fly Away Plus</p>
         </footer>
     </div>
 </body>

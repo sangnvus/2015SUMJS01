@@ -22,3 +22,24 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Nav bar customizations */
+.navbar {
+    min-height: 70px;
+    -ms-opacity: 0.8;
+    opacity: 0.8;
+    padding-top: 5px
+}
+
+.nav-search-box {
+    -moz-min-width   : 400px;
+    -ms-min-width    : 400px;
+    -o-min-width     : 400px;
+    -webkit-min-width: 400px;
+    min-width        : 400px
+}
+
+.nav-search-box.form-control {
+    max-width: 500px
+}
+/* END Nav bar customizations */
