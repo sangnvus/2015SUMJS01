@@ -39,7 +39,7 @@ textarea {
     min-width        : 400px
 }
 
-.nav-search-box.form-control {
-    max-width: 500px
+.nav-search-box input {
+    max-width: 350px
 }
 /* END Nav bar customizations */
