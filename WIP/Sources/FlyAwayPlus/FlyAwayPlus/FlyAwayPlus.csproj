@@ -196,11 +196,23 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\avatar\avatar-1.jpg" />
+    <Content Include="Images\avatar\avatar-2.jpg" />
+    <Content Include="Images\avatar\avatar-3.jpg" />
+    <Content Include="Images\avatar\avatar-4.jpg" />
+    <Content Include="Images\avatar\avatar-5.jpg" />
+    <Content Include="Images\avatar\avatar-6.jpg" />
     <Content Include="Content\bootstrap-social.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\carousel\carousel.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\GSDKit\demo.css" />
+    <Content Include="Content\GSDKit\get-shit-done.css" />
+    <Content Include="Content\GSDKit\gsdk-base.css" />
+    <Content Include="Content\GSDKit\gsdk-checkbox-radio-switch.css" />
+    <Content Include="Content\GSDKit\gsdk-sliders.css" />
     <Content Include="data\img\img_chania.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -232,6 +244,14 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\carousel\main.js" />
+    <Content Include="Scripts\carousel\masonry.pkgd.min.js" />
+    <Content Include="Scripts\GSDKit\custom.js" />
+    <Content Include="Scripts\GSDKit\get-shit-done.js" />
+    <Content Include="Scripts\GSDKit\gsdk-bootstrapswitch.js" />
+    <Content Include="Scripts\GSDKit\gsdk-checkbox.js" />
+    <Content Include="Scripts\GSDKit\gsdk-radio.js" />
+    <Content Include="Scripts\GSDKit\jquery-ui-1.10.4.custom.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
