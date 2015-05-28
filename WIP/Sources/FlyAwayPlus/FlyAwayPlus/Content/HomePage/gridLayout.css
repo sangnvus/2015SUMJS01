@@ -38,101 +38,37 @@
         transition: all 0.3s ease-in-out;
     }
 
-#DIV_1 {
+.user-info {
     height: auto;
     position: relative;
     width: 100%;
     overflow: hidden;
-}/*#DIV_1*/
+}/*#user-info*/
 
-#A_2 {
-    color: rgb(113, 113, 113);
-    text-decoration: none;
-    border: 0px none rgb(113, 113, 113);
-}/*#A_2*/
-
-#DIV_3 {
-    color: rgb(113, 113, 113);
+.user-info .avatar {
     float: left;
     height: 30px;
     max-width: 100%;
     position: relative;
     width: 30px;
-    perspective-origin: 15px 15px;
-    transform-origin: 15px 15px;
-    border: 0px none rgb(113, 113, 113);
-    border-radius: 50% 50% 50% 50%;
-    font: normal normal bold normal 11px/15px Helvetica, 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
-    margin: 0px 5px 0px 0px;
-    outline: rgb(113, 113, 113) none 0px;
-}/*#DIV_3*/
+}/*#avatar*/
 
-#DIV_3:after {
-    box-shadow: rgba(0, 0, 0, 0.329412) 0px 0px 2px 0px inset;
-    color: rgb(113, 113, 113);
-    display: block;
-    height: 30px;
-    left: 0px;
-    position: absolute;
-    top: 0px;
-    width: 30px;
-    align-self: stretch;
-    perspective-origin: 15px 15px;
-    transform-origin: 15px 15px;
-    content: ' ';
-    border: 0px none rgb(113, 113, 113);
-    border-radius: 50% 50% 50% 50%;
-    font: normal normal bold normal 11px/15px Helvetica, 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
-    outline: rgb(113, 113, 113) none 0px;
-}/*#DIV_3:after*/
-
-#DIV_4 {
-    color: rgb(113, 113, 113);
-    width: 30px;
-    perspective-origin: 15px 0px;
-    transform-origin: 15px 0px;
-    border: 0px none rgb(113, 113, 113);
-    font: normal normal bold normal 11px/15px Helvetica, 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
-    outline: rgb(113, 113, 113) none 0px;
-    overflow: hidden;
-}/*#DIV_4*/
-
-#IMG_5 {
-    color: rgb(113, 113, 113);
-    display: block;
-    height: 30px;
-    max-width: 100%;
-    position: absolute;
-    vertical-align: middle;
-    width: 30px;
-    align-self: stretch;
-    perspective-origin: 15px 15px;
-    transform-origin: 15px 15px;
-    border: 0px none rgb(113, 113, 113);
-    border-radius: 50% 50% 50% 50%;
-    font: normal normal bold normal 11px/15px Helvetica, 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
-    outline: rgb(113, 113, 113) none 0px;
-}/*#IMG_5*/
-
-#DIV_6 {
+.user-info .name-user {
     color: rgb(153, 153, 153);
     height: 15px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 181px;
     perspective-origin: 90.5px 7.5px;
     transform-origin: 90.5px 7.5px;
     border: 0px none rgb(153, 153, 153);
-    
     overflow: hidden;
-}/*#DIV_6*/
+}/*#name-user*/
 
-#DIV_7 {
+.user-info .post-time {
     color: rgb(113, 113, 113);
-    height: 15px;
+    -moz-text-overflow: ellipsis;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 181px;
-    overflow: hidden;
-}/*#DIV_7*/
+    font-size: small
+}/*#post-time*/
 

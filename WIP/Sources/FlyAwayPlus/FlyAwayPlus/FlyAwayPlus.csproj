@@ -196,6 +196,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\HomePage\gridLayout.css" />
+    <Content Include="Content\reset.css" />
     <Content Include="Images\avatar\avatar-1.jpg" />
     <Content Include="Images\avatar\avatar-2.jpg" />
     <Content Include="Images\avatar\avatar-3.jpg" />
@@ -205,7 +207,7 @@
     <Content Include="Content\bootstrap-social.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\carousel\carousel.css" />
+    <Content Include="Content\HomePage\carousel.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\GSDKit\demo.css" />
@@ -219,6 +221,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\background\halong.jpg" />
+    <Content Include="Images\background\nhatrang.jpg" />
+    <Content Include="Images\background\sondoong.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EntityDeploy Include="Models\FAP_Model.edmx">
@@ -244,6 +249,7 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\carousel\jquery.flexslider-min.js" />
     <Content Include="Scripts\carousel\main.js" />
     <Content Include="Scripts\carousel\masonry.pkgd.min.js" />
     <Content Include="Scripts\GSDKit\custom.js" />
@@ -252,6 +258,7 @@
     <Content Include="Scripts\GSDKit\gsdk-checkbox.js" />
     <Content Include="Scripts\GSDKit\gsdk-radio.js" />
     <Content Include="Scripts\GSDKit\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="Scripts\HomePage\pinterest_grid.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
