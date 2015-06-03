@@ -1,0 +1,47 @@
+﻿.nav-tabs-search-results-wrapper {
+    float: left;
+    padding-left: 0;
+    width: 100%;
+    height: auto;
+    background-color: #e5e5e5;
+}
+
+.nav-tabs-search-results-wrapper > ul.nav-tabs-search-results {
+    height: 50px;
+    list-style: outside none none;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.nav-tabs-search-results-wrapper > ul.nav-tabs-search-results > li.nav-tab {
+    float: left;
+    width: 50%;
+    border-right: 1px solid #ecf0f1;
+}
+
+.nav-tabs-search-results-wrapper > ul.nav-tabs-search-results > li.nav-tab > .btn {
+    font-size: 14px;
+    height: 50px;
+    padding-top: 13px;
+    text-transform: uppercase;
+    width: 100%;
+}
+.btn-default.btn-bevel {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    -moz-user-select: none;
+    border-color: -moz-use-text-color -moz-use-text-color rgba(0, 0, 0, 0.1);
+    border-image: none;
+    border-style: none none solid;
+    border-width: 0 0 4px;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+.btn-default {
+    background-color: #e5e5e5;
+    border-color: transparent;
+    color: #7c7c7c;
+}
