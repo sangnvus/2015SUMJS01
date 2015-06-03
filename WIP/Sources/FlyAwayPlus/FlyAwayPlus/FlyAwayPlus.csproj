@@ -197,6 +197,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootflat.css" />
     <Content Include="Content\HomePage\gridLayout.css" />
     <Content Include="Content\reset.css" />
     <Content Include="Images\avatar\avatar-1.jpg" />
@@ -211,11 +212,6 @@
     <Content Include="Content\HomePage\carousel.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
-    <Content Include="Content\GSDKit\demo.css" />
-    <Content Include="Content\GSDKit\get-shit-done.css" />
-    <Content Include="Content\GSDKit\gsdk-base.css" />
-    <Content Include="Content\GSDKit\gsdk-checkbox-radio-switch.css" />
-    <Content Include="Content\GSDKit\gsdk-sliders.css" />
     <Content Include="data\img\img_chania.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -225,6 +221,7 @@
     <Content Include="Images\background\halong.jpg" />
     <Content Include="Images\background\nhatrang.jpg" />
     <Content Include="Images\background\sondoong.jpg" />
+    <Content Include="Images\FAP logo.PNG" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EntityDeploy Include="Models\FAP_Model.edmx">
@@ -253,12 +250,6 @@
     <Content Include="Scripts\carousel\jquery.flexslider-min.js" />
     <Content Include="Scripts\carousel\main.js" />
     <Content Include="Scripts\carousel\masonry.pkgd.min.js" />
-    <Content Include="Scripts\GSDKit\custom.js" />
-    <Content Include="Scripts\GSDKit\get-shit-done.js" />
-    <Content Include="Scripts\GSDKit\gsdk-bootstrapswitch.js" />
-    <Content Include="Scripts\GSDKit\gsdk-checkbox.js" />
-    <Content Include="Scripts\GSDKit\gsdk-radio.js" />
-    <Content Include="Scripts\GSDKit\jquery-ui-1.10.4.custom.min.js" />
     <Content Include="Scripts\HomePage\pinterest_grid.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

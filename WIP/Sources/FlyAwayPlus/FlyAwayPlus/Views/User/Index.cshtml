@@ -1,67 +1,68 @@
 ﻿@{
     ViewBag.Title = "User Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div style="width: 100%; text-align: center">
-    <h2>@ViewBag.Title</h2>
-</div>
 
-<div class="container">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-4">
-                <img class="img-responsive" src="../../data/img/img_chania.jpg" alt="Chania" width="460" height="345" />
-            </div>
-            <div class="col-sm-8">
-                <table class="table">
-                    <tbody>
-                        <tr class="success">
-                            <td>Name</td>
-                            <td>Nguyen Minh Hoang</td>
-                        </tr>
-                        <tr class="danger">
-                            <td>Sex</td>
-                            <td>Male</td>
-                        </tr>
-                        <tr class="success">
-                            <td>Email</td>
-                            <td>hoangnmse02819@fpt.edu.vn</td>
-                        </tr>
-                        <tr class="danger">
-                            <td>Tel</td>
-                            <td>0988888888</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-default">Follow</button>
-                <button type="button" class="btn btn-primary">Unfollow</button>
-            </div>
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="timeline">
+            <dl>
+                <dt>Apr 2015</dt>
+                <dd class="pos-right clearfix">
+                    <div class="circ"></div>
+                    <div class="time">Apr 14</div>
+                    <div class="events">
+                        <div class="pull-left">
+                            <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
+                        </div>
+                        <div class="events-body">
+                            <h4 class="events-heading">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4>
+                            <p>Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
+                        </div>
+                    </div>
+                </dd>
+                <dd class="pos-left clearfix">
+                    <div class="circ"></div>
+                    <div class="time">Apr 10</div>
+                    <div class="events">
+                        <div class="pull-left">
+                            <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
+                        </div>
+                        <div class="events-body">
+                            <h4 class="events-heading">Curabitur tortor. Pellentesque nibh. Aenean quam.</h4>
+                            <p>In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.</p>
+                        </div>
+                    </div>
+                </dd>
+                <dt>Mar 2015</dt>
+                <dd class="pos-right clearfix">
+                    <div class="circ"></div>
+                    <div class="time">Mar 15</div>
+                    <div class="events">
+                        <div class="pull-left">
+                            <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
+                        </div>
+                        <div class="events-body">
+                            <h4 class="events-heading">Suspendisse in justo eu magna luctus suscipit.</h4>
+                            <p>Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. </p>
+                        </div>
+                    </div>
+                </dd>
+                <dd class="pos-left clearfix">
+                    <div class="circ"></div>
+                    <div class="time">Mar 8</div>
+                    <div class="events">
+                        <div class="pull-left">
+                            <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
+                        </div>
+                        <div class="events-body">
+                            <h4 class="events-heading">Integer lacinia sollicitudin massa. Cras metus.</h4>
+                            <p>Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede. Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci.</p>
+                        </div>
+                    </div>
+                </dd>
+
+            </dl>
         </div>
     </div>
-    <p></p>
-    
-    <p></p>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Post 1</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>John</td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Post 2</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Adam</td>
-            </tr>
-        </tbody>
-    </table>
 </div>
