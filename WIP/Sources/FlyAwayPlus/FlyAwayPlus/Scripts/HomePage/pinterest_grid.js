@@ -61,7 +61,6 @@
             $container = $(this.element),
             container_width = $container.width();
             $article = $(this.element).children();
-
         if(single_column_mode === true) {
             article_width = $container.width() - self.options.padding_x;
         } else {

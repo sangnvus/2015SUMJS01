@@ -168,6 +168,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ResultController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -198,8 +199,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootflat.css" />
+    <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\gridLayout.css" />
     <Content Include="Content\reset.css" />
+    <Content Include="Content\SearchPage\search.css" />
     <Content Include="Images\avatar\avatar-1.jpg" />
     <Content Include="Images\avatar\avatar-2.jpg" />
     <Content Include="Images\avatar\avatar-3.jpg" />
@@ -261,6 +264,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\SearchPage\search.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -303,6 +307,8 @@
     <Content Include="Views\FapAccount\AuthenFacebook.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Result\Index.cshtml" />
+    <Content Include="Views\Search\Search.cshtml" />
+    <Content Include="Views\Search\SearchDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
