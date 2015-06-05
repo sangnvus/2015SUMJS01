@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #f2f2f2 !important;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -37,7 +38,7 @@ textarea {
     z-index: 2000;
 }
 
-.navbar-custom .nav li a {
+    .navbar-custom .nav li a {
         display: block;
         color: #50c1e9;
     }
@@ -57,6 +58,7 @@ textarea {
         }
 
         .navbar-custom .navbar-toggle .icon-bar {
+            background-color: #ffffff;
             background-color: rgba(255,255,255,.9);
         }
 
@@ -75,14 +77,14 @@ textarea {
         padding: 5px 15px;
     }
 
-.navbar-custom .navbar-brand:active, .navbar-custom .navbar-brand:hover {
-    -ms-opacity: 1;
-    opacity: 1;
-    -webkit-filter: alpha(opacity=100);
-    -moz-filter: alpha(opacity=100);
-    -o-filter: alpha(opacity=100);
-    filter: alpha(opacity=100);
-}
+        .navbar-custom .navbar-brand:active, .navbar-custom .navbar-brand:hover {
+            -ms-opacity: 1;
+            opacity: 1;
+            -webkit-filter: alpha(opacity=100);
+            -moz-filter: alpha(opacity=100);
+            -o-filter: alpha(opacity=100);
+            filter: alpha(opacity=100);
+        }
 
 /* END Nav bar customizations */
 
@@ -94,5 +96,52 @@ textarea {
 }
 
 .body-content {
-    margin-top: 70px
+    margin-top: 70px;
+}
+
+.circle-image {
+    -ms-border-radius: 50%;
+    border-radius: 50%;
+    padding: 3px;
+    background-color: #ffffff;
+    -webkit-box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
+    -moz-box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
+    -ms-box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
+    box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
+}
+
+.vertical-space-10 {
+    height: 10px;
+    width: 100%
+}
+
+.vertical-space-15 {
+    height: 15px;
+    width: 100%;
+    background-color: transparent
+}
+
+.vertical-space-20 {
+    height: 20px;
+    width: 100%
+}
+
+.vertical-space-25 {
+    height: 25px;
+    width: 100%
+}
+
+.frame-container {
+    background-color: #ffffff;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.padding-5 {
+    padding: 5px;
+    width: 60px
+}
+
+.padding-top-30 {
+    padding-top: 30px
 }
