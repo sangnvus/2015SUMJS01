@@ -39,7 +39,7 @@
         width: 400px;
     }
 
-    #pac-input:focus {
+        #pac-input:focus {
             border-color: #4d90fe;
         }
 
@@ -58,6 +58,7 @@
             font-size: 13px;
             font-weight: 300;
         }
+
     #legend {
         background: #FFF;
         padding: 10px;
@@ -65,6 +66,7 @@
         font-size: 12px;
         font-family: Arial, sans-serif;
     }
+
     .color {
         border: 1px solid;
         height: 12px;
@@ -76,6 +78,7 @@
     .red {
         background: #C00;
     }
+
     .blue {
         background: #06C;
     }
@@ -95,9 +98,9 @@
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var markers = [];
-            var map = new window.google.maps.Map(document.getElementById('googleMap'),mapOptions);
+            var map = new window.google.maps.Map(document.getElementById('googleMap'), mapOptions);
 
-            
+
 
             //Full screen map
             var fullScreenMap = (
@@ -237,7 +240,7 @@
         google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
-    
+
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <button id="fullScreenMap" style="width:auto; padding: 8px;" type="button" class="btn btn-default map-controller-btn full-screen-btn"></button>
     <div id="googleMap" style="width:100%;height:380px"></div>

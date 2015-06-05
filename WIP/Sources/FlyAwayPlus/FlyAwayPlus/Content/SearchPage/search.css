@@ -7,6 +7,15 @@ div .full-width {
     float: left;
 }
 
+.half-width {
+    width: 50%;
+}
+
+div .half-width {
+    display: block;
+    float: left;
+}
+
 h3 {
     margin-top: 0px !important;
 }
@@ -68,4 +77,40 @@ div .search-result > section {
     height:200px;
     max-height:100%;
     max-width:100%;
+}
+
+#idSearchRoomResult > div {
+    width: 24%;
+    float: left;
+    margin: 5px;
+    background: white none repeat scroll 0 0;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+}
+
+#idSearchRoomResult > div > h1 a {
+    color: #a92733;
+    text-align: center;
+}
+
+#idSearchRoomResult > div > h1 {
+    font-size: 1em;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+a:hover, a:focus {
+    color: #4fc1e9;
+    text-decoration: none;
+}
+
+#idSearchRatePositiveResult > article, #idSearchRateNegativeResult > article{
+    float: left;
+    margin: 10px;
+    width: 220px;
+    position: initial !important;
+}
+
+#idSearchRate > div:nth-of-type(1) {
+    border-right: 1px solid #ccd1d9;
 }

@@ -24,5 +24,5 @@ namespace FlyAwayPlus.Controllers
         {
             return View();
         }
-	}
+    }
 }
