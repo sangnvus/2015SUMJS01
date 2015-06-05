@@ -1,47 +1,116 @@
-﻿.nav-tabs-search-results-wrapper {
-    float: left;
-    padding-left: 0;
+﻿.full-width {
     width: 100%;
-    height: auto;
-    background-color: #e5e5e5;
 }
 
-.nav-tabs-search-results-wrapper > ul.nav-tabs-search-results {
-    height: 50px;
-    list-style: outside none none;
-    margin-bottom: 0;
-    padding-left: 0;
-}
-
-.nav-tabs-search-results-wrapper > ul.nav-tabs-search-results > li.nav-tab {
+div .full-width {
+    display: block;
     float: left;
+}
+
+.half-width {
     width: 50%;
-    border-right: 1px solid #ecf0f1;
 }
 
-.nav-tabs-search-results-wrapper > ul.nav-tabs-search-results > li.nav-tab > .btn {
-    font-size: 14px;
-    height: 50px;
-    padding-top: 13px;
-    text-transform: uppercase;
+div .half-width {
+    display: block;
+    float: left;
+}
+
+h3 {
+    margin-top: 0px !important;
+}
+
+.nav-tabs > li {
+    width: 33.333333%;
+}
+
+    .nav-tabs > li > a {
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+div .search-result > section {
+    position: relative;
+    max-width: 100%;
     width: 100%;
 }
-.btn-default.btn-bevel {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    -moz-user-select: none;
-    border-color: -moz-use-text-color -moz-use-text-color rgba(0, 0, 0, 0.1);
-    border-image: none;
-    border-style: none none solid;
-    border-width: 0 0 4px;
+
+#idSearchPeople > div {
+    width: 19%;
+    float: left;
+    padding: 5px;
 }
-*, *::before, *::after {
-    box-sizing: border-box;
+
+.oval-thought::before {
+    background: #075698 none repeat scroll 0 0;
+    border-radius: 30px;
+    bottom: -20px;
+    content: "";
+    height: 30px;
+    left: 50px;
+    position: absolute;
+    width: 30px;
 }
-.btn-default {
-    background-color: #e5e5e5;
-    border-color: transparent;
-    color: #7c7c7c;
+
+.oval-thought::after {
+    background: #075698 none repeat scroll 0 0;
+    border-radius: 15px;
+    bottom: -30px;
+    content: "";
+    height: 15px;
+    left: 30px;
+    position: absolute;
+    width: 15px;
+}
+
+.oval-thought {
+    background: rgba(0, 0, 0, 0) linear-gradient(#2e88c4, #075698) repeat scroll 0 0;
+    border-radius: 220px / 120px;
+    color: #fff;
+    /*margin: 1em auto 80px;
+    padding: 50px 40px;*/
+    position: absolute;
+    text-align: center;
+    width: 270px;
+    float:left;
+    width:200px;
+    height:200px;
+    max-height:100%;
+    max-width:100%;
+}
+
+#idSearchRoomResult > div {
+    width: 24%;
+    float: left;
+    margin: 5px;
+    background: white none repeat scroll 0 0;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+}
+
+#idSearchRoomResult > div > h1 a {
+    color: #a92733;
+    text-align: center;
+}
+
+#idSearchRoomResult > div > h1 {
+    font-size: 1em;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+a:hover, a:focus {
+    color: #4fc1e9;
+    text-decoration: none;
+}
+
+#idSearchRatePositiveResult > article, #idSearchRateNegativeResult > article{
+    float: left;
+    margin: 10px;
+    width: 220px;
+    position: initial !important;
+}
+
+#idSearchRate > div:nth-of-type(1) {
+    border-right: 1px solid #ccd1d9;
 }
