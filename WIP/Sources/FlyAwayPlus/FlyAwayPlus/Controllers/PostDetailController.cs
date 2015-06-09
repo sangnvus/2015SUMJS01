@@ -6,10 +6,10 @@ using System.Web.Mvc;
 
 namespace FlyAwayPlus.Controllers
 {
-    public class LookAroundController : Controller
+    public class PostDetailController : Controller
     {
         //
-        // GET: /LookAround/
+        // GET: /PostDetail/
         public ActionResult Index()
         {
             return View();
