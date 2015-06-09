@@ -1,0 +1,112 @@
+﻿<style>
+    .span > b {
+        font-weight: bold;
+    }
+     .title {
+         left: 200px;
+         top: 90px;
+         width: auto;
+         height: 30px;
+         position: absolute;
+         z-index: 2;
+     }
+    .title > b {
+        font-weight:bold;
+    }
+    .article {
+        overflow: hidden;
+        width: 100%;
+        height: auto;
+        background-color: #DDE6DC;
+        position: relative;
+        z-index: 1;
+    }
+
+    .avatar {
+        z-index: 4;
+        position: absolute;
+        left: 100px;
+        top: 80px;
+        height: 50px;
+        width: 50px;
+        background-color: #00FF00;
+    }
+    .circleBase {
+        -ms-border-radius: 50%;
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    }
+
+    .type2 {
+        width: 60px;
+        height: 60px;
+        background: #ccc;
+        border: 3px solid #000;
+    }
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    .type {
+        background-color: #49FC3F;
+        right: 200px;
+        top: 80px;
+        width: auto;
+        height: 30px;
+        position: absolute;
+    }
+</style>
+<div id="main" style="margin-top: 50px">
+    <div class="article">
+        <p style="margin: 10px">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspNgày hôm nay(10/6), nắng nóng sẽ tiếp tục duy trì ở các khu vực trên và mở rộng ra các nơi khác ở Bắc bộ
+            với nền nhiệt cao nhất phổ biến 35-37 độ, có nơi trên 39 độ C.</p>
+        <div style="width: 100%; height: auto">
+            <img style="display: inline; margin: 10px" src="../../../Images/avatar/avatar-2.jpg" />
+            <img style="display: inline; margin: 10px" src="../../../Images/avatar/avatar-3.jpg" />
+            <img style="display: inline; margin: 10px" src="../../../Images/avatar/avatar-4.jpg" />
+        </div>
+        <div style="margin-left: 10px">
+            <p>2 peple like this</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-link">Like</button>
+            <button type="button" class="btn btn-link">Unlike</button>
+        </div>
+        <div style="float:left; width:100%">
+            <div style="float:left; width:auto">
+                <img style="width: 40px; height: 40px; margin-left: 10px;margin-bottom: 10px" src="../../../Images/avatar/avatar-2.jpg" />
+            </div>
+            <div style="float:left; margin-left: 10px;">
+                <span style="display: inline; margin-top: 0"><b>Thúy: Nóng thế á?</b></span>
+            </div>
+        </div>
+        <div style="float:left; width:100%">
+            <div style="float:left; width:auto">
+                <img style="width: 40px; height: 40px; margin-left: 10px;margin-bottom: 10px" src="../../../Images/avatar/avatar-3.jpg" />
+            </div>
+            <div style="float:left; margin-left: 10px;">
+                <span style="display: inline; margin-top: 0"><b>Hiếu: Uh, nóng mà má!</b></span>
+            </div>
+        </div>
+        <div>
+            <div style="float:left; width:auto">
+                <textarea style="margin-left: 10px" rows="4" cols="50"></textarea>
+            </div>
+            <div style="float:left; margin-left: 10px; margin-top: 30px">
+                <button type="button" class="btn btn-default">Comment</button>
+            </div>
+        </div>
+    </div>
+    <div class="avatar circleBase type2">
+        <img class="img-circle" src="../../../Images/avatar/avatar-1.jpg" />
+    </div>
+    <div class="title">
+        <b>Thời tiết hôm nay</b>
+    </div>
+    
+    <div class="type">
+        <p style="margin: 10px">
+            Positive article!
+        </p>
+    </div>
+</div>

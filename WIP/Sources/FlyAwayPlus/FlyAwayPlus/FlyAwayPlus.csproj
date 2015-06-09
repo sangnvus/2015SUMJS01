@@ -169,6 +169,8 @@
     <Compile Include="Controllers\LookAroundController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
+    <Compile Include="Controllers\PostDetailController.cs" />
+    <Compile Include="Controllers\ResultController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -327,6 +329,7 @@
     <Content Include="Views\Search\SearchDetail.cshtml" />
     <Content Include="Views\LookAround\Index.cshtml" />
     <Content Include="Views\Room\RoomDetail.cshtml" />
+    <Content Include="Views\PostDetail\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
