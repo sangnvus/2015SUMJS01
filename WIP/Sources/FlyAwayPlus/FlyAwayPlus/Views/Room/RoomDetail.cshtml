@@ -1,0 +1,406 @@
+﻿@{
+    ViewBag.Title = "RoomDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
+<link href="~/Content/HomePage/gridLayout.css" rel="stylesheet" />
+<link href="~/Content/RoomPage/roomDetail.css" rel="stylesheet" />
+
+<div class="full-width">
+    <div class="col-sm-5">
+        <p class="text-primary"><h3>Room name: Tokyo, Japan</h3></p>
+        <p class="text-info"><h4>Room ID: 1234567890865</h4></p>
+    </div>
+
+    <div class="col-sm-4">
+        <a href="#">
+            <img src="~/Images/avatar/avatar-1.jpg" width="50" height="50" data-toggle="popover" title="Romin Royeelin"
+                 data-content="And here's some amazing content. It's very engaging. Right?" />
+        </a>
+        <a href="#"><img src="~/Images/avatar/avatar-2.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-3.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-4.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-5.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-6.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-1.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-2.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-3.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-4.jpg" width="50" height="50" /></a>
+        <a href="#"><img src="~/Images/avatar/avatar-5.jpg" width="50" height="50" /></a>
+
+        <div class="btn-group pull-right">
+            <button type="button" class="btn glyphicon-option-horizontal" data-toggle="dropdown" aria-expanded="false"></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#"><img src="~/Images/avatar/avatar-2.jpg" width="50" height="50" /></a></li>
+                <li><a href="#"><img src="~/Images/avatar/avatar-2.jpg" width="50" height="50" /></a></li>
+                <li><a href="#"><img src="~/Images/avatar/avatar-2.jpg" width="50" height="50" /></a></li>
+                <li><a href="#"><img src="~/Images/avatar/avatar-2.jpg" width="50" height="50" /></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <button type="button" class="btn glyphicon glyphicon-plus"></button>
+        <div class="btn-group btn-info">
+            <button type="button" class="btn btn-primary glyphicon glyphicon-cog"></button>
+            <button type="button" class="btn btn-primary dropdown-toggle" style="margin-left: 0px; top: 1px;" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Copy link</a></li>
+                <li><a href="#">Invite friends</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Exit</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="full-width" style="padding-left: 15px;">
+    <div class="box">
+        <div class="box-header" data-original-title="">
+            <h2>
+                <i class="fa fa-shopping-cart"></i>
+                <span class="break"></span>
+                Plan
+            </h2>
+            <div class="box-icon">
+                <!--<a class="btn-setting" href="#"><i class="fa fa-wrench"></i></a>-->
+                <a class="btn-minimize" data-toggle="collapse" data-target="#idPlan"><i class="fa fa-chevron-down"></i></a>
+                <!--<a class="btn-close" href="#"><i class="fa fa-times"></i></a>-->
+            </div>
+        </div>
+    </div>
+    <div id="idPlan" class="collapse col-lg-12 col-sm-12" style="margin-top: 20px;">
+        <!-- Overview Time -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header" data-original-title="">
+                        <h2>
+                            <i class="fa fa-shopping-cart"></i>
+                            <span class="break"></span>
+                            Overview Time
+                        </h2>
+                        <div class="box-icon">
+                            <!--<a class="btn-setting" href="#"><i class="fa fa-wrench"></i></a>-->
+                            <a class="btn-minimize" data-toggle="collapse" data-target="#idOverviewPlanTable"><i class="fa fa-chevron-down"></i></a>
+                            <!--<a class="btn-close" href="#"><i class="fa fa-times"></i></a>-->
+                        </div>
+                    </div>
+
+                    <div class="box-content" id="idOverviewPlanTable">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prepare Plan -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header" data-original-title="">
+                        <h2>
+                            <i class="fa fa-shopping-cart"></i>
+                            <span class="break"></span>
+                            Prepare
+                        </h2>
+                        <div class="box-icon">
+                            <!--<a class="btn-setting" href="#"><i class="fa fa-wrench"></i></a>-->
+                            <a class="btn-minimize" data-toggle="collapse" data-target="#idPreparePlanTable"><i class="fa fa-chevron-down"></i></a>
+                            <!--<a class="btn-close" href="#"><i class="fa fa-times"></i></a>-->
+                        </div>
+                    </div>
+                    <div class="box-content collapse" id="idPreparePlanTable">
+                        <div role="grid">
+                            <!--<div class="row"></div>-->
+                            <table id="idTable" class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                                <thead>
+                                    <tr role="row">
+                                        <th>Username</th>
+                                        <th>Content</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Duc Filan</td>
+                                        <td>Thuc an</td>
+                                        <td>
+                                            <span class="label label-warning">Pending</span>
+                                        </td>
+                                        <td>
+                                            <a href="table.html#" class="btn btn-info">
+                                                <i class="fa fa-edit "></i>
+                                            </a>
+                                            <a href="table.html#" class="btn btn-danger">
+                                                <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Duc Filan</td>
+                                        <td>Do uong</td>
+                                        <td>
+                                            <span class="label label-success">Complete</span>
+                                        </td>
+                                        <td>
+                                            <a href="table.html#" class="btn btn-info">
+                                                <i class="fa fa-edit "></i>
+                                            </a>
+                                            <a href="table.html#" class="btn btn-danger">
+                                                <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Duc Filan</td>
+                                        <td>Thuc an</td>
+                                        <td>
+                                            <span class="label label-warning">Pending</span>
+                                        </td>
+                                        <td>
+                                            <a href="table.html#" class="btn btn-info">
+                                                <i class="fa fa-edit "></i>
+                                            </a>
+                                            <a href="table.html#" class="btn btn-danger">
+                                                <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Duc Filan</td>
+                                        <td>Do uong</td>
+                                        <td>
+                                            <span class="label label-success">Complete</span>
+                                        </td>
+                                        <td>
+                                            <a href="table.html#" class="btn btn-info">
+                                                <i class="fa fa-edit "></i>
+                                            </a>
+                                            <a href="table.html#" class="btn btn-danger">
+                                                <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Duc Filan</td>
+                                        <td>Thuc an</td>
+                                        <td>
+                                            <span class="label label-warning">Pending</span>
+                                        </td>
+                                        <td>
+                                            <a href="table.html#" class="btn btn-info">
+                                                <i class="fa fa-edit "></i>
+                                            </a>
+                                            <a href="table.html#" class="btn btn-danger">
+                                                <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Duc Filan</td>
+                                        <td>Do uong</td>
+                                        <td>
+                                            <span class="label label-success">Complete</span>
+                                        </td>
+                                        <td>
+                                            <a href="table.html#" class="btn btn-info">
+                                                <i class="fa fa-edit "></i>
+                                            </a>
+                                            <a href="table.html#" class="btn btn-danger">
+                                                <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Plan -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div data-original-title="" class="box-header">
+                        <h2>
+                            <i class="fa  fa-calendar"></i>
+                            <span class="break"></span>
+                            Timeline
+                        </h2>
+                        <div class="box-icon">
+                            <!--<a class="btn-setting" href="#"><i class="fa fa-wrench"></i></a>-->
+                            <a data-target="#idTimelinePlanTable" data-toggle="collapse" class="btn-minimize"><i class="fa fa-chevron-down"></i></a>
+                            <!--<a class="btn-close" href="#"><i class="fa fa-times"></i></a>-->
+                        </div>
+                    </div>
+
+                    <div class="box-content collapse" id="idTimelinePlanTable">
+                        <div class="timeline">
+                            <dl>
+                                <dt>2015 July 14</dt>
+                                <dd class="pos-right clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">9:35</div>
+                                    <div class="events">
+                                        <div class="events-body">
+                                            <h4 class="events-heading">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4>
+                                            <p>Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="pos-left clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">10:50</div>
+                                    <div class="events">
+                                        <div class="events-body">
+                                            <h4 class="events-heading">Curabitur tortor. Pellentesque nibh. Aenean quam.</h4>
+                                            <p>In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.</p>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dt>2015 July 15</dt>
+                                <dd class="pos-right clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">13:00</div>
+                                    <div class="events">
+                                        <div class="events-body">
+                                            <h4 class="events-heading">Suspendisse in justo eu magna luctus suscipit.</h4>
+                                            <p>Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. </p>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="pos-left clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">17:00</div>
+                                    <div class="events">
+                                        <div class="events-body">
+                                            <h4 class="events-heading">Integer lacinia sollicitudin massa. Cras metus.</h4>
+                                            <p>Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede. Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci.</p>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="full-width">
+            <h1 class="center-heading"><span>Timeline Plan</span></h1>
+        </div>
+        <div id="idTimelinePlan" class="full-width">A</div>
+        <div class="full-width">
+            <h1 class="center-heading"><span>Prepare Plan</span></h1>
+        </div>
+        <div id="idPreparePlan" class="full-width">B</div>
+        <div class="full-width">
+            <h1 class="center-heading"><span>Details Plan</span></h1>
+        </div>
+        <div id="idDetailPlan" class="full-width">C</div>
+        -->
+    </div>
+</div>
+
+
+<div class="full-width" style="margin-top:20px;">
+    <div class="col-sm-4">
+        <article class="white-panel">
+            <img src="http://www.mediademon.com/wp-content/uploads/2014/03/Blog-Post-Imagery.png" width="350" height="180" alt="ALT">
+            <h3><a href="#">Putting users first with flat design</a></h3>
+            <div class="divider"></div>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non sollicitudin elit.
+                Curabitur magna ligula, condimentum sed lacus nec, vulputate cursus sem. Sed a semper felis.
+                Curabitur ligula enim, auctor eget rutrum a, convallis non diam. Vivamus ullamcorper aliquam purus, et euismod justo.
+                Nulla
+            </p><div class="divider"></div>
+            <div class="user-info">
+                <div class="avatar">
+                    <img src="~/Images/avatar/avatar-1.jpg" alt="Username 1" class="img-circle" />
+                </div>
+                <div class="col-md-4">
+                    <div class="name-user">Duc Filan</div>
+                    <div class="post-time">6 hours ago</div>
+                </div>
+                <span class="glyphicon glyphicon-comment col-md-2 pull-right" aria-hidden="true" style="font-size: larger"></span>
+                <span class="glyphicon glyphicon-heart col-md-2 pull-right" aria-hidden="true" style="font-size: larger"></span>
+            </div>
+        </article>
+    </div>
+
+    <div class="col-lg-8 col-md-8">
+        <div class="box noOverflow chat alt">
+            <div class="conversation">
+                <div class="actions">
+                    <img alt="avatar" src="~/Images/avatar/avatar-1.jpg" class="avatar">
+                    <img alt="avatar" src="~/Images/avatar/avatar-2.jpg" class="avatar">
+                    <img alt="avatar" src="~/Images/avatar/avatar-3.jpg" class="avatar">
+                </div>
+                <ul class="talk">
+                    <li>
+                        <img alt="avatar" src="~/Images/avatar/avatar-1.jpg" class="avatar">
+                        <span class="name">Ann Kovalsky</span>
+                        <span class="time">1:32PM</span>
+                        <div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>
+                    </li>
+                    <li>
+                        <img alt="avatar" src="~/Images/avatar/avatar-2.jpg" class="avatar">
+                        <span class="name">Megan Abbott</span>
+                        <span class="time">1:32PM</span>
+                        <div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>
+                    </li>
+                    <li>
+                        <img alt="avatar" src="~/Images/avatar/avatar-3.jpg" class="avatar">
+                        <span class="name">Ann Kovalsky</span>
+                        <span class="time">1:32PM</span>
+                        <div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>
+                    </li>
+                    <li>
+                        <img alt="avatar" src="~/Images/avatar/avatar-4.jpg" class="avatar">
+                        <span class="name">Łukasz Holeczek</span>
+                        <span class="time">1:32PM</span>
+                        <div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>
+                    </li>
+                    <li>
+                        <img alt="avatar" src="~/Images/avatar/avatar-5.jpg" class="avatar">
+                        <span class="name">Megan Abbott</span>
+                        <span class="time">1:32PM</span>
+                        <div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>
+                    </li>
+                </ul>
+                <div class="form">
+                    <input type="text" placeholder="Write Message" class="write-message">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/Scripts/carousel/masonry.pkgd.min.js"></script>
+<script src="~/Scripts/carousel/jquery.flexslider-min.js"></script>
+<script src="~/Scripts/carousel/main.js"></script>
+
+<script src="~/Scripts/HomePage/pinterest_grid.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#blog-landing').pinterest_grid({
+            no_columns: 4,
+            padding_x: 20,
+            padding_y: 20,
+            margin_bottom: 50,
+            single_column_breakpoint: 700
+        });
+
+    });
+</script>

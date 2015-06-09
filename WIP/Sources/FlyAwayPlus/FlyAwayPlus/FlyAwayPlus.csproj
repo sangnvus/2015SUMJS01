@@ -168,7 +168,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LookAroundController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ResultController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -203,6 +203,7 @@
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\gridLayout.css" />
     <Content Include="Content\reset.css" />
+    <Content Include="Content\RoomPage\roomDetail.css" />
     <Content Include="Content\speech-buble.css" />
     <Content Include="Content\SearchPage\search.css" />
     <Content Include="Images\avatar\avatar-1.jpg" />
@@ -322,10 +323,10 @@
     <Content Include="Views\FapAccount\Register.cshtml" />
     <Content Include="Views\FapAccount\AuthenFacebook.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\Result\Index.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
     <Content Include="Views\Search\SearchDetail.cshtml" />
     <Content Include="Views\LookAround\Index.cshtml" />
+    <Content Include="Views\Room\RoomDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

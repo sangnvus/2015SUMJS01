@@ -6,11 +6,17 @@ using System.Web.Mvc;
 
 namespace FlyAwayPlus.Controllers
 {
-    public class ResultController : Controller
+    public class RoomController : Controller
     {
         //
-        // GET: /Result/
+        // GET: /Room/
         public ActionResult Index()
+        {
+            return View();
+        }
+
+
+        public ActionResult RoomDetail()
         {
             return View();
         }
