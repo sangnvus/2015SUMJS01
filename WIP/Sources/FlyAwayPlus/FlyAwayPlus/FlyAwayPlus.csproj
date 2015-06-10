@@ -170,7 +170,6 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\PostDetailController.cs" />
-    <Compile Include="Controllers\ResultController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -204,6 +203,7 @@
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\gridLayout.css" />
+    <Content Include="Content\jquery.fs.stepper.css" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\RoomPage\roomDetail.css" />
     <Content Include="Content\speech-buble.css" />
@@ -236,6 +236,7 @@
     <Content Include="Images\UIHelper\WOW slider\loading.gif" />
     <Content Include="Images\UIHelper\WOW slider\pause.png" />
     <Content Include="Images\UIHelper\WOW slider\play.png" />
+    <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
     <Content Include="Content\UserPage\WOW slider\style.mod.css" />
@@ -330,6 +331,7 @@
     <Content Include="Views\LookAround\Index.cshtml" />
     <Content Include="Views\Room\RoomDetail.cshtml" />
     <Content Include="Views\PostDetail\Index.cshtml" />
+    <Content Include="Views\Room\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
