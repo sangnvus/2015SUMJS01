@@ -48,27 +48,30 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <br/>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Contact</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <textarea class="form-control" rows="2"></textarea>
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-primary" style="height: 54px">POST</button>
-                                </span>
-                            </div>
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <textarea class="form-control" rows="3"></textarea>
                         </div>
-
-                        <div class="form-group">
-                            <input type="checkbox" name="post-type" checked data-on-text="Value" data-off-text="Normal">
+                        <div class="col-xs-3">
+                            <button class="btn btn-primary">POST</button>
                         </div>
-                    </form>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label>Value</label>
+                            <input name="post-type" type="checkbox" checked="" data-on-text="Yes" data-off-text="No">
+                        </div>
+                        <div class="col-xs-4">
+                            
+                        </div>
+                    </div>
                 </div>
-
-                <div class="modal-footer"></div>
+                <div class="modal-footer">
+                </div>
             </div>
         </div>
     </div>
