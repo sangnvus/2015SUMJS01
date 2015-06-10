@@ -168,3 +168,4 @@ D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayP
 D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus\obj\Release\FlyAwayPlus.csprojResolveAssemblyReference.cache
 D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus\obj\Release\FlyAwayPlus.dll
 D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus\obj\Release\FlyAwayPlus.pdb
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus\obj\Release\FlyAwayPlus.csprojResolveAssemblyReference.cache
