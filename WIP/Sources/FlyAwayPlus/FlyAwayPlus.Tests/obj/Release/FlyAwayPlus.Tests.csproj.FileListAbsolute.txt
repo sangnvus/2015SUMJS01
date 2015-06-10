@@ -42,3 +42,47 @@ D:\Study\Work\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\
 D:\Study\Work\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\obj\Release\FlyAwayPlus.Tests.csprojResolveAssemblyReference.cache
 D:\Study\Work\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\obj\Release\FlyAwayPlus.Tests.dll
 D:\Study\Work\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\obj\Release\FlyAwayPlus.Tests.pdb
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\FlyAwayPlus.Tests.dll.config
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\FlyAwayPlus.Tests.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\FlyAwayPlus.Tests.pdb
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Facebook.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\FlyAwayPlus.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Web.Infrastructure.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Newtonsoft.Json.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Helpers.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Mvc.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Razor.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.WebPages.Deployment.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.WebPages.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.WebPages.Razor.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.AspNet.Identity.Core.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.AspNet.Identity.Owin.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\EntityFramework.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.AspNet.Identity.EntityFramework.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Optimization.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Owin.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.Security.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.Security.Cookies.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.Host.SystemWeb.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\FlyAwayPlus.pdb
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Facebook.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Newtonsoft.Json.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Helpers.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Mvc.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Razor.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.WebPages.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.WebPages.Deployment.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.WebPages.Razor.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.AspNet.Identity.Core.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.AspNet.Identity.Owin.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\EntityFramework.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.AspNet.Identity.EntityFramework.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\System.Web.Optimization.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.Security.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.Security.Cookies.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\bin\Release\Microsoft.Owin.Host.SystemWeb.xml
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\obj\Release\FlyAwayPlus.Tests.csprojResolveAssemblyReference.cache
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\obj\Release\FlyAwayPlus.Tests.dll
+F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\FlyAwayPlus\FlyAwayPlus.Tests\obj\Release\FlyAwayPlus.Tests.pdb

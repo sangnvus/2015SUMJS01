@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootflat.css" />
+    <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\gridLayout.css" />
@@ -237,6 +238,7 @@
     <Content Include="Images\UIHelper\WOW slider\loading.gif" />
     <Content Include="Images\UIHelper\WOW slider\pause.png" />
     <Content Include="Images\UIHelper\WOW slider\play.png" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\WOW slider\script.js" />
@@ -334,6 +336,7 @@
     <Content Include="Views\Room\RoomDetail.cshtml" />
     <Content Include="Views\PostDetail\Index.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />
+    <Content Include="Views\Room\RoomList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
