@@ -17,6 +17,10 @@
     white-space: normal;
 }
 
+img {
+    max-width: 100%;
+}
+
 /* Nav bar customizations */
 .navbar-custom {
     position: fixed;

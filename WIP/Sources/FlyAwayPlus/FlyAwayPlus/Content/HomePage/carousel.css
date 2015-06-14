@@ -1,32 +1,5 @@
 /* -------------------------------- 
 
-Primary style
-
--------------------------------- */
-*, *:after, *:before {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-body {
-    font-size: 100%;
-    font-family: "Helvetica Neue", sans-serif;
-    color: #39393c;
-    background-color: #dadee1;
-}
-
-a {
-    color: #79b6e4;
-    text-decoration: none;
-}
-
-img {
-    max-width: 100%;
-}
-
-/* -------------------------------- 
-
 Main components 
 
 -------------------------------- */
@@ -113,7 +86,6 @@ Main components
 @media only screen and (min-width: 1170px) {
     .cd-testimonials p {
         font-size: 26px;
-        font-size: 1.625rem;
         line-height: 1.6;
     }
 }
@@ -138,12 +110,10 @@ Main components
 
     .cd-author .cd-author-info li:first-child {
         font-size: 14px;
-        font-size: 0.875rem;
     }
 
     .cd-author .cd-author-info li:last-child {
         font-size: 12px;
-        font-size: 0.75rem;
         color: #6b6b70;
     }
 
@@ -159,12 +129,10 @@ Main components
 
         .cd-author .cd-author-info li:first-child {
             font-size: 16px;
-            font-size: 1rem;
         }
 
         .cd-author .cd-author-info li:last-child {
             font-size: 14px;
-            font-size: 0.875rem;
         }
 }
 
@@ -276,9 +244,10 @@ Main components
     color: #6b6b70;
     font-weight: 700;
     font-size: 12px;
-    font-size: 0.75rem;
     -webkit-transition: color, 0.2s;
     -moz-transition: color, 0.2s;
+    -ms-transition: color, 0.2s;
+    -o-transition: color, 0.2s;
     transition: color, 0.2s;
 }
 
