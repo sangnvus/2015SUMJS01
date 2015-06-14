@@ -117,6 +117,10 @@ Main components
         color: #6b6b70;
     }
 
+.cd-author ul {
+    list-style-type: none;
+}
+
 @media only screen and (min-width: 768px) {
     .cd-author img {
         width: 50px;
