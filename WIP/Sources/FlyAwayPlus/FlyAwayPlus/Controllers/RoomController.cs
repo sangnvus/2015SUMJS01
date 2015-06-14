@@ -20,5 +20,10 @@ namespace FlyAwayPlus.Controllers
         {
             return View();
         }
+
+        public ActionResult RoomList()
+        {
+            return View();
+        }
 	}
 }

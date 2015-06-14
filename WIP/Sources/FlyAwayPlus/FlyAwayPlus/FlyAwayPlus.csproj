@@ -334,6 +334,7 @@
     <Content Include="Views\Room\RoomDetail.cshtml" />
     <Content Include="Views\PostDetail\Index.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />
+    <Content Include="Views\Room\RoomList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
