@@ -21,6 +21,10 @@ img {
     max-width: 100%;
 }
 
+.modal {
+    margin-top: 70px
+}
+
 /* Nav bar customizations */
 .navbar-custom {
     position: fixed;
@@ -149,10 +153,8 @@ img {
     margin: 0 auto;
     display: block;
     background-color: #f7f7f7;
-    -moz-box-shadow: 0 0 3px 3px #888;
-    -webkit-box-shadow: 0 0 3px 3px #888;
-    box-shadow: 0 0 3px 3px #888;
-    border-radius: 2px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .main {
@@ -232,3 +234,79 @@ img {
     margin-bottom: 20px;
 }
 /* LOGIN FORM ENDS*/
+
+/* POST FORM */
+.share-post-box {
+    max-width: 500px;
+    margin: 0 auto;
+    display: block;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+}
+
+    .share-post-box .share {
+        -webkit-transition: 0.1s ease-out height;
+        -moz-transition: 0.1s ease-out height;
+        -ms-transition: 0.1s ease-out height;
+        -o-transition: 0.1s ease-out height;
+        transition: 0.1s ease-out height;
+        clear: both;
+        background: white;
+        border: 2px solid #dddddd;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+        .share-post-box .share .arrow {
+            background: url(arrow.png) no-repeat #dddddd;
+            position: absolute;
+            width: 14px;
+            height: 10px;
+            left: 4px;
+            display: inline;
+            top: -10px;
+            -webkit-transition: 0.3s ease-out all;
+            -moz-transition: 0.3s ease-out all;
+            -ms-transition: 0.3s ease-out all;
+            -o-transition: 0.3s ease-out all;
+            transition: 0.3s ease-out all;
+        }
+
+    .share-post-box .post-types li a {
+        color: #085083;
+        text-decoration: none;
+    }
+
+        .share-post-box .post-types li a.active {
+            color: #404040;
+        }
+
+    .share-post-box .post-types {
+        padding-left: 5px;
+    }
+
+    .share-post-box ul {
+        list-style: none;
+        margin-bottom: 9px;
+    }
+
+    .share-post-box .post-types li {
+        display: inline;
+        margin-right: 10px;
+    }
+
+.message {
+    border-radius: 0;
+    border: none;
+}
+
+.panel {
+    border-radius: 0;
+    border: none;
+    margin-bottom: 0;
+}
+
+.privacy-dropdown {
+    width: 100px;
+}
+/* POST FORM ENDS*/
