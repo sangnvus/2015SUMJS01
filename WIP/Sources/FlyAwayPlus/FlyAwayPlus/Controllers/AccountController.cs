@@ -52,6 +52,11 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
+        public ActionResult FindPassword(string email)
+        {
+            return View();
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
