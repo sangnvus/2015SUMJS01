@@ -33,9 +33,10 @@
                 <ul class="nav navbar-nav navbar-left">
                     <li><a class="current" href="../Home/">Home</a></li>
                     <li><a class="" href="../Explore">Explore</a></li>
+                    <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
+                    <li><a class="" data-toggle="modal" data-target="#login-modal">Login</a></li>
                 </ul>
 
-                <button class="btn btn-link" data-toggle="modal" data-target="#post-modal" style="margin-top: 10px">Post</button>
             </div>
         </div>
     </div>
@@ -66,7 +67,7 @@
                             <input name="post-type" type="checkbox" checked="" data-on-text="Yes" data-off-text="No">
                         </div>
                         <div class="col-xs-4">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -74,6 +75,57 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="login-modal" class="modal fade">
+        <form class="form-signin">
+            <h3 class="heading-desc">
+                <button class="close pull-right" type="button" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button> Login to FAP
+            </h3>
+
+            <div class="social-box">
+                <div class="row mg-btm">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary btn-block" href="#">
+                            <i class="fa fa-facebook"></i> &nbsp;&nbsp;&nbsp;Login with Facebook
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <a class="btn btn-danger btn-block" href="#">
+                            <i class="fa fa-google"></i> &nbsp;&nbsp;&nbsp;Login with Google&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main">
+                <input autofocus="" class="form-control" placeholder="Email" type="text">
+                <input class="form-control" placeholder="Password" type="password"> 
+                <span class="clearfix"></span>
+            </div>
+
+            <div class="login-footer">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <div class="left-section">
+                            <a href="">Forgot your password?</a> <a href="">Sign up now</a>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 col-md-6 pull-right">
+                        <button class="btn btn-large btn-danger pull-right"
+                                type="submit">
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
     @Scripts.Render("~/bundles/bootstrap")
