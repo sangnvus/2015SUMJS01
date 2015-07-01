@@ -237,7 +237,6 @@
     <Content Include="Images\UIHelper\WOW slider\loading.gif" />
     <Content Include="Images\UIHelper\WOW slider\pause.png" />
     <Content Include="Images\UIHelper\WOW slider\play.png" />
-    <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
