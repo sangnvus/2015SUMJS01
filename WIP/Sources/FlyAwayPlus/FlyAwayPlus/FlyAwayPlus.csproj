@@ -335,6 +335,7 @@
     <Content Include="Views\PostDetail\Index.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Room\RoomList.cshtml" />
+    <Content Include="Views\Account\FindPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
