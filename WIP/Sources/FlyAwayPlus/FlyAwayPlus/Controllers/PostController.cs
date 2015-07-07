@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace FlyAwayPlus.Controllers
 {
-    public class PostDetailController : Controller
+    public class PostController : Controller
     {
         //
         // GET: /PostDetail/
