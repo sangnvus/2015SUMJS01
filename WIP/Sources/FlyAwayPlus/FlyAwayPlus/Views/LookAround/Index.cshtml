@@ -93,10 +93,84 @@
         function initialize() {
             var mapOptions = {
                 zoom: 15,
-                center: myCenter,
                 disableDefaultUI: true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
+
+            // Try HTML5 geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = new google.maps.LatLng(position.coords.latitude,
+                                                     position.coords.longitude);
+                    map.setCenter(pos);
+
+                    //Marker
+                    var marker0 = new google.maps.Marker({
+                        position: pos,
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                        map: map
+                    });
+                    var infowindow0 = new google.maps.InfoWindow({
+                        content: '<div id="iw_container">' +
+                         '<div class="iw_title">Hoàng Nghia Ð?c</div>' +
+                         '<div class="iw_content">0985646611</div>' +
+                         '</div>',
+                        maxWidth: 200
+                    });
+                    google.maps.event.addListener(marker0, 'mouseover', function () {
+                        infowindow0.open(map, marker0);
+                    });
+                    google.maps.event.addListener(marker0, 'mouseout', function () {
+                        infowindow0.close();
+                    });
+
+                    var marker1 = new google.maps.Marker({
+                        position: new google.maps.LatLng(position.coords.latitude + 0.0009803, position.coords.longitude - 0.0020357),
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                        map: map
+                    });
+                    var infowindow1 = new google.maps.InfoWindow({
+                        content: '<div id="iw_container">' +
+                         '<div class="iw_title">Duong Thanh H?i</div>' +
+                         '<div class="iw_content">0964046554</div>' +
+                         '</div>',
+                        maxWidth: 200
+                    });
+                    google.maps.event.addListener(marker1, 'mouseover', function () {
+                        infowindow1.open(map, marker1);
+                    });
+                    google.maps.event.addListener(marker1, 'mouseout', function () {
+                        infowindow1.close();
+                    });
+
+                    var marker2 = new google.maps.Marker({
+                        position: new google.maps.LatLng(position.coords.latitude - 0.0015227, position.coords.longitude - 0.0057717),
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                        map: map
+                    });
+                    var infowindow2 = new google.maps.InfoWindow({
+                        content: '<div id="iw_container">' +
+                         '<div class="iw_title">Nguy?n Minh Hoàng</div>' +
+                         '<div class="iw_content">01664250678</div>' +
+                         '</div>',
+                        maxWidth: 200
+                    });
+                    google.maps.event.addListener(marker2, 'mouseover', function () {
+                        infowindow2.open(map, marker2);
+                    });
+                    google.maps.event.addListener(marker2, 'mouseout', function () {
+                        infowindow2.close();
+                    });
+
+                }, function () {
+                    handleNoGeolocation(true);
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleNoGeolocation(false);
+            }
+
+
             var markers = [];
             var map = new window.google.maps.Map(document.getElementById('googleMap'), mapOptions);
 
@@ -166,65 +240,6 @@
                 searchBox.setBounds(bounds);
             });
 
-            //Marker
-
-            var marker0 = new google.maps.Marker({
-                position: new google.maps.LatLng(21.024159, 105.841534),
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                map: map
-            });
-            var infowindow0 = new google.maps.InfoWindow({
-                content: '<div id="iw_container">' +
-                 '<div class="iw_title">Hoàng Nghĩa Đức</div>' +
-                 '<div class="iw_content">0985646611</div>' +
-                 '</div>',
-                maxWidth: 200
-            });
-            google.maps.event.addListener(marker0, 'mouseover', function () {
-                infowindow0.open(map, marker0);
-            });
-            google.maps.event.addListener(marker0, 'mouseout', function () {
-                infowindow0.close();
-            });
-
-            var marker1 = new google.maps.Marker({
-                position: new google.maps.LatLng(21.023677, 105.834928),
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                map: map
-            });
-            var infowindow1 = new google.maps.InfoWindow({
-                content: '<div id="iw_container">' +
-                 '<div class="iw_title">Dương Thanh Hải</div>' +
-                 '<div class="iw_content">0964046554</div>' +
-                 '</div>',
-                maxWidth: 200
-            });
-            google.maps.event.addListener(marker1, 'mouseover', function () {
-                infowindow1.open(map, marker1);
-            });
-            google.maps.event.addListener(marker1, 'mouseout', function () {
-                infowindow1.close();
-            });
-
-            var marker2 = new google.maps.Marker({
-                position: new google.maps.LatLng(21.021174, 105.831192),
-                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                map: map
-            });
-            var infowindow2 = new google.maps.InfoWindow({
-                content: '<div id="iw_container">' +
-                 '<div class="iw_title">Nguyễn Minh Hoàng</div>' +
-                 '<div class="iw_content">01664250678</div>' +
-                 '</div>',
-                maxWidth: 200
-            });
-            google.maps.event.addListener(marker2, 'mouseover', function () {
-                infowindow2.open(map, marker2);
-            });
-            google.maps.event.addListener(marker2, 'mouseout', function () {
-                infowindow2.close();
-            });
-
             //Create legend
             var legend = document.createElement('div');
             legend.id = 'legend';
@@ -236,6 +251,24 @@
             legend.index = 1;
             map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
         }
+
+        function handleNoGeolocation(errorFlag) {
+            if (errorFlag) {
+                var content = 'Error: The Geolocation service failed.';
+            } else {
+                var content = 'Error: Your browser doesn\'t support geolocation.';
+            }
+
+            var options = {
+                map: map,
+                position: new google.maps.LatLng(60, 105),
+                content: content
+            };
+
+            var infowindow = new google.maps.InfoWindow(options);
+            map.setCenter(options.position);
+        }
+
 
         google.maps.event.addDomListener(window, 'load', initialize);
 
