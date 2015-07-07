@@ -12,10 +12,10 @@ namespace FlyAwayPlus.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Picture
+    public partial class Photo
     {
-        public decimal pictureID { get; set; }
-        public string path { get; set; }
-        public System.DateTime dateCreated { get; set; }
+        public decimal photoID { get; set; }
+        public string url { get; set; }
+        public string dateCreated { get; set; }
     }
 }

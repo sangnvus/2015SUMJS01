@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FlyAwayPlusModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="FlyAwayPlusModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="commentID" />
@@ -21,13 +21,13 @@
           <Property Name="content" Type="nvarchar" MaxLength="2000" Nullable="false" />
           <Property Name="dateCreated" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="Picture">
+        <EntityType Name="Photo">
           <Key>
-            <PropertyRef Name="pictureID" />
+            <PropertyRef Name="photoID" />
           </Key>
-          <Property Name="pictureID" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="path" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="dateCreated" Type="datetime" Nullable="false" />
+          <Property Name="photoID" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="url" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="dateCreated" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Place">
           <Key>
@@ -36,6 +36,7 @@
           <Property Name="placeID" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="longitude" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="latitude" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Post">
           <Key>
@@ -43,7 +44,7 @@
           </Key>
           <Property Name="postID" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="content" Type="nvarchar" MaxLength="2000" Nullable="false" />
-          <Property Name="dateCreated" Type="datetime" Nullable="false" />
+          <Property Name="dateCreated" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Room">
           <Key>
@@ -91,7 +92,7 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
         <EntityContainer Name="FlyAwayPlusModelStoreContainer">
           <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Picture" EntityType="Self.Picture" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Photo" EntityType="Self.Photo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Place" EntityType="Self.Place" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Room" EntityType="Self.Room" Schema="dbo" store:Type="Tables" />
@@ -103,7 +104,7 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="FlyAwayPlusModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="FlyAwayPlusModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="commentID" />
@@ -120,13 +121,13 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
           <Property Name="content" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="dateCreated" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="Picture">
+        <EntityType Name="Photo">
           <Key>
-            <PropertyRef Name="pictureID" />
+            <PropertyRef Name="photoID" />
           </Key>
-          <Property Name="pictureID" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="path" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="dateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="photoID" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="url" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dateCreated" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Place">
           <Key>
@@ -135,6 +136,7 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
           <Property Name="placeID" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="longitude" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="latitude" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Post">
           <Key>
@@ -142,7 +144,7 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
           </Key>
           <Property Name="postID" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="content" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="dateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="dateCreated" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Room">
           <Key>
@@ -187,7 +189,7 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Comments" EntityType="Self.Comment" />
           <EntitySet Name="Messages" EntityType="Self.Message" />
-          <EntitySet Name="Pictures" EntityType="Self.Picture" />
+          <EntitySet Name="Photos" EntityType="Self.Photo" />
           <EntitySet Name="Places" EntityType="Self.Place" />
           <EntitySet Name="Posts" EntityType="Self.Post" />
           <EntitySet Name="Rooms" EntityType="Self.Room" />
@@ -219,11 +221,11 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Pictures">
-            <EntityTypeMapping TypeName="FlyAwayPlusModel.Picture">
-              <MappingFragment StoreEntitySet="Picture">
-                <ScalarProperty Name="pictureID" ColumnName="pictureID" />
-                <ScalarProperty Name="path" ColumnName="path" />
+          <EntitySetMapping Name="Photos">
+            <EntityTypeMapping TypeName="FlyAwayPlusModel.Photo">
+              <MappingFragment StoreEntitySet="Photo">
+                <ScalarProperty Name="photoID" ColumnName="photoID" />
+                <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="dateCreated" ColumnName="dateCreated" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -234,6 +236,7 @@ warning 6035: The relationship 'FK_UserDetail_User' has columns that are not par
                 <ScalarProperty Name="placeID" ColumnName="placeID" />
                 <ScalarProperty Name="longitude" ColumnName="longitude" />
                 <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

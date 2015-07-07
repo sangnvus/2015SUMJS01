@@ -27,7 +27,7 @@ namespace FlyAwayPlus.Models
     
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
-        public virtual DbSet<Picture> Pictures { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
         public virtual DbSet<Place> Places { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }

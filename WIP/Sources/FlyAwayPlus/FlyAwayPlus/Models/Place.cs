@@ -17,5 +17,6 @@ namespace FlyAwayPlus.Models
         public decimal placeID { get; set; }
         public decimal longitude { get; set; }
         public decimal latitude { get; set; }
+        public string name { get; set; }
     }
 }

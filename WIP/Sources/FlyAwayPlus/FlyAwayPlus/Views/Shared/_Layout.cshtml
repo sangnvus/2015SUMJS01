@@ -11,6 +11,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Scripts/common.js")
 
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
@@ -64,6 +65,11 @@
                     <div class="">
                         <textarea class="form-control message" cols="40" id="status_message" name="message" placeholder="What's on your mind?" rows="10" style="height: 62px; overflow: hidden;"></textarea>
                     </div>
+                    <div style="width: 96px; height: 96px; border: 2px dashed #dcdee3; border-radius: 2px; margin-top: 5px;">
+                        <a style="cursor: pointer; display:block; height: 100%; width: 100%; background-image:url('../../Images/upload.png'); background-position: center center; background-repeat: no-repeat; background-size: 20px 20px">
+                            <input style="opacity: 0; cursor: inherit; height:100%; width:100%;" type="file" name="uploadPhoto" title="select one file to upload"/>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="panel-footer">
@@ -72,7 +78,7 @@
                             <div class="form-group">
                                 <div class="btn-group">
                                     <button class="btn btn-default" type="button"><i class="fa fa-map-marker"></i> Location</button>
-                                    <button class="btn btn-default" type="button"><i class="fa fa-picture-o"></i> Photo</button>
+                                    <button id="idBtnUploadPhoto" class="btn btn-default" type="button"><i class="fa fa-picture-o"></i> Photo</button>
                                     <button class="btn btn-default" type="button"><i class="fa fa-video-camera"></i> Video</button>
 
                                     <div class="btn-group" role="group">
