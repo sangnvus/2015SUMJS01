@@ -16,6 +16,6 @@ namespace FlyAwayPlus.Models
     {
         public decimal postID { get; set; }
         public string content { get; set; }
-        public System.DateTime dateCreated { get; set; }
+        public string dateCreated { get; set; }
     }
 }
