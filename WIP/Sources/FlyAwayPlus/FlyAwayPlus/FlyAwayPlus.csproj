@@ -43,9 +43,18 @@
       <HintPath>..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Neo4jClient">
+      <HintPath>..\packages\Neo4jClient.1.0.0.662\lib\net40\Neo4jClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -175,27 +184,52 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\FAP_Model.Context.cs">
+    <Compile Include="Models\Comment.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FapModels.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FAP_Model.Context.tt</DependentUpon>
+      <DependentUpon>FapModels.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FAP_Model.cs">
+    <Compile Include="Models\FapModels.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FAP_Model.tt</DependentUpon>
+      <DependentUpon>FapModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FAP_Model.Designer.cs">
+    <Compile Include="Models\FapModels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FAP_Model.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FAP_USER.cs">
-      <DependentUpon>FAP_Model.tt</DependentUpon>
+      <DependentUpon>FapModels.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Message.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Picture.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Place.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Post.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Room.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserDetail.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Video.cs">
+      <DependentUpon>FapModels.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -245,23 +279,6 @@
     <Content Include="Scripts\WOW slider\wowslider.mod.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\FAP_Model.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>FAP_Model.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\FAP_Model.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FAP_Model.edmx</DependentUpon>
-      <LastGenOutput>FAP_Model.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\FAP_Model.edmx.diagram">
-      <DependentUpon>FAP_Model.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\FAP_Model.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FAP_Model.edmx</DependentUpon>
-      <LastGenOutput>FAP_Model.cs</LastGenOutput>
-    </Content>
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.woff" />
@@ -270,6 +287,23 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
+    <EntityDeploy Include="Models\FapModels.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>FapModels.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\FapModels.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FapModels.edmx</DependentUpon>
+      <LastGenOutput>FapModels.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\FapModels.edmx.diagram">
+      <DependentUpon>FapModels.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\FapModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FapModels.edmx</DependentUpon>
+      <LastGenOutput>FapModels.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\carousel\jquery.flexslider-min.js" />
     <Content Include="Scripts\carousel\main.js" />
@@ -337,7 +371,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -377,6 +410,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
