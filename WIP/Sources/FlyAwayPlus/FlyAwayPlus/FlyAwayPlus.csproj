@@ -173,8 +173,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\FapAccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LookAroundController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
@@ -186,50 +186,16 @@
     </Compile>
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Comment.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FapModels.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FapModels.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FapModels.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FapModels.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FapModels.edmx</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Message.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Photo.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Place.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Post.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Room.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\User.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\UserDetail.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Video.cs">
-      <DependentUpon>FapModels.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Photo.cs" />
+    <Compile Include="Models\Place.cs" />
+    <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -289,23 +255,6 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
-    <EntityDeploy Include="Models\FapModels.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>FapModels.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\FapModels.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FapModels.edmx</DependentUpon>
-      <LastGenOutput>FapModels.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\FapModels.edmx.diagram">
-      <DependentUpon>FapModels.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\FapModels.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FapModels.edmx</DependentUpon>
-      <LastGenOutput>FapModels.cs</LastGenOutput>
-    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\carousel\jquery.flexslider-min.js" />
     <Content Include="Scripts\carousel\main.js" />
@@ -360,8 +309,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\FapAccount\Register.cshtml" />
-    <Content Include="Views\FapAccount\AuthenFacebook.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
     <Content Include="Views\Search\SearchDetail.cshtml" />
@@ -371,9 +318,11 @@
     <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Room\RoomList.cshtml" />
     <Content Include="Views\Account\FindPassword.cshtml" />
+    <Content Include="Views\Shared\LoginPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

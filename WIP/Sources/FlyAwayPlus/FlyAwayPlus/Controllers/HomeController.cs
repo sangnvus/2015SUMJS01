@@ -22,10 +22,9 @@ namespace FlyAwayPlus.Controllers
             Dictionary<string, Photo> listPhotoDict = new Dictionary<string, Photo>();
             Dictionary<string, Place> listPlaceDict = new Dictionary<string, Place>();
 
-            if (user_session == null)
+            if (user_session == null || user_session.ToString().Trim().Equals(""))
             {
-                int x, y, z;
-                // Do something
+                // TODO
             }
             else
             {

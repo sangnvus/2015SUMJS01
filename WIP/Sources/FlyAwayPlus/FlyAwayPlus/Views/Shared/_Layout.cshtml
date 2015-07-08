@@ -7,11 +7,14 @@
     <link href="~/Content/bootflat.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-switch.min.css" rel="stylesheet" />
 
-    @Styles.Render("~/Content/css")
+    
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/Scripts/common.js")
-
+    @Scripts.Render("~/Scripts/jquery.validate.js")
+    @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
+    
+    @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
 </head>
@@ -30,7 +33,7 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left">
+                <ul class="nav navbar-nav navbar-left" style="width:90%">
                     <li><a class="current" href="../Home/">Home</a></li>
                     <li><a class="" href="../Explore">Explore</a></li>
                     <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
@@ -40,9 +43,9 @@
                     }
                     else
                     {
-                        <li><a class="" data-toggle="modal" data-target="#login-modal">@Session["username"]</a></li>
+                        <li style="float:right"><a href="/Login/Logout" data-toggle="modal">Log out</a></li>
+                        <li style="float:right"><a href="~/Home/" data-toggle="modal">@Session["username"]</a></li>
                     }
-                    
                 </ul>
 
             </div>
@@ -66,7 +69,7 @@
                     </div>
                     <div style="width: 96px; height: 96px; border: 2px dashed #dcdee3; border-radius: 2px; margin-top: 5px;">
                         <a style="cursor: pointer; display:block; height: 100%; width: 100%; background-image:url('../../Images/upload.png'); background-position: center center; background-repeat: no-repeat; background-size: 20px 20px">
-                            <input style="opacity: 0; cursor: inherit; height:100%; width:100%;" type="file" name="uploadPhoto" title="select one file to upload"/>
+                            <input style="opacity: 0; cursor: inherit; height:100%; width:100%;" type="file" name="uploadPhoto" title="select one file to upload" />
                         </a>
                     </div>
                 </div>
@@ -106,173 +109,9 @@
             </div>
         </form>
     </div>
-
-    <div id="login-modal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog login-modal-wrap">
-            <div class="modal-content">
-                <div class="modal-body login-modal-body">
-                    <div class="panel panel-login">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <a href="#" class="active" id="login-form-link">Login</a>
-                                </div>
-                                <div class="col-xs-6">
-                                    <a href="#" id="register-form-link">Register</a>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <form id="login-form" action="/FapAccount/Login" method="post" role="form" style="display: block;">
-                                        <div class="social-box">
-                                            <div class="row mg-btm">
-                                                <div class="col-md-12">
-                                                    <a class="btn btn-primary btn-block" href="/FapAccount/AuthenFacebook">
-                                                        <i class="fa fa-facebook"></i> &nbsp;&nbsp;&nbsp;Login with Facebook
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <a class="btn btn-danger btn-block" href="#">
-                                                        <i class="fa fa-google"></i> &nbsp;&nbsp;&nbsp;Login with Google&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
-                                            <label for="remember"> Remember Me</label>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-6 col-sm-offset-3">
-                                                    <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="text-center">
-                                                        <a href="/Account/ForgotPassword" tabindex="5" class="forgot-password">Forgot Password?</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="register-form" action="/FapAccount/Register" method="post" role="form" style="display: none;">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <input type="text" name="phone_number" id="phone_number" class="form-control input-lg" placeholder="Phone number" tabindex="3">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <input type="text" name="dob" id="dob" class="form-control input-lg" placeholder="DOB" tabindex="4">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row" style="text-align: center">
-                                            <div class="form-group">
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="gender-options" id="male-gender" value="male"> Male
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="gender-options" id="female-gender" value="female"> Female
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="gender-options" id="other-gender" value="other"> Other
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <input type="text" name="address" id="address" class="form-control input-lg" placeholder="Address" tabindex="5">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" name="user_name" id="user_name" class="form-control input-lg" placeholder="Username" tabindex="6">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="7">
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="8">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="9">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-6 col-sm-offset-3">
-                                                    <input type="submit" name="register-submit" id="register-submit" tabindex="10" class="form-control btn btn-register" value="Register Now">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    @Html.Action("LoginPartial", "Login")
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-
-    <script>
-        $(function () {
-            $('#login-form-link').click(function (e) {
-                $("#login-form").delay(100).fadeIn(100);
-                $("#register-form").fadeOut(100);
-                $('#register-form-link').removeClass('active');
-                $(this).addClass('active');
-                e.preventDefault();
-            });
-            $('#register-form-link').click(function (e) {
-                $("#register-form").delay(100).fadeIn(100);
-                $("#login-form").fadeOut(100);
-                $('#login-form-link').removeClass('active');
-                $(this).addClass('active');
-                e.preventDefault();
-            });
-
-        });
-
-    </script>
 </body>
 </html>

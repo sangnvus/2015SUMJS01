@@ -1309,3 +1309,366 @@ Storage files: (filename : modification date - size)
 2015-07-08 06:06:05.528+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STOPPING diagnostics END ---
 2015-07-08 06:06:05.534+0000 INFO  [o.n.s.d.LifecycleManagingDatabase]: Successfully stopped database
 2015-07-08 06:06:05.534+0000 INFO  [o.n.s.CommunityNeoServer]: Successfully shutdown database.
+2015-07-08 14:53:04.348+0000 INFO  [o.n.s.CommunityNeoServer]: Setting startup timeout to: 120000ms based on 120000
+2015-07-08 14:53:04.831+0000 INFO  [o.n.k.InternalAbstractGraphDatabase]: No locking implementation specified, defaulting to 'community'
+2015-07-08 14:53:05.021+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- INITIALIZED diagnostics START ---
+2015-07-08 14:53:05.023+0000 INFO  [o.n.k.i.DiagnosticsManager]: Neo4j Kernel properties:
+2015-07-08 14:53:05.027+0000 INFO  [o.n.k.i.DiagnosticsManager]: store_dir=F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\Database\GraphDatabase
+2015-07-08 14:53:05.028+0000 INFO  [o.n.k.i.DiagnosticsManager]: remote_shell_enabled=true
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: Diagnostics providers:
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: org.neo4j.kernel.configuration.Config
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: org.neo4j.kernel.info.DiagnosticsManager
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: SYSTEM_MEMORY
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: JAVA_MEMORY
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: OPERATING_SYSTEM
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: JAVA_VIRTUAL_MACHINE
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: CLASSPATH
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: LIBRARY_PATH
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: SYSTEM_PROPERTIES
+2015-07-08 14:53:05.029+0000 INFO  [o.n.k.i.DiagnosticsManager]: NETWORK
+2015-07-08 14:53:05.030+0000 INFO  [o.n.k.i.DiagnosticsManager]: System memory information:
+2015-07-08 14:53:05.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: Total Physical memory: 4.00 GB
+2015-07-08 14:53:05.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: Free Physical memory: 3.20 GB
+2015-07-08 14:53:05.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: Committed virtual memory: 107.17 MB
+2015-07-08 14:53:05.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: Total swap space: 4.00 GB
+2015-07-08 14:53:05.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: Free swap space: 4.00 GB
+2015-07-08 14:53:05.041+0000 INFO  [o.n.k.i.DiagnosticsManager]: JVM memory information:
+2015-07-08 14:53:05.041+0000 INFO  [o.n.k.i.DiagnosticsManager]: Free  memory: 30.52 MB
+2015-07-08 14:53:05.041+0000 INFO  [o.n.k.i.DiagnosticsManager]: Total memory: 69.34 MB
+2015-07-08 14:53:05.041+0000 INFO  [o.n.k.i.DiagnosticsManager]: Max   memory: 247.50 MB
+2015-07-08 14:53:05.080+0000 INFO  [o.n.k.i.DiagnosticsManager]: Garbage Collector: Copy: [Eden Space, Survivor Space]
+2015-07-08 14:53:05.080+0000 INFO  [o.n.k.i.DiagnosticsManager]: Garbage Collector: MarkSweepCompact: [Eden Space, Survivor Space, Tenured Gen, Perm Gen]
+2015-07-08 14:53:05.087+0000 INFO  [o.n.k.i.DiagnosticsManager]: Memory Pool: Code Cache (Non-heap memory): committed=2.00 MB, used=1.98 MB, max=32.00 MB, threshold=0.00 B
+2015-07-08 14:53:05.087+0000 INFO  [o.n.k.i.DiagnosticsManager]: Memory Pool: Eden Space (Heap memory): committed=19.19 MB, used=10.15 MB, max=68.31 MB, threshold=?
+2015-07-08 14:53:05.088+0000 INFO  [o.n.k.i.DiagnosticsManager]: Memory Pool: Survivor Space (Heap memory): committed=2.38 MB, used=0.00 B, max=8.50 MB, threshold=?
+2015-07-08 14:53:05.088+0000 INFO  [o.n.k.i.DiagnosticsManager]: Memory Pool: Tenured Gen (Heap memory): committed=47.78 MB, used=28.67 MB, max=170.69 MB, threshold=0.00 B
+2015-07-08 14:53:05.088+0000 INFO  [o.n.k.i.DiagnosticsManager]: Memory Pool: Perm Gen (Non-heap memory): committed=14.50 MB, used=14.31 MB, max=64.00 MB, threshold=0.00 B
+2015-07-08 14:53:05.088+0000 INFO  [o.n.k.i.DiagnosticsManager]: Operating system information:
+2015-07-08 14:53:05.089+0000 INFO  [o.n.k.i.DiagnosticsManager]: Operating System: Windows 8; version: 6.2; arch: x86; cpus: 4
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: Process id: 4680@haidtse02856
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: Byte order: LITTLE_ENDIAN
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: Local timezone: Asia/Bangkok
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: JVM information:
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: VM Name: Java HotSpot(TM) Client VM
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: VM Vendor: Oracle Corporation
+2015-07-08 14:53:05.090+0000 INFO  [o.n.k.i.DiagnosticsManager]: VM Version: 24.45-b08
+2015-07-08 14:53:05.091+0000 INFO  [o.n.k.i.DiagnosticsManager]: JIT compiler: HotSpot Client Compiler
+2015-07-08 14:53:05.092+0000 INFO  [o.n.k.i.DiagnosticsManager]: VM Arguments: [-Dexe4j.semaphoreName=Local\c:_program_files_(x86)_neo4j_community_bin_neo4j-community.exe, -Dexe4j.isInstall4j=true, -Dexe4j.moduleName=C:\Program Files (x86)\Neo4j Community\bin\neo4j-community.exe, -Dexe4j.processCommFile=C:\Users\HAICON~1\AppData\Local\Temp\e4j_p4680.tmp, -Dexe4j.tempDir=, -Dexe4j.unextractedPosition=0, -Djava.library.path=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\110\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies\;C:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;c:\program files (x86)\neo4j community\jre\bin, -Dexe4j.consoleCodepage=cp0, -Dinstall4j.launcherId=24, -Dinstall4j.swt=false]
+2015-07-08 14:53:05.092+0000 INFO  [o.n.k.i.DiagnosticsManager]: Java classpath:
+2015-07-08 14:53:05.095+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\classes
+2015-07-08 14:53:05.095+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [classpath] C:\Program Files (x86)\Neo4j Community\.install4j\i4jruntime.jar
+2015-07-08 14:53:05.095+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [classpath] C:\Program Files (x86)\Neo4j Community\bin\neo4j-desktop-2.2.2.jar
+2015-07-08 14:53:05.095+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/sunmscapi.jar
+2015-07-08 14:53:05.095+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/access-bridge-32.jar
+2015-07-08 14:53:05.095+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\resources.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.0] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/bin/neo4j-desktop-2.2.2.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/sunjce_provider.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/sunec.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.0] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/bin/
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.0] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/.install4j/i4jruntime.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\jce.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/jaccess.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/zipfs.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/localedata.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/dnsns.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\sunrsasign.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\charsets.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\jsse.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [loader.1] file:/C:/Program%20Files%20(x86)/Neo4j%20Community/jre/lib/ext/sunpkcs11.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\rt.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]:  [bootstrap] C:\Program Files (x86)\Neo4j Community\jre\lib\jfr.jar
+2015-07-08 14:53:05.096+0000 INFO  [o.n.k.i.DiagnosticsManager]: Library path:
+2015-07-08 14:53:05.097+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Windows\System32
+2015-07-08 14:53:05.097+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Windows
+2015-07-08 14:53:05.097+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Windows\System32\wbem
+2015-07-08 14:53:05.098+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Windows\System32\WindowsPowerShell\v1.0
+2015-07-08 14:53:05.098+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\AMD\ATI.ACE\Core-Static
+2015-07-08 14:53:05.098+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files\Microsoft\Web Platform Installer
+2015-07-08 14:53:05.098+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0
+2015-07-08 14:53:05.099+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files\Microsoft SQL Server\110\Tools\Binn
+2015-07-08 14:53:05.099+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files\TortoiseGit\bin
+2015-07-08 14:53:05.099+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit
+2015-07-08 14:53:05.099+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files\Microsoft SQL Server\110\DTS\Binn
+2015-07-08 14:53:05.114+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn
+2015-07-08 14:53:05.114+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio
+2015-07-08 14:53:05.115+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies
+2015-07-08 14:53:05.115+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn
+2015-07-08 14:53:05.115+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Skype\Phone
+2015-07-08 14:53:05.115+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0
+2015-07-08 14:53:05.116+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files\Microsoft SQL Server\120\Tools\Binn
+2015-07-08 14:53:05.116+0000 INFO  [o.n.k.i.DiagnosticsManager]: C:\Program Files (x86)\Neo4j Community\jre\bin
+2015-07-08 14:53:05.116+0000 INFO  [o.n.k.i.DiagnosticsManager]: System.properties:
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.moduleName = C:\Program Files (x86)\Neo4j Community\bin\neo4j-community.exe
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.processCommFile = C:\Users\HAICON~1\AppData\Local\Temp\e4j_p4680.tmp
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.semaphoreName = Local\c:_program_files_(x86)_neo4j_community_bin_neo4j-community.exe
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.boot.library.path = c:\program files (x86)\neo4j community\jre\bin
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.consoleCodepage = cp0
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: path.separator = ;
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: file.encoding.pkg = sun.io
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.country = US
+2015-07-08 14:53:05.129+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.script = 
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.os.patch.level = 
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: install4j.exeDir = C:\Program Files (x86)\Neo4j Community\bin\
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.dir = C:\Program Files (x86)\Neo4j Community\bin
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: neo4j.ext.udc.source = desktop
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.variant = 
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.tempDir = 
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.jnu.encoding = Cp1252
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.awt.enableExtraMouseButtons = true
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: install4j.launcherId = 24
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.management.compiler = HotSpot Client Compiler
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.isInstall4j = true
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: install4j.swt = false
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.home = C:\Users\haicon2321993
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.timezone = Asia/Bangkok
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: file.encoding = Cp1252
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.name = haicon2321993
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.java.command = C:\Program Files (x86)\Neo4j Community\bin\neo4j-community.exe
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.arch.data.model = 32
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.launchName = C:\Program Files (x86)\Neo4j Community\bin\neo4j-community.exe
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: user.language = en
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: awt.toolkit = sun.awt.windows.WToolkit
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: exe4j.unextractedPosition = 0
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: install4j.appDir = C:\Program Files (x86)\Neo4j Community\
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: file.separator = \
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.io.unicode.encoding = UnicodeLittle
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.cpu.endian = little
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.desktop = windows
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: sun.cpu.isalist = pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86
+2015-07-08 14:53:05.130+0000 INFO  [o.n.k.i.DiagnosticsManager]: Network information:
+2015-07-08 14:53:05.565+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Software Loopback Interface 1:
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: 127.0.0.1
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: 0:0:0:0:0:0:0:1
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (L2TP):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (SSTP):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (IKEv2):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (PPTP):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (PPPOE):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (IP):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (IPv6):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (Network Monitor):
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Kernel Debug Network Adapter:
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface RAS Async Adapter:
+2015-07-08 14:53:05.566+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Intel(R) Centrino(R) Wireless-N 1030:
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Realtek PCIe GBE Family Controller:
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Bluetooth Device (RFCOMM Protocol TDI):
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Bluetooth Device (Personal Area Network):
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: fe80:0:0:0:d9d8:9531:d4a8:7b09%15
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft ISATAP Adapter:
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Teredo Tunneling Pseudo-Interface:
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: fe80:0:0:0:0:100:7f:fffe%17
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft ISATAP Adapter #2:
+2015-07-08 14:53:05.567+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft ISATAP Adapter #3:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Hosted Network Virtual Adapter:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft ISATAP Adapter #4:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: fe80:0:0:0:0:5efe:a14:589%21
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft ISATAP Adapter #5:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Intel(R) 82566DM-2 Gigabit Network Connection:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Hyper-V Network Switch Default Miniport:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Switch Extension Adapter:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #2:
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: fe80:0:0:0:5c8e:12c6:983b:3602%26
+2015-07-08 14:53:05.568+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Switch Extension Adapter #2:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Network Adapter Multiplexor Default Miniport:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Network Adapter Multiplexor Driver:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #3:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: 10.20.5.137
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]:     address: fe80:0:0:0:2c12:f350:5a2d:8699%30
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (IP)-QoS Packet Scheduler-0000:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Switch Extension Adapter #2-WFP vSwitch Layers LightWeight Filter-0000:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Switch Extension Adapter-WFP vSwitch Layers LightWeight Filter-0000:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #2-QoS Packet Scheduler-0000:
+2015-07-08 14:53:05.569+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #2-WFP 802.3 MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #2-WFP Native MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (IPv6)-QoS Packet Scheduler-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Realtek PCIe GBE Family Controller-WFP Native MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Intel(R) Centrino(R) Wireless-N 1030-Virtual WiFi Filter Driver-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Intel(R) Centrino(R) Wireless-N 1030-WFP Native MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #3-QoS Packet Scheduler-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #3-WFP 802.3 MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Hyper-V Virtual Ethernet Adapter #3-WFP Native MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Intel(R) Centrino(R) Wireless-N 1030-Native WiFi Filter Driver-0000:
+2015-07-08 14:53:05.570+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Network Adapter Multiplexor Driver-Microsoft Network Bridge-0000:
+2015-07-08 14:53:05.571+0000 INFO  [o.n.k.i.DiagnosticsManager]: Interface Microsoft Network Adapter Multiplexor Driver-WFP Native MAC Layer LightWeight Filter-0000:
+2015-07-08 14:53:05.571+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- INITIALIZED diagnostics END ---
+2015-07-08 14:53:06.630+0000 INFO  [o.n.k.NeoStoreDataSource]: Opened logical log [F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.transaction.db.3] version=3, lastTxId=51 (clean)
+2015-07-08 14:53:06.658+0000 INFO  [o.n.k.KernelHealth]: Kernel health set to OK
+2015-07-08 14:53:09.981+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for KernelDiagnostics:Versions START ---
+2015-07-08 14:53:09.982+0000 INFO  [o.n.k.i.DiagnosticsManager]: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId{creationTime=1436263546746, randomId=-3857694192966228083, storeVersion=14969031248344582, upgradeTime=1436263546746, upgradeId=1}
+2015-07-08 14:53:09.982+0000 INFO  [o.n.k.i.DiagnosticsManager]: Kernel version: Neo4j Desktop (neo4j-desktop), version: 2.2.2
+2015-07-08 14:53:09.983+0000 INFO  [o.n.k.i.DiagnosticsManager]: Neo4j component versions:
+2015-07-08 14:53:09.988+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-lucene-index), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.988+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-cypher-compiler-2.1), version: 2.2.2; revision: 2.1.8:2.1-maint:687/5c83ce3a5ddf33259593f719153ce71a6fe89fc7
+2015-07-08 14:53:09.988+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-import-tool), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.988+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-cypher-compiler-2.2), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.988+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-graph-algo), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.988+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-consistency-check), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.989+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-cypher-compiler-2.0), version: 2.2.2; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-07-08 14:53:09.989+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-cypher-compiler-1.9), version: 2.2.2; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-07-08 14:53:09.989+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-udc), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.989+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-jmx), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.989+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-graph-matching), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.989+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (server-api), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.990+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-desktop), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.990+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-cypher), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.990+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-server), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.990+0000 INFO  [o.n.k.i.DiagnosticsManager]:   Neo4j Desktop (neo4j-shell), version: 2.2.2; revision: 2.2.2:2.2:973/0ee8628da67da8c582a299d6aa109768be6886d7
+2015-07-08 14:53:09.990+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for KernelDiagnostics:Versions END ---
+2015-07-08 14:53:09.995+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for NEO_STORE_VERSIONS START ---
+2015-07-08 14:53:09.996+0000 INFO  [o.n.k.i.DiagnosticsManager]: Store versions:
+2015-07-08 14:53:09.996+0000 INFO  [o.n.k.i.DiagnosticsManager]: Store versions:
+2015-07-08 14:53:09.996+0000 INFO  [o.n.k.i.DiagnosticsManager]:   NeoStore v0.A.5
+2015-07-08 14:53:09.996+0000 INFO  [o.n.k.i.DiagnosticsManager]:   SchemaStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   NodeStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   RelationshipStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   RelationshipTypeStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   LabelTokenStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   PropertyStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   PropertyIndexStore v0.A.5
+2015-07-08 14:53:09.997+0000 INFO  [o.n.k.i.DiagnosticsManager]:   StringPropertyStore v0.A.5
+2015-07-08 14:53:09.998+0000 INFO  [o.n.k.i.DiagnosticsManager]:   ArrayPropertyStore v0.A.5
+2015-07-08 14:53:09.998+0000 INFO  [o.n.k.i.DiagnosticsManager]:   RelationshipGroupStore v0.A.5
+2015-07-08 14:53:09.998+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for NEO_STORE_VERSIONS END ---
+2015-07-08 14:53:09.998+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for NEO_STORE_ID_USAGE START ---
+2015-07-08 14:53:09.998+0000 INFO  [o.n.k.i.DiagnosticsManager]: Id usage:
+2015-07-08 14:53:09.998+0000 INFO  [o.n.k.i.DiagnosticsManager]: Id usage:
+2015-07-08 14:53:09.999+0000 INFO  [o.n.k.i.DiagnosticsManager]:   SchemaStore: used=1 high=0
+2015-07-08 14:53:09.999+0000 INFO  [o.n.k.i.DiagnosticsManager]:   NodeStore: used=178 high=177
+2015-07-08 14:53:10.000+0000 INFO  [o.n.k.i.DiagnosticsManager]:   RelationshipStore: used=170 high=169
+2015-07-08 14:53:10.000+0000 INFO  [o.n.k.i.DiagnosticsManager]:   RelationshipTypeStore: used=3 high=2
+2015-07-08 14:53:10.001+0000 INFO  [o.n.k.i.DiagnosticsManager]:   LabelTokenStore: used=4 high=3
+2015-07-08 14:53:10.002+0000 INFO  [o.n.k.i.DiagnosticsManager]:   PropertyStore: used=46 high=45
+2015-07-08 14:53:10.002+0000 INFO  [o.n.k.i.DiagnosticsManager]:   PropertyIndexStore: used=15 high=14
+2015-07-08 14:53:10.003+0000 INFO  [o.n.k.i.DiagnosticsManager]:   StringPropertyStore: used=23 high=22
+2015-07-08 14:53:10.003+0000 INFO  [o.n.k.i.DiagnosticsManager]:   ArrayPropertyStore: used=1 high=0
+2015-07-08 14:53:10.003+0000 INFO  [o.n.k.i.DiagnosticsManager]:   RelationshipGroupStore: used=1 high=0
+2015-07-08 14:53:10.003+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for NEO_STORE_ID_USAGE END ---
+2015-07-08 14:53:10.004+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles START ---
+2015-07-08 14:53:10.010+0000 INFO  [o.n.k.i.DiagnosticsManager]: Disk space on partition (Total / Free / Free %): 38066561024 / 6620725248 / 17
+Storage files: (filename : modification date - size)
+2015-07-08 14:53:10.014+0000 INFO  [o.n.k.i.DiagnosticsManager]:   dbms:
+2015-07-08 14:53:10.015+0000 INFO  [o.n.k.i.DiagnosticsManager]:     auth: 2015-07-07T21:30:00+0700 - 114.00 B
+2015-07-08 14:53:10.017+0000 INFO  [o.n.k.i.DiagnosticsManager]:   - Total: 2015-07-07T21:30:00+0700 - 114.00 B
+2015-07-08 14:53:10.017+0000 INFO  [o.n.k.i.DiagnosticsManager]:   index:
+2015-07-08 14:53:10.018+0000 INFO  [o.n.k.i.DiagnosticsManager]:   - Total: 2015-07-07T21:37:11+0700 - 0.00 B
+2015-07-08 14:53:10.019+0000 INFO  [o.n.k.i.DiagnosticsManager]:   lock: 2015-07-08T21:53:05+0700 - 0.00 B
+2015-07-08 14:53:10.033+0000 INFO  [o.n.k.i.DiagnosticsManager]:   messages.log: 2015-07-08T21:53:08+0700 - 197.11 kB
+2015-07-08 14:53:10.034+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neo4j.properties: 2015-07-07T21:30:00+0700 - 1.76 kB
+2015-07-08 14:53:10.035+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore: 2015-07-08T21:53:06+0700 - 99.00 B
+2015-07-08 14:53:10.035+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.counts.db.a: 2015-07-08T02:49:30+0700 - 850.00 B
+2015-07-08 14:53:10.035+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.counts.db.b: 2015-07-07T21:37:11+0700 - 178.00 B
+2015-07-08 14:53:10.037+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.id: 2015-07-08T13:06:05+0700 - 9.00 B
+2015-07-08 14:53:10.037+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.labeltokenstore.db: 2015-07-08T21:53:06+0700 - 20.00 B
+2015-07-08 14:53:10.039+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.labeltokenstore.db.id: 2015-07-08T13:06:02+0700 - 9.00 B
+2015-07-08 14:53:10.039+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.labeltokenstore.db.names: 2015-07-08T21:53:06+0700 - 190.00 B
+2015-07-08 14:53:10.041+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.labeltokenstore.db.names.id: 2015-07-08T13:06:02+0700 - 9.00 B
+2015-07-08 14:53:10.042+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.nodestore.db: 2015-07-08T21:53:06+0700 - 2.61 kB
+2015-07-08 14:53:10.048+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.nodestore.db.id: 2015-07-08T13:06:04+0700 - 1.20 kB
+2015-07-08 14:53:10.048+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.nodestore.db.labels: 2015-07-08T21:53:06+0700 - 68.00 B
+2015-07-08 14:53:10.049+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.nodestore.db.labels.id: 2015-07-08T13:06:04+0700 - 9.00 B
+2015-07-08 14:53:10.050+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db: 2015-07-08T21:53:06+0700 - 1.84 kB
+2015-07-08 14:53:10.050+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.arrays: 2015-07-08T21:53:06+0700 - 128.00 B
+2015-07-08 14:53:10.051+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.arrays.id: 2015-07-08T13:06:03+0700 - 9.00 B
+2015-07-08 14:53:10.052+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.id: 2015-07-08T13:06:04+0700 - 9.00 B
+2015-07-08 14:53:10.053+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.index: 2015-07-08T21:53:06+0700 - 135.00 B
+2015-07-08 14:53:10.054+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.index.id: 2015-07-08T13:06:03+0700 - 9.00 B
+2015-07-08 14:53:10.055+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.index.keys: 2015-07-08T21:53:06+0700 - 608.00 B
+2015-07-08 14:53:10.056+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.index.keys.id: 2015-07-08T13:06:03+0700 - 9.00 B
+2015-07-08 14:53:10.057+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.strings: 2015-07-08T21:53:06+0700 - 2.88 kB
+2015-07-08 14:53:10.063+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.propertystore.db.strings.id: 2015-07-08T13:06:03+0700 - 89.00 B
+2015-07-08 14:53:10.063+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshipgroupstore.db: 2015-07-08T21:53:06+0700 - 25.00 B
+2015-07-08 14:53:10.064+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshipgroupstore.db.id: 2015-07-08T13:06:05+0700 - 9.00 B
+2015-07-08 14:53:10.065+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshipstore.db: 2015-07-08T21:53:06+0700 - 5.64 kB
+2015-07-08 14:53:10.071+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshipstore.db.id: 2015-07-08T13:06:04+0700 - 1.13 kB
+2015-07-08 14:53:10.072+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshiptypestore.db: 2015-07-08T21:53:06+0700 - 15.00 B
+2015-07-08 14:53:10.073+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshiptypestore.db.id: 2015-07-08T13:06:02+0700 - 9.00 B
+2015-07-08 14:53:10.073+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshiptypestore.db.names: 2015-07-08T21:53:06+0700 - 152.00 B
+2015-07-08 14:53:10.074+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.relationshiptypestore.db.names.id: 2015-07-08T13:06:02+0700 - 9.00 B
+2015-07-08 14:53:10.074+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.schemastore.db: 2015-07-08T21:53:06+0700 - 64.00 B
+2015-07-08 14:53:10.075+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.schemastore.db.id: 2015-07-08T13:06:05+0700 - 9.00 B
+2015-07-08 14:53:10.076+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.transaction.db.0: 2015-07-07T21:30:00+0700 - 1.44 kB
+2015-07-08 14:53:10.076+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.transaction.db.1: 2015-07-08T02:07:34+0700 - 131.44 kB
+2015-07-08 14:53:10.077+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.transaction.db.2: 2015-07-08T21:37:54+0700 - 16.00 B
+2015-07-08 14:53:10.077+0000 INFO  [o.n.k.i.DiagnosticsManager]:   neostore.transaction.db.3: 2015-07-08T21:53:06+0700 - 16.00 B
+2015-07-08 14:53:10.077+0000 INFO  [o.n.k.i.DiagnosticsManager]:   rrd: 2015-07-07T21:30:00+0700 - 1.93 MB
+2015-07-08 14:53:10.077+0000 INFO  [o.n.k.i.DiagnosticsManager]:   schema:
+2015-07-08 14:53:10.078+0000 INFO  [o.n.k.i.DiagnosticsManager]:     label:
+2015-07-08 14:53:10.078+0000 INFO  [o.n.k.i.DiagnosticsManager]:       lucene:
+2015-07-08 14:53:10.078+0000 INFO  [o.n.k.i.DiagnosticsManager]:         _j.cfs: 2015-07-08T02:07:35+0700 - 305.00 B
+2015-07-08 14:53:10.079+0000 INFO  [o.n.k.i.DiagnosticsManager]:         segments.gen: 2015-07-08T02:49:30+0700 - 20.00 B
+2015-07-08 14:53:10.079+0000 INFO  [o.n.k.i.DiagnosticsManager]:         segments_3: 2015-07-08T02:49:30+0700 - 215.00 B
+2015-07-08 14:53:10.079+0000 INFO  [o.n.k.i.DiagnosticsManager]:         write.lock: 2015-07-08T21:53:06+0700 - 0.00 B
+2015-07-08 14:53:10.080+0000 INFO  [o.n.k.i.DiagnosticsManager]:       - Total: 2015-07-08T21:53:06+0700 - 540.00 B
+2015-07-08 14:53:10.080+0000 INFO  [o.n.k.i.DiagnosticsManager]:     - Total: 2015-07-07T21:37:11+0700 - 540.00 B
+2015-07-08 14:53:10.080+0000 INFO  [o.n.k.i.DiagnosticsManager]:   - Total: 2015-07-07T21:30:00+0700 - 540.00 B
+2015-07-08 14:53:10.081+0000 INFO  [o.n.k.i.DiagnosticsManager]:   store_lock: 2015-07-07T21:30:00+0700 - 0.00 B
+2015-07-08 14:53:10.081+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles END ---
+2015-07-08 14:53:10.161+0000 INFO  [o.n.k.EmbeddedGraphDatabase]: Database is now ready
+2015-07-08 14:53:10.161+0000 INFO  [o.n.s.d.LifecycleManagingDatabase]: Successfully started database
+2015-07-08 14:53:10.182+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- SERVER STARTED START ---
+2015-07-08 14:53:10.360+0000 INFO  [o.n.s.CommunityNeoServer]: Starting HTTP on port :7474 with 4 threads available
+2015-07-08 14:53:11.097+0000 INFO  [o.n.s.w.Jetty9WebServer]: Mounting static content at [/webadmin] from [webadmin-html]
+2015-07-08 14:53:11.159+0000 INFO  [o.n.s.w.Jetty9WebServer]: Mounting static content at [/browser] from [browser]
+2015-07-08 14:53:12.699+0000 INFO  [o.n.s.CommunityNeoServer]: Server started on: http://localhost:7474/
+2015-07-08 14:53:12.699+0000 INFO  [o.n.s.CommunityNeoServer]: Remote interface ready and available at [http://localhost:7474/]
+2015-07-08 14:53:12.699+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- SERVER STARTED END ---
+2015-07-08 15:14:28.010+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob]: Index population started: [:Person(id) [provider: {key=lucene, version=1.0}]]
+2015-07-08 15:14:28.362+0000 INFO  [o.n.k.i.a.KernelSchemaStateStore]: Schema state store has been cleared.
+2015-07-08 15:14:28.416+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob]: Index population completed. Index is now online: [:Person(id) [provider: {key=lucene, version=1.0}]]
+2015-07-08 15:15:46.938+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob]: Index population started: [:Person(person_id) [provider: {key=lucene, version=1.0}]]
+2015-07-08 15:15:47.182+0000 INFO  [o.n.k.i.a.KernelSchemaStateStore]: Schema state store has been cleared.
+2015-07-08 15:15:47.185+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob]: Index population completed. Index is now online: [:Person(person_id) [provider: {key=lucene, version=1.0}]]
+2015-07-08 17:15:23.594+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for 252ms.
+2015-07-08 17:18:27.177+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:18:27.178+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:18:27.178+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:18:27.178+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:25:44.538+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:'0', email: 'haicon232@yahoo.com.vn'})
+RETURN u
+2015-07-08 17:39:14.388+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:'0', email: 'Luc@fpt.com.vn'})
+RETURN u
+2015-07-08 17:39:14.389+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:39:14.389+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:39:14.389+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:39:14.390+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOSTRING0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:39:45.633+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:'0', email: 'haicon232@yahoo.com.vn'})
+RETURN u
+2015-07-08 17:43:51.874+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(RelationshipChain(NodePattern(Some(Identifier(a)),List(),None,true),RelationshipPattern(Some(Identifier(r)),false,List(),None,None,BOTH),NodePattern(Some(Identifier(b)),List(),None,true))))),List(),Some(Where(And(In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(a))),Collection(List(Parameter(  AUTOINT0)))),In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(b))),Collection(List(Parameter(  AUTOINT1)))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(r),Identifier(r)))),None,None,None))))
+2015-07-08 17:43:51.874+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(RelationshipChain(NodePattern(Some(Identifier(a)),List(),None,true),RelationshipPattern(Some(Identifier(r)),false,List(),None,None,BOTH),NodePattern(Some(Identifier(b)),List(),None,true))))),List(),Some(Where(And(In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(a))),Collection(List(Parameter(  AUTOINT0)))),In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(b))),Collection(List(Parameter(  AUTOINT1)))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(r),Identifier(r)))),None,None,None))))
+2015-07-08 17:43:51.875+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(RelationshipChain(NodePattern(Some(Identifier(a)),List(),None,true),RelationshipPattern(Some(Identifier(r)),false,List(),None,None,BOTH),NodePattern(Some(Identifier(b)),List(),None,true))))),List(),Some(Where(And(In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(a))),Collection(List(Parameter(  AUTOINT0)))),In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(b))),Collection(List(Parameter(  AUTOINT1)))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(r),Identifier(r)))),None,None,None))))
+2015-07-08 17:43:51.876+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(RelationshipChain(NodePattern(Some(Identifier(a)),List(),None,true),RelationshipPattern(Some(Identifier(r)),false,List(),None,None,BOTH),NodePattern(Some(Identifier(b)),List(),None,true))))),List(),Some(Where(And(In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(a))),Collection(List(Parameter(  AUTOINT0)))),In(FunctionInvocation(FunctionName(id),false,Vector(Identifier(b))),Collection(List(Parameter(  AUTOINT1)))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(r),Identifier(r)))),None,None,None))))
+2015-07-08 17:55:18.530+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:1, email: 'haicon2321993@gmail.com'})
+RETURN u
+2015-07-08 17:55:18.534+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:55:18.535+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:55:18.536+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:55:18.538+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:57:27.107+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:1, email: 'haicon2321993@gmail.com'})
+RETURN u
+2015-07-08 17:57:27.111+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:57:27.112+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:57:27.114+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 17:57:27.114+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:00:40.871+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:1, email: 'haicon2321993@gmail.com'})
+RETURN u
+2015-07-08 19:00:40.872+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:00:40.872+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:00:40.872+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:00:40.872+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:01:52.917+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: CYPHER 2.2 MATCH (u:user {typeID:1, email: 'haicon2321993@gmail.com'})
+RETURN u
+2015-07-08 19:01:52.919+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:01:52.920+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:01:52.921+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:01:52.922+0000 INFO  [o.n.k.i.q.QueryExecutionEngine]: Discarded stale query from the query cache: Query(None,SingleQuery(List(Match(false,Pattern(List(EveryPath(NodePattern(Some(Identifier(u)),List(),None,false)))),List(),Some(Where(And(And(Equals(Property(Identifier(u),PropertyKeyName(typeID)),Parameter(  AUTOINT0)),Equals(Property(Identifier(u),PropertyKeyName(email)),Parameter(  AUTOSTRING1))),HasLabels(Identifier(u),List(LabelName(user))))))), Return(false,ReturnItems(false,List(AliasedReturnItem(Identifier(u),Identifier(u)))),None,None,None))))
+2015-07-08 19:08:34.521+0000 INFO  [o.n.s.CommunityNeoServer]: Successfully shutdown Neo4j Server.
+2015-07-08 19:08:34.522+0000 INFO  [o.n.k.EmbeddedGraphDatabase]: Shutdown started
+2015-07-08 19:08:34.523+0000 INFO  [o.n.k.EmbeddedGraphDatabase]: Database is now unavailable
+2015-07-08 19:08:34.664+0000 INFO  [o.n.k.i.s.StoreFactory]: About to rotate counts store at transaction 103 to [F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.b], from [F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.a].
+2015-07-08 19:08:34.685+0000 INFO  [o.n.k.i.s.StoreFactory]: Successfully rotated counts store at transaction 103 to [F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.b], from [F:\Capstone Project\Project\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.a].
+2015-07-08 19:08:40.039+0000 INFO  [o.n.k.NeoStoreDataSource]: NeoStore closed
+2015-07-08 19:08:40.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STOPPING diagnostics START ---
+2015-07-08 19:08:40.040+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STOPPING diagnostics END ---
+2015-07-08 19:08:40.045+0000 INFO  [o.n.s.d.LifecycleManagingDatabase]: Successfully stopped database
+2015-07-08 19:08:40.045+0000 INFO  [o.n.s.CommunityNeoServer]: Successfully shutdown database.
