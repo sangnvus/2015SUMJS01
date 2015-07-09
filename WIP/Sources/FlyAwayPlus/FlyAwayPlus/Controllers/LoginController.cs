@@ -22,7 +22,7 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Register(User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 user.typeID = 0; // Fap Account
 
@@ -50,7 +50,7 @@ namespace FlyAwayPlus.Controllers
                 // Set the auth cookie
                 Session["authenicated"] = true;
                 Session["username"] = user.firstName + " " + user.lastName;
-                Session["user"] = user;
+                UserHelpers.setCurrentUser(Session, user);
             }
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -61,7 +61,7 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Login(User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 user.typeID = 0;
 
@@ -86,7 +86,7 @@ namespace FlyAwayPlus.Controllers
         {
             Session["authenicated"] = "";
             Session["username"] = "";
-            Session["user"] = "";
+            UserHelpers.setCurrentUser(Session, null);
             return RedirectToAction("Index", "Home");
         }
 
@@ -164,7 +164,7 @@ namespace FlyAwayPlus.Controllers
             // Set the auth cookie
             Session["authenicated"] = true;
             Session["username"] = newUser.firstName + " " + newUser.lastName;
-            Session["user"] = newUser;
+            UserHelpers.setCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);
             //SessionHelper.RenewCurrentUser();

@@ -10,5 +10,6 @@ namespace FlyAwayPlus.Models
         public int postID { get; set; }
         public string content { get; set; }
         public string dateCreated { get; set; }
+        public string privacy { get; set; }
     }
 }

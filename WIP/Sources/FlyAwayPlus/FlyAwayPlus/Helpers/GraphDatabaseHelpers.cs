@@ -52,5 +52,79 @@ namespace FlyAwayPlus.Helpers
 
             return uniqueID;
         }
+
+        public static Post findPost(int id, User user)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - post of current user
+                 *     - post with privacy = 'public'
+                 *     - post of friend with privacy = 'friend'
+                 * 
+                 * match(u1:user {userID:@userID})-[:friend]->(u2:user)
+                   with u1, u2
+                   match(p:post {postID:@postID}) 
+                   where (u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')
+                   return p
+                 */
+            Post p = null;
+            client.Connect();
+            p = client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
+                            .With("u1, u2")
+                            .Match("(p:post {postID:" + id + "})")
+                            .Where("(u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')")
+                            .ReturnDistinct<Post>("p")
+                            .Results.Single();
+
+            return p;
+        }
+
+        public static User searchUser(Post post) {
+            User user = null;
+            client.Connect();
+            user = client.Cypher.Match("(u:user)-[:has]->(p:post)")
+                            .Where("p.postID=" + post.postID)
+                            .ReturnDistinct<User>("u")
+                            .Results.Single();
+            return user;
+        }
+
+        public static List<Comment> findComment(Post post)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - comment of post
+                 * 
+                 * MATCH(p:post {postID:@postID})-[:has]->(c:comment)
+                    return c
+                 */
+            List<Comment> list = null;
+            client.Connect();
+            list = client.Cypher.Match("(p:post {postID:" + post.postID + "})-[:has]->(c:comment)")
+                            .Return<Comment>("c")
+                            .OrderBy("c.dateCreated")
+                            .Results.ToList();
+            return list;
+        }
+
+        public static User findUser(Comment comment)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - comment of post
+                 * 
+                 * MATCH(u:user)-[:has]->(c:comment{commentID:@commentID})
+                    return u
+                 */
+            User user = null;
+            client.Connect();
+            user = client.Cypher.Match("(u:user)-[:has]->(c:comment{commentID:" + comment.commentID + "})")
+                            .Return<User>("u")
+                            .Results.Single();
+            return user;
+        }
     }
 }

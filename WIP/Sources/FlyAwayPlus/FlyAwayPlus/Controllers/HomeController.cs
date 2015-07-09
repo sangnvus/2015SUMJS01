@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FlyAwayPlus.Models;
 using Neo4jClient;
 using System.Configuration;
+using FlyAwayPlus.Helpers;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -13,8 +14,7 @@ namespace FlyAwayPlus.Controllers
     {
         public ActionResult Index()
         {
-            var user_session = Session["user"];
-            User user = null;
+            User user = UserHelpers.getCurrentUser(Session);
 
             List<Post> listPost = new List<Post>();
             Photo Photo = null;
@@ -22,25 +22,24 @@ namespace FlyAwayPlus.Controllers
             Dictionary<string, Photo> listPhotoDict = new Dictionary<string, Photo>();
             Dictionary<string, Place> listPlaceDict = new Dictionary<string, Place>();
 
-            if (user_session == null || user_session.ToString().Trim().Equals(""))
+            if (user == null)
             {
                 // TODO
             }
             else
             {
-                user = (User)user_session;
                 GraphClient client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
                 client.Connect();
 
-                listPost = client.Cypher.Match("(u:user {userID:'" + user.userID + "'})-[:has]->(p:post)")
+                listPost = client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:has]->(p:post)")
                             .Return<Post>("p").Results.OrderBy(p => p.postID).ToList();
 
                 foreach (Post po in listPost)
                 {
-                    Photo = client.Cypher.Match("(po:post {postID:'" + po.postID + "'})-[:has]->(ph:photo)")
+                    Photo = client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:has]->(ph:photo)")
                             .Return<Photo>("ph").Results.OrderBy(ph => ph.photoID).ToList().First();
 
-                    Place = client.Cypher.Match("(po:post {postID:'" + po.postID + "'})-[:at]->(pl:place)")
+                    Place = client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:at]->(pl:place)")
                             .Return<Place>("pl").Results.OrderBy(pl => pl.placeID).ToList().First();
 
                     listPhotoDict.Add(po.postID.ToString(), Photo);
