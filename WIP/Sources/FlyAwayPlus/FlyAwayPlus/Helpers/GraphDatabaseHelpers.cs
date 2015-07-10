@@ -82,8 +82,8 @@ namespace FlyAwayPlus.Helpers
                    return p
                  */
             Post p = null;
-            client.Connect();
-            p = client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
+            Client.Connect();
+            p = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
                             .With("u1, u2")
                             .Match("(p:post {postID:" + id + "})")
                             .Where("(u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')")
@@ -96,8 +96,8 @@ namespace FlyAwayPlus.Helpers
         public static User searchUser(Post post)
         {
             User user = null;
-            client.Connect();
-            user = client.Cypher.Match("(u:user)-[:has]->(p:post)")
+            Client.Connect();
+            user = Client.Cypher.Match("(u:user)-[:has]->(p:post)")
                             .Where("p.postID=" + post.postID)
                             .ReturnDistinct<User>("u")
                             .Results.Single();
@@ -115,8 +115,8 @@ namespace FlyAwayPlus.Helpers
                     return c
                  */
             List<Comment> list = null;
-            client.Connect();
-            list = client.Cypher.Match("(p:post {postID:" + post.postID + "})-[:has]->(c:comment)")
+            Client.Connect();
+            list = Client.Cypher.Match("(p:post {postID:" + post.postID + "})-[:has]->(c:comment)")
                             .Return<Comment>("c")
                             .OrderBy("c.dateCreated")
                             .Results.ToList();
@@ -134,8 +134,8 @@ namespace FlyAwayPlus.Helpers
                     return u
                  */
             User user = null;
-            client.Connect();
-            user = client.Cypher.Match("(u:user)-[:has]->(c:comment{commentID:" + comment.commentID + "})")
+            Client.Connect();
+            user = Client.Cypher.Match("(u:user)-[:has]->(c:comment{commentID:" + comment.commentID + "})")
                             .Return<User>("u")
                             .Results.Single();
             return user;
@@ -154,8 +154,8 @@ namespace FlyAwayPlus.Helpers
             User user = null;
             try
             {
-                client.Connect();
-                user = client.Cypher.Match("(u:user {userID:" + id + "})")
+                Client.Connect();
+                user = Client.Cypher.Match("(u:user {userID:" + id + "})")
                                 .Return<User>("u")
                                 .Results.Single();
             }
@@ -178,8 +178,8 @@ namespace FlyAwayPlus.Helpers
                     return u
                  */
             User user = null;
-            client.Connect();
-            user = client.Cypher.Match("(u:user)-[:has]->(p:post{postID:" + post.postID + "})")
+            Client.Connect();
+            user = Client.Cypher.Match("(u:user)-[:has]->(p:post{postID:" + post.postID + "})")
                             .Return<User>("u")
                             .Results.Single();
             return user;
@@ -199,8 +199,8 @@ namespace FlyAwayPlus.Helpers
                  */
 
             List<Post> listPost = null;
-            client.Connect();
-            listPost = client.Cypher.Match("(p:post)")
+            Client.Connect();
+            listPost = Client.Cypher.Match("(p:post)")
                             .Where("p.privacy='public'")
                             .Return<Post>("p")
                             .OrderByDescending("p.dateCreated")
@@ -221,8 +221,8 @@ namespace FlyAwayPlus.Helpers
                  */
 
             Photo photo = null;
-            client.Connect();
-            photo = client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:has]->(ph:photo)")
+            Client.Connect();
+            photo = Client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:has]->(ph:photo)")
                             .Return<Photo>("ph")
                             .OrderBy("ph.photoID")
                             .Results
@@ -244,8 +244,8 @@ namespace FlyAwayPlus.Helpers
                  */
 
             Place place = null;
-            client.Connect();
-            place = client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:at]->(pl:place)")
+            Client.Connect();
+            place = Client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:at]->(pl:place)")
                             .Return<Place>("pl")
                             .OrderBy("pl.placeID")
                             .Results
@@ -270,8 +270,8 @@ namespace FlyAwayPlus.Helpers
                    return p
                  */
             List<Post> listPost = null;
-            client.Connect();
-            listPost = client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
+            Client.Connect();
+            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
                             .With("u1, u2")
                             .Match("(p:post)")
                             .Where("(u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')")
@@ -293,8 +293,8 @@ namespace FlyAwayPlus.Helpers
                    return p
                  */
             List<Post> listPost = null;
-            client.Connect();
-            listPost = client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:has]->(p:post)")
+            Client.Connect();
+            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:has]->(p:post)")
                             .ReturnDistinct<Post>("p")
                             .OrderByDescending("p.dateCreated")
                             .Results.ToList();
@@ -316,8 +316,8 @@ namespace FlyAwayPlus.Helpers
                     return p
                  */
             List<Post> listPost = null;
-            client.Connect();
-            listPost = client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "}), (u2:user {userID:" + currentUser.userID + "})")
+            Client.Connect();
+            listPost = Client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "}), (u2:user {userID:" + currentUser.userID + "})")
                             .With("u1, u2")
                             .Match("(p:post)<-[:has]-u1")
                             .Where("p.privacy='public' or (p.privacy='friend' and u1-[:friend]->u2)")
@@ -340,8 +340,8 @@ namespace FlyAwayPlus.Helpers
                     return u2;
                  */
             List<User> listUser = null;
-            client.Connect();
-            listUser = client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
+            Client.Connect();
+            listUser = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
 

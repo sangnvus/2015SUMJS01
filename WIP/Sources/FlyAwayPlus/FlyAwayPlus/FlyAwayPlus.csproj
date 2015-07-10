@@ -198,6 +198,7 @@
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Place.cs" />
     <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\Relationships\CommonRelationships.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Video.cs" />
