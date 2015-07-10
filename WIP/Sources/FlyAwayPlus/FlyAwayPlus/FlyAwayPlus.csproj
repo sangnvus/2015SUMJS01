@@ -184,10 +184,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FAPConstants.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
+    <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Helpers\UploadImage\ImageResult.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Photo.cs" />
@@ -205,6 +208,7 @@
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\gridLayout.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
+    <Content Include="Scripts\jquery.geocomplete.js" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\RoomPage\roomDetail.css" />
     <Content Include="Content\speech-buble.css" />
@@ -319,9 +323,11 @@
     <Content Include="Views\Room\RoomList.cshtml" />
     <Content Include="Views\Account\FindPassword.cshtml" />
     <Content Include="Views\Shared\LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_PostPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\UserUpload\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>

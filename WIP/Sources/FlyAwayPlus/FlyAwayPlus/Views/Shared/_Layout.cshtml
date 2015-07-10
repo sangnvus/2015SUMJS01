@@ -7,13 +7,13 @@
     <link href="~/Content/bootflat.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-switch.min.css" rel="stylesheet" />
 
-    
+
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/Scripts/common.js")
     @Scripts.Render("~/Scripts/jquery.validate.js")
     @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
-    
+
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
@@ -33,21 +33,24 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left" style="width:90%">
+                <ul class="nav navbar-nav navbar-left">
                     <li><a class="current" href="../Home/">Home</a></li>
-                    <li><a class="" href="../Explore">Explore</a></li>
-                    <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
-                    @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
-                    {
-                        <li><a class="" data-toggle="modal" data-target="#login-modal">Login</a></li>
-                    }
-                    else
-                    {
-                        <li style="float:right"><a href="/Login/Logout" data-toggle="modal">Log out</a></li>
-                        <li style="float:right"><a href="~/Home/" data-toggle="modal">@Session["username"]</a></li>
-                    }
+                    <li><a class="" href="../LookAround/">Explore</a></li>
                 </ul>
-
+                @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a class="navbar-right" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/Login/Logout">Log out</a></li>
+                        <li><a href="#">@Session["username"]</a></li>
+                    </ul>
+                }
+                @Html.Partial("_PostPartial")
             </div>
         </div>
     </div>
@@ -56,59 +59,6 @@
         <hr />
     </div>
 
-    <div class="modal fade" id="post-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <form action="/PostDetail/" class="share-post-box" enctype="multipart/form-data" method="post">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-paper-plane"></i> Update Status
-                </div>
-
-                <div class="panel-body">
-                    <div class="">
-                        <textarea class="form-control message" cols="40" id="status_message" name="message" placeholder="What's on your mind?" rows="10" style="height: 62px; overflow: hidden;"></textarea>
-                    </div>
-                    <div style="width: 96px; height: 96px; border: 2px dashed #dcdee3; border-radius: 2px; margin-top: 5px;">
-                        <a style="cursor: pointer; display:block; height: 100%; width: 100%; background-image:url('../../Images/upload.png'); background-position: center center; background-repeat: no-repeat; background-size: 20px 20px">
-                            <input style="opacity: 0; cursor: inherit; height:100%; width:100%;" type="file" name="uploadPhoto" title="select one file to upload" />
-                        </a>
-                    </div>
-                </div>
-
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="form-group">
-                                <div class="btn-group">
-                                    <button class="btn btn-default" type="button"><i class="fa fa-map-marker"></i> Location</button>
-                                    <button id="idBtnUploadPhoto" class="btn btn-default" type="button"><i class="fa fa-picture-o"></i> Photo</button>
-                                    <button class="btn btn-default" type="button"><i class="fa fa-video-camera"></i> Video</button>
-
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Privacy
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Public</a></li>
-                                            <li><a href="#">Friends</a></li>
-                                            <li><a href="#">Private</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <input class="btn btn-primary" name="submit" type="submit" value="Post">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
     @Html.Action("LoginPartial", "Login")
 
     @Scripts.Render("~/bundles/bootstrap")

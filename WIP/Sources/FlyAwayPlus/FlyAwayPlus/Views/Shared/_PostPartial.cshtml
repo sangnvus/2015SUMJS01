@@ -1,0 +1,101 @@
+﻿<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+<script src="~/Scripts/jquery.geocomplete.js"></script>
+
+<ul class="nav navbar-nav navbar-left">
+    <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
+</ul>
+
+<div class="modal fade" id="post-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    @using (Html.BeginForm("Add", "Post", FormMethod.Post, new { @class = "share-post-box", @enctype = "multipart/form-data" }))
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-paper-plane"></i> Update Status
+            </div>
+
+            <div class="panel-body">
+                <div class="">
+                    <textarea class="form-control message"
+                              rows="10" cols="40"
+                              id="status_message" name="message"
+                              placeholder="What's on your mind?"
+                              style="height: 62px; overflow: hidden;"></textarea>
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="helper-elements-wrapper">
+                        <div id="id-location-wrapper" class="hidden">
+                            <input class="form-control" id="id-location-textbox" name="location" placeholder="Enter a location" type="text" />
+                            <div class="map-canvas"></div>
+                            <input type="hidden" name="lat" />
+                            <input type="hidden" name="lng" />
+                        </div>
+
+                        <input class="form-control hidden" type="file" id="id-picture-textbox" name="picture" />
+                        <input class="form-control hidden" type="text" id="id-video-textbox" name="location" />
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="btn-group">
+                                <button class="btn btn-default" type="button" id="id-location-button">
+                                    <i class="fa fa-map-marker"></i> Location
+                                </button>
+                                <button class="btn btn-default" type="button" id="id-picture-button">
+                                    <i class="fa fa-picture-o"></i> Photo
+                                </button>
+                                <button class="btn btn-default" type="button" id="id-video-button">
+                                    <i class="fa fa-video-camera"></i> Video
+                                </button>
+
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Privacy
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Public</a></li>
+                                        <li><a href="#">Friends</a></li>
+                                        <li><a href="#">Private</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input class="btn btn-primary" name="submit" type="submit" value="Post">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(function () {
+        $("#id-location-button").click(function () {
+            $("#id-location-wrapper").toggleClass("hidden");
+            $("#id-picture-textbox").removeClass("hidden");
+            $("#id-picture-textbox").addClass("hidden");
+        });
+
+        $("#id-picture-button").click(function () {
+            $("#id-picture-textbox").toggleClass("hidden");
+            $("#id-location-wrapper").removeClass("hidden");
+            $("#id-location-wrapper").addClass("hidden");
+        });
+
+        $("#id-location-textbox").geocomplete({
+            map: ".map-canvas",
+            details: "#id-location-wrapper",
+            location: [21.027764, 105.83416]
+        });
+    });
+</script>

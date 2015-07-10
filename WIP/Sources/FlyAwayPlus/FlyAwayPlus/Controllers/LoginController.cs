@@ -1,12 +1,9 @@
-﻿using Facebook;
+﻿using System;
+using System.Configuration;
+using System.Web.Mvc;
+using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -27,7 +24,7 @@ namespace FlyAwayPlus.Controllers
                 user.typeID = 0; // Fap Account
 
                 // select from DB
-                User newUser = GraphDatabaseHelpers.getUser(user.typeID, user.email);
+                User newUser = GraphDatabaseHelpers.GetUser(user.typeID, user.email);
 
                 /*
                  *  Insert into Graph DB 
@@ -35,12 +32,12 @@ namespace FlyAwayPlus.Controllers
                 if (newUser == null)
                 {
                     user.typeID = 0; // Fap account
-                    user.dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    user.dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                     //user.dateOfBirth = DateTime.Now.ToString();
                     user.status = "active";
 
                     // insert user to Database
-                    GraphDatabaseHelpers.insertUser(user);
+                    GraphDatabaseHelpers.InsertUser(user);
                 }
                 else
                 {
@@ -65,7 +62,7 @@ namespace FlyAwayPlus.Controllers
             {
                 user.typeID = 0;
 
-                var newUser = GraphDatabaseHelpers.getUser(user.typeID, user.email);
+                var newUser = GraphDatabaseHelpers.GetUser(user.typeID, user.email);
 
                 if (newUser == null)
                 {
@@ -137,7 +134,7 @@ namespace FlyAwayPlus.Controllers
             string email = me.email;
 
             // select from DB
-            User newUser = GraphDatabaseHelpers.getUser(1, email); // Facebook account: typeID = 1
+            User newUser = GraphDatabaseHelpers.GetUser(1, email); // Facebook account: typeID = 1
 
             /*
              *  Insert into Graph DB 
@@ -158,7 +155,7 @@ namespace FlyAwayPlus.Controllers
                 newUser.password = "";
 
                 // insert user to Database
-                GraphDatabaseHelpers.insertUser(newUser);
+                GraphDatabaseHelpers.InsertUser(newUser);
             }
 
             // Set the auth cookie
@@ -176,10 +173,12 @@ namespace FlyAwayPlus.Controllers
         {
             get
             {
-                var uriBuilder = new UriBuilder(Request.Url);
-                uriBuilder.Query = null;
-                uriBuilder.Fragment = null;
-                uriBuilder.Path = Url.Action("FacebookCallback");
+                var uriBuilder = new UriBuilder(Request.Url)
+                {
+                    Query = null,
+                    Fragment = null,
+                    Path = Url.Action("FacebookCallback")
+                };
                 return uriBuilder.Uri;
             }
         }

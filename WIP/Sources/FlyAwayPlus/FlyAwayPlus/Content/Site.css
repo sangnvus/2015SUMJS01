@@ -281,6 +281,10 @@ img {
             font-weight: bold;
             font-size: 20px;
         }
+
+.map_canvas {
+    height: 150px;
+}
 /* LOGIN FORM ENDS*/
 
 /* POST FORM */
@@ -359,6 +363,29 @@ img {
 .privacy-dropdown {
     width: 100px;
 }
+
+#id-location-textbox {
+    
+}
+
+.map-canvas {
+    height: 150px
+}
+
+.pac-container {
+    /* put Google geocomplete list on top of Bootstrap modal */
+    z-index: 9999;
+}
+.helper-elements-wrapper {
+    margin-bottom: 20px
+}
+
+.helper-elements-wrapper input {
+    -ms-border-radius: 0;
+    border-radius: 0;
+    margin-top: -20px
+}
+
 /* POST FORM ENDS*/
 
 /* POST DETAIL*/
@@ -420,41 +447,41 @@ img {
     vertical-align: top;
 }
 
-.comment-list .comment-detail .commenter-avatar {
-    -ms-border-radius: 2px;
-    border-radius: 2px;
-    width: 30px;
-    height: 30px;
-    float: left;
-    margin-right: 10px;
-    margin-top: 5px
-}
+    .comment-list .comment-detail .commenter-avatar {
+        -ms-border-radius: 2px;
+        border-radius: 2px;
+        width: 30px;
+        height: 30px;
+        float: left;
+        margin-right: 10px;
+        margin-top: 5px;
+    }
 
-.comment-list .comment-detail .commenter-name {
-    font-weight: bold;
-    color: #404040;
-    font-size: 13px;
-}
+    .comment-list .comment-detail .commenter-name {
+        font-weight: bold;
+        color: #404040;
+        font-size: 13px;
+    }
 
-.comment-list .comment-detail .commenter-post-time {
-    color: #999;
-    font-size: 12px;
-    margin-right: 8px
-}
+    .comment-list .comment-detail .commenter-post-time {
+        color: #999;
+        font-size: 12px;
+        margin-right: 8px;
+    }
 
-.comment-list .comment-detail .comment-content {
-    font-size: 13px;
-}
+    .comment-list .comment-detail .comment-content {
+        font-size: 13px;
+    }
 
 .comment-area .comment-textbox-wrapper {
     margin: 0 20px 0 20px;
     padding-bottom: 10px;
 }
 
-.comment-area .comment-textbox-wrapper .comment-textbox {
-    width: 100%;
-    border: 1px solid #ddd;
-    padding: 6px 8px;
-    font-size: 12px
-}
+    .comment-area .comment-textbox-wrapper .comment-textbox {
+        width: 100%;
+        border: 1px solid #ddd;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
 /* POST DETAIL ENDS */
