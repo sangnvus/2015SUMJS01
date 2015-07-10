@@ -30,5 +30,6 @@ namespace FlyAwayPlus.Models
         public string dateOfBirth { get; set; }
         public string status { get; set; }
         public string dateJoined { get; set; }
+        public string avatar { get; set; }
     }
 }

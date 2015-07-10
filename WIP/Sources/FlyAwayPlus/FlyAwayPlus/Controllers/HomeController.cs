@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FlyAwayPlus.Models;
 using Neo4jClient;
 using System.Configuration;
+using FlyAwayPlus.Helpers;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -13,44 +14,59 @@ namespace FlyAwayPlus.Controllers
     {
         public ActionResult Index()
         {
-            var user_session = Session["user"];
-            User user = null;
+            User user = UserHelpers.getCurrentUser(Session);
+            
 
             List<Post> listPost = new List<Post>();
-            Photo Photo = null;
-            Place Place = null;
-            Dictionary<string, Photo> listPhotoDict = new Dictionary<string, Photo>();
-            Dictionary<string, Place> listPlaceDict = new Dictionary<string, Place>();
+            Photo photo = null;
+            Place place = null;
+            User userDict = null;
+            Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
+            Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
+            Dictionary<int, User> listUserDict = new Dictionary<int, User>();
 
-            if (user_session == null || user_session.ToString().Trim().Equals(""))
+            if (user == null)
             {
-                // TODO
+                /*
+                 * Search all public post
+                 */
+                listPost = GraphDatabaseHelpers.searchAllPost();
+                foreach (Post po in listPost)
+                {
+                    photo = GraphDatabaseHelpers.findPhoto(po);
+                    place = GraphDatabaseHelpers.findPlace(po);
+                    userDict = GraphDatabaseHelpers.findUser(po);
+
+                    listPhotoDict.Add(po.postID, photo);
+                    listPlaceDict.Add(po.postID, place);
+                    listUserDict.Add(po.postID, userDict);
+                }
+
             }
             else
             {
-                user = (User)user_session;
                 GraphClient client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
                 client.Connect();
 
-                listPost = client.Cypher.Match("(u:user {userID:'" + user.userID + "'})-[:has]->(p:post)")
-                            .Return<Post>("p").Results.OrderBy(p => p.postID).ToList();
+                listPost = GraphDatabaseHelpers.findPostFollowing(user);
 
                 foreach (Post po in listPost)
                 {
-                    Photo = client.Cypher.Match("(po:post {postID:'" + po.postID + "'})-[:has]->(ph:photo)")
-                            .Return<Photo>("ph").Results.OrderBy(ph => ph.photoID).ToList().First();
+                    photo = GraphDatabaseHelpers.findPhoto(po);
+                    place = GraphDatabaseHelpers.findPlace(po);
+                    userDict = GraphDatabaseHelpers.findUser(po);
 
-                    Place = client.Cypher.Match("(po:post {postID:'" + po.postID + "'})-[:at]->(pl:place)")
-                            .Return<Place>("pl").Results.OrderBy(pl => pl.placeID).ToList().First();
-
-                    listPhotoDict.Add(po.postID.ToString(), Photo);
-                    listPlaceDict.Add(po.postID.ToString(), Place);
+                    listPhotoDict.Add(po.postID, photo);
+                    listPlaceDict.Add(po.postID, place);
+                    listUserDict.Add(po.postID, userDict);
                 }
             }
 
             ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listPlaceDict"] = listPlaceDict;
+            ViewData["listUserDict"] = listUserDict;
+
             return View();
         }
 

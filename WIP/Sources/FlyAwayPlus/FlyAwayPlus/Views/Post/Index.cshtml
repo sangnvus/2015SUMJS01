@@ -1,93 +1,84 @@
-﻿<div class="col-md-8 col-md-offset-2">
+﻿@model FlyAwayPlus.Models.Post
+
+@{
+    var userPost = ViewData["userPost"] as FlyAwayPlus.Models.User;
+    var user = ViewData["user"] as FlyAwayPlus.Models.User;
+    var listComment = ViewData["listComment"] as List<FlyAwayPlus.Models.Comment>;
+    var dict = ViewData["dict"] as Dictionary<int, FlyAwayPlus.Models.User>;
+}
+<div class="col-md-8 col-md-offset-2">
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="post-area">
                 <div class="post-info">
                     <div class="user-avatar">
-                        <img src="~/Images/avatar/avatar-1.jpg" alt="Username 1" class="img-circle" />
+                        <img src="@userPost.avatar" alt="@String.Format("{0} {1}", userPost.firstName, userPost.lastName)" class="img-circle" />
                     </div>
                     <div class="post-info-area">
                         <div class="user-name">
-                            Duc Filan
-                        </div>
-                        <span class="post-time">
-                            <span>Shared with Public</span>
-                            &nbsp;-&nbsp;
-                            <span>Yesterday at 22:15</span>
-                        </span>
-
+                            <a href="/User/Index/@userPost.userID">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
                     </div>
-                </div>
-                <div class="post-content">
-                    危なくないからその丘で雪の上を滑ろうではないか！
+                    <span class="post-time">
+                        <span>Shared with @Model.privacy</span>
+                        &nbsp;-&nbsp;
+                        <span>@Model.dateCreated</span>
+                    </span>
+
                 </div>
             </div>
-            <div class="interact-area">
-                <a>Like</a>
-                &nbsp;·&nbsp;
-                <a>Dislike</a>
+            <div class="post-content">
+                @Model.content
             </div>
-            <div class="divide-area"></div>
-            <div class="comment-area">
-                <div class="comment-stats">
-                    <span>4 people commented</span>
-                </div>
+        </div>
+        <div class="interact-area">
+            <a>Like</a>
+            &nbsp;·&nbsp;
+            <a>Dislike</a>
+        </div>
+        <div class="divide-area"></div>
+        <div class="comment-area">
+            <div class="comment-stats">
+                <span>@listComment.Count comments</span>
+            </div>
 
-                <div class="comment-list">
+            <div class="comment-list">
+                @foreach (var comment in listComment)
+                {
+                    var u = @dict[comment.commentID];
                     <div class="comment-detail">
                         <div class="commenter-avatar">
-                            <img src="~/Images/avatar/avatar-2.jpg" alt="Username 2"/>
+                            <img src="@u.avatar" alt="@String.Format("{0} {1}", u.firstName, u.lastName)" />
                         </div>
                         <div class="commenter-content">
-                            <span class="commenter-name">Hai Duong</span>
-                            <span class="commenter-post-time" title="22:15:28 07-07-2015">- Yesterday 22:15</span>
+                            <span class="commenter-name"><a href="/User/Index/@u.userID">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
+                            <span class="commenter-post-time" title="@comment.dateCreated">- @comment.dateCreated</span>
                         </div>
                         <div class="comment-content">
-                            危なくないからその丘で雪の上を滑ろうではないか！
+                            @comment.content
                         </div>
                     </div>
-                    <div class="comment-detail">
-                        <div class="commenter-avatar">
-                            <img src="~/Images/avatar/avatar-2.jpg" alt="Username 2"/>
-                        </div>
-                        <div class="commenter-content">
-                            <span class="commenter-name">Hai Duong</span>
-                            <span class="commenter-post-time" title="22:15:28 07-07-2015">- Yesterday 22:15</span>
-                        </div>
-                        <div class="comment-content">
-                            危なくないからその丘で雪の上を滑ろうではないか！
-                        </div>
-                    </div>
-                    <div class="comment-detail">
-                        <div class="commenter-avatar">
-                            <img src="~/Images/avatar/avatar-2.jpg" alt="Username 2"/>
-                        </div>
-                        <div class="commenter-content">
-                            <span class="commenter-name">Hai Duong</span>
-                            <span class="commenter-post-time" title="22:15:28 07-07-2015">- Yesterday 22:15</span>
-                        </div>
-                        <div class="comment-content">
-                            危なくないからその丘で雪の上を滑ろうではないか！
-                        </div>
-                    </div>
-                    <div class="comment-detail">
-                        <div class="commenter-avatar">
-                            <img src="~/Images/avatar/avatar-2.jpg" alt="Username 2"/>
-                        </div>
-                        <div class="commenter-content">
-                            <span class="commenter-name">Hai Duong</span>
-                            <span class="commenter-post-time" title="22:15:28 07-07-2015">- Yesterday 22:15</span>
-                        </div>
-                        <div class="comment-content">
-                            危なくないからその丘で雪の上を滑ろうではないか！
-                        </div>
-                    </div>
-                </div>
+                }
 
-                <div class="comment-textbox-wrapper">
-                    <input type="text" class="comment-textbox" placeholder="Input comment..." />
+                <!--
+                <div class="comment-detail">
+                    <div class="commenter-avatar">
+                        <img src="~/Images/avatar/avatar-2.jpg" alt="Username 2"/>
+                    </div>
+                    <div class="commenter-content">
+                        <span class="commenter-name">Hai Duong</span>
+                        <span class="commenter-post-time" title="22:15:28 07-07-2015">- Yesterday 22:15</span>
+                    </div>
+                    <div class="comment-content">
+                        危なくないからその丘で雪の上を滑ろうではないか！
+                    </div>
                 </div>
+                -->
+            </div>
+
+            <div class="comment-textbox-wrapper">
+                <input type="text" class="comment-textbox" placeholder="Input comment..." />
             </div>
         </div>
     </div>
+</div>
 </div>

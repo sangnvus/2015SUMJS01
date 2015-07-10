@@ -34,8 +34,18 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a class="current" href="../Home/">Home</a></li>
-                    <li><a class="" href="../LookAround/">Explore</a></li>
+                    <li><a class="current" href="/Home/">Home</a></li>
+                    <li><a class="" href="#">Explore</a></li>
+                    <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
+                    @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
+                    {
+                        <li><a class="" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                    }
+                    else
+                    {
+                        <li style="float:right"><a href="/Login/Logout" data-toggle="modal">Log out</a></li>
+                        <li style="float:right"><a href="/User/Index/" data-toggle="modal">@Session["username"]</a></li>
+                    }
                 </ul>
                 @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
                 {

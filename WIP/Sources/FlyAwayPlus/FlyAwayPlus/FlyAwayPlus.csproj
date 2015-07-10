@@ -185,7 +185,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\FAPConstants.cs" />
+    <Compile Include="Helpers\DateHelpers.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
+    <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -231,6 +233,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\avatar\avatar-7.jpg" />
     <Content Include="Images\background\halong.jpg" />
     <Content Include="Images\background\nhatrang.jpg" />
     <Content Include="Images\background\sondoong.jpg" />
