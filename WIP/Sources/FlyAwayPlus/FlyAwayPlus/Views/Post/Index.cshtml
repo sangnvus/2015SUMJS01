@@ -16,7 +16,7 @@
                     </div>
                     <div class="post-info-area">
                         <div class="user-name">
-                            <a href="#">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
+                            <a href="/User/Index/@userPost.userID">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
                     </div>
                     <span class="post-time">
                         <span>Shared with @Model.privacy</span>
@@ -50,7 +50,7 @@
                             <img src="@u.avatar" alt="@String.Format("{0} {1}", u.firstName, u.lastName)" />
                         </div>
                         <div class="commenter-content">
-                            <span class="commenter-name"><a href="#">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
+                            <span class="commenter-name"><a href="/User/Index/@u.userID">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
                             <span class="commenter-post-time" title="@comment.dateCreated">- @comment.dateCreated</span>
                         </div>
                         <div class="comment-content">

@@ -1,8 +1,16 @@
-﻿@{
+﻿@model FlyAwayPlus.Models.User
+@{
     ViewBag.Title = "User Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var listPost = ViewData["listPostDict"] as Dictionary<string, List<FlyAwayPlus.Models.Post>>;
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
+    var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
+    var timeline = ViewData["timeline"] as List<string>;
+    var friend = ViewData["friend"] as List<FlyAwayPlus.Models.User>;
+}
 <link href="~/Content/UserPage/WOW slider/wow-style.css" rel="stylesheet" />
 <link href="~/Content/speech-buble.css" rel="stylesheet" />
 
@@ -28,7 +36,7 @@
 <div class="col-md-12 frame-container padding-top-30">
     <div class="col-md-10">
         <div class="col-md-2">
-            <img src="~/Images/avatar/avatar-1.jpg" class="circle-image" alt="Avatar" />
+            <img src="@Model.avatar" class="circle-image" alt="Avatar" />
         </div>
         <div class="col-md-10">
             <p class="triangle-border left">I am Duc Filan, 22 years old, from Vinh city. I have travelled to 3 places in the world.<br /> Add me as your friend and be on my trips!</p>
@@ -51,77 +59,33 @@
 <!-- Friend list -->
 <div class="col-md-12 frame-container" style="margin-top: 30px">
     <h3 class="text-center text-capitalize">MY FRIENDS</h3>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-1.jpg" alt="Avatar"/>
-        <p class="small text-center">Duc</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-2.jpg" alt="Avatar"/>
-        <p class="small text-center">Hai</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-3.jpg" alt="Avatar"/>
-        <p class="small text-center">Hieu</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-4.jpg" alt="Avatar"/>
-        <p class="small text-center">Hoang</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-5.jpg" alt="Avatar"/>
-        <p class="small text-center">Thuy</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-6.jpg" alt="Avatar"/>
-        <p class="small text-center">Luc</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-1.jpg" alt="Avatar"/>
-        <p class="small text-center">Duc</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-2.jpg" alt="Avatar"/>
-        <p class="small text-center">Hai</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-3.jpg" alt="Avatar"/>
-        <p class="small text-center">Hieu</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-4.jpg" alt="Avatar"/>
-        <p class="small text-center">Hoang</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-5.jpg" alt="Avatar"/>
-        <p class="small text-center">Thuy</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-6.jpg" alt="Avatar"/>
-        <p class="small text-center">Luc</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-1.jpg" alt="Avatar"/>
-        <p class="small text-center">Duc</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-2.jpg" alt="Avatar"/>
-        <p class="small text-center">Hai</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-3.jpg" alt="Avatar"/>
-        <p class="small text-center">Hieu</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-4.jpg" alt="Avatar"/>
-        <p class="small text-center">Hoang</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <img class="circle-image" height="50" src="~/Images/avatar/avatar-5.jpg" alt="Avatar"/>
-        <p class="small text-center">Thuy</p>
-    </div>
-    <div class="padding-5 col-md-2">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">...</button>
-    </div>
+    @if (friend.Count > 17)
+    {
+        for (int index = 0; index < 17; index++)
+        {
+            <div class="padding-5 col-md-2">
+                <img class="circle-image" height="50" src="@friend[index].avatar" alt="Avatar" />
+                <a href="/User/Index/@friend[index].userID"><p class="small text-center">@String.Format("{0} {1}", @friend[index].firstName, @friend[index].lastName)</p></a>
+            </div>
+        }
+        <div class="padding-5 col-md-2">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#myFriend">...</button>
+        </div>
+    }
+    else
+    {
+        foreach (var userFriend in friend)
+        {
+            <div class="padding-5 col-md-2">
+                <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
+                <a href="#"><p class="small text-center">@String.Format("{0} {1}", userFriend.firstName, userFriend.lastName)</p></a>
+            </div>
+        }
+        if (friend.Count == 0)
+        {
+            <p>@String.Format("{0} {1} has no friends", @Model.firstName, @Model.lastName)</p>
+        }
+    }
 </div>
 
 <!-- Timeline -->
@@ -130,61 +94,30 @@
         <div class="col-md-12">
             <div class="timeline">
                 <dl>
-                    <dt>Apr 2015</dt>
-                    <dd class="pos-right clearfix">
-                        <div class="circ"></div>
-                        <div class="time">Apr 14</div>
-                        <div class="events">
-                            <div class="pull-left">
-                                <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
-                            </div>
-                            <div class="events-body">
-                                <h4 class="events-heading">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4>
-                                <p>Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
-                            </div>
-                        </div>
-                    </dd>
-                    <dd class="pos-left clearfix">
-                        <div class="circ"></div>
-                        <div class="time">Apr 10</div>
-                        <div class="events">
-                            <div class="pull-left">
-                                <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
-                            </div>
-                            <div class="events-body">
-                                <h4 class="events-heading">Curabitur tortor. Pellentesque nibh. Aenean quam.</h4>
-                                <p>In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.</p>
-                            </div>
-                        </div>
-                    </dd>
-                    <dt>Mar 2015</dt>
-                    <dd class="pos-right clearfix">
-                        <div class="circ"></div>
-                        <div class="time">Mar 15</div>
-                        <div class="events">
-                            <div class="pull-left">
-                                <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
-                            </div>
-                            <div class="events-body">
-                                <h4 class="events-heading">Suspendisse in justo eu magna luctus suscipit.</h4>
-                                <p>Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. </p>
-                            </div>
-                        </div>
-                    </dd>
-                    <dd class="pos-left clearfix">
-                        <div class="circ"></div>
-                        <div class="time">Mar 8</div>
-                        <div class="events">
-                            <div class="pull-left">
-                                <img class="events-object img-rounded" src="~/Images/avatar/avatar-1.jpg">
-                            </div>
-                            <div class="events-body">
-                                <h4 class="events-heading">Integer lacinia sollicitudin massa. Cras metus.</h4>
-                                <p>Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede. Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci.</p>
-                            </div>
-                        </div>
-                    </dd>
-
+                    @for (int index = 0, indexPost = 0; index < timeline.Count; index++)
+                    {
+                        <dt>@timeline[index]</dt>
+                        foreach (var post in listPost[timeline[index]])
+                        {
+                            var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
+                            var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
+                            indexPost++;
+                            
+                            <dd class="@posPosition clearfix">
+                                <div class="circ"></div>
+                                <div class="time" style="@style">@post.dateCreated</div>
+                                <div class="events">
+                                    <div class="pull-left">
+                                        <img class="events-object img-rounded" src="@Model.avatar">
+                                    </div>
+                                    <div class="events-body">
+                                        <h4 class="events-heading">@listPlaceDict[@post.postID].name</h4>
+                                        <p>@post.content</p>
+                                    </div>
+                                </div>
+                            </dd>
+                        }
+                    }
                 </dl>
             </div>
         </div>
@@ -193,44 +126,27 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 40px">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Friend List</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    @for (int i = 0; i < 10; i++)
-                    {
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="~/Images/avatar/avatar-1.jpg" alt="Avatar" />
-                            <p class="small text-center">Duc</p>
-                        </div>
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="~/Images/avatar/avatar-2.jpg" alt="Avatar" />
-                            <p class="small text-center">Hai</p>
-                        </div>
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="~/Images/avatar/avatar-3.jpg" alt="Avatar" />
-                            <p class="small text-center">Hieu</p>
-                        </div>
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="~/Images/avatar/avatar-4.jpg" alt="Avatar" />
-                            <p class="small text-center">Hoang</p>
-                        </div>
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="~/Images/avatar/avatar-5.jpg" alt="Avatar" />
-                            <p class="small text-center">Thuy</p>
-                        </div>
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="~/Images/avatar/avatar-6.jpg" alt="Avatar" />
-                            <p class="small text-center">Luc</p>
-                        </div>
-                    }
+@if (friend.Count > 17)
+{
+    <div class="modal fade" id="myFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 40px">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Friend List</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        @foreach (var userFriend in friend)
+                        {
+                            <div class="padding-5 col-md-2">
+                                <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
+                                <a href="/User/Index/@userFriend.userID"><p class="small text-center">@String.Format("{0} {1}", userFriend.firstName, userFriend.lastName)</p></a>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}

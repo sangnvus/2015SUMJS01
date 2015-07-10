@@ -12,7 +12,7 @@ namespace FlyAwayPlus.Controllers
     {
         //
         // GET: /PostDetail/
-        public ActionResult Index(int id)
+        public ActionResult Index(int id = 0)
         {
             Post post = null;
             User user = UserHelpers.getCurrentUser(Session);
