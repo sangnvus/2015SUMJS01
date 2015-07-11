@@ -30,11 +30,11 @@ namespace FlyAwayPlus.Controllers
                 /*
                  * Search all public post
                  */
-                listPost = GraphDatabaseHelpers.searchAllPost();
+                listPost = GraphDatabaseHelpers.SearchAllPost();
                 foreach (Post po in listPost)
                 {
-                    photo = GraphDatabaseHelpers.findPhoto(po);
-                    place = GraphDatabaseHelpers.findPlace(po);
+                    photo = GraphDatabaseHelpers.FindPhoto(po);
+                    place = GraphDatabaseHelpers.FindPlace(po);
                     userDict = GraphDatabaseHelpers.findUser(po);
 
                     listPhotoDict.Add(po.postID, photo);
@@ -48,12 +48,12 @@ namespace FlyAwayPlus.Controllers
                 GraphClient client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
                 client.Connect();
 
-                listPost = GraphDatabaseHelpers.findPostFollowing(user);
+                listPost = GraphDatabaseHelpers.FindPostFollowing(user);
 
                 foreach (Post po in listPost)
                 {
-                    photo = GraphDatabaseHelpers.findPhoto(po);
-                    place = GraphDatabaseHelpers.findPlace(po);
+                    photo = GraphDatabaseHelpers.FindPhoto(po);
+                    place = GraphDatabaseHelpers.FindPlace(po);
                     userDict = GraphDatabaseHelpers.findUser(po);
 
                     listPhotoDict.Add(po.postID, photo);

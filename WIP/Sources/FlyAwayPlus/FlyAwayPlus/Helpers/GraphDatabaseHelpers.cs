@@ -26,7 +26,7 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
-        public static void InsertPost(Post post, Photo photo, Place place)
+        public static void InsertPost(User user, Post post, Photo photo, Place place)
         {
             // Auto increment Id.
             post.postID = GetGlobalIncrementId();
@@ -35,14 +35,42 @@ namespace FlyAwayPlus.Helpers
 
             Client.Connect();
 
-            NodeReference<Post> postRef = Client.Create(post);
+            NodeReference<Post> postRef = Client.Cypher.Create("(p:post {newPost})")
+                                            .WithParam("newPost", post)
+                                            .Return<Node<Post>>("p")
+                                            .Results.Single()
+                                            .Reference;
 
-            NodeReference<Photo> photoRef = Client.Create(photo);
+            NodeReference<Photo> photoRef = Client.Cypher.Create("(p:photo {newPhoto})")
+                                            .WithParam("newPhoto", photo)
+                                            .Return<Node<Photo>>("p")
+                                            .Results.Single()
+                                            .Reference;
 
-            NodeReference<Place> placeRef = Client.Create(place);
+            NodeReference<Place> placeRef = Client.Cypher.Create("(p:place {newPlace})")
+                                            .WithParam("newPlace", place)
+                                            .Return<Node<Place>>("p")
+                                            .Results.Single()
+                                            .Reference;
 
-            Client.CreateRelationship(postRef, new HasRelationship(photoRef));
-            Client.CreateRelationship(postRef, new AtRelationship(placeRef));
+            Node<User> userNode = Client.Cypher.Match("(u:user {email: '" + user.email + "'})").Return<Node<User>>("u").Results.FirstOrDefault();
+            if (userNode != null)
+            {
+                var userRef = userNode.Reference;
+
+                Client.CreateRelationship(postRef, new PostHasPhotoRelationship(photoRef));
+                Client.CreateRelationship(postRef, new PostAtPlaceRelationship(placeRef));
+
+                Client.CreateRelationship(userRef, new UserHasPostRelationship(postRef));
+                
+                Client.Cypher.Match("(u:user {email:'" + user.email + "'}), (p:photo {photoID: " + photo.photoID + "})")
+                    .Create("(u)-[r:has]->(p)")
+                    .ExecuteWithoutResults();
+
+                Client.Cypher.Match("(u:user {email:'" + user.email + "'}), (p:place {placeID: " + place.placeID + "})")
+                    .Create("(u)-[r:visited]->(p)")
+                    .ExecuteWithoutResults();
+            }
         }
 
         public static User GetUser(int typeId, string email)
@@ -66,7 +94,7 @@ namespace FlyAwayPlus.Helpers
             return uniqueId;
         }
 
-        public static Post findPost(int id, User user)
+        public static Post FindPost(int id, User user)
         {
             /*
                  * Query:
@@ -93,7 +121,7 @@ namespace FlyAwayPlus.Helpers
             return p;
         }
 
-        public static User searchUser(Post post)
+        public static User SearchUser(Post post)
         {
             User user = null;
             Client.Connect();
@@ -104,7 +132,7 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public static List<Comment> findComment(Post post)
+        public static List<Comment> FindComment(Post post)
         {
             /*
                  * Query:
@@ -185,7 +213,7 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public static List<Post> searchAllPost()
+        public static List<Post> SearchAllPost()
         {
 
             /*
@@ -208,7 +236,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public static Photo findPhoto(Post po)
+        public static Photo FindPhoto(Post po)
         {
 
             /*
@@ -231,7 +259,7 @@ namespace FlyAwayPlus.Helpers
             return photo;
         }
 
-        public static Place findPlace(Post po)
+        public static Place FindPlace(Post po)
         {
 
             /*
@@ -254,7 +282,7 @@ namespace FlyAwayPlus.Helpers
             return place;
         }
 
-        public static List<Post> findPostFollowing(User user)
+        public static List<Post> FindPostFollowing(User user)
         {
             /*
                  * Query:
@@ -282,7 +310,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public static List<Post> findPostOfUser(User user)
+        public static List<Post> FindPostOfUser(User user)
         {
             /*
                  * Query:
@@ -302,7 +330,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public static List<Post> findPostOfOtherUser(User currentUser, User otherUser)
+        public static List<Post> FindPostOfOtherUser(User currentUser, User otherUser)
         {
             /*
                  * Query:
@@ -328,7 +356,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public static List<User> findFriend(User user)
+        public static List<User> FindFriend(User user)
         {
 
             /*

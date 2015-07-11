@@ -33,14 +33,14 @@ namespace FlyAwayPlus.Controllers
             if (userSession.userID == id || id == 0)
             {
                 user = userSession;
-                listPost = GraphDatabaseHelpers.findPostOfUser(userSession);
-                friend = GraphDatabaseHelpers.findFriend(userSession);
+                listPost = GraphDatabaseHelpers.FindPostOfUser(userSession);
+                friend = GraphDatabaseHelpers.FindFriend(userSession);
                 timeline = DateHelpers.toTimeLineDate(listPost, listPostDict);
 
                 foreach (Post po in listPost)
                 {
-                    photo = GraphDatabaseHelpers.findPhoto(po);
-                    place = GraphDatabaseHelpers.findPlace(po);
+                    photo = GraphDatabaseHelpers.FindPhoto(po);
+                    place = GraphDatabaseHelpers.FindPlace(po);
 
                     listPhotoDict.Add(po.postID, photo);
                     listPlaceDict.Add(po.postID, place);
@@ -53,14 +53,14 @@ namespace FlyAwayPlus.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                listPost = GraphDatabaseHelpers.findPostOfOtherUser(userSession, user);
-                friend = GraphDatabaseHelpers.findFriend(user);
+                listPost = GraphDatabaseHelpers.FindPostOfOtherUser(userSession, user);
+                friend = GraphDatabaseHelpers.FindFriend(user);
                 timeline = DateHelpers.toTimeLineDate(listPost, listPostDict);
 
                 foreach (Post po in listPost)
                 {
-                    photo = GraphDatabaseHelpers.findPhoto(po);
-                    place = GraphDatabaseHelpers.findPlace(po);
+                    photo = GraphDatabaseHelpers.FindPhoto(po);
+                    place = GraphDatabaseHelpers.FindPlace(po);
 
                     listPhotoDict.Add(po.postID, photo);
                     listPlaceDict.Add(po.postID, place);

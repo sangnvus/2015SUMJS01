@@ -186,6 +186,7 @@
     </Compile>
     <Compile Include="Helpers\FAPConstants.cs" />
     <Compile Include="Helpers\DateHelpers.cs" />
+    <Compile Include="Helpers\FapRelationships.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
@@ -358,7 +359,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1644</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

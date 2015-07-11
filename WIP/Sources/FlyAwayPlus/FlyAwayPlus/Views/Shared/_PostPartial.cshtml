@@ -1,10 +1,11 @@
 ﻿<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
 <script src="~/Scripts/jquery.geocomplete.js"></script>
-
-<ul class="nav navbar-nav navbar-left">
-    <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
-</ul>
-
+@if (Session["authenicated"] != null && Session["authenicated"].ToString().Equals("True"))
+{
+    <ul class="nav navbar-nav navbar-left">
+        <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
+    </ul>
+}
 <div class="modal fade" id="post-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
     @using (Html.BeginForm("Add", "Post", FormMethod.Post, new { @class = "share-post-box", @enctype = "multipart/form-data" }))
@@ -57,11 +58,11 @@
                                         Privacy
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Public</a></li>
-                                        <li><a href="#">Friends</a></li>
-                                        <li><a href="#">Private</a></li>
-                                    </ul>
+                                    <select class="dropdown-menu" name="privacy">
+                                        <option value="public">Public</option>
+                                        <option value="friend">Friends</option>
+                                        <option value="private">Private</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

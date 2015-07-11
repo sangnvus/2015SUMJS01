@@ -1,8 +1,5 @@
-﻿using FlyAwayPlus.Helpers;
-using FlyAwayPlus.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FlyAwayPlus.Helpers;
@@ -30,9 +27,9 @@ namespace FlyAwayPlus.Controllers
 
             try
             {
-                post = GraphDatabaseHelpers.findPost(id, user);
-                userPost = GraphDatabaseHelpers.searchUser(post);
-                listComment = GraphDatabaseHelpers.findComment(post);
+                post = GraphDatabaseHelpers.FindPost(id, user);
+                userPost = GraphDatabaseHelpers.SearchUser(post);
+                listComment = GraphDatabaseHelpers.FindComment(post);
 
                 foreach (var comment in listComment)
                 {
@@ -59,14 +56,16 @@ namespace FlyAwayPlus.Controllers
             Decimal latitude = Decimal.Parse(Request.Form["lat"]);
             Decimal longitude = Decimal.Parse(Request.Form["lng"]);
             string location = Request.Form["location"];
-            string filename = string.Empty;
+            string filename;
+            string privacy = Request.Form["privacy"];
 
             filename = UploadImage(Request.Files);
 
             Post newPost = new Post
             {
                 content = message,
-                dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
+                dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                privacy = privacy
             };
 
             Place newPlace = new Place
@@ -82,7 +81,9 @@ namespace FlyAwayPlus.Controllers
                 url = filename
             };
 
-            GraphDatabaseHelpers.InsertPost(newPost, newPhoto, newPlace);
+            var user = (User)Session["user"];
+
+            GraphDatabaseHelpers.InsertPost(user, newPost, newPhoto, newPlace);
 
             return RedirectToAction("Index", "Home");
         }
@@ -99,7 +100,7 @@ namespace FlyAwayPlus.Controllers
                 if (file.ContentLength <= 0) continue;
                 ImageUpload imageUpload = new ImageUpload
                 {
-                    Width = FapConstants.UploadedImageMaxWidthPixcel, 
+                    Width = FapConstants.UploadedImageMaxWidthPixcel,
                     Height = FapConstants.UploadedImageMaxHeightPixcel
                 };
                 ImageResult imageResult = imageUpload.RenameUploadFile(file);
