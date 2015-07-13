@@ -4353,3 +4353,13 @@ Storage files: (filename : modification date - size)
 2015-07-13 13:39:50.984+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for 751ms.
 2015-07-13 14:28:49.173+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for 2018ms.
 2015-07-13 14:39:51.378+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for 368ms.
+2015-07-13 15:31:12.185+0000 INFO  [o.n.s.CommunityNeoServer]: Successfully shutdown Neo4j Server.
+2015-07-13 15:31:12.185+0000 INFO  [o.n.k.EmbeddedGraphDatabase]: Shutdown started
+2015-07-13 15:31:12.201+0000 INFO  [o.n.k.EmbeddedGraphDatabase]: Database is now unavailable
+2015-07-13 15:31:12.395+0000 INFO  [o.n.k.i.s.StoreFactory]: About to rotate counts store at transaction 346 to [D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.a], from [D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.b].
+2015-07-13 15:31:12.411+0000 INFO  [o.n.k.i.s.StoreFactory]: Successfully rotated counts store at transaction 346 to [D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.a], from [D:\LEARNING\Copy\2015 SUMMER\SWP493\2015SUMJS01\WIP\Sources\Database\GraphDatabase\neostore.counts.db.b].
+2015-07-13 15:31:12.731+0000 INFO  [o.n.k.NeoStoreDataSource]: NeoStore closed
+2015-07-13 15:31:12.731+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STOPPING diagnostics START ---
+2015-07-13 15:31:12.731+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- STOPPING diagnostics END ---
+2015-07-13 15:31:12.762+0000 INFO  [o.n.s.d.LifecycleManagingDatabase]: Successfully stopped database
+2015-07-13 15:31:12.762+0000 INFO  [o.n.s.CommunityNeoServer]: Successfully shutdown database.
