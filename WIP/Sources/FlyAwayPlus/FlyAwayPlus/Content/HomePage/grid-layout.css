@@ -30,6 +30,8 @@
         border-top-left-radius: 10px;
         -ms-border-top-right-radius: 10px;
         border-top-right-radius: 10px;
+
+        max-width: 100%
     }
 
         .white-panel .dark-wrapper .post-actions {
