@@ -47,7 +47,7 @@ namespace FlyAwayPlus.Controllers
                 // Set the auth cookie
                 Session["authenicated"] = true;
                 Session["username"] = user.firstName + " " + user.lastName;
-                UserHelpers.setCurrentUser(Session, user);
+                UserHelpers.SetCurrentUser(Session, user);
             }
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -83,7 +83,7 @@ namespace FlyAwayPlus.Controllers
         {
             Session["authenicated"] = "";
             Session["username"] = "";
-            UserHelpers.setCurrentUser(Session, null);
+            UserHelpers.SetCurrentUser(Session, null);
             return RedirectToAction("Index", "Home");
         }
 
@@ -141,18 +141,21 @@ namespace FlyAwayPlus.Controllers
              */
             if (newUser == null)
             {
-                newUser = new User();
-                newUser.typeID = 1; // Facebook account
-                newUser.email = email;
-                newUser.address = me.adress;
-                newUser.dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-                newUser.dateOfBirth = me.date_of_birth;
-                newUser.firstName = me.first_name;
-                newUser.lastName = me.last_name;
-                newUser.gender = me.gender;
-                newUser.phoneNumber = me.phone_number;
-                newUser.status = "active";
-                newUser.password = "";
+                newUser = new User
+                {
+                    typeID = 1,
+                    email = email,
+                    address = me.adress,
+                    dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                    dateOfBirth = me.date_of_birth,
+                    firstName = me.first_name,
+                    lastName = me.last_name,
+                    gender = me.gender,
+                    phoneNumber = me.phone_number,
+                    status = "active",
+                    password = ""
+                };
+                // Facebook account
 
                 // insert user to Database
                 GraphDatabaseHelpers.InsertUser(newUser);
@@ -161,7 +164,7 @@ namespace FlyAwayPlus.Controllers
             // Set the auth cookie
             Session["authenicated"] = true;
             Session["username"] = newUser.firstName + " " + newUser.lastName;
-            UserHelpers.setCurrentUser(Session, newUser);
+            UserHelpers.SetCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);
             //SessionHelper.RenewCurrentUser();

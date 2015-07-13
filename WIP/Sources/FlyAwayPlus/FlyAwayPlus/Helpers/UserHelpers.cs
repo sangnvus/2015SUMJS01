@@ -10,24 +10,20 @@ namespace FlyAwayPlus.Helpers
     public class UserHelpers
     {
         private const string USER = "user";
-        public static User getCurrentUser(HttpSessionStateBase session)
+        public static User GetCurrentUser(HttpSessionStateBase session)
         {
 
-            var user_session = session[USER];
-            User user = null;
+            var userSession = session[USER];
 
-            if (user_session == null || user_session.ToString().Length == 0)
+            if (userSession == null || userSession.ToString().Length == 0)
             {
                 return null;
             }
-            else
-            {
-                user = (User)user_session;
-            }
+            var user = (User)userSession;
 
             return user;
         }
-        public static void setCurrentUser(HttpSessionStateBase session, User user)
+        public static void SetCurrentUser(HttpSessionStateBase session, User user)
         {
             session[USER] = user;
         }

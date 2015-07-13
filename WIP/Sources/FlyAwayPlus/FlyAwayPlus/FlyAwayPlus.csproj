@@ -210,8 +210,9 @@
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\common.css" />
-    <Content Include="Content\HomePage\gridLayout.css" />
+    <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
+    <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\RoomPage\roomDetail.css" />
@@ -265,10 +266,6 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\carousel\jquery.flexslider-min.js" />
-    <Content Include="Scripts\carousel\main.js" />
-    <Content Include="Scripts\carousel\masonry.pkgd.min.js" />
-    <Content Include="Scripts\HomePage\pinterest_grid.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

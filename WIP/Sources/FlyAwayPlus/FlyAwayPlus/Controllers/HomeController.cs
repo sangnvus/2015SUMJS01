@@ -14,13 +14,13 @@ namespace FlyAwayPlus.Controllers
     {
         public ActionResult Index()
         {
-            User user = UserHelpers.getCurrentUser(Session);
+            User user = UserHelpers.GetCurrentUser(Session);
             
 
             List<Post> listPost = new List<Post>();
-            Photo photo = null;
-            Place place = null;
-            User userDict = null;
+            Photo photo;
+            Place place;
+            User userDict;
             Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
             Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
             Dictionary<int, User> listUserDict = new Dictionary<int, User>();
@@ -41,7 +41,6 @@ namespace FlyAwayPlus.Controllers
                     listPlaceDict.Add(po.postID, place);
                     listUserDict.Add(po.postID, userDict);
                 }
-
             }
             else
             {

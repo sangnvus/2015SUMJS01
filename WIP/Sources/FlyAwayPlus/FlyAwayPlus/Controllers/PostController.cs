@@ -14,10 +14,10 @@ namespace FlyAwayPlus.Controllers
         // GET: /PostDetail/
         public ActionResult Index(int id = 0)
         {
-            Post post = null;
-            User user = UserHelpers.getCurrentUser(Session);
-            User userPost = null;
-            List<Comment> listComment = null;
+            Post post;
+            User user = UserHelpers.GetCurrentUser(Session);
+            User userPost;
+            List<Comment> listComment;
             Dictionary<int, User> dict = new Dictionary<int, User>();
 
             if (user == null)
@@ -90,6 +90,7 @@ namespace FlyAwayPlus.Controllers
 
         private string UploadImage(HttpFileCollectionBase files)
         {
+            // TODO: Multiple file names.
             string filename = string.Empty;
             foreach (string item in files)
             {

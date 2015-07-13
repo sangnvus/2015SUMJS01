@@ -13,14 +13,14 @@ namespace FlyAwayPlus.Controllers
         // GET: /User/
         public ActionResult Index(int id = 0)
         {
-            User userSession = UserHelpers.getCurrentUser(Session);
-            User user = null;
-            List<Post> listPost = null;
+            User userSession = UserHelpers.GetCurrentUser(Session);
+            User user;
+            List<Post> listPost;
             List<Photo> listPhoto = new List<Photo>();
-            List<User> friend = new List<User>();
-            List<String> timeline = new List<string>();
-            Photo photo = null;
-            Place place = null;
+            List<User> friend;
+            List<String> timeline;
+            Photo photo;
+            Place place;
             Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
             Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
             Dictionary<String, List<Post>> listPostDict = new Dictionary<string, List<Post>>();

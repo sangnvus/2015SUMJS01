@@ -1,37 +1,39 @@
-﻿@media (min-width: 768px)
-.map-controller-btn {
-  display: block;
-  position: relative;
-  top: -40px;
-  width: 30px;
-  height: 30px;
-  float: left;
-  margin-left: 10px;
-  border: none;
-  border-radius: 100%;
-  background: #fff center no-repeat;
-  display: inline-block;
-  margin-bottom: 0;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  font-weight: 400;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  border-radius: 5px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
+﻿.map-controller-btn {
+    display: block;
+    position: relative;
+    top: -40px;
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin-left: 10px;
+    border: none;
+    -ms-border-radius: 100%;
+    border-radius: 100%;
+    background: #fff center no-repeat;
+    display: inline-block;
+    margin-bottom: 0;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    font-weight: 400;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
+
 .full-screen-btn {
-  background-image: url(../../../data/img/arrow-down-blue.png) !important;
+    background-image: url(../../../data/img/arrow-down-blue.png) !important;
 }
+
 .mini-screen-btn {
-  background-image: url(../../../data/img/arrow-up-blue.png) !important;
+    background-image: url(../../../data/img/arrow-up-blue.png) !important;
 }
