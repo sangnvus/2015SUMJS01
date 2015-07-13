@@ -8,6 +8,8 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+
+    margin-top: 50px
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -40,8 +42,6 @@ img {
     -webkit-box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.25);
     -ms-box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.25);
     box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.25);
-
-    margin-bottom: 80px
 }
 
 .navbar-custom .nav li a {
@@ -99,10 +99,6 @@ img {
     margin: 9.5px 0;
     overflow: hidden;
     background-color: #e5e5e5;
-}
-
-.body-content {
-    margin-top: 10px;
 }
 
 .circle-image {
