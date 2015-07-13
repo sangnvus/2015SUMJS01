@@ -37,9 +37,12 @@ img {
     background-color: rgba(255,255,255,.9);
     width: 100%;
     z-index: 2000;
+    -webkit-box-shadow: 0 0 24px 0 #323234;
+    -ms-box-shadow: 0 0 24px 0 #323234;
+    box-shadow: 0 0 24px 0 #323234;
 }
 
-    .navbar-custom .nav li a {
+.navbar-custom .nav li a {
         display: block;
         color: #50c1e9;
     }
@@ -365,26 +368,26 @@ img {
 }
 
 #id-location-textbox {
-    
 }
 
 .map-canvas {
-    height: 150px
+    height: 150px;
 }
 
 .pac-container {
     /* put Google geocomplete list on top of Bootstrap modal */
     z-index: 9999;
 }
+
 .helper-elements-wrapper {
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
 
-.helper-elements-wrapper input {
-    -ms-border-radius: 0;
-    border-radius: 0;
-    margin-top: -20px
-}
+    .helper-elements-wrapper input {
+        -ms-border-radius: 0;
+        border-radius: 0;
+        margin-top: -20px;
+    }
 
 /* POST FORM ENDS*/
 
