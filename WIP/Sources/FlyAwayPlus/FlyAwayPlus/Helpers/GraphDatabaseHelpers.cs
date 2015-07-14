@@ -348,6 +348,31 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
+        public static List<Post> SearchLimitPost(int skip, int limit)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - Search limit post with privacy public
+                 * 
+                 * match (p:post)
+                    where p.privacy='public'
+                    return p
+                 */
+
+            List<Post> listPost = null;
+            Client.Connect();
+            listPost = Client.Cypher.Match("(p:post)")
+                            .Where("p.privacy='public'")
+                            .Return<Post>("p")
+                            .OrderByDescending("p.dateCreated")
+                            .Skip(skip)
+                            .Limit(limit)
+                            .Results.ToList();
+            return listPost;
+        }
+
         public static Photo FindPhoto(Post po)
         {
 
@@ -486,6 +511,36 @@ namespace FlyAwayPlus.Helpers
                             .Results.ToList();
 
             return listUser;
+        }
+
+        public static List<Post> FindLimitPostFollowing(User user, int skip, int limit)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - post of current user
+                 *     - post with privacy = 'public'
+                 *     - post of friend with privacy = 'friend'
+                 * 
+                 * match(u1:user {userID:@userID})-[:friend]->(u2:user)
+                   with u1, u2
+                   match(p:post) 
+                   where (u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')
+                   return p
+                 */
+            List<Post> listPost = null;
+            Client.Connect();
+            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
+                            .With("u1, u2")
+                            .Match("(p:post)")
+                            .Where("(u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')")
+                            .ReturnDistinct<Post>("p")
+                            .OrderByDescending("p.dateCreated")
+                            .Skip(skip)
+                            .Limit(limit)
+                            .Results.ToList();
+
+            return listPost;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿var homeModule = (function(){
+﻿var homeModule = (function () {
+    var isCallAjax = false;
+
     var setBlocksit = function () {
         var conWidth = $("#blog-landing").width();
         //my container width
@@ -132,18 +134,41 @@
 
         commonModule.callAjax(controller, data, null);
     };
-
+    
+    var loadMoreData = function () {
+        if (isCallAjax) {
+            return;
+        }
+        isCallAjax = true;
+        var controller = "/Home/LoadMore/";
+        $("div#loading").show();
+        $.ajax({
+            type: 'POST',
+            url: controller,
+            //data: "pageNum=" + page,
+            success: function (data, textstatus) {
+                $("#blog-landing").append(data);
+                homeModule.setBlocksit();
+                homeModule.fadeImage();
+                $("div#loading").hide();
+                isCallAjax = false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("div#loading").hide();
+                isCallAjax = false;
+            }
+        });
+    };
+    
     return {
         setBlocksit: setBlocksit,
         fadeImage: fadeImage,
         likePost: likePost,
         dislikePost: dislikePost,
-        plusPost: plusPost
+        plusPost: plusPost,
+        loadMoreData: loadMoreData
     }
 })();
-
-
-
 
 $(window).load(function () {
     homeModule.setBlocksit();
@@ -151,8 +176,18 @@ $(window).load(function () {
     homeModule.likePost();
     homeModule.dislikePost();
     homeModule.plusPost();
+    $("div#loading").hide();
 });
+
 //window resize
 $(window).resize(function () {
     homeModule.setBlocksit();
+});
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        if (isLoadMore || isLoadMore == "true") {
+            homeModule.loadMoreData();
+        }
+    }
 });
