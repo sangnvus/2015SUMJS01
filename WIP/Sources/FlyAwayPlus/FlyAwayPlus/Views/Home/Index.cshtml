@@ -4,10 +4,9 @@
 
 <link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
+<link href="~/Content/HomePage/home.css" rel="stylesheet" />
 
-<script>
-
-</script>
+<script src="~/Scripts/Home/home.js"></script>
 
 <div id="blog-landing">
     @foreach (var post in ViewData["listPost"] as List<FlyAwayPlus.Models.Post>)
@@ -19,12 +18,15 @@
         <div class="white-panel">
             <div class="dark-wrapper">
                 <img src="@(photo[post.postID].url.StartsWith("http") ? "" : "/Images/UserUpload/")@photo[post.postID].url" alt="ALT">
-                <ul class="post-actions">
+                <ul class="post-actions" style="padding-left:0px;">
                     <li>
-                        <button type="button" class="btn btn-primary btn-circle btn-lg btn-plus"><i class="glyphicon glyphicon-plus"></i></button>
+                        <a href="#" role="@post.postID" class="btn btn-primary btn-circle btn-lg btn-plus"><i class="glyphicon glyphicon-plus"></i></a>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-danger btn-circle btn-lg btn-heart"><i class="glyphicon glyphicon-heart"></i></button>
+                        <a href="#" role="@post.postID"  class="btn btn-primary btn-circle btn-lg btn-like"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    </li>
+                    <li>
+                        <a href="#" role="@post.postID" class="btn btn-primary btn-circle btn-lg btn-dislike"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                     </li>
                 </ul>
             </div>
@@ -42,7 +44,7 @@
 
                 <div class="user-interacted-area">
                     <i class="fa fa-thumbs-o-up"></i>&nbsp;<b class="like-count">4</b>&nbsp;
-                    <i class="fa fa-thumbs-o-down"></i>&nbsp;1&nbsp;
+                    <i class="fa fa-thumbs-o-down"></i>&nbsp;<b class="dislike-count">1</b>&nbsp;
                     <i class="fa fa-comment-o"></i>&nbsp;25&nbsp;
                     <i class="fa fa-group"></i>&nbsp;18
                 </div>
@@ -62,65 +64,11 @@
 </div>
 
 <script>
-    $(window).load( function() {
-        setBlocksit();
-    });
-    //window resize
-    $(window).resize(function() {
-        setBlocksit();
-    });
-
-    function setBlocksit(){
-        var conWidth = $("#blog-landing").width();
-        //my container width
-        var gridwidth =212;
-        //alert(conWidth);
-        var col = conWidth/gridwidth;
-        //alert(col);
-        $("#blog-landing").BlocksIt({
-            numOfCol: Math.floor(col),
-            offsetX: 8,
-            offsetY: 8
-        });
-    }
-
     $(function () {
         // Animate user action buttons
-        $(".dark-wrapper").hover(function () {
-            $(this).find("img").fadeTo(500, 0.5);
-
-            var postActions = $(this).find(".post-actions");
-
-            postActions.css("visibility", "visible");
-            postActions.css("opacity", "1");
-            postActions.animate({ top: '20px' }, "slow");
-        }, function () {
-            $(this).find("img").fadeTo(500, 1);
-
-            var postActions = $(this).find(".post-actions");
-
-            postActions.animate({ top: '0px' }, "slow");
-            postActions.css("visibility", "hidden");
-            postActions.css("opacity", "0");
-        });
+        
 
         //Like post
-        $(".btn-heart").click(function () {
-            var likeIcon = $(this).parentsUntil(".white-panel")
-                                  .parent()
-                                  .find(".fa-thumbs-o-up");
-
-            likeIcon.toggleClass("interacted")
-                    .toggleClass("fa-thumbs-up");
-
-            var likeCountElement = $(this).parentsUntil(".white-panel").parent()
-                .find(".like-count");
-
-            if (likeIcon.hasClass("interacted")) {
-                likeCountElement.text(parseInt(likeCountElement.text()) + 1);
-            } else {
-                likeCountElement.text(parseInt(likeCountElement.text()) - 1);
-            }
-        });
+        
     });
 </script>

@@ -66,4 +66,48 @@ namespace FlyAwayPlus.Models.Relationships
             get { return TypeKey; }
         }
     }
+
+    public class UserLikePostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
+        IRelationshipAllowingTargetNode<Post>
+    {
+        public static readonly string TypeKey = "like";
+        public string dateCreated { get; set; }
+
+        public UserLikePostRelationship(NodeReference targetNode)
+            : base(targetNode)
+        {
+        }
+
+        public UserLikePostRelationship(NodeReference targetNode, object data)
+            : base(targetNode, data)
+        {
+        }
+
+        public override string RelationshipTypeKey
+        {
+            get { return TypeKey; }
+        }
+    }
+
+    public class UserDislikePostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
+        IRelationshipAllowingTargetNode<Post>
+    {
+        public static readonly string TypeKey = "dislike";
+        public string dateCreated { get; set; }
+
+        public UserDislikePostRelationship(NodeReference targetNode)
+            : base(targetNode)
+        {
+        }
+
+        public UserDislikePostRelationship(NodeReference targetNode, object data)
+            : base(targetNode, data)
+        {
+        }
+
+        public override string RelationshipTypeKey
+        {
+            get { return TypeKey; }
+        }
+    }
 }

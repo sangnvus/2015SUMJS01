@@ -211,8 +211,10 @@
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\grid-layout.css" />
+    <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
     <Content Include="Scripts\blocksit.min.js" />
+    <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\RoomPage\roomDetail.css" />
@@ -250,6 +252,7 @@
     <Content Include="Images\upload.png" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
+    <Content Include="Scripts\PostPage\postDetail.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
     <Content Include="Content\UserPage\WOW slider\style.mod.css" />

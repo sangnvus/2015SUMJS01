@@ -75,5 +75,49 @@ namespace FlyAwayPlus.Controllers
 
             return View(user);
         }
+
+        public JsonResult Like(int postId)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            Boolean a = false;
+            if (user != null)
+            {
+                var like = GraphDatabaseHelpers.findLike(user.userID, postId);
+                if (like == 0)
+                {
+                    // User like post and delete exist dislike
+                    a = GraphDatabaseHelpers.InsertLike(user.userID, postId);
+                    GraphDatabaseHelpers.DeleteDislike(user.userID, postId);
+                }
+                else
+                {
+                    // delete exist like post
+                    GraphDatabaseHelpers.DeleteLike(user.userID, postId);
+                }
+            }
+            return Json(a);
+        }
+
+        public JsonResult Dislike(int postId)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            Boolean a = false;
+            if (user != null)
+            {
+                var dislike = GraphDatabaseHelpers.findDislike(user.userID, postId);
+                if (dislike == null)
+                {
+                    // user dislike post and delete exist like
+                    a = GraphDatabaseHelpers.InsertDislike(user.userID, postId);
+                    GraphDatabaseHelpers.DeleteLike(user.userID, postId);
+                }
+                else
+                {
+                    // delete exist dislike
+                    GraphDatabaseHelpers.DeleteDislike(user.userID, postId);
+                }
+            }
+            return Json(a);
+        }
 	}
 }

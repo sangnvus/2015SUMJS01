@@ -26,6 +26,119 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
+        public static int findLike(int userID, int postID)
+        {
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:like]->(p:post {postID:" + postID + "})")
+                                .Return<int>("COUNT(r)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public static int findDislike(int userID, int postID)
+        {
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:dislike]->(p:post {postID:" + postID + "})")
+                                .Return<int>("COUNT(r)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public static bool DeleteLike(int userID, int postID)
+        {
+            /**
+             * Match(u:user {userID:@userID})-[r:like]->(p:post {postID:@postID})
+                delete r
+             */
+            try
+            {
+                Client.Connect();
+                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:like]->(p:post {postID:" + postID + "})")
+                                .Delete("r")
+                                .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }  
+
+        public static bool DeleteDislike(int userID, int postID)
+        {
+            /**
+             * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
+                delete r
+             */
+            try { 
+                Client.Connect();
+                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:dislike]->(p:post {postID:" + postID + "})")
+                                .Delete("r")
+                                .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }                               
+
+        public static bool InsertDislike(int userID, int postID)
+        {
+            Node<User> userNode = getNodeUser(userID);
+
+            NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
+                                            .Return<Node<Post>>("p")
+                                            .Results.Single()
+                                            .Reference;
+            if (userNode != null)
+            {
+                var userRef = userNode.Reference;
+                Client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat) }));
+                return true;
+            }
+            return false;
+        }
+
+        public static bool InsertLike(int userID, int postID) {
+            Node<User> userNode = getNodeUser(userID);
+
+            NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
+                                            .Return<Node<Post>>("p")
+                                            .Results.Single()
+                                            .Reference;
+            if (userNode != null)
+            {
+                var userRef = userNode.Reference;
+                Client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)}));
+                return true;
+            }
+            return false;
+        }
+
+        public static Node<User> getNodeUser(int id)
+        {
+            Client.Connect();
+            Node<User> userNode = Client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
+            return userNode;
+        }
+
         public static void InsertPost(User user, Post post, Photo photo, Place place)
         {
             // Auto increment Id.
@@ -40,7 +153,7 @@ namespace FlyAwayPlus.Helpers
                                             .Return<Node<Post>>("p")
                                             .Results.Single()
                                             .Reference;
-
+            
             NodeReference<Photo> photoRef = Client.Cypher.Create("(p:photo {newPhoto})")
                                             .WithParam("newPhoto", photo)
                                             .Return<Node<Photo>>("p")
@@ -52,22 +165,21 @@ namespace FlyAwayPlus.Helpers
                                             .Return<Node<Place>>("p")
                                             .Results.Single()
                                             .Reference;
-
-            Node<User> userNode = Client.Cypher.Match("(u:user {email: '" + user.email + "'})").Return<Node<User>>("u").Results.FirstOrDefault();
+            
+            Node<User> userNode = getNodeUser(user.userID);
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
 
                 Client.CreateRelationship(postRef, new PostHasPhotoRelationship(photoRef));
                 Client.CreateRelationship(postRef, new PostAtPlaceRelationship(placeRef));
-
                 Client.CreateRelationship(userRef, new UserHasPostRelationship(postRef));
                 
-                Client.Cypher.Match("(u:user {email:'" + user.email + "'}), (p:photo {photoID: " + photo.photoID + "})")
+                Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
                     .Create("(u)-[r:has]->(p)")
                     .ExecuteWithoutResults();
 
-                Client.Cypher.Match("(u:user {email:'" + user.email + "'}), (p:place {placeID: " + place.placeID + "})")
+                Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
                     .Create("(u)-[r:visited]->(p)")
                     .ExecuteWithoutResults();
             }
