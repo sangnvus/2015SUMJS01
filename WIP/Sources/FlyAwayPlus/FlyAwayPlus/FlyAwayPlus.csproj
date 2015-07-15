@@ -333,6 +333,7 @@
     <Content Include="Views\Shared\_PostPartial.cshtml" />
     <Content Include="Views\Shared\_Loading.cshtml" />
     <Content Include="Views\Shared\_listPost.cshtml" />
+    <Content Include="Views\Shared\_ListChatFriend.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
