@@ -10,6 +10,21 @@
 </script>
 
 <div id="blog-landing">
+    @* Left panel *@
+    <div class="white-panel">
+        <div class="sidebar-header">
+            <div id="weather-sidebar"></div>
+        </div>
+
+        <div class="sidebar-list">
+            <a href="#"><i class="fa fa-fw fa-star-o"></i><span>Wishlist</span></a>
+            <a href="#"><i class="fa fa-fw fa-building-o"></i><span>Discover rooms</span></a>
+            <a href="#"><i class="fa fa-fw fa-book"></i><span>My rooms</span></a>
+            <a href="#"><i class="fa fa-fw fa-street-view"></i><span>Look around</span></a>
+            <a href="#"><i class="fa fa-fw fa-rocket"></i><span>Hot trend</span></a>
+        </div>
+    </div>
+
     @foreach (var post in ViewData["listPost"] as List<FlyAwayPlus.Models.Post>)
     {
         var photo = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
@@ -62,20 +77,20 @@
 </div>
 
 <script>
-    $(window).load( function() {
+    $(window).load(function () {
         setBlocksit();
     });
     //window resize
-    $(window).resize(function() {
+    $(window).resize(function () {
         setBlocksit();
     });
 
-    function setBlocksit(){
+    function setBlocksit() {
         var conWidth = $("#blog-landing").width();
         //my container width
-        var gridwidth =212;
+        var gridwidth = 212;
         //alert(conWidth);
-        var col = conWidth/gridwidth;
+        var col = conWidth / gridwidth;
         //alert(col);
         $("#blog-landing").BlocksIt({
             numOfCol: Math.floor(col),
@@ -85,7 +100,7 @@
     }
 
     $(function () {
-        // Animate user action buttons
+        // Animate user action buttons.
         $(".dark-wrapper").hover(function () {
             $(this).find("img").fadeTo(500, 0.5);
 
@@ -104,7 +119,7 @@
             postActions.css("opacity", "0");
         });
 
-        //Like post
+        // Like post.
         $(".btn-heart").click(function () {
             var likeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
@@ -122,5 +137,27 @@
                 likeCountElement.text(parseInt(likeCountElement.text()) - 1);
             }
         });
+
+        // Sidebar - load weather.
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var loadWeather = function (location, woeid) {
+                $.simpleWeather({
+                    location: location,
+                    woeid: woeid,
+                    unit: 'c',
+                    success: function (weather) {
+                        html = '<h2><div style="position: absolute; top: -10px; left: 25px"><i class="icon-' + weather.code + '"></i></div> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
+                        html += weather.city;
+
+                        $("#weather-sidebar").html(html);
+                    },
+                    error: function (error) {
+                        $("#weather-sidebar").html('<p>' + error + '</p>');
+                    }
+                });
+            };
+            loadWeather(position.coords.latitude + ',' + position.coords.longitude); //load weather using your lat/lng coordinates
+        });
     });
+
 </script>

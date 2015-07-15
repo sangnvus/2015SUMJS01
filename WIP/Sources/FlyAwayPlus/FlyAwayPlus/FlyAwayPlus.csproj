@@ -250,6 +250,7 @@
     <Content Include="Images\upload.png" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
+    <Content Include="Scripts\jquery.simpleWeather.min.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
     <Content Include="Content\UserPage\WOW slider\style.mod.css" />

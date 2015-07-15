@@ -17,6 +17,7 @@
     <link href="~/Content/Site.css" rel="stylesheet" />
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
+    <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
 </head>
 <body>
     <div class="navbar navbar-custom" role="navigation">
@@ -38,8 +39,18 @@
                     }
                     else
                     {
-                        <li><a href="/Login/Logout">Log out</a></li>
-                        <li><a href="#">@Session["username"]</a></li>
+                        <li style="height: 53px">
+                            <a data-toggle="dropdown" class="dropdown-toggle">
+                                <img src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "Images/avatar/avatar-1.jpg" : "")@Session["userAva"]"
+                                     alt="@Session["username"]"
+                                     class="avatar" />
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">View profile</a></li>
+                                <li><a href="/Login/Logout">Log out</a></li>
+                            </ul>
+                        </li>
                     }
                 </ul>
                 @Html.Partial("_PostPartial")

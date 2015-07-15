@@ -47,6 +47,7 @@ namespace FlyAwayPlus.Controllers
                 // Set the auth cookie
                 Session["authenicated"] = true;
                 Session["username"] = user.firstName + " " + user.lastName;
+                Session["userAva"] = user.avatar;
                 UserHelpers.SetCurrentUser(Session, user);
             }
 
@@ -72,6 +73,7 @@ namespace FlyAwayPlus.Controllers
                 {
                     Session["authenicated"] = true;
                     Session["username"] = newUser.firstName + " " + newUser.lastName;
+                    Session["userAva"] = user.avatar;
                     Session["user"] = newUser;
                 }
             }
@@ -164,6 +166,7 @@ namespace FlyAwayPlus.Controllers
             // Set the auth cookie
             Session["authenicated"] = true;
             Session["username"] = newUser.firstName + " " + newUser.lastName;
+            Session["userAva"] = newUser.avatar;
             UserHelpers.SetCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);

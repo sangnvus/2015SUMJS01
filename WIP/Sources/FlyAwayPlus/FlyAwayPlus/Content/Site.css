@@ -8,8 +8,7 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
-
-    margin-top: 50px
+    margin-top: 50px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -44,7 +43,7 @@ img {
     box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.25);
 }
 
-.navbar-custom .nav li a {
+    .navbar-custom .nav li a {
         display: block;
         color: #50c1e9;
     }
@@ -92,6 +91,37 @@ img {
             filter: alpha(opacity=100);
         }
 
+    .navbar-custom .avatar {
+        width: 35px;
+        height: 35px;
+        -ms-background-size: cover;
+        background-size: cover;
+        display: block;
+        -ms-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        float: left;
+        position: relative;
+        margin-top: -5px;
+    }
+
+.caret-up {
+    width: 0;
+    height: 0;
+    border-left: 4px solid rgba(0, 0, 0, 0);
+    border-right: 4px solid rgba(0, 0, 0, 0);
+    border-bottom: 4px solid;
+    display: inline-block;
+    margin-left: 2px;
+    vertical-align: middle;
+}
+
+.navbar-right .dropdown-menu {
+    border-top: #ffffff;
+    margin-top: -2px !important;
+    border: 0;
+}
 /* END Nav bar customizations */
 
 .white-panel .divider {
@@ -486,3 +516,264 @@ img {
         font-size: 12px;
     }
 /* POST DETAIL ENDS */
+
+/* HOME SIDE MENU */
+@import url(http://fonts.googleapis.com/css?family=Raleway:200,400,700,800);
+
+.sidebar-header {
+    text-align: center;
+    height: 80px;
+    text-transform: uppercase;
+    padding: 10px;
+    color: #ffffff;
+    background-color: #53A3CD;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    -ms-border-top-left-radius: 10px;
+    border-top-left-radius: 10px;
+    -ms-border-top-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.sidebar-list a {
+    display: block;
+    color: #414a51;
+    font-weight: 700;
+    padding: 0.8em 0.55em;
+    font-family: 'Raleway', Arial, sans-serif;
+}
+
+.sidebar-list a {
+    text-decoration: none;
+    outline: none;
+}
+
+    .sidebar-list a:hover,
+    .sidebar-list a:focus {
+        color: #c94e50;
+        outline: none;
+    }
+
+    .sidebar-list a i {
+        opacity: 0.8;
+        color: #d91e18;
+    }
+
+    .sidebar-list a span {
+        margin-left: 10px;
+    }
+
+@font-face {
+    font-family: 'weather';
+    src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.eot');
+    src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.eot?#iefix') format('embedded-opentype'), url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.woff') format('woff'), url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.ttf') format('truetype'), url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.svg#artill_clean_weather_iconsRg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.loading {
+    margin: 65px 0 0;
+}
+
+#weather-sidebar h2 {
+    margin: 0 0 0 35px
+}
+
+#weather-sidebar i {
+    font-family: weather;
+    font-size: 80px;
+    font-style: normal;
+}
+
+#weather-sidebar .icon-0:before {
+    content: ":";
+}
+
+#weather-sidebar .icon-1:before {
+    content: "p";
+}
+
+#weather-sidebar .icon-2:before {
+    content: "S";
+}
+
+#weather-sidebar .icon-3:before {
+    content: "Q";
+}
+
+#weather-sidebar .icon-4:before {
+    content: "S";
+}
+
+#weather-sidebar .icon-5:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-6:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-7:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-8:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-9:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-10:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-11:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-12:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-13:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-14:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-15:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-16:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-17:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-18:before {
+    content: "U";
+}
+
+#weather-sidebar .icon-19:before {
+    content: "Z";
+}
+
+#weather-sidebar .icon-20:before {
+    content: "Z";
+}
+
+#weather-sidebar .icon-21:before {
+    content: "Z";
+}
+
+#weather-sidebar .icon-22:before {
+    content: "Z";
+}
+
+#weather-sidebar .icon-23:before {
+    content: "Z";
+}
+
+#weather-sidebar .icon-24:before {
+    content: "E";
+}
+
+#weather-sidebar .icon-25:before {
+    content: "E";
+}
+
+#weather-sidebar .icon-26:before {
+    content: "3";
+}
+
+#weather-sidebar .icon-27:before {
+    content: "a";
+}
+
+#weather-sidebar .icon-28:before {
+    content: "A";
+}
+
+#weather-sidebar .icon-29:before {
+    content: "a";
+}
+
+#weather-sidebar .icon-30:before {
+    content: "A";
+}
+
+#weather-sidebar .icon-31:before {
+    content: "6";
+}
+
+#weather-sidebar .icon-32:before {
+    content: "1";
+}
+
+#weather-sidebar .icon-33:before {
+    content: "6";
+}
+
+#weather-sidebar .icon-34:before {
+    content: "1";
+}
+
+#weather-sidebar .icon-35:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-36:before {
+    content: "1";
+}
+
+#weather-sidebar .icon-37:before {
+    content: "S";
+}
+
+#weather-sidebar .icon-38:before {
+    content: "S";
+}
+
+#weather-sidebar .icon-39:before {
+    content: "S";
+}
+
+#weather-sidebar .icon-40:before {
+    content: "M";
+}
+
+#weather-sidebar .icon-41:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-42:before {
+    content: "I";
+}
+
+#weather-sidebar .icon-43:before {
+    content: "W";
+}
+
+#weather-sidebar .icon-44:before {
+    content: "a";
+}
+
+#weather-sidebar .icon-45:before {
+    content: "S";
+}
+
+#weather-sidebar .icon-46:before {
+    content: "U";
+}
+
+#weather-sidebar .icon-47:before {
+    content: "S";
+}
+
+/* HOME SIDE MENU ENDS */
