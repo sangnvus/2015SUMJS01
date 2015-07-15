@@ -12,7 +12,6 @@ namespace FlyAwayPlus.Helpers
                                             "May", "June", "July", "Aug", 
                                             "Sep", "Oct", "Nov", "Dec"
                                         };
-        private static String FORMAT = "yyyy/MM/dd hh:mm:ss";
 
         public static List<String> toTimeLineDate(List<Post> listPost, Dictionary<String,List<Post>> listPostDict)
         {

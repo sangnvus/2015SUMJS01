@@ -4,12 +4,12 @@
 
 <link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
+<link href="~/Content/HomePage/home.css" rel="stylesheet" />
 
-<script>
-
-</script>
+<script src="~/Scripts/Home/home.js"></script>
 
 <div id="blog-landing">
+    @Html.Partial("_listPost")
     @* Left panel *@
     <div class="white-panel">
         <div class="sidebar-header">
@@ -76,6 +76,7 @@
     }
 </div>
 
+@Html.Partial("_Loading")
 <script>
     $(window).load(function () {
         setBlocksit();

@@ -12,25 +12,55 @@ namespace FlyAwayPlus.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {
-            User user = UserHelpers.GetCurrentUser(Session);
-            
+        public const int RecordsPerPage = 10;
 
+        public ActionResult LoadMore()
+        {
+            int totalAdd = 0;
+            int pageNumber = 1;
+
+            if (Session["totalAddPost"] == null)
+            {
+                Session["totalAddPost"] = 0;
+            }
+            else
+            {
+                totalAdd = int.Parse(Session["totalAddPost"].ToString());
+            }
+
+            if (Session["pageNumberHomeIndex"] == null)
+            {
+                Session["pageNumberHomeIndex"] = 1;
+            }
+            else
+            {
+                pageNumber = int.Parse(Session["pageNumberHomeIndex"].ToString());
+            }
+            int skip = pageNumber * RecordsPerPage + totalAdd;
+            
+            loadData(skip);
+
+            Session["pageNumberHomeIndex"] = pageNumber + 1;
+            return PartialView("_listPost");
+        }
+
+        private void loadData(int skip)
+        {
             List<Post> listPost = new List<Post>();
-            Photo photo;
-            Place place;
-            User userDict;
             Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
             Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
             Dictionary<int, User> listUserDict = new Dictionary<int, User>();
+            Photo photo;
+            Place place;
+            User userDict;
+            User user = UserHelpers.GetCurrentUser(Session);
 
             if (user == null)
             {
                 /*
-                 * Search all public post
+                 * Search limit public post
                  */
-                listPost = GraphDatabaseHelpers.SearchAllPost();
+                listPost = GraphDatabaseHelpers.SearchLimitPost(skip, RecordsPerPage);
                 foreach (Post po in listPost)
                 {
                     photo = GraphDatabaseHelpers.FindPhoto(po);
@@ -44,10 +74,10 @@ namespace FlyAwayPlus.Controllers
             }
             else
             {
-                GraphClient client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
-                client.Connect();
-
-                listPost = GraphDatabaseHelpers.FindPostFollowing(user);
+                /**
+                 * Search limit following post
+                 */
+                listPost = GraphDatabaseHelpers.FindLimitPostFollowing(user, skip, RecordsPerPage);
 
                 foreach (Post po in listPost)
                 {
@@ -66,6 +96,18 @@ namespace FlyAwayPlus.Controllers
             ViewData["listPlaceDict"] = listPlaceDict;
             ViewData["listUserDict"] = listUserDict;
 
+            if (listPost.Count < RecordsPerPage)
+            {
+                ViewData["isLoadMore"] = "false";
+            }
+            else
+            {
+                ViewData["isLoadMore"] = "true";
+            }
+        }
+        public ActionResult Index()
+        {
+            loadData(0);
             return View();
         }
 

@@ -6,6 +6,7 @@
     var listComment = ViewData["listComment"] as List<FlyAwayPlus.Models.Comment>;
     var dict = ViewData["dict"] as Dictionary<int, FlyAwayPlus.Models.User>;
 }
+<script src="~/Scripts/PostPage/postDetail.js" type="text/javascript"></script>
 <div class="col-md-8 col-md-offset-2">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -31,9 +32,9 @@
             </div>
         </div>
         <div class="interact-area">
-            <a>Like</a>
-            &nbsp;·&nbsp;
-            <a>Dislike</a>
+            <a href="#" class="btn-like"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">4</b>&nbsp;
+            <a href="#" class="btn-dislike"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">1</b>&nbsp;
+            <a href="#" class="btn-people"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">18</b>
         </div>
         <div class="divide-area"></div>
         <div class="comment-area">

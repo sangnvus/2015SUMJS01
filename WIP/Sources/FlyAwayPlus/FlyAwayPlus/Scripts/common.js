@@ -1,15 +1,4 @@
-﻿/*
-var commonModule = (function () {
-    clickUploadPhoto = function () {
-        $("#idBtnUploadPhoto").click(function (e) {
-            if (e.handled !== true) {
-                alert('a');
-                e.handled = true;
-            }
-        });
-    };
-    
-
+﻿var commonModule = (function () {
     convertTime = function (time) {
         // time format: YYYY/MM/DD HH:mm:ss
         var timeList = time.split(" ");
@@ -54,11 +43,33 @@ var commonModule = (function () {
         }
     };
 
+    var callAjax = function (controller, parameters, callbackMethod) {
+        $.ajax({
+            url: controller,
+            type: 'POST',
+            dataType: 'json',
+            data: parameters,
+            success: function (data) {
+                if (callbackMethod) {
+                    eval(callbackMethod);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (callbackMethod) {
+                    var data = "error";
+                    eval(callbackMethod);
+                }
+            }
+        });
+    };
+
+
     return {
-        convertTime: convertTime
+        convertTime: convertTime,
+        callAjax: callAjax
     }
 })();
-*/
+
 $(document).ready(function () {
     //commonModule.clickUploadPhoto();
 });
