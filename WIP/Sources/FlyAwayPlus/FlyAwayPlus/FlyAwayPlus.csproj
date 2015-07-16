@@ -210,14 +210,11 @@
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\common.css" />
-    <Content Include="Content\morphing-search.css" />
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
-    <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Scripts\blocksit.min.js" />
-    <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />
     <Content Include="Content\reset.css" />
@@ -336,7 +333,7 @@
     <Content Include="Views\Shared\_PostPartial.cshtml" />
     <Content Include="Views\Shared\_Loading.cshtml" />
     <Content Include="Views\Shared\_listPost.cshtml" />
-    <Content Include="Views\Shared\_SearchPartial.cshtml" />
+    <Content Include="Views\Shared\_ListChatFriend.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

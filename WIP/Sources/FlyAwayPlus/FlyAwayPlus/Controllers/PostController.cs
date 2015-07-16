@@ -19,6 +19,9 @@ namespace FlyAwayPlus.Controllers
             User userPost;
             List<Comment> listComment;
             Dictionary<int, User> dict = new Dictionary<int, User>();
+            int likeCount = 0;
+            int dislikeCount = 0;
+            int userComment = 0;
 
             if (user == null)
             {
@@ -31,9 +34,12 @@ namespace FlyAwayPlus.Controllers
                 userPost = GraphDatabaseHelpers.SearchUser(post);
                 listComment = GraphDatabaseHelpers.FindComment(post);
 
+                likeCount = GraphDatabaseHelpers.CountLike(post.postID);
+                dislikeCount = GraphDatabaseHelpers.CountDislike(post.postID);
+                userComment = GraphDatabaseHelpers.CountUserComment(post.postID);
                 foreach (var comment in listComment)
                 {
-                    dict.Add(comment.commentID, GraphDatabaseHelpers.findUser(comment));
+                    dict.Add(comment.commentID, GraphDatabaseHelpers.FindUser(comment));
                 }
             }
             catch (Exception e)
@@ -46,6 +52,9 @@ namespace FlyAwayPlus.Controllers
             ViewData["user"] = user;
             ViewData["listComment"] = listComment;
             ViewData["dict"] = dict;
+            ViewData["likeCount"] = likeCount;
+            ViewData["dislikeCount"] = dislikeCount;
+            ViewData["userComment"] = userComment;
 
             return View(post);
         }

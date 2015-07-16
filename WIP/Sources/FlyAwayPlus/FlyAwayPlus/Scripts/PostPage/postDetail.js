@@ -1,12 +1,12 @@
 ﻿var postDetailModule = (function () {
     var likePost = function () {
         $(".btn-like").click(function () {
-            var likeIcon = $(this).parent(".interact-area").find(".fa-thumbs-o-up");
+            var likeIcon = $(".fa-thumbs-o-up");
 
             likeIcon.toggleClass("interacted")
                     .toggleClass("fa-thumbs-up");
 
-            var likeCountElement = $(this).parent(".interact-area").find(".like-count");
+            var likeCountElement = $(".like-count");
 
             if (likeIcon.hasClass("interacted")) {
                 likeCountElement.text(parseInt(likeCountElement.text()) + 1);
@@ -14,14 +14,15 @@
                 likeCountElement.text(parseInt(likeCountElement.text()) - 1);
             }
 
-            unDislikePost(this);
+            unDislikePost();
+            likeAjax(this);
         });
     };
 
-    var unLikePost = function (post) {
-        var likeIcon = $(post).parent(".interact-area").find(".fa-thumbs-o-up");
+    var unLikePost = function () {
+        var likeIcon = $(".fa-thumbs-o-up");
 
-        var likeCountElement = $(post).parent(".interact-area").find(".like-count");
+        var likeCountElement = $(".like-count");
 
         if (likeIcon.hasClass("interacted")) {
             likeIcon.toggleClass("interacted")
@@ -30,10 +31,10 @@
         }
     };
 
-    var unDislikePost = function (post) {
-        var dislikeIcon = $(post).parent(".interact-area").find(".fa-thumbs-o-down");
+    var unDislikePost = function () {
+        var dislikeIcon = $(".fa-thumbs-o-down");
 
-        var dislikeCountElement = $(post).parent(".interact-area").find(".dislike-count");
+        var dislikeCountElement = $(".dislike-count");
 
         if (dislikeIcon.hasClass("interacted")) {
             dislikeIcon.toggleClass("interacted")
@@ -44,12 +45,12 @@
 
     var dislikePost = function () {
         $(".btn-dislike").click(function () {
-            var dislikeIcon = $(this).parent(".interact-area").find(".fa-thumbs-o-down");
+            var dislikeIcon = $(".fa-thumbs-o-down");
 
             dislikeIcon.toggleClass("interacted")
                     .toggleClass("fa-thumbs-down");
 
-            var dislikeCountElement = $(this).parent(".interact-area").find(".dislike-count");
+            var dislikeCountElement = $(".dislike-count");
 
             if (dislikeIcon.hasClass("interacted")) {
                 dislikeCountElement.text(parseInt(dislikeCountElement.text()) + 1);
@@ -57,8 +58,29 @@
                 dislikeCountElement.text(parseInt(dislikeCountElement.text()) - 1);
             }
 
-            unLikePost(this);
+            unLikePost();
+            dislikeAjax(this);
         });
+    };
+
+    var likeAjax = function (post) {
+        var controller = "/User/Like";
+        var postID = parseInt($(post).attr("role"));
+        var data = {
+            postId: postID
+        }
+
+        commonModule.callAjax(controller, data, null);
+    };
+
+    var dislikeAjax = function (post) {
+        var controller = "/User/Dislike";
+        var postID = parseInt($(post).attr("role"));
+        var data = {
+            postId: postID
+        }
+
+        commonModule.callAjax(controller, data, null);
     };
 
     return {
