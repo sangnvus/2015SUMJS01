@@ -14,10 +14,17 @@
 
     <link href="~/Content/bootflat.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
     <link href="~/Content/Site.css" rel="stylesheet" />
+
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
+
     <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/morphing-search.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar navbar-custom" role="navigation">
@@ -31,6 +38,7 @@
                 <ul class="nav navbar-nav navbar-left">
                     <li><a class="current" href="/Home/">Home</a></li>
                     <li><a class="" href="#">Explore</a></li>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
@@ -41,7 +49,7 @@
                     {
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle">
-                                <img src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "Images/avatar/avatar-1.jpg" : "")@Session["userAva"]"
+                                <img src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/avatar/avatar-1.jpg" : "")@Session["userAva"]"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
@@ -57,10 +65,12 @@
             </div>
         </div>
     </div>
-    <div class="container body-content" style="width:85%; margin-left: 5%;">
+    <div class="container body-content">
+        @Html.Partial("_SearchPartial")
         @RenderBody()
         <hr />
     </div>
+
     @Html.Action("LoginPartial", "Login")
 
     @Scripts.Render("~/bundles/bootstrap")

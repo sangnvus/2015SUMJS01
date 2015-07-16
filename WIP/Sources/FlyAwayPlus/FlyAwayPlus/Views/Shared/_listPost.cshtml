@@ -3,10 +3,7 @@
     var photo = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
     var place = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
     var user = ViewData["listUserDict"] as Dictionary<int, FlyAwayPlus.Models.User>;
-    var dislike = ViewData["dislikeCount"] as Dictionary<int, int>;
-    var like = ViewData["likeCount"] as Dictionary<int, int>;
-    var comment = ViewData["commentCount"] as Dictionary<int, int>;
-    var userComment = ViewData["userCommentCount"] as Dictionary<int, int>;
+
     <div class="white-panel">
         <div class="dark-wrapper">
             <img src="@(photo[post.postID].url.StartsWith("http") ? "" : "/Images/UserUpload/")@photo[post.postID].url" alt="ALT">
@@ -35,10 +32,10 @@
             }
 
             <div class="user-interacted-area">
-                <i class="fa fa-thumbs-o-up"></i>&nbsp;<b class="like-count">@like[post.postID]</b>&nbsp;
-                <i class="fa fa-thumbs-o-down"></i>&nbsp;<b class="dislike-count">@dislike[post.postID]</b>&nbsp;
-                <i class="fa fa-comment-o"></i>&nbsp;@comment[post.postID]&nbsp;
-                <i class="fa fa-group"></i>&nbsp;@userComment[post.postID]
+                <i class="fa fa-thumbs-o-up"></i>&nbsp;<b class="like-count">4</b>&nbsp;
+                <i class="fa fa-thumbs-o-down"></i>&nbsp;<b class="dislike-count">1</b>&nbsp;
+                <i class="fa fa-comment-o"></i>&nbsp;25&nbsp;
+                <i class="fa fa-group"></i>&nbsp;18
             </div>
             <div class="divider"></div>
             <div class="user-info">
@@ -47,7 +44,7 @@
                     <a href="/User/Index/@user[post.postID].userID">
                         <div class="name-user">@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)</div>
                     </a>
-                    <div class="post-time">@post.toRealtime()</div>
+                    <div class="post-time">@post.dateCreated</div>
                 </div>
             </div>
         </div>

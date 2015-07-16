@@ -7,28 +7,3 @@
     margin: 0 20px 0 5px;
     padding: 8px 14px;
 }
-
-.chat-sidebar {
-    border: 1px solid rgba(29, 49, 91, 0.3);
-    height: 100%;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 200px;
-}
-
-.sidebar-name {
-    font-size: 12px;
-    margin-bottom: 4px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.sidebar-name a {
-    color: inherit;
-    display: block;
-    height: 100%;
-    text-decoration: none;
-}

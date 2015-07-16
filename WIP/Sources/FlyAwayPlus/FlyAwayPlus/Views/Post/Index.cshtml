@@ -22,7 +22,7 @@
                     <span class="post-time">
                         <span>Shared with @Model.privacy</span>
                         &nbsp;-&nbsp;
-                        <span>@Model.toRealtime()</span>
+                        <span>@Model.dateCreated</span>
                     </span>
 
                 </div>
@@ -31,18 +31,13 @@
                 @Model.content
             </div>
         </div>
-
         <div class="interact-area">
-            <a href="#" role="@Model.postID" class="btn-like"><span>Like</span></a>
-            <a href="#" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
+            <a href="#" class="btn-like"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">4</b>&nbsp;
+            <a href="#" class="btn-dislike"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">1</b>&nbsp;
+            <a href="#" class="btn-people"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">18</b>
         </div>
         <div class="divide-area"></div>
         <div class="comment-area">
-            <div style="margin: 0 20px 12px">
-                <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
-                <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
-                <a href="#" role="@Model.postID"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
-            </div>
             <div class="comment-stats">
                 <span>@listComment.Count comments</span>
             </div>
@@ -57,7 +52,7 @@
                         </div>
                         <div class="commenter-content">
                             <span class="commenter-name"><a href="/User/Index/@u.userID">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
-                            <span class="commenter-post-time" title="@comment.toRealtime()">- @comment.toRealtime()</span>
+                            <span class="commenter-post-time" title="@comment.dateCreated">- @comment.dateCreated</span>
                         </div>
                         <div class="comment-content">
                             @comment.content

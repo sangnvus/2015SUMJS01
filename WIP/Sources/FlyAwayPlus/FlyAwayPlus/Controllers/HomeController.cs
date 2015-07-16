@@ -50,11 +50,9 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
             Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
             Dictionary<int, User> listUserDict = new Dictionary<int, User>();
-            Dictionary<int, int> dictLikeCount = new Dictionary<int, int>();
-            Dictionary<int, int> dictDislikeCount = new Dictionary<int, int>();
-            Dictionary<int, int> dictCommentCount = new Dictionary<int, int>();
-            Dictionary<int, int> dictUserCommentCount = new Dictionary<int, int>();
-
+            Photo photo;
+            Place place;
+            User userDict;
             User user = UserHelpers.GetCurrentUser(Session);
 
             if (user == null)
@@ -65,13 +63,13 @@ namespace FlyAwayPlus.Controllers
                 listPost = GraphDatabaseHelpers.SearchLimitPost(skip, RecordsPerPage);
                 foreach (Post po in listPost)
                 {
-                    listPhotoDict.Add(po.postID, GraphDatabaseHelpers.FindPhoto(po));
-                    listPlaceDict.Add(po.postID, GraphDatabaseHelpers.FindPlace(po));
-                    listUserDict.Add(po.postID, GraphDatabaseHelpers.FindUser(po));
-                    dictLikeCount.Add(po.postID, GraphDatabaseHelpers.CountLike(po.postID));
-                    dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.CountDislike(po.postID));
-                    dictCommentCount.Add(po.postID, GraphDatabaseHelpers.CountComment(po.postID));
-                    dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.CountUserComment(po.postID));
+                    photo = GraphDatabaseHelpers.FindPhoto(po);
+                    place = GraphDatabaseHelpers.FindPlace(po);
+                    userDict = GraphDatabaseHelpers.findUser(po);
+
+                    listPhotoDict.Add(po.postID, photo);
+                    listPlaceDict.Add(po.postID, place);
+                    listUserDict.Add(po.postID, userDict);
                 }
             }
             else
@@ -83,13 +81,13 @@ namespace FlyAwayPlus.Controllers
 
                 foreach (Post po in listPost)
                 {
-                    listPhotoDict.Add(po.postID, GraphDatabaseHelpers.FindPhoto(po));
-                    listPlaceDict.Add(po.postID, GraphDatabaseHelpers.FindPlace(po));
-                    listUserDict.Add(po.postID, GraphDatabaseHelpers.FindUser(po));
-                    dictLikeCount.Add(po.postID, GraphDatabaseHelpers.CountLike(po.postID));
-                    dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.CountDislike(po.postID));
-                    dictCommentCount.Add(po.postID, GraphDatabaseHelpers.CountComment(po.postID));
-                    dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.CountUserComment(po.postID));
+                    photo = GraphDatabaseHelpers.FindPhoto(po);
+                    place = GraphDatabaseHelpers.FindPlace(po);
+                    userDict = GraphDatabaseHelpers.findUser(po);
+
+                    listPhotoDict.Add(po.postID, photo);
+                    listPlaceDict.Add(po.postID, place);
+                    listUserDict.Add(po.postID, userDict);
                 }
             }
 
@@ -97,10 +95,6 @@ namespace FlyAwayPlus.Controllers
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listPlaceDict"] = listPlaceDict;
             ViewData["listUserDict"] = listUserDict;
-            ViewData["dislikeCount"] = dictDislikeCount;
-            ViewData["likeCount"] = dictLikeCount;
-            ViewData["commentCount"] = dictCommentCount;
-            ViewData["userCommentCount"] = dictUserCommentCount;
 
             if (listPost.Count < RecordsPerPage)
             {

@@ -26,10 +26,70 @@
     @Html.Partial("_listPost")
     
 </div>
-<!--Html.Partial("_ListChatFriend")-->
+
 @Html.Partial("_Loading")
 <script>
+    $(window).load(function () {
+        setBlocksit();
+    });
+    //window resize
+    $(window).resize(function () {
+        setBlocksit();
+    });
+
+    function setBlocksit() {
+        var conWidth = $("#blog-landing").width();
+        //my container width
+        var gridwidth = 212;
+        //alert(conWidth);
+        var col = conWidth / gridwidth;
+        //alert(col);
+        $("#blog-landing").BlocksIt({
+            numOfCol: Math.floor(col),
+            offsetX: 8,
+            offsetY: 8
+        });
+    }
+
     $(function () {
+        // Animate user action buttons.
+        $(".dark-wrapper").hover(function () {
+            $(this).find("img").fadeTo(500, 0.5);
+
+            var postActions = $(this).find(".post-actions");
+
+            postActions.css("visibility", "visible");
+            postActions.css("opacity", "1");
+            postActions.animate({ top: '20px' }, "slow");
+        }, function () {
+            $(this).find("img").fadeTo(500, 1);
+
+            var postActions = $(this).find(".post-actions");
+
+            postActions.animate({ top: '0px' }, "slow");
+            postActions.css("visibility", "hidden");
+            postActions.css("opacity", "0");
+        });
+
+        // Like post.
+        $(".btn-heart").click(function () {
+            var likeIcon = $(this).parentsUntil(".white-panel")
+                                  .parent()
+                                  .find(".fa-thumbs-o-up");
+
+            likeIcon.toggleClass("interacted")
+                    .toggleClass("fa-thumbs-up");
+
+            var likeCountElement = $(this).parentsUntil(".white-panel").parent()
+                .find(".like-count");
+
+            if (likeIcon.hasClass("interacted")) {
+                likeCountElement.text(parseInt(likeCountElement.text()) + 1);
+            } else {
+                likeCountElement.text(parseInt(likeCountElement.text()) - 1);
+            }
+        });
+
         // Sidebar - load weather.
         navigator.geolocation.getCurrentPosition(function (position) {
             var loadWeather = function (location, woeid) {
