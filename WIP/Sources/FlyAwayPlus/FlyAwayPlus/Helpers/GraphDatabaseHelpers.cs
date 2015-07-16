@@ -26,7 +26,87 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
-        public static int findLike(int userID, int postID)
+        public static int CountUserComment(int postID)
+        {
+            /*
+             * Match (p:post {postID:@postID})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
+                return COUNT (DISTINCT u)
+             */
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)")
+                                .Return<int>("COUNT(distinct u)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public static int CountComment(int postID)
+        {
+            /*
+             * Match (p:post {postID:@postID})-[r:has]->(c:comment)
+                return COUNT(DISTINCT c)
+             */
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[r:has]->(c:comment)")
+                                .Return<int>("COUNT(distinct c)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public static int CountDislike(int postID)
+        {
+            /*
+             * Match (p:post {postID:@postID})<-[r:dislike]-(u:user)
+                return COUNT(DISTINCT c)
+             */
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:dislike]-(u:user)")
+                                .Return<int>("COUNT(distinct r)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public static int CountLike(int postID)
+        {
+            /*
+             * Match (p:post {postID:@postID})<-[r:like]-(u:user)
+                return COUNT(DISTINCT r)
+             */
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:like]-(u:user)")
+                                .Return<int>("COUNT(DISTINCT r)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public static int FindLike(int userID, int postID)
         {
             try
             {
@@ -42,7 +122,7 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public static int findDislike(int userID, int postID)
+        public static int FindDislike(int userID, int postID)
         {
             try
             {
@@ -263,7 +343,7 @@ namespace FlyAwayPlus.Helpers
             return list;
         }
 
-        public static User findUser(Comment comment)
+        public static User FindUser(Comment comment)
         {
             /*
                  * Query:
@@ -281,7 +361,7 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public static User findUser(int id)
+        public static User FindUser(int id)
         {
             /*
                  * Query:
@@ -307,7 +387,7 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public static User findUser(Post post)
+        public static User FindUser(Post post)
         {
             /*
                  * Query:

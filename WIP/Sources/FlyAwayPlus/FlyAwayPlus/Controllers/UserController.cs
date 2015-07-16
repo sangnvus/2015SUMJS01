@@ -48,7 +48,7 @@ namespace FlyAwayPlus.Controllers
             }
             else
             {
-                user = GraphDatabaseHelpers.findUser(id);
+                user = GraphDatabaseHelpers.FindUser(id);
                 if (user == null)
                 {
                     return RedirectToAction("Index", "Home");
@@ -82,7 +82,7 @@ namespace FlyAwayPlus.Controllers
             Boolean a = false;
             if (user != null)
             {
-                var like = GraphDatabaseHelpers.findLike(user.userID, postId);
+                int like = GraphDatabaseHelpers.FindLike(user.userID, postId);
                 if (like == 0)
                 {
                     // User like post and delete exist dislike
@@ -104,8 +104,8 @@ namespace FlyAwayPlus.Controllers
             Boolean a = false;
             if (user != null)
             {
-                var dislike = GraphDatabaseHelpers.findDislike(user.userID, postId);
-                if (dislike == null)
+                int dislike = GraphDatabaseHelpers.FindDislike(user.userID, postId);
+                if (dislike == 0)
                 {
                     // user dislike post and delete exist like
                     a = GraphDatabaseHelpers.InsertDislike(user.userID, postId);
