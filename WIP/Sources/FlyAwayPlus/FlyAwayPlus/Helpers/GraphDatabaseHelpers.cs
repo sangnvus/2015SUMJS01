@@ -26,6 +26,30 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
+        public static bool InsertComment(int postID, Comment comment, int userID)
+        {
+            // Auto increment Id.
+            comment.commentID = GetGlobalIncrementId();
+
+            Client.Connect();
+            NodeReference<Comment> comRef = Client.Cypher.Create("(c:comment {newComment})").
+                        WithParam("newComment", comment)
+                        .Return<Node<Comment>>("c")
+                        .Results.Single().Reference;
+
+            Node<Post> postNode = getNodePost(postID);
+            Node<User> userNode = getNodeUser(userID);
+            if (postNode != null)
+            {
+                var postRef = postNode.Reference;
+                var userRef = userNode.Reference;
+                Client.CreateRelationship(postRef, new PostHasCommentRelationship(comRef));
+                Client.CreateRelationship(userRef, new UserHasCommentRelationship(comRef));
+                return true;
+            }
+            return false;
+        }
+
         public static int CountUserComment(int postID)
         {
             /*
@@ -215,8 +239,13 @@ namespace FlyAwayPlus.Helpers
         public static Node<User> getNodeUser(int id)
         {
             Client.Connect();
-            Node<User> userNode = Client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
-            return userNode;
+            return Client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
+        }
+
+        public static Node<Post> getNodePost(int id)
+        {
+            Client.Connect();
+            return Client.Cypher.Match("(p:post {postID: " + id + "})").Return<Node<Post>>("p").Results.FirstOrDefault();
         }
 
         public static void InsertPost(User user, Post post, Photo photo, Place place)

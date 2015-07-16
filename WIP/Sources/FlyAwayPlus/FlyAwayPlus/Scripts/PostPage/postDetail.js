@@ -82,10 +82,48 @@
 
         commonModule.callAjax(controller, data, null);
     };
+    
+    var commentAjax = function (post) {
+        var controller = "/User/Comment";
+        var postID = parseInt($(post).attr("role"));
+        var content = $(post).val();
+        var data = {
+            postId: postID,
+            content: content
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: controller,
+            data: data,
+            success: function (data, textstatus) {
+                $(".comment-list").append(data);
+                $("#idTextareaComment").text("").val("");
+                $("#idTextareaComment").triggerHandler("blur")
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    var handleEnter = function (evt) {
+        if (evt.keyCode == 13 && evt.shiftKey) {
+            if (evt.type == "keydown") {
+                // create new line
+                $(this).val($(this).val() + "\n");
+            }
+            evt.preventDefault();
+        }
+        else if (evt.keyCode == 13) {
+            commentAjax($("#idTextareaComment"));
+            evt.preventDefault();
+        }
+    };
 
     return {
         likePost: likePost,
-        dislikePost: dislikePost
+        dislikePost: dislikePost,
+        handleEnter: handleEnter
     }
 })();
 
@@ -96,4 +134,9 @@ $(document).ready(function () {
         postDetailModule.likePost();
         postDetailModule.dislikePost();
     });
+
+    $("#idTextareaComment").keydown(function (e) {
+        postDetailModule.handleEnter(e);
+    });
+    $("#idTextareaComment").elastic();
 });

@@ -76,6 +76,22 @@ namespace FlyAwayPlus.Controllers
             return View(user);
         }
 
+        public ActionResult Comment(int postId, string content)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            Dictionary<int, FlyAwayPlus.Models.User> dict = new Dictionary<int, Models.User>();
+            Comment comment = new Comment();
+            comment.content = content;
+            comment.content = comment.content.Replace("\\","\\\\");
+            comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+
+            bool success = GraphDatabaseHelpers.InsertComment(postId, comment, user.userID);
+            dict.Add(comment.commentID, user);
+            
+            ViewData["dict"] = dict;
+            return PartialView("_PostDetailPartial", comment);
+        }
+
         public JsonResult Like(int postId)
         {
             User user = UserHelpers.GetCurrentUser(Session);

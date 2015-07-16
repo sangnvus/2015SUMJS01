@@ -216,6 +216,7 @@
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\Home\home.js" />
+    <Content Include="Scripts\jquery.elastic.source.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\RoomPage\roomDetail.css" />
@@ -334,6 +335,7 @@
     <Content Include="Views\Shared\_Loading.cshtml" />
     <Content Include="Views\Shared\_listPost.cshtml" />
     <Content Include="Views\Shared\_ListChatFriend.cshtml" />
+    <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

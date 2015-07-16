@@ -89,6 +89,49 @@ namespace FlyAwayPlus.Models.Relationships
         }
     }
 
+    public class PostHasCommentRelationship : Relationship, IRelationshipAllowingSourceNode<Post>,
+        IRelationshipAllowingTargetNode<Comment>
+    {
+        public static readonly string TypeKey = "has";
+        public string dateCreated { get; set; }
+
+        public PostHasCommentRelationship(NodeReference targetNode)
+            : base(targetNode)
+        {
+        }
+
+        public PostHasCommentRelationship(NodeReference targetNode, object data)
+            : base(targetNode, data)
+        {
+        }
+
+        public override string RelationshipTypeKey
+        {
+            get { return TypeKey; }
+        }
+    }
+    public class UserHasCommentRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
+        IRelationshipAllowingTargetNode<Comment>
+    {
+        public static readonly string TypeKey = "has";
+        public string dateCreated { get; set; }
+
+        public UserHasCommentRelationship(NodeReference targetNode)
+            : base(targetNode)
+        {
+        }
+
+        public UserHasCommentRelationship(NodeReference targetNode, object data)
+            : base(targetNode, data)
+        {
+        }
+
+        public override string RelationshipTypeKey
+        {
+            get { return TypeKey; }
+        }
+    }
+
     public class UserDislikePostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
         IRelationshipAllowingTargetNode<Post>
     {
