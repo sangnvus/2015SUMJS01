@@ -300,8 +300,10 @@
     <Content Include="Images\upload.png" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
+    <Content Include="Scripts\LookAround\logger.js" />
     <Content Include="Scripts\PostPage\postDetail.js" />
     <Content Include="Scripts\jquery.simpleWeather.min.js" />
+    <Content Include="Scripts\prettymaps.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
     <Content Include="Content\UserPage\WOW slider\style.mod.css" />
@@ -382,7 +384,7 @@
     <Content Include="Views\Shared\_listPost.cshtml" />
     <Content Include="Views\Shared\_ListChatFriend.cshtml" />
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
-    <Content Include="Views\Login\SendMail.cshtml" />
+    <Content Include="Views\Login\ForgotPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

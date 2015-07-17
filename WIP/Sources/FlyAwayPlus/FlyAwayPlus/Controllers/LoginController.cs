@@ -190,6 +190,11 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
         public ActionResult SendMail()
         {
             var x = Request["email"];
@@ -216,7 +221,9 @@ namespace FlyAwayPlus.Controllers
 
             }
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
+
+
     }
 }
