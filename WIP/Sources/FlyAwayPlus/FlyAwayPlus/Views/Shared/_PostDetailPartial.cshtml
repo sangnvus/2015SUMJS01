@@ -14,6 +14,8 @@
         <span class="commenter-post-time" title="@Model.toRealtime()">- @Model.toRealtime()</span>
     </div>
     <div class="comment-content">
-        <p style="word-break:break-all; ">@Model.content</p>
+        <p style="word-break:break-all;">
+            @Html.Raw(Html.Encode(@Model.content).Replace("\\n", "<br />"))
+        </p>
     </div>
 </div>

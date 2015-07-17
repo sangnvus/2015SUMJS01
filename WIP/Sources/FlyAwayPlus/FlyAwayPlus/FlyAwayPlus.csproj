@@ -259,6 +259,7 @@
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
+    <Content Include="Content\PostDetailPage\postDetail.css" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\Home\home.js" />

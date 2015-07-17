@@ -1,0 +1,10 @@
+﻿.comment-list .comment-detail {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 0;
+}
+
+.comment-list .comment-detail .comment-content {
+    margin-left: 40px;
+}

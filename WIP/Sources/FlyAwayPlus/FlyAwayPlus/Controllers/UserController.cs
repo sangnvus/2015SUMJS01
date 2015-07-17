@@ -82,7 +82,7 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, FlyAwayPlus.Models.User> dict = new Dictionary<int, Models.User>();
             Comment comment = new Comment();
             comment.content = content;
-            comment.content = comment.content.Replace("\\","\\\\");
+            comment.content = comment.content.Replace("\n","\\n");
             comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
 
             bool success = GraphDatabaseHelpers.InsertComment(postId, comment, user.userID);

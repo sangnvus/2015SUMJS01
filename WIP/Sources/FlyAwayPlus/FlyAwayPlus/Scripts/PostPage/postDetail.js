@@ -98,8 +98,7 @@
             data: data,
             success: function (data, textstatus) {
                 $(".comment-list").append(data);
-                $("#idTextareaComment").text("").val("");
-                $("#idTextareaComment").triggerHandler("blur")
+                $("#idTextareaComment").text("").val("").blur();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
             }

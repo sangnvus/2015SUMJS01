@@ -367,7 +367,7 @@ namespace FlyAwayPlus.Helpers
             Client.Connect();
             list = Client.Cypher.Match("(p:post {postID:" + post.postID + "})-[:has]->(c:comment)")
                             .Return<Comment>("c")
-                            .OrderBy("c.dateCreated")
+                            .OrderByDescending("c.dateCreated")
                             .Results.ToList();
             return list;
         }
