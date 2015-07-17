@@ -179,16 +179,16 @@
         var data = {
             pageNumber: 1
         };
-        if (typePost == "index") {
-            controller = "/Home/LoadMore/";
-            data.pageNumber = pageNumberIndex++;
-        }
-        else if(typePost == "wish") {
+        if(typePost == "wish") {
             controller = "/Home/LoadMoreWish/";
             data.pageNumber = pageNumberWish++;
         } else if (typePost == "hot") {
             controller = "/Home/LoadMoreHot/";
             data.pageNumber = pageNumberHot++;
+        } else {
+            //  (typePost == "index")
+            controller = "/Home/LoadMore/";
+            data.pageNumber = pageNumberIndex++;
         }
 
         $("div#loading").show();

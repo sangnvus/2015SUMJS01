@@ -13,6 +13,9 @@ using ASPSnippets.GoogleAPI;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
+using ASPSnippets.GoogleAPI;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -57,6 +60,7 @@ namespace FlyAwayPlus.Controllers
                 Session["authenicated"] = true;
                 Session["username"] = user.firstName + " " + user.lastName;
                 Session["userAva"] = user.avatar;
+                Session["userID"] = user.userID;
                 UserHelpers.SetCurrentUser(Session, user);
             }
 
@@ -84,6 +88,7 @@ namespace FlyAwayPlus.Controllers
                     Session["username"] = newUser.firstName + " " + newUser.lastName;
                     Session["userAva"] = user.avatar;
                     Session["user"] = newUser;
+                    Session["userID"] = newUser.userID;
                 }
             }
 
@@ -92,8 +97,15 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Logout()
         {
+            User user = UserHelpers.GetCurrentUser(Session);
+            if (user.typeID == 2)
+            {
+                GoogleConnect.Clear();
+            }
             Session["authenicated"] = "";
             Session["username"] = "";
+            Session["userAva"] = "";
+            Session["userID"] = "";
             UserHelpers.SetCurrentUser(Session, null);
             return RedirectToAction("Index", "Home");
         }
@@ -189,6 +201,7 @@ namespace FlyAwayPlus.Controllers
 
             // select from DB
             User newUser = GraphDatabaseHelpers.GetUser(1, email); // Facebook account: typeID = 1
+            string facebookID = me.id;
 
             /*
              *  Insert into Graph DB 
@@ -207,6 +220,7 @@ namespace FlyAwayPlus.Controllers
                     gender = me.gender,
                     phoneNumber = me.phone_number,
                     status = "active",
+                    avatar = "https://graph.facebook.com/" + facebookID + "/picture?type=normal",
                     password = ""
                 };
                 // Facebook account
@@ -219,6 +233,7 @@ namespace FlyAwayPlus.Controllers
             Session["authenicated"] = true;
             Session["username"] = newUser.firstName + " " + newUser.lastName;
             Session["userAva"] = newUser.avatar;
+            Session["userID"] = newUser.userID;
             UserHelpers.SetCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -298,18 +313,54 @@ namespace FlyAwayPlus.Controllers
             return null;
         }
 
+        private class Email
+        {
+            public string Value { get; set; }
+            public string Type { get; set; }
+        }
+
+        private class Address
+        {
+            public string Value { get; set; }
+            public bool Primary { get; set; }
+        }
         public ActionResult GoogleCallback()
         {
 
             if (!string.IsNullOrEmpty(Request.QueryString["code"]))
             {
                 string code = Request.QueryString["code"];
-                string json = GoogleConnect.Fetch("me", code);
-                User profile = new JavaScriptSerializer().Deserialize<User>(json);
-                string email = profile.email;
-
+                dynamic google = JObject.Parse(GoogleConnect.Fetch("me", code));
+                JArray emailList = new JArray(google.emails);
+                string email = "";
+                foreach (JToken x in emailList)
+                {
+                    Email e = x.ToObject<Email>();
+                    if (e.Type.Equals("account"))
+                    {
+                        email = e.Value;
+                    }
+                
+                }
+                string avatar = google.image.url.Value;
+                avatar = avatar.Substring(0, avatar.LastIndexOf("?sz=") + 4) + "100";
+                JArray addressList = new JArray();
+                if (google.placesLived != null)
+                {
+                    addressList = new JArray(google.placesLived);
+                }
+                string address = "";
+                foreach (JToken x in addressList)
+                {
+                    Address a = x.ToObject<Address>();
+                    if (a.Primary)
+                    {
+                        address = a.Value;
+                    }
+                }
+                
                 // select from DB
-                User newUser = GraphDatabaseHelpers.GetUser(1, email); // Facebook account: typeID = 1
+                User newUser = GraphDatabaseHelpers.GetUser(2, email); // Google account: typeID = 2
 
                 /*
                  *  Insert into Graph DB 
@@ -318,19 +369,20 @@ namespace FlyAwayPlus.Controllers
                 {
                     newUser = new User
                     {
-                        typeID = 1,
+                        typeID = 2,
                         email = email,
-                        address = profile.address,
+                        address = address,
                         dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
-                        dateOfBirth = profile.dateOfBirth,
-                        firstName = profile.firstName,
-                        lastName = profile.lastName,
-                        gender = profile.gender,
-                        phoneNumber = profile.phoneNumber,
+                        dateOfBirth = "",
+                        firstName = google.name.familyName.Value,
+                        lastName = google.name.givenName.Value,
+                        gender = google.gender == null ? "" : google.gender.Value,
+                        phoneNumber = "",
                         status = "active",
+                        avatar = avatar,
                         password = ""
                     };
-                    // Facebook account
+                    // Google account
 
                     // insert user to Database
                     GraphDatabaseHelpers.InsertUser(newUser);
@@ -340,15 +392,11 @@ namespace FlyAwayPlus.Controllers
                 Session["authenicated"] = true;
                 Session["username"] = newUser.firstName + " " + newUser.lastName;
                 Session["userAva"] = newUser.avatar;
+                Session["userID"] = newUser.userID;
                 UserHelpers.SetCurrentUser(Session, newUser);
-
-                //FormsAuthentication.SetAuthCookie(email, false);
-                //SessionHelper.RenewCurrentUser();
-
-                return RedirectToAction("Index", "Home");
             }
 
-            return null;
+            return RedirectToAction("Index", "Home");
         }
 
         ///////////////////////////
