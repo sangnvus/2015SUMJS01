@@ -593,7 +593,7 @@ img {
 #weather-sidebar h2 {
     margin: 0;
     font-weight: inherit;
-    font-size: 30px
+    font-size: 30px;
 }
 
 #weather-sidebar i {
@@ -870,6 +870,19 @@ img {
         top: 10px;
         left: 25px;
         z-index: 1;
-        cursor: pointer
+        cursor: pointer;
     }
 /* NOTIFICATION MENU ENDS */
+
+/* AVATAR UPLOAD */
+#avatar-upload-form input[type="file"] {
+    display: none;
+}
+
+#avatar-upload-form .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+/* AVATAR UPLOAD ENDS */

@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using ASPSnippets.GoogleAPI;
@@ -93,6 +98,50 @@ namespace FlyAwayPlus.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UploadAvatar(IEnumerable<HttpPostedFileBase> files)
+        {
+            if (files == null || !files.Any())
+            {
+                var errorData = new
+                {
+                    success = false,
+                    errorMessage = "No file uploaded."
+                };
+                return Json(errorData);
+            }
+
+            var file = files.FirstOrDefault();
+            if (file == null || !IsImage(file))
+            {
+                var errorData = new
+                {
+                    success = false, 
+                    errorMessage = "File is of wrong format."
+                };
+                return Json(errorData);
+            }
+
+            if (file.ContentLength <= 0)
+            {
+                var errorData = new
+                {
+                    success = false,
+                    errorMessage = "File cannot be zero length."
+                };
+                return Json(errorData);
+            }
+
+            var webPath = GetTempSavedFilePath(file);
+            var successData = new
+            {
+                success = true, 
+                fileName = webPath.Replace("/", "\\")
+            };
+            return Json(successData);
+        }
+
         public ActionResult AuthenFacebook()
         {
 
@@ -113,7 +162,6 @@ namespace FlyAwayPlus.Controllers
             return Redirect(loginUrl.AbsoluteUri);
         }
 
-        
         public ActionResult FacebookCallback(string code)
         {
             var fb = new FacebookClient();
@@ -300,6 +348,137 @@ namespace FlyAwayPlus.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            return null;
+        }
+
+        ///////////////////////////
+        // TINY HELPER FUNCTIONS //
+        ///////////////////////////
+
+        private const int AvatarStoredWidth = 100;  // Ava size to be saved
+        private const int AvatarStoredHeight = 100; // Ava size to be saved
+        private const int AvatarScreenWidth = 500;  // Size of image to be showed to resize, crop
+
+        private const string TempFolder = "/Temp";
+        private const string MapTempFolder = "~" + TempFolder;
+        private const string AvatarPath = "\\Images\\UserUpload\\UserAvatar";
+
+        private bool IsImage(HttpPostedFileBase file)
+        {
+            if (file == null) return false;
+            
+            return file.ContentType.Contains("image") ||
+                FapConstants.ImageFileExtensions.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private string GetTempSavedFilePath(HttpPostedFileBase file, int counter = 0)
+        {
+            // Define destination
+            var serverPath = HttpContext.Server.MapPath(TempFolder);
+            if (Directory.Exists(serverPath) == false)
+            {
+                Directory.CreateDirectory(serverPath);
+            }
+
+            // Generate unique file name
+            var fileName = Path.GetFileName(file.FileName);
+            const string prepend = "item_";
+            string finalFileName = prepend + ((counter)) + "_" + fileName;
+            if (System.IO.File.Exists(Path.Combine(serverPath, finalFileName)))
+            {
+                return GetTempSavedFilePath(file, ++counter);
+            }
+
+            finalFileName = SaveTemporaryAvatarFileImage(file, serverPath, finalFileName);
+
+            // Clean up old files after every save
+            CleanUpTempFolder(1);
+            return Path.Combine(TempFolder, finalFileName);
+        }
+
+        private static string SaveTemporaryAvatarFileImage(HttpPostedFileBase file, string serverPath, string fileName)
+        {
+            var img = new WebImage(file.InputStream);
+            var ratio = img.Height / (double)img.Width;
+            img.Resize(AvatarScreenWidth, (int)(AvatarScreenWidth * ratio));
+
+            var fullFileName = Path.Combine(serverPath, fileName);
+            if (System.IO.File.Exists(fullFileName))
+            {
+                System.IO.File.Delete(fullFileName);
+            }
+
+            img.Save(fullFileName);
+            return Path.GetFileName(img.FileName);
+        }
+
+        private void CleanUpTempFolder(int hoursOld)
+        {
+            try
+            {
+                var currentUtcNow = DateTime.UtcNow;
+                var serverPath = HttpContext.Server.MapPath("/Temp");
+                if (!Directory.Exists(serverPath)) return;
+                var fileEntries = Directory.GetFiles(serverPath);
+                foreach (var fileEntry in fileEntries)
+                {
+                    var fileCreationTime = System.IO.File.GetCreationTimeUtc(fileEntry);
+                    var res = currentUtcNow - fileCreationTime;
+                    if (res.TotalHours > hoursOld)
+                    {
+                        System.IO.File.Delete(fileEntry);
+                    }
+                }
+            }
+            catch
+            {
+                // Deliberately empty.
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SaveImage(string t, string l, string h, string w, string fileName)
+        {
+            try
+            {
+                // Calculate dimensions
+                var top = Convert.ToInt32(t.Replace("-", "").Replace("px", ""));
+                var left = Convert.ToInt32(l.Replace("-", "").Replace("px", ""));
+                var height = Convert.ToInt32(h.Replace("-", "").Replace("px", ""));
+                var width = Convert.ToInt32(w.Replace("-", "").Replace("px", ""));
+
+                // Get file from temporary folder
+                if (fileName != null)
+                {
+                    var fn = Path.Combine(Server.MapPath(MapTempFolder), Path.GetFileName(fileName));
+                    // ...get image and resize it, ...
+                    var img = new WebImage(fn);
+                    img.Resize(width, height);
+                    // ... crop the part the user selected, ...
+                    img.Crop(top, left, height - top - AvatarStoredHeight, width - left - AvatarStoredWidth);
+                    // ... delete the temporary file,...
+                    System.IO.File.Delete(fn);
+                    // ... and save the new one.
+                    var newFileName = Path.Combine(AvatarPath, Path.GetFileName(fn));
+                    var newFileLocation = HttpContext.Server.MapPath(newFileName);
+                    var directoryName = Path.GetDirectoryName(newFileLocation);
+                    if (directoryName != null && !Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+
+                    img.Save(newFileLocation);
+                    return Json(new
+                                {
+                                    success = true,
+                                    avatarFileLocation = newFileName
+                                });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, errorMessage = "Unable to upload file.\nERRORINFO: " + ex.Message });
+            }
             return null;
         }
     }
