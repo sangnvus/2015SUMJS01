@@ -382,11 +382,11 @@
     <Content Include="Views\Shared\_listPost.cshtml" />
     <Content Include="Views\Shared\_ListChatFriend.cshtml" />
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
+    <Content Include="Views\Login\SendMail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Images\UserUpload\" />
-    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Net.Mail;
 using System.Web.Mvc;
 using Facebook;
 using FlyAwayPlus.Helpers;
@@ -187,6 +188,35 @@ namespace FlyAwayPlus.Controllers
                 };
                 return uriBuilder.Uri;
             }
+        }
+
+        public ActionResult SendMail()
+        {
+            var x = Request["email"];
+            string senderID = "flyawayplus.system@gmail.com";// use sender’s email id here..
+            const string senderPassword = "doan2015"; // sender password here…
+            try
+            {
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com", // smtp server address here…
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new System.Net.NetworkCredential(senderID, senderPassword),
+                    Timeout = 30000,
+                };
+                var message = new MailMessage(senderID, x, "subject", "body");
+                smtp.Send(message);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
+
+            return View();
         }
     }
 }

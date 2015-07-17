@@ -1,0 +1,28 @@
+﻿@model FlyAwayPlus.Models.ForgotPasswordViewModel
+@{
+    ViewBag.Title = "Forgot your password?";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<h3>Enter your email</h3>
+<form action="/Login/SendMail" method="POST">
+    <div class="form-group">
+        <div class="col-md-2">
+            <p>Email:</p>
+        </div>
+        <div class="col-md-10">
+            <input name="email" class="form-control" type="text" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" />
+        </div>
+    </div>
+
+    <p id="demo"></p>
+</form>
+<script>
+</script>
