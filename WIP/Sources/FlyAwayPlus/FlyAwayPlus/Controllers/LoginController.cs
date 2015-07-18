@@ -55,6 +55,7 @@ namespace FlyAwayPlus.Controllers
                 Session["authenicated"] = true;
                 Session["username"] = user.firstName + " " + user.lastName;
                 Session["userAva"] = user.avatar;
+                Session["userID"] = user.userID;
                 UserHelpers.SetCurrentUser(Session, user);
             }
 
@@ -82,6 +83,7 @@ namespace FlyAwayPlus.Controllers
                     Session["username"] = newUser.firstName + " " + newUser.lastName;
                     Session["userAva"] = user.avatar;
                     Session["user"] = newUser;
+                    Session["userID"] = newUser.userID;
                 }
             }
 
@@ -98,6 +100,7 @@ namespace FlyAwayPlus.Controllers
             Session["authenicated"] = "";
             Session["username"] = "";
             Session["userAva"] = "";
+            Session["userID"] = "";
             UserHelpers.SetCurrentUser(Session, null);
             return RedirectToAction("Index", "Home");
         }
@@ -182,6 +185,7 @@ namespace FlyAwayPlus.Controllers
             Session["authenicated"] = true;
             Session["username"] = newUser.firstName + " " + newUser.lastName;
             Session["userAva"] = newUser.avatar;
+            Session["userID"] = newUser.userID;
             UserHelpers.SetCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -340,6 +344,7 @@ namespace FlyAwayPlus.Controllers
                 Session["authenicated"] = true;
                 Session["username"] = newUser.firstName + " " + newUser.lastName;
                 Session["userAva"] = newUser.avatar;
+                Session["userID"] = newUser.userID;
                 UserHelpers.SetCurrentUser(Session, newUser);
             }
 
