@@ -39,9 +39,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASPSnippets.GoogleAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Nguyen Minh Hoang\Desktop\Google_Login\Bin\ASPSnippets.GoogleAPI.dll</HintPath>
+    <Reference Include="ASPSnippets.GoogleAPI">
+      <HintPath>Dlls\ASPSnippets.GoogleAPI.dll</HintPath>
     </Reference>
     <Reference Include="Facebook">
       <HintPath>..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>

@@ -708,7 +708,8 @@ namespace FlyAwayPlus.Helpers
                  */
             List<Post> listPost = null;
             Client.Connect();
-            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:friend]->(u2:user)")
+            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})")
+                            .OptionalMatch("u1-[:friend]->(u2:user)")
                             .With("u1, u2")
                             .Match("(p:post)")
                             .Where("(u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')")
