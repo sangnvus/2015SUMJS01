@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using ASPSnippets.GoogleAPI;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
@@ -20,7 +21,7 @@ namespace FlyAwayPlus.Controllers
         public ActionResult LoginPartial()
         {
             var model = new User();
-            return PartialView("~/Views/Shared/LoginPartial.cshtml", model);
+            return PartialView("~/Views/Shared/_LoginPartial.cshtml", model);
         }
 
         public ActionResult Register(User user)

@@ -30,7 +30,7 @@ namespace FlyAwayPlus.Controllers
             int skip = pageNumber * RecordsPerPage + totalAdd;
             
             loadData(skip);
-            return PartialView("_listPost");
+            return PartialView("_ListPost");
         }
 
         private void loadData(int skip)
@@ -44,7 +44,7 @@ namespace FlyAwayPlus.Controllers
                  * Search limit public post
                  */
                 listPost = GraphDatabaseHelpers.SearchLimitPost(skip, RecordsPerPage);
-                findRelatedInformationPost(listPost);
+                FindRelatedInformationPost(listPost);
             }
             else
             {
@@ -52,7 +52,7 @@ namespace FlyAwayPlus.Controllers
                  * Search limit following post
                  */
                 listPost = GraphDatabaseHelpers.FindLimitPostFollowing(user, skip, RecordsPerPage);
-                findRelatedInformationPost(listPost);
+                FindRelatedInformationPost(listPost);
             }
             
             ViewData["typePost"] = "index";
@@ -71,11 +71,11 @@ namespace FlyAwayPlus.Controllers
         {
             int skip = pageNumber * RecordsPerPage;
 
-            loadDataWishlist(skip);
-            return PartialView("_listPost");
+            LoadDataWishlist(skip);
+            return PartialView("_ListPost");
         }
 
-        private void findRelatedInformationPost(List<Post> listPost)
+        private void FindRelatedInformationPost(List<Post> listPost)
         {
             User user = UserHelpers.GetCurrentUser(Session);
             Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
@@ -135,9 +135,8 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
-        private void loadDataWishlist(int skip)
+        private void LoadDataWishlist(int skip)
         {
-            List<Post> listPost = new List<Post>();
             User user = UserHelpers.GetCurrentUser(Session);
 
             if (user != null)
@@ -145,8 +144,8 @@ namespace FlyAwayPlus.Controllers
                 /**
                  * Search limit following post
                  */
-                listPost = GraphDatabaseHelpers.FindLimitWishlist(user, skip, RecordsPerPage);
-                findRelatedInformationPost(listPost);
+                var listPost = GraphDatabaseHelpers.FindLimitWishlist(user, skip, RecordsPerPage);
+                FindRelatedInformationPost(listPost);
             }
 
             ViewData["typePost"] = "wish";
@@ -155,7 +154,7 @@ namespace FlyAwayPlus.Controllers
         {
             if (type.Equals("wishlist"))
             {
-                loadDataWishlist(0);
+                LoadDataWishlist(0);
             }
             else if(type.Equals("hot")) {
                 ViewData["typePost"] = "hot";
