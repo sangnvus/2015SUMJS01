@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Configuration;
+using System.Net;
 using System.Net.Mail;
-using System.Threading;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v2;
-using Google.Apis.Util.Store;
-using ASPSnippets.GoogleAPI;
-using System.Web.Script.Serialization;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -228,7 +224,7 @@ namespace FlyAwayPlus.Controllers
                     Port = 587,
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
-                    Credentials = new System.Net.NetworkCredential(senderID, senderPassword),
+                    Credentials = new NetworkCredential(senderID, senderPassword),
                     Timeout = 30000,
                 };
                 var message = new MailMessage(senderID, x, "subject", "body");
