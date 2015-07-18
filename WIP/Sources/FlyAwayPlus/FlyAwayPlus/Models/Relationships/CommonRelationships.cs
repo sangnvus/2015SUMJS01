@@ -153,4 +153,25 @@ namespace FlyAwayPlus.Models.Relationships
             get { return TypeKey; }
         }
     }
+
+    public class UserWishPostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
+        IRelationshipAllowingTargetNode<Post>
+    {
+        public static readonly string TypeKey = "wish";
+
+        public UserWishPostRelationship(NodeReference targetNode)
+            : base(targetNode)
+        {
+        }
+
+        public UserWishPostRelationship(NodeReference targetNode, object data)
+            : base(targetNode, data)
+        {
+        }
+
+        public override string RelationshipTypeKey
+        {
+            get { return TypeKey; }
+        }
+    }
 }

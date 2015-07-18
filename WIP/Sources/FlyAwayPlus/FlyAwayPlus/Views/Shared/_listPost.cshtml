@@ -7,18 +7,29 @@
     var like = ViewData["likeCount"] as Dictionary<int, int>;
     var comment = ViewData["commentCount"] as Dictionary<int, int>;
     var userComment = ViewData["userCommentCount"] as Dictionary<int, int>;
+    var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
+    var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
+    var isWishDict = ViewData["isWishDict"] as Dictionary<int, bool>;
+
+    string btnWishClass = isWishDict[post.postID] ? "btn-warning" : "btn-primary";
+    string btnLikeClass = isLikeDict[post.postID] ? "btn-warning" : "btn-primary";
+    string btnDislikeClass = isDislikeDict[post.postID] ? "btn-warning" : "btn-primary";
+
+    string btnLikeIconClass = isLikeDict[post.postID] ? "interacted fa-thumbs-up" : "";
+    string btnDislikeIconClass = isDislikeDict[post.postID] ? "interacted fa-thumbs-down" : "";
+    
     <div class="white-panel">
         <div class="dark-wrapper">
             <img src="@(photo[post.postID].url.StartsWith("http") ? "" : "/Images/UserUpload/")@photo[post.postID].url" alt="ALT">
             <ul class="post-actions" style="padding-left:0px;">
                 <li>
-                    <a href="#" role="@post.postID" class="btn btn-primary btn-circle btn-lg btn-plus"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn btn-primary btn-circle btn-lg btn-like"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn btn-primary btn-circle btn-lg btn-dislike"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
@@ -35,8 +46,8 @@
             }
 
             <div class="user-interacted-area">
-                <i class="fa fa-thumbs-o-up"></i>&nbsp;<b class="like-count">@like[post.postID]</b>&nbsp;
-                <i class="fa fa-thumbs-o-down"></i>&nbsp;<b class="dislike-count">@dislike[post.postID]</b>&nbsp;
+                <i class="fa fa-thumbs-o-up @btnLikeIconClass"></i>&nbsp;<b class="like-count">@like[post.postID]</b>&nbsp;
+                <i class="fa fa-thumbs-o-down @btnDislikeIconClass"></i>&nbsp;<b class="dislike-count">@dislike[post.postID]</b>&nbsp;
                 <i class="fa fa-comment-o"></i>&nbsp;@comment[post.postID]&nbsp;
                 <i class="fa fa-group"></i>&nbsp;@userComment[post.postID]
             </div>
@@ -55,5 +66,6 @@
 }
 
 <script>
-    var isLoadMore = @ViewData["isLoadMore"].ToString();
+    var isLoadMore = '@ViewData["isLoadMore"].ToString()';
+    var typePost = '@ViewData["typePost"].ToString()';
 </script>

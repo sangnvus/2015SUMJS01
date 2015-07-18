@@ -26,9 +26,45 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
+        public static bool isLike(int postID, int userID)
+        {
+            // Auto increment Id
+           
+            Client.Connect();
+            int like = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:like]->(p:post {postID:" + postID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.Single();
+
+            return like != 0;
+        }
+
+        public static bool isDislike(int postID, int userID)
+        {
+            // Auto increment Id
+
+            Client.Connect();
+            int dislike = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:dislike]->(p:post {postID:" + postID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.Single();
+
+            return dislike != 0;
+        }
+
+        public static bool isWish(int postID, int userID)
+        {
+            // Auto increment Id
+
+            Client.Connect();
+            int wish = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:wish]->(p:post {postID:" + postID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.Single();
+
+            return wish != 0;
+        }
+
         public static bool InsertComment(int postID, Comment comment, int userID)
         {
-            // Auto increment Id.
+            // Auto increment Id
             comment.commentID = GetGlobalIncrementId();
 
             Client.Connect();
@@ -50,6 +86,37 @@ namespace FlyAwayPlus.Helpers
             return false;
         }
 
+        public static bool AddToWishList(int postID, int userID)
+        {
+            Client.Connect();
+
+            NodeReference<Post> postRef = getNodePost(postID).Reference;
+            Node<User> userNode = getNodeUser(userID);
+            if (userNode != null)
+            {
+                var userRef = userNode.Reference;
+                Client.CreateRelationship(userRef, new UserWishPostRelationship(postRef));
+                return true;
+            }
+            return false;
+        }
+
+        public static bool RemoveFromWishList(int postID, int userID)
+        {
+            try
+            {
+                Client.Connect();
+                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:wish]->(p:post {postID:" + postID + "})")
+                                    .Delete("r")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
         public static int CountUserComment(int postID)
         {
             /*
@@ -181,7 +248,7 @@ namespace FlyAwayPlus.Helpers
                 return false;
             }
             return true;
-        }  
+        }
 
         public static bool DeleteDislike(int userID, int postID)
         {
@@ -189,7 +256,8 @@ namespace FlyAwayPlus.Helpers
              * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
                 delete r
              */
-            try { 
+            try
+            {
                 Client.Connect();
                 Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:dislike]->(p:post {postID:" + postID + "})")
                                 .Delete("r")
@@ -201,7 +269,7 @@ namespace FlyAwayPlus.Helpers
                 return false;
             }
             return true;
-        }                               
+        }
 
         public static bool InsertDislike(int userID, int postID)
         {
@@ -220,7 +288,8 @@ namespace FlyAwayPlus.Helpers
             return false;
         }
 
-        public static bool InsertLike(int userID, int postID) {
+        public static bool InsertLike(int userID, int postID)
+        {
             Node<User> userNode = getNodeUser(userID);
 
             NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
@@ -230,7 +299,7 @@ namespace FlyAwayPlus.Helpers
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)}));
+                Client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat) }));
                 return true;
             }
             return false;
@@ -262,7 +331,7 @@ namespace FlyAwayPlus.Helpers
                                             .Return<Node<Post>>("p")
                                             .Results.Single()
                                             .Reference;
-            
+
             NodeReference<Photo> photoRef = Client.Cypher.Create("(p:photo {newPhoto})")
                                             .WithParam("newPhoto", photo)
                                             .Return<Node<Photo>>("p")
@@ -274,7 +343,7 @@ namespace FlyAwayPlus.Helpers
                                             .Return<Node<Place>>("p")
                                             .Results.Single()
                                             .Reference;
-            
+
             Node<User> userNode = getNodeUser(user.userID);
             if (userNode != null)
             {
@@ -283,7 +352,7 @@ namespace FlyAwayPlus.Helpers
                 Client.CreateRelationship(postRef, new PostHasPhotoRelationship(photoRef));
                 Client.CreateRelationship(postRef, new PostAtPlaceRelationship(placeRef));
                 Client.CreateRelationship(userRef, new UserHasPostRelationship(postRef));
-                
+
                 Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
                     .Create("(u)-[r:has]->(p)")
                     .ExecuteWithoutResults();
@@ -643,6 +712,29 @@ namespace FlyAwayPlus.Helpers
                             .With("u1, u2")
                             .Match("(p:post)")
                             .Where("(u1-[:has]->p) or (p.privacy='friend' and u2-[:has]->p) or (p.privacy = 'public')")
+                            .ReturnDistinct<Post>("p")
+                            .OrderByDescending("p.dateCreated")
+                            .Skip(skip)
+                            .Limit(limit)
+                            .Results.ToList();
+
+            return listPost;
+        }
+
+        public static List<Post> FindLimitWishlist(User user, int skip, int limit)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - wishlist
+                 * 
+                 * match(u1:user {userID:@userID})-[:wish]->(p:post)
+                   return p
+                   orderby p.dateCreated
+                 */
+            List<Post> listPost = null;
+            Client.Connect();
+            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:wish]->(p:post)")
                             .ReturnDistinct<Post>("p")
                             .OrderByDescending("p.dateCreated")
                             .Skip(skip)
