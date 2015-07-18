@@ -48,63 +48,79 @@ img {
         color: #50c1e9;
     }
 
-        .navbar-custom .nav li a.current, .navbar-custom .nav li a:active {
-            border-bottom: 3px solid #50c1e9;
-        }
+    .navbar-custom .remove-background {
+        background-color: transparent !important;
+    }
 
-    .navbar-custom .navbar-toggle {
-        position: relative;
+    .navbar-custom .nav li .interact-item:hover {
+        color: #D91E17;
+        cursor: pointer;
+    }
+
+.nav li a .interact-button {
+    font-size: 18px;
+    height: 18px;
+    overflow: hidden;
+    margin: -5px 0 -5px 0;
+}
+
+.navbar-custom .nav li a.current, .navbar-custom .nav li a:active {
+    /*TODO*/
+}
+
+.navbar-custom .navbar-toggle {
+    position: relative;
+    background-color: #50c1e9;
+    border-color: #50c1e9;
+}
+
+    .navbar-custom .navbar-toggle:focus, .navbar-custom .navbar-toggle:hover {
         background-color: #50c1e9;
-        border-color: #50c1e9;
     }
 
-        .navbar-custom .navbar-toggle:focus, .navbar-custom .navbar-toggle:hover {
-            background-color: #50c1e9;
-        }
-
-        .navbar-custom .navbar-toggle .icon-bar {
-            background-color: #ffffff;
-            background-color: rgba(255,255,255,.9);
-        }
-
-    .navbar-custom .navbar-brand {
-        -ms-opacity: .7;
-        opacity: .7;
-        -webkit-filter: alpha(opacity=70);
-        -moz-filter: alpha(opacity=70);
-        -o-filter: alpha(opacity=70);
-        filter: alpha(opacity=70);
-        -webkit-transition: opacity .4s ease-in-out;
-        -moz-transition: opacity .4s ease-in-out;
-        -ms-transition: opacity .4s ease-in-out;
-        -o-transition: opacity .4s ease-in-out;
-        transition: opacity .4s ease-in-out;
-        padding: 5px 15px;
+    .navbar-custom .navbar-toggle .icon-bar {
+        background-color: #ffffff;
+        background-color: rgba(255,255,255,.9);
     }
 
-        .navbar-custom .navbar-brand:active, .navbar-custom .navbar-brand:hover {
-            -ms-opacity: 1;
-            opacity: 1;
-            -webkit-filter: alpha(opacity=100);
-            -moz-filter: alpha(opacity=100);
-            -o-filter: alpha(opacity=100);
-            filter: alpha(opacity=100);
-        }
+.navbar-custom .navbar-brand {
+    -ms-opacity: .7;
+    opacity: .7;
+    -webkit-filter: alpha(opacity=70);
+    -moz-filter: alpha(opacity=70);
+    -o-filter: alpha(opacity=70);
+    filter: alpha(opacity=70);
+    -webkit-transition: opacity .4s ease-in-out;
+    -moz-transition: opacity .4s ease-in-out;
+    -ms-transition: opacity .4s ease-in-out;
+    -o-transition: opacity .4s ease-in-out;
+    transition: opacity .4s ease-in-out;
+    padding: 5px 15px;
+}
 
-    .navbar-custom .avatar {
-        width: 35px;
-        height: 35px;
-        -ms-background-size: cover;
-        background-size: cover;
-        display: block;
-        -ms-border-radius: 50%;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        border-radius: 50%;
-        float: left;
-        position: relative;
-        margin-top: -5px;
+    .navbar-custom .navbar-brand:active, .navbar-custom .navbar-brand:hover {
+        -ms-opacity: 1;
+        opacity: 1;
+        -webkit-filter: alpha(opacity=100);
+        -moz-filter: alpha(opacity=100);
+        -o-filter: alpha(opacity=100);
+        filter: alpha(opacity=100);
     }
+
+.navbar-custom .avatar {
+    width: 35px;
+    height: 35px;
+    -ms-background-size: cover;
+    background-size: cover;
+    display: block;
+    -ms-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    float: left;
+    position: relative;
+    margin-top: -5px;
+}
 
 .caret-up {
     width: 0;
@@ -230,6 +246,8 @@ img {
         font-size: 16px;
         -webkit-transition: all 0.1s linear;
         -moz-transition: all 0.1s linear;
+        -ms-transition: all 0.1s linear;
+        -o-transition: all 0.1s linear;
         transition: all 0.1s linear;
     }
 
@@ -518,8 +536,6 @@ img {
 /* POST DETAIL ENDS */
 
 /* HOME SIDE MENU */
-@import url(http://fonts.googleapis.com/css?family=Raleway:200,400,700,800);
-
 .sidebar-header {
     text-align: center;
     height: 80px;
@@ -575,7 +591,7 @@ img {
 }
 
 #weather-sidebar h2 {
-    margin: 0 0 0 35px;
+    margin: 0;
 }
 
 #weather-sidebar i {
@@ -777,3 +793,75 @@ img {
 }
 
 /* HOME SIDE MENU ENDS */
+
+
+/* NOTIFICATION MENU */
+.notification-li {
+    position: relative;
+}
+
+    .notification-li .notification-container {
+        background-color: #fff;
+        border: 1px solid #646464;
+        border: 1px solid rgba(100, 100, 100, .4);
+        -webkit-box-shadow: 0 3px 8px #000000;
+        -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+        overflow: visible;
+        position: absolute;
+        top: 60px;
+        margin-left: -170px;
+        width: 400px;
+        z-index: -1;
+        display: none;
+    }
+
+        .notification-li .notification-container:before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 0;
+            height: 0;
+            color: transparent;
+            border: 10px solid black;
+            border-color: transparent transparent white;
+            margin-top: -20px;
+            margin-left: 188px;
+        }
+
+        .notification-li .notification-container .notification-title {
+            z-index: 1000;
+            font-weight: bold;
+            padding: 8px;
+            font-size: 13px;
+            background-color: #ffffff;
+            width: 384px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .notification-li .notification-container .notifications-body {
+            padding: 33px 0px 0px 0px !important;
+            min-height: 300px;
+        }
+
+        .notification-li .notification-container .notification-footer {
+            background-color: #e9eaed;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            font-size: 12px;
+            border-top: 1px solid #dddddd;
+        }
+
+        .notification-li .notification-container .notification-count {
+            padding: 3px 7px 3px 7px;
+            background: #cc0000;
+            color: #ffffff;
+            font-weight: bold;
+            margin-left: 77px;
+            -ms-border-radius: 9px;
+            border-radius: 9px;
+            position: absolute;
+            margin-top: -11px;
+            font-size: 11px;
+        }
+/* NOTIFICATION MENU ENDS */

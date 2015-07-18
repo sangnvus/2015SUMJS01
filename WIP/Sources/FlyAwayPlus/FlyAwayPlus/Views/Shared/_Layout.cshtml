@@ -14,10 +14,17 @@
 
     <link href="~/Content/bootflat.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
     <link href="~/Content/Site.css" rel="stylesheet" />
+
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
+
     <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/morphing-search.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar navbar-custom" role="navigation">
@@ -28,19 +35,47 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a class="current" href="/Home/">Home</a></li>
-                    <li><a class="" href="#">Explore</a></li>
-                </ul>
+                @*<ul class="nav navbar-nav navbar-left">
+                        <li><a class="current" href="/Home/">Home</a></li>
+                    </ul>*@
                 <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" class="remove-background">
+                            <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="remove-background">
+                            <i class="fa fa-fw fa-comments interact-item interact-button"></i>
+                        </a>
+                    </li>
+                    <li class="notification-li">
+                        <a href="#" class="remove-background">
+                            <i class="fa fa-fw fa-bell interact-item interact-button" id="btn-notification"></i>
+                        </a>
+
+                        <span class="notification-count">3</span>
+
+                        <div class="notification-container">
+                            <div class="notification-title">
+                                Notifications
+                            </div>
+
+                            <div class="notifications notifications-body"></div>
+
+                            <div class="notification-footer">
+                                <a href="#">See All</a>
+                            </div>
+                        </div>
+                    </li>
                     @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
                     {
-                        <li><a class="navbar-right" data-toggle="modal" data-target="#login-modal">Login/Sign Up</a></li>
+                        <li><a class="navbar-right interact-item remove-background" data-toggle="modal" data-target="#login-modal">Login/Sign Up</a></li>
                     }
                     else
                     {
                         <li style="height: 53px">
-                            <a data-toggle="dropdown" class="dropdown-toggle">
+                            <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
                                 <img src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "Images/avatar/avatar-1.jpg" : "")@Session["userAva"]"
                                      alt="@Session["username"]"
                                      class="avatar" />
@@ -58,12 +93,33 @@
         </div>
     </div>
     <div class="container body-content" style="width:85%; margin-left: 5%;">
+        @Html.Partial("_SearchPartial")
         @RenderBody()
         <hr />
     </div>
+
     @Html.Action("LoginPartial", "Login")
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(function () {
+            $("#btn-notification").click(function () {
+                $(".notification-container").fadeToggle(300);
+                $(".notification-count").fadeOut("slow");
+                return false;
+            });
+
+            //Document Click
+            $(document).click(function () {
+                $(".notification-container").hide();
+            });
+            //Popup Click
+            $(".notification-container").click(function () {
+                return false;
+            });
+        });
+    </script>
 </body>
 </html>
