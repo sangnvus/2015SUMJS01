@@ -13,9 +13,8 @@
     <script src="~/Scripts/blocksit.min.js"></script>
     <script src="~/Scripts/jquery.elastic.source.js"></script>
     
-    <link href="~/Content/bootflat.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-
+    <link href="~/Content/bootflat.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/font-awesome.css")
@@ -51,11 +50,10 @@
                         </a>
                     </li>
                     <li class="notification-li">
-                        <a href="#" class="remove-background">
-                            <i class="fa fa-fw fa-bell interact-item interact-button" id="btn-notification"></i>
+                        <a href="#" class="remove-background" id="btn-notification">
+                            <i class="fa fa-fw fa-bell interact-item interact-button"></i>
+                            <span class="notification-count badge badge-danger">3</span>
                         </a>
-
-                        <span class="notification-count">3</span>
 
                         <div class="notification-container">
                             <div class="notification-title">
