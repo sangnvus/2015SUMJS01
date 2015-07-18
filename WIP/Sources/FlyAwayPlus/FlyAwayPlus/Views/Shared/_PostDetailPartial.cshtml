@@ -1,0 +1,21 @@
+﻿@model FlyAwayPlus.Models.Comment
+
+@{
+    var dict = ViewData["dict"] as Dictionary<int, FlyAwayPlus.Models.User>;
+    var u = @dict[Model.commentID];
+}
+
+<div class="comment-detail">
+    <div class="commenter-avatar">
+        <img src="@u.avatar" alt="@String.Format("{0} {1}", u.firstName, u.lastName)" />
+    </div>
+    <div class="commenter-content">
+        <span class="commenter-name"><a href="/User/Index/@u.userID">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
+        <span class="commenter-post-time" title="@Model.toRealtime()">- @Model.toRealtime()</span>
+    </div>
+    <div class="comment-content">
+        <p style="word-break:break-all;">
+            @Html.Raw(Html.Encode(@Model.content).Replace("\\n", "<br />"))
+        </p>
+    </div>
+</div>

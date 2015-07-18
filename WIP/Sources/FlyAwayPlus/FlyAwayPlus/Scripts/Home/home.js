@@ -1,5 +1,8 @@
 ﻿var homeModule = (function () {
     var isCallAjax = false;
+    var pageNumberIndex = 1;
+    var pageNumberWish = 1;
+    var pageNumberHot = 1;
 
     var setBlocksit = function () {
         var conWidth = $("#blog-landing").width();
@@ -36,7 +39,8 @@
     };
 
     var likePost = function () {
-        $(".btn-like").click(function () {
+        $(".btn-like").click(function (evt) {
+            $(this).toggleClass("btn-primary").toggleClass("btn-warning");
             var likeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
                                   .find(".fa-thumbs-o-up");
@@ -55,6 +59,7 @@
 
             unDislikePost(this);
             likeAjax(this);
+            evt.preventDefault();
         });
     };
 
@@ -62,7 +67,7 @@
         var likeIcon = $(post).parentsUntil(".white-panel")
                                 .parent()
                                 .find(".fa-thumbs-o-up");
-
+        
         var likeCountElement = $(this).parentsUntil(".white-panel").parent()
             .find(".like-count");
 
@@ -70,6 +75,11 @@
             likeIcon.toggleClass("interacted")
                     .toggleClass("fa-thumbs-up");
             likeCountElement.text(parseInt(likeCountElement.text()) - 1);
+
+            var buttonLike = $(post).parentsUntil(".white-panel")
+                                .parent()
+                                .find(".btn-like");
+            $(buttonLike).toggleClass("btn-primary").toggleClass("btn-warning");
         }
     };
 
@@ -85,11 +95,17 @@
             dislikeIcon.toggleClass("interacted")
                     .toggleClass("fa-thumbs-down");
             dislikeCountElement.text(parseInt(dislikeCountElement.text()) - 1);
+
+            var buttonDislike = $(post).parentsUntil(".white-panel")
+                                .parent()
+                                .find(".btn-dislike");
+            $(buttonDislike).toggleClass("btn-primary").toggleClass("btn-warning");
         }
     };
 
     var dislikePost = function () {
-        $(".btn-dislike").click(function () {
+        $(".btn-dislike").click(function (evt) {
+            $(this).toggleClass("btn-primary").toggleClass("btn-warning");
             var dislikeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
                                   .find(".fa-thumbs-o-down");
@@ -108,11 +124,30 @@
 
             unLikePost(this);
             dislikeAjax(this);
+            evt.preventDefault();
         });
     };
 
     var plusPost = function () {
         // Add to wish list
+        $(".btn-plus").click(function (evt) {
+            var controller = "";
+            var data = {
+                postID: parseInt($(this).attr("role"))
+            };
+            if ($(this).hasClass("btn-primary")) {
+                controller = "/User/AddToWishlist";
+            }
+            else if ($(this).hasClass("btn-warning")) {
+                controller = "/User/RemoveFromWishlist";
+            }
+            $(this).toggleClass("btn-primary").toggleClass("btn-warning");
+
+            if (controller != "") {
+                commonModule.callAjax(controller, data, null);
+            }
+            evt.preventDefault();
+        });
     };
 
     var likeAjax = function (post) {
@@ -135,21 +170,39 @@
         commonModule.callAjax(controller, data, null);
     };
     
-    var loadMoreData = function () {
+    var loadMoreData = function (typePost) {
         if (isCallAjax) {
             return;
         }
         isCallAjax = true;
         var controller = "/Home/LoadMore/";
+        var data = {
+            pageNumber: 1
+        };
+        if (typePost == "index") {
+            controller = "/Home/LoadMore/";
+            data.pageNumber = pageNumberIndex++;
+        }
+        else if(typePost == "wish") {
+            controller = "/Home/LoadMoreWish/";
+            data.pageNumber = pageNumberWish++;
+        } else if (typePost == "hot") {
+            controller = "/Home/LoadMoreHot/";
+            data.pageNumber = pageNumberHot++;
+        }
+
         $("div#loading").show();
         $.ajax({
             type: 'POST',
             url: controller,
-            //data: "pageNum=" + page,
+            data: data,
             success: function (data, textstatus) {
                 $("#blog-landing").append(data);
                 homeModule.setBlocksit();
                 homeModule.fadeImage();
+                homeModule.likePost();
+                homeModule.dislikePost();
+                homeModule.plusPost();
                 $("div#loading").hide();
                 isCallAjax = false;
             },

@@ -76,17 +76,33 @@ namespace FlyAwayPlus.Controllers
             return View(user);
         }
 
+        public ActionResult Comment(int postId, string content)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            Dictionary<int, FlyAwayPlus.Models.User> dict = new Dictionary<int, Models.User>();
+            Comment comment = new Comment();
+            comment.content = content;
+            comment.content = comment.content.Replace("\n","\\n");
+            comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+
+            bool success = GraphDatabaseHelpers.InsertComment(postId, comment, user.userID);
+            dict.Add(comment.commentID, user);
+            
+            ViewData["dict"] = dict;
+            return PartialView("_PostDetailPartial", comment);
+        }
+
         public JsonResult Like(int postId)
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            Boolean a = false;
+            Boolean success = false;
             if (user != null)
             {
                 int like = GraphDatabaseHelpers.FindLike(user.userID, postId);
                 if (like == 0)
                 {
                     // User like post and delete exist dislike
-                    a = GraphDatabaseHelpers.InsertLike(user.userID, postId);
+                    success = GraphDatabaseHelpers.InsertLike(user.userID, postId);
                     GraphDatabaseHelpers.DeleteDislike(user.userID, postId);
                 }
                 else
@@ -95,20 +111,20 @@ namespace FlyAwayPlus.Controllers
                     GraphDatabaseHelpers.DeleteLike(user.userID, postId);
                 }
             }
-            return Json(a);
+            return Json(success);
         }
 
         public JsonResult Dislike(int postId)
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            Boolean a = false;
+            Boolean success = false;
             if (user != null)
             {
                 int dislike = GraphDatabaseHelpers.FindDislike(user.userID, postId);
                 if (dislike == 0)
                 {
                     // user dislike post and delete exist like
-                    a = GraphDatabaseHelpers.InsertDislike(user.userID, postId);
+                    success = GraphDatabaseHelpers.InsertDislike(user.userID, postId);
                     GraphDatabaseHelpers.DeleteLike(user.userID, postId);
                 }
                 else
@@ -117,7 +133,29 @@ namespace FlyAwayPlus.Controllers
                     GraphDatabaseHelpers.DeleteDislike(user.userID, postId);
                 }
             }
-            return Json(a);
+            return Json(success);
+        }
+
+        public JsonResult AddToWishlist(int postID)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                success = GraphDatabaseHelpers.AddToWishList(postID, user.userID);
+            }
+            return Json(success);
+        }
+
+        public JsonResult RemoveFromWishlist(int postID)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                success = GraphDatabaseHelpers.RemoveFromWishList(postID, user.userID);
+            }
+            return Json(success);
         }
 	}
 }
