@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Configuration;
 using System.Net.Mail;
+using System.Threading;
 using System.Web.Mvc;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v2;
+using Google.Apis.Util.Store;
+using ASPSnippets.GoogleAPI;
+using System.Web.Script.Serialization;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -190,6 +196,20 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
+        private Uri RedirectUriGoogle
+        {
+            get
+            {
+                var uriBuilder = new UriBuilder(Request.Url)
+                {
+                    Query = null,
+                    Fragment = null,
+                    Path = Url.Action("GoogleCallback")
+                };
+                return uriBuilder.Uri;
+            }
+        }
+
         public ActionResult ForgotPassword()
         {
             return View();
@@ -224,6 +244,66 @@ namespace FlyAwayPlus.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public ActionResult AuthenGoogle()
+        {
+            GoogleConnect.ClientId = "929041403867-jj882kepf3cdpcm6dhr2r5qg6hsvrohf.apps.googleusercontent.com";
+            GoogleConnect.ClientSecret = "2YuXPruTBTEkEHlkwXuZkvS2";
+            GoogleConnect.RedirectUri = RedirectUriGoogle.AbsoluteUri.Split('?')[0];
+            GoogleConnect.Authorize("profile", "email");
+            return null;
+        }
 
+        public ActionResult GoogleCallback()
+        {
+
+            if (!string.IsNullOrEmpty(Request.QueryString["code"]))
+            {
+                string code = Request.QueryString["code"];
+                string json = GoogleConnect.Fetch("me", code);
+                User profile = new JavaScriptSerializer().Deserialize<User>(json);
+                string email = profile.email;
+
+                // select from DB
+                User newUser = GraphDatabaseHelpers.GetUser(1, email); // Facebook account: typeID = 1
+
+                /*
+                 *  Insert into Graph DB 
+                 */
+                if (newUser == null)
+                {
+                    newUser = new User
+                    {
+                        typeID = 1,
+                        email = email,
+                        address = profile.address,
+                        dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                        dateOfBirth = profile.dateOfBirth,
+                        firstName = profile.firstName,
+                        lastName = profile.lastName,
+                        gender = profile.gender,
+                        phoneNumber = profile.phoneNumber,
+                        status = "active",
+                        password = ""
+                    };
+                    // Facebook account
+
+                    // insert user to Database
+                    GraphDatabaseHelpers.InsertUser(newUser);
+                }
+
+                // Set the auth cookie
+                Session["authenicated"] = true;
+                Session["username"] = newUser.firstName + " " + newUser.lastName;
+                Session["userAva"] = newUser.avatar;
+                UserHelpers.SetCurrentUser(Session, newUser);
+
+                //FormsAuthentication.SetAuthCookie(email, false);
+                //SessionHelper.RenewCurrentUser();
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return null;
+        }
     }
 }
