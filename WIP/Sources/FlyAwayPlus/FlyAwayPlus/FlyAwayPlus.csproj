@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="ASPSnippets.GoogleAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Nguyen Minh Hoang\Desktop\Google_Login\Bin\ASPSnippets.GoogleAPI.dll</HintPath>
+      <HintPath>Dlls\ASPSnippets.GoogleAPI.dll</HintPath>
     </Reference>
     <Reference Include="Facebook">
       <HintPath>..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
@@ -376,7 +376,6 @@
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
@@ -387,10 +386,10 @@
     <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Room\RoomList.cshtml" />
     <Content Include="Views\Account\FindPassword.cshtml" />
-    <Content Include="Views\Shared\LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_PostPartial.cshtml" />
     <Content Include="Views\Shared\_Loading.cshtml" />
-    <Content Include="Views\Shared\_listPost.cshtml" />
+    <Content Include="Views\Shared\_ListPost.cshtml" />
     <Content Include="Views\Shared\_ListChatFriend.cshtml" />
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
@@ -398,7 +397,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\UserUpload\" />
+    <Folder Include="Images\UserUpload\UserAvatar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
