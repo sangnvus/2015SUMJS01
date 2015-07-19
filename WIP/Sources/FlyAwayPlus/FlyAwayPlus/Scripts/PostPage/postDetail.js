@@ -1,4 +1,24 @@
-﻿var postDetailModule = (function () {
+﻿$(document).ready(function () {
+    commentHubProxy = $.connection.commentHub;
+
+    commentHubProxy.client.addNewComment = function (content) {
+        $(".comment-list").append(content);
+    }
+
+    $(window).load(function () {
+        postDetailModule.likePost();
+        postDetailModule.dislikePost();
+    });
+
+    $.connection.hub.start().done(function () {
+        $("#idTextareaComment").keydown(function (e) {
+            postDetailModule.handleEnter(e);
+        });
+    });
+    $("#idTextareaComment").elastic();
+});
+
+var postDetailModule = (function () {
     var likePost = function () {
         $(".btn-like").click(function () {
             var likeIcon = $(".fa-thumbs-o-up");
@@ -98,7 +118,9 @@
             data: data,
             success: function (data, textstatus) {
                 $(".comment-list").append(data);
-                $("#idTextareaComment").text("").val("").blur();
+                $("#idTextareaComment").text("").val("");
+
+                commentHubProxy.server.sendComment(data);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
             }
@@ -125,17 +147,3 @@
         handleEnter: handleEnter
     }
 })();
-
-
-
-$(document).ready(function () {
-    $(window).load(function () {
-        postDetailModule.likePost();
-        postDetailModule.dislikePost();
-    });
-
-    $("#idTextareaComment").keydown(function (e) {
-        postDetailModule.handleEnter(e);
-    });
-    $("#idTextareaComment").elastic();
-});

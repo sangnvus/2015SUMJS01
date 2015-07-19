@@ -246,6 +246,7 @@
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
+    <Compile Include="Hubs\CommentHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -272,6 +273,7 @@
     <Content Include="Content\jquery.fs.stepper.css" />
     <Content Include="Content\PostDetailPage\postDetail.css" />
     <Content Include="Content\morphing-search.css" />
+    <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Scripts\blocksit.min.js" />
