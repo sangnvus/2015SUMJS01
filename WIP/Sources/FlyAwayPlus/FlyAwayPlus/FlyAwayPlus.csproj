@@ -282,6 +282,7 @@
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\Home\home.js" />
+    <Content Include="Scripts\images-loaded.min.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />
     <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />

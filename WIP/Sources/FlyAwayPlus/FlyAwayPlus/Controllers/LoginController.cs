@@ -8,13 +8,10 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using ASPSnippets.GoogleAPI;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
-using ASPSnippets.GoogleAPI;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace FlyAwayPlus.Controllers
@@ -31,7 +28,7 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Register(User user)
         {
-            if (!ModelState.IsValid)
+            //if (!ModelState.IsValid)
             {
                 user.typeID = 0; // Fap Account
 
@@ -501,9 +498,9 @@ namespace FlyAwayPlus.Controllers
                     var fn = Path.Combine(Server.MapPath(MapTempFolder), Path.GetFileName(fileName));
                     // ...get image and resize it, ...
                     var img = new WebImage(fn);
-                    img.Resize(width, height);
+                    //img.Resize(width, height);
                     // ... crop the part the user selected, ...
-                    img.Crop(top, left, height - top - AvatarStoredHeight, width - left - AvatarStoredWidth);
+                    img.Crop(top, left, img.Height - top - AvatarStoredHeight, img.Width - left - AvatarStoredWidth);
                     // ... delete the temporary file,...
                     System.IO.File.Delete(fn);
                     // ... and save the new one.

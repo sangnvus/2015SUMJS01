@@ -116,10 +116,21 @@
     margin: 3px 5px;
 }
 
-.user-info .avatar img {
+.user-info .avatar {
     width: 30px;
     height: 30px;
     max-width: 100%;
+    
+    -ms-background-size: cover;
+    background-size: cover;
+    display: block;
+    -ms-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    float: left;
+    position: relative;
+    margin: 3px 5px;
 }
 /*#avatar*/
 

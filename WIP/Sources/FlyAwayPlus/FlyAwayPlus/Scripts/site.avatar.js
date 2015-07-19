@@ -142,6 +142,8 @@ function saveAvatar() {
             if (!keepCropBox) {
                 $("#avatar-crop-box").addClass("hidden");
             }
+
+            $("#id-register-avatar-path").val(data.avatarFileLocation);
         } else {
             alert(data.errorMessage);
         }

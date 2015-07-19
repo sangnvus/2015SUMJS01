@@ -4,14 +4,13 @@
 
 #preview-pane {
     position: absolute;
-    right: -160px;
+    left: -98px;
     z-index: 1;
     display: block;
-    border: 1px #000 solid;
 }
 
     #preview-pane .preview-container {
         overflow: hidden;
-        width: 100px;  /* ToDo - size of the crop window*/
-        height: 100px; /* ToDo - size of the crop window*/
+        width: 68px;  /* ToDo - size of the crop window*/
+        height: 68px; /* ToDo - size of the crop window*/
     }
