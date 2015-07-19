@@ -22,78 +22,80 @@
     -ms-transition: top 1s ease, left 1s ease;
 }
 
-    .white-panel .dark-wrapper {
-        display: inline-block;
-        padding: 0;
-        overflow: hidden;
-        -ms-border-top-left-radius: 10px;
-        border-top-left-radius: 10px;
-        -ms-border-top-right-radius: 10px;
-        border-top-right-radius: 10px;
-        max-width: 100%;
-    }
+.white-panel .dark-wrapper {
+    display: inline-block;
+    padding: 0;
+    overflow: hidden;
+    -ms-border-top-left-radius: 10px;
+    border-top-left-radius: 10px;
+    -ms-border-top-right-radius: 10px;
+    border-top-right-radius: 10px;
+    max-width: 100%;
+}
 
-        .white-panel .dark-wrapper .post-actions {
-            position: absolute;
-            visibility: hidden;
-            top: 0px;
-            z-index: 1;
-            -ms-opacity: 0;
-            opacity: 0;
-            width: 100%;
-            text-align: center;
-            -webkit-transition: opacity .2s ease-in-out;
-            -moz-transition: opacity .2s ease-in-out;
-            -ms-transition: opacity .2s ease-in-out;
-            -o-transition: opacity .2s ease-in-out;
-            transition: opacity .2s ease-in-out;
-            display: flex;
-            float: left;
-            list-style-type: none;
-        }
+.white-panel .dark-wrapper .post-actions {
+    position: absolute;
+    visibility: hidden;
+    top: 0px;
+    z-index: 1;
+    -ms-opacity: 0;
+    opacity: 0;
+    width: 100%;
+    text-align: center;
+    -webkit-transition: opacity .2s ease-in-out;
+    -moz-transition: opacity .2s ease-in-out;
+    -ms-transition: opacity .2s ease-in-out;
+    -o-transition: opacity .2s ease-in-out;
+    transition: opacity .2s ease-in-out;
+    display: flex;
+    float: left;
+    list-style-type: none;
+}
 
-    .white-panel img {
-        display: block;
-        -ms-border-top-left-radius: 10px;
-        border-top-left-radius: 10px;
-        -ms-border-top-right-radius: 10px;
-        border-top-right-radius: 10px;
-        cursor: zoom-in;
-    }
+.white-panel img {
+    display: block;
+    /*
+    -ms-border-top-left-radius: 10px;
+    border-top-left-radius: 10px;
+    -ms-border-top-right-radius: 10px;
+    border-top-right-radius: 10px;
+    */
+    cursor: zoom-in;
+}
 
-    .white-panel .panel-content-wrapper {
-        padding: 10px;
-    }
+.white-panel .panel-content-wrapper {
+    padding: 10px;
+}
 
-        .white-panel .panel-content-wrapper .user-interacted-area {
-            font-size: 12px;
-        }
+.white-panel .panel-content-wrapper .user-interacted-area {
+    font-size: 12px;
+}
 
-            .white-panel .panel-content-wrapper .user-interacted-area .interacted {
-                color: #e74c3c;
-            }
+.white-panel .panel-content-wrapper .user-interacted-area .interacted {
+    color: #e74c3c;
+}
 
-    .white-panel h1 {
-        margin-top: 0;
-        font-size: 100%;
-        font-weight: bold;
-    }
+.white-panel h1 {
+    margin-top: 0;
+    font-size: 100%;
+    font-weight: bold;
+}
 
-        .white-panel h1 a {
-            color: #A92733;
-        }
+.white-panel h1 a {
+    color: #A92733;
+}
 
-    .white-panel:hover {
-        /*-webkit-box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
-        -ms-box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
-        box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
-        margin-top: -5px;
-        -webkit-transition: all 0.3s ease-in-out;
-        -moz-transition: all 0.3s ease-in-out;
-        -o-transition: all 0.3s ease-in-out;
-        -ms-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;*/
-    }
+.white-panel:hover {
+    /*-webkit-box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+    -ms-box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+    margin-top: -5px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;*/
+}
 
 .user-info {
     height: auto;
@@ -114,6 +116,8 @@
     float: left;
     position: relative;
     margin: 3px 5px;
+    width: 35px;
+    height: 35px;
 }
 
 .user-info .avatar {

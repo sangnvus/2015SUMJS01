@@ -31,6 +31,11 @@ namespace FlyAwayPlus.Controllers
             try
             {
                 post = GraphDatabaseHelpers.FindPost(id, user);
+                if (post == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
                 userPost = GraphDatabaseHelpers.SearchUser(post);
                 listComment = GraphDatabaseHelpers.FindComment(post);
 

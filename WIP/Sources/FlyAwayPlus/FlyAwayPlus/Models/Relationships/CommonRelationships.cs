@@ -8,7 +8,7 @@ namespace FlyAwayPlus.Models.Relationships
 {
     public class PostHasPhotoRelationship : Relationship, IRelationshipAllowingSourceNode<Post>, IRelationshipAllowingTargetNode<Photo>
     {
-        public static readonly string TypeKey = "has";
+        public static readonly string TypeKey = "HAS";
 
         public PostHasPhotoRelationship(NodeReference targetNode)
             : base(targetNode)
@@ -28,7 +28,7 @@ namespace FlyAwayPlus.Models.Relationships
 
     public class PostAtPlaceRelationship : Relationship, IRelationshipAllowingSourceNode<Post>, IRelationshipAllowingTargetNode<Place>
     {
-        public static readonly string TypeKey = "at";
+        public static readonly string TypeKey = "AT";
 
         public PostAtPlaceRelationship(NodeReference targetNode)
             : base(targetNode)
@@ -46,31 +46,10 @@ namespace FlyAwayPlus.Models.Relationships
         }
     }
 
-    public class UserHasPostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
-        IRelationshipAllowingTargetNode<Post>
-    {
-        public static readonly string TypeKey = "has";
-
-        public UserHasPostRelationship(NodeReference targetNode)
-            : base(targetNode)
-        {
-        }
-
-        public UserHasPostRelationship(NodeReference targetNode, object data)
-            : base(targetNode, data)
-        {
-        }
-
-        public override string RelationshipTypeKey
-        {
-            get { return TypeKey; }
-        }
-    }
-
     public class UserLikePostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
         IRelationshipAllowingTargetNode<Post>
     {
-        public static readonly string TypeKey = "like";
+        public static readonly string TypeKey = "LIKE";
         public string dateCreated { get; set; }
 
         public UserLikePostRelationship(NodeReference targetNode)
@@ -89,39 +68,19 @@ namespace FlyAwayPlus.Models.Relationships
         }
     }
 
-    public class PostHasCommentRelationship : Relationship, IRelationshipAllowingSourceNode<Post>,
+    
+    public class UserCreateCommentRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
         IRelationshipAllowingTargetNode<Comment>
     {
-        public static readonly string TypeKey = "has";
+        public static readonly string TypeKey = "CREATE";
         public string dateCreated { get; set; }
 
-        public PostHasCommentRelationship(NodeReference targetNode)
+        public UserCreateCommentRelationship(NodeReference targetNode)
             : base(targetNode)
         {
         }
 
-        public PostHasCommentRelationship(NodeReference targetNode, object data)
-            : base(targetNode, data)
-        {
-        }
-
-        public override string RelationshipTypeKey
-        {
-            get { return TypeKey; }
-        }
-    }
-    public class UserHasCommentRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
-        IRelationshipAllowingTargetNode<Comment>
-    {
-        public static readonly string TypeKey = "has";
-        public string dateCreated { get; set; }
-
-        public UserHasCommentRelationship(NodeReference targetNode)
-            : base(targetNode)
-        {
-        }
-
-        public UserHasCommentRelationship(NodeReference targetNode, object data)
+        public UserCreateCommentRelationship(NodeReference targetNode, object data)
             : base(targetNode, data)
         {
         }
@@ -135,7 +94,7 @@ namespace FlyAwayPlus.Models.Relationships
     public class UserDislikePostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
         IRelationshipAllowingTargetNode<Post>
     {
-        public static readonly string TypeKey = "dislike";
+        public static readonly string TypeKey = "DISLIKE";
         public string dateCreated { get; set; }
 
         public UserDislikePostRelationship(NodeReference targetNode)
@@ -157,7 +116,7 @@ namespace FlyAwayPlus.Models.Relationships
     public class UserWishPostRelationship : Relationship, IRelationshipAllowingSourceNode<User>,
         IRelationshipAllowingTargetNode<Post>
     {
-        public static readonly string TypeKey = "wish";
+        public static readonly string TypeKey = "WISH";
 
         public UserWishPostRelationship(NodeReference targetNode)
             : base(targetNode)

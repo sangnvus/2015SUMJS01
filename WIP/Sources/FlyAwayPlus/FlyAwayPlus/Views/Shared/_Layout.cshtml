@@ -62,8 +62,23 @@
                                 Notifications
                             </div>
                             <hr />
-                            <div class="notifications notifications-body"></div>
-
+                            <div class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px ! important;">
+                                @for (int i = 0; i < 15; i++)
+                                {
+                                    <div style="width:100%; height: 65px;">
+                                        <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                                            <!--
+                                            <img class="avatar" style="float:left" src="~/Images/avatar/avatar-default.jpg" />
+                                            -->
+                                            <div style="float:left">
+                                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                                            </div>
+                                            <div style="">Duc FiLan da thich ban  tai sao the aaaaaaaaaaaaaaaaaaaaaa</div>
+                                        </a>
+                                    </div>
+                                    <hr />
+                                }
+                            </div>
                             <div class="notification-footer">
                                 <a href="#">See All</a>
                             </div>
