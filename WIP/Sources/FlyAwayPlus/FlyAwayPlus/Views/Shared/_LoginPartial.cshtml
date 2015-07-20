@@ -1,4 +1,12 @@
-﻿@model FlyAwayPlus.Models.User
+﻿
+<script src="~/Scripts/jquery.form.min.js"></script>
+<script src="~/Scripts/jquery.Jcrop.min.js"></script>
+<script src="~/Scripts/site.avatar.js"></script>
+
+<link href="~/Content/jquery.Jcrop.min.css" rel="stylesheet" />
+<link href="~/Content/Site.avatar.css" rel="stylesheet" />
+
+@model FlyAwayPlus.Models.User
 
 <div id="login-modal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog login-modal-wrap">
@@ -121,11 +129,6 @@
                                         @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control input-lg", id = "id_register_address", placeholder = "Address", tabindex = "5" } })
                                         @Html.ValidationMessageFor(model => model.address)
                                     </div>
-                                    <!--
-                                    <div class="form-group">
-                                        <input type="text" value="" name="user_name" id="user_name" class="form-control input-lg" placeholder="Username" tabindex="6">
-                                    </div>
-                                    -->
                                     <div class="form-group">
                                         @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control input-lg", id = "id_register_email", placeholder = "Email Address", tabindex = "7", type = "email" } })
                                         @Html.ValidationMessageFor(model => model.email)
@@ -152,6 +155,9 @@
                                         </div>
                                     </div>
                                 }
+                            <div class="form-group">
+                                @{ Html.RenderPartial("~/Views/Login/UploadAvatar.cshtml"); }
+                            </div>
                             </div>
                         </div>
                     </div>

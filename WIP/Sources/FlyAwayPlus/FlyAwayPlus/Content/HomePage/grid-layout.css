@@ -30,8 +30,7 @@
         border-top-left-radius: 10px;
         -ms-border-top-right-radius: 10px;
         border-top-right-radius: 10px;
-
-        max-width: 100%
+        max-width: 100%;
     }
 
         .white-panel .dark-wrapper .post-actions {
@@ -66,13 +65,13 @@
         padding: 10px;
     }
 
-    .white-panel .panel-content-wrapper .user-interacted-area {
-        font-size: 12px
-    }
+        .white-panel .panel-content-wrapper .user-interacted-area {
+            font-size: 12px;
+        }
 
-    .white-panel .panel-content-wrapper .user-interacted-area .interacted {
-        color: #e74c3c;
-    }
+            .white-panel .panel-content-wrapper .user-interacted-area .interacted {
+                color: #e74c3c;
+            }
 
     .white-panel h1 {
         margin-top: 0;
@@ -102,44 +101,44 @@
     width: 100%;
     overflow: hidden;
 }
-    /*#user-info*/
+/*#user-info*/
 
-    .user-info .avatar {
-        width: 30px;
-        height: 30px;
-        -ms-background-size: cover;
-        background-size: cover;
-        display: block;
-        -ms-border-radius: 50%;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        border-radius: 50%;
-        float: left;
-        position: relative;
-        margin: 3px 5px;
-    }
+.avatar {
+    -ms-background-size: cover;
+    background-size: cover;
+    display: block;
+    -ms-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    float: left;
+    position: relative;
+    margin: 3px 5px;
+}
 
-        .user-info .avatar img {
-            max-width: 100%;
-        }
-    /*#avatar*/
+.user-info .avatar img {
+    width: 30px;
+    height: 30px;
+    max-width: 100%;
+}
+/*#avatar*/
 
-    .user-info .name-user {
-        -moz-text-overflow: ellipsis;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        font-weight: bold;
-    }
-    /*#name-user*/
+.user-info .name-user {
+    -moz-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: bold;
+}
+/*#name-user*/
 
-    .user-info .post-time {
-        color: rgb(113, 113, 113);
-        -moz-text-overflow: ellipsis;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 11px;
-    }
+.user-info .post-time {
+    color: rgb(113, 113, 113);
+    -moz-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+}
 /*#post-time*/
 
 .btn-circle.btn-lg {

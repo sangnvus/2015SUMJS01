@@ -9,28 +9,25 @@ namespace FlyAwayPlus.Helpers.UploadImage
 {
     public class ImageUpload
     {
-        // set default size here
+        // Set default size here
         public int Width { get; set; }
 
         public int Height { get; set; }
 
-        // folder for the upload, you can put this in the web.config
+        // Folder for the upload, you can put this in the web.config
         private readonly string UploadPath = "~/Images/UserUpload/";
 
-        public ImageResult RenameUploadFile(HttpPostedFileBase file, Int32 counter = 0)
+        public ImageResult RenameUploadFile(HttpPostedFileBase file, int counter = 0)
         {
             var fileName = Path.GetFileName(file.FileName);
 
-            string prepend = "item_";
-            string finalFileName = prepend + ((counter)) + "_" + fileName;
-            if (File.Exists
-                (HttpContext.Current.Request.MapPath(UploadPath + finalFileName)))
-            {
-                //file exists => add country try again
-                return RenameUploadFile(file, ++counter);
-            }
-            //file doesn't exist, upload item but validate first
-            return UploadFile(file, finalFileName);
+            const string prepend = "item_";
+            var finalFileName = prepend + ((counter)) + "_" + fileName;
+            return File.Exists(HttpContext.Current.Request.MapPath(UploadPath + finalFileName)) 
+                ? 
+                RenameUploadFile(file, ++counter) 
+                : 
+                UploadFile(file, finalFileName);
         }
 
         private ImageResult UploadFile(HttpPostedFileBase file, string fileName)

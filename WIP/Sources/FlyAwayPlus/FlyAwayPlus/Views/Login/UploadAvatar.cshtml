@@ -1,0 +1,36 @@
+﻿<div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3">
+        <img src="~/Images/UIHelper/default-avatar.jpg" class="avatar" id="upload-avatar-preview" alt="Avatar" />
+    </div>
+    <div class="col-xs-8 col-sm-8 col-md-8">
+        <section id="avatar-upload-box">
+            @using (Ajax.BeginForm("UploadAvatar", "Avatar", new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "avatar-upload-form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <label for="file-upload" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i> Custom Upload
+                </label>
+                <input id="file-upload" type="file" name="files" />
+            }
+
+            <div class="progress progress-striped upload-avatar-progress active hidden">
+                <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+            </div>
+        </section>
+        <section id="avatar-crop-box" class="hidden">
+            <p>
+                <img src="" id="crop-avatar-target" alt="Uploaded image" />
+                <div id="preview-pane">
+                    <div class="preview-container">
+                        <img src="" class="jcrop-preview" alt="Preview" />
+                    </div>
+                </div>
+            </p>
+            <p><button class="btn btn-default" onclick="saveAvatar()">Save Avatar</button></p>
+        </section>
+        <div id="avatar-result" class="hidden">
+            <img src="" alt="Final Image" />
+        </div>
+    </div>
+</div>

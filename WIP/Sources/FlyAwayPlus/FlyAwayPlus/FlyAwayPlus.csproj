@@ -271,15 +271,19 @@
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
+    <Content Include="Content\jquery.Jcrop.min.css" />
     <Content Include="Content\PostDetailPage\postDetail.css" />
     <Content Include="Content\morphing-search.css" />
     <Content Include="Images\avatar\avatar-default.jpg" />
+    <Content Include="Content\Site.avatar.css" />
+    <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />
+    <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\RoomPage\roomDetail.css" />
@@ -318,12 +322,14 @@
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.Jcrop.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.timeago.js" />
     <Content Include="Scripts\LookAround\logger.js" />
     <Content Include="Scripts\PostPage\postDetail.js" />
     <Content Include="Scripts\jquery.simpleWeather.min.js" />
     <Content Include="Scripts\prettymaps.js" />
+    <Content Include="Scripts\site.avatar.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
     <Content Include="Content\UserPage\WOW slider\style.mod.css" />
@@ -405,6 +411,7 @@
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Login\ForgotPassword.cshtml" />
+    <Content Include="Views\Login\UploadAvatar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
