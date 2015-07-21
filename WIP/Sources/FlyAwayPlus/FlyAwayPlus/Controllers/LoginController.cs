@@ -13,8 +13,6 @@ using ASPSnippets.GoogleAPI;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
-using ASPSnippets.GoogleAPI;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace FlyAwayPlus.Controllers
