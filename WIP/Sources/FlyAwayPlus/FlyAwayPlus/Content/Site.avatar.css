@@ -4,10 +4,9 @@
 
 #preview-pane {
     position: absolute;
-    right: -160px;
+    left: -98px;
     z-index: 1;
     display: block;
-    border: 1px #000 solid;
 }
 
     #preview-pane .preview-container {

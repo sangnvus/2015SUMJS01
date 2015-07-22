@@ -229,6 +229,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LookAroundController.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Helpers\UploadImage\ImageResult.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
+	<Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Place.cs" />
     <Compile Include="Models\Post.cs" />
@@ -283,6 +285,7 @@
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\Home\home.js" />
+    <Content Include="Scripts\images-loaded.min.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />
     <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="Scripts\jquery.geocomplete.js" />
@@ -413,6 +416,7 @@
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Login\ForgotPassword.cshtml" />
     <Content Include="Views\Login\UploadAvatar.cshtml" />
+    <Content Include="Views\HelpCenter\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

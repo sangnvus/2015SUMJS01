@@ -12,7 +12,7 @@ var jcrop_api,
 // ToDo - change the size limit of the file. You may need to change web.config if larger files are necessary.
 var maxSizeAllowed = 2;     // Upload limit in MB
 var maxSizeInBytes = maxSizeAllowed * 1024 * 1024;
-var keepUploadBox = false;  // ToDo - Remove if you want to keep the upload box
+var keepUploadBox = true;  // ToDo - Remove if you want to keep the upload box
 var keepCropBox = false;    // ToDo - Remove if you want to keep the crop box
 
 $(function () {
@@ -54,9 +54,16 @@ function initAvatarUpload() {
                 var img = $("#crop-avatar-target");
                 img.attr("src", data.fileName);
 
+                $(".jcrop-holder").find("img").each(function () {
+                    $(this).attr("src", data.fileName);
+                });
+
                 if (!keepUploadBox) {
                     $("#avatar-upload-box").addClass("hidden");
                 }
+
+                $(".upload-avatar-progress").addClass("hidden");
+                $("#avatar-upload-form").removeClass("hidden");
                 $("#avatar-crop-box").removeClass("hidden");
                 initAvatarCrop(img);
             }
@@ -121,31 +128,37 @@ function updatePreviewPane(c) {
 }
 
 function saveAvatar() {
-    var img = $("#preview-pane .preview-container img");
-    $("#avatar-crop-box button").addClass("disabled");
+    $(".preview-container").imagesLoaded(function () {
+        var img = $("#preview-pane .preview-container img");
+        $("#avatar-crop-box button").addClass("disabled");
 
-    $.ajax({
-        type: "POST",
-        url: "/Login/SaveImage",
-        traditional: true,
-        data: {
-            w: img.css("width"),
-            h: img.css("height"),
-            l: img.css("marginLeft"),
-            t: img.css("marginTop"),
-            fileName: img.attr("src")
-        }
-    }).done(function (data) {
-        if (data.success === true) {
-            $("#upload-avatar-preview").attr("src", data.avatarFileLocation);
-
-            if (!keepCropBox) {
-                $("#avatar-crop-box").addClass("hidden");
+        $.ajax({
+            type: "POST",
+            url: "/Login/SaveImage",
+            traditional: true,
+            data: {
+                w: img.css("width"),
+                h: img.css("height"),
+                l: img.css("marginLeft"),
+                t: img.css("marginTop"),
+                fileName: img.attr("src")
             }
-        } else {
-            alert(data.errorMessage);
-        }
-    }).fail(function (e) {
-        alert("Cannot upload avatar at this time");
+        }).done(function (data) {
+            if (data.success === true) {
+                $("#upload-avatar-preview").attr("src", data.avatarFileLocation);
+
+                if (!keepCropBox) {
+                    $("#avatar-crop-box").addClass("hidden");
+                }
+
+                $("#id-register-avatar-path").val(data.avatarFileLocation.replace(/\\/g, "//"));
+                $("#upload-avatar-preview").attr("src", data.avatarFileLocation);
+                $("#avatar-crop-box button").removeClass("disabled");
+            } else {
+                alert(data.errorMessage);
+            }
+        }).fail(function (e) {
+            alert("Cannot upload avatar at this time");
+        });
     });
 }
