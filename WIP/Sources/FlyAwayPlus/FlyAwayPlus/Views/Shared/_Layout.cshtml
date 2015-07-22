@@ -39,59 +39,56 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                @*<ul class="nav navbar-nav navbar-left">
-                        <li><a class="current" href="/Home/">Home</a></li>
-                    </ul>*@
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#" class="remove-background">
-                            <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="remove-background">
-                            <i class="fa fa-fw fa-comments interact-item interact-button"></i>
-                        </a>
-                    </li>
-                    <li class="notification-li">
-                        <a href="#" class="remove-background" id="btn-notification">
-                            <i class="fa fa-fw fa-bell interact-item interact-button"></i>
-                            <span class="notification-count badge badge-danger">3</span>
-                        </a>
-
-                        <div class="notification-container">
-                            <div class="notification-title">
-                                Notifications
-                            </div>
-                            <hr />
-                            <div class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px ! important;">
-                                @for (int i = 0; i < 15; i++)
-                                {
-                                    <div style="width:100%; height: 65px;">
-                                        <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
-                                            <!--
-                                            <img class="avatar" style="float:left" src="~/Images/avatar/avatar-default.jpg" />
-                                            -->
-                                            <div style="float:left">
-                                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
-                                            </div>
-                                            <div style="">Duc FiLan da thich ban  tai sao the aaaaaaaaaaaaaaaaaaaaaa</div>
-                                        </a>
-                                    </div>
-                                    <hr />
-                                }
-                            </div>
-                            <div class="notification-footer">
-                                <a href="#">See All</a>
-                            </div>
-                        </div>
-                    </li>
                     @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
                     {
                         <li><a class="navbar-right interact-item remove-background" data-toggle="modal" data-target="#login-modal">Login/Sign Up</a></li>
                     }
                     else
                     {
+                        <li>
+                            <a href="#" class="remove-background">
+                                <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="remove-background">
+                                <i class="fa fa-fw fa-comments interact-item interact-button"></i>
+                            </a>
+                        </li>
+                        <li class="notification-li">
+                            <a href="#" class="remove-background" id="btn-notification">
+                                <i class="fa fa-fw fa-bell interact-item interact-button"></i>
+                                <span class="notification-count badge badge-danger">3</span>
+                            </a>
+
+                            <div class="notification-container">
+                                <div class="notification-title">
+                                    Notifications
+                                </div>
+                                <hr />
+                                <div class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px ! important;">
+                                    @for (int i = 0; i < 15; i++)
+                                    {
+                                        <div style="width:100%; height: 65px;">
+                                            <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                                                <!--
+                                                <img class="avatar" style="float:left" src="~/Images/avatar/avatar-default.jpg" />
+                                                -->
+                                                <div style="float:left">
+                                                    <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                                                </div>
+                                                <div style="">Duc FiLan da thich ban  tai sao the aaaaaaaaaaaaaaaaaaaaaa</div>
+                                            </a>
+                                        </div>
+                                        <hr />
+                                    }
+                                </div>
+                                <div class="notification-footer">
+                                    <a href="#">See All</a>
+                                </div>
+                            </div>
+                        </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
                                 <img src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/avatar/avatar-default.jpg" : @Session["userAva"])"
@@ -136,6 +133,21 @@
             //Popup Click
             $(".notification-container").click(function () {
                 return false;
+            });
+        });
+
+        $(document).ready(function () {
+            notificationHubProxy = $.connection.notificationHub;
+
+            notificationHubProxy.client.receiveNotification = function (content) {
+                console.log(content);
+            }
+
+            $.connection.hub.start().done(function () {
+                var login = '@Session["authenicated"]';
+                if (login != null && login != "") {
+                    notificationHubProxy.server.loadNotification(@Session["userID"]);
+                }
             });
         });
     </script>
