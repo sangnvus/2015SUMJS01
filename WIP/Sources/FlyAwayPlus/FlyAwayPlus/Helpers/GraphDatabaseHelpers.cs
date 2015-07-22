@@ -26,6 +26,11 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
+        public static string GetNotification(int userID)
+        {
+            return "";
+        }
+
         public static bool isLike(int postID, int userID)
         {
             // Auto increment Id
