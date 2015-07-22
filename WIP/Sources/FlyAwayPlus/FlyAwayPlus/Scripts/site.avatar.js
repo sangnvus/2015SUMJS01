@@ -124,30 +124,32 @@ function saveAvatar() {
     var img = $("#preview-pane .preview-container img");
     $("#avatar-crop-box button").addClass("disabled");
 
-    $.ajax({
-        type: "POST",
-        url: "/Login/SaveImage",
-        traditional: true,
-        data: {
-            w: img.css("width"),
-            h: img.css("height"),
-            l: img.css("marginLeft"),
-            t: img.css("marginTop"),
-            fileName: img.attr("src")
-        }
-    }).done(function (data) {
-        if (data.success === true) {
-            $("#upload-avatar-preview").attr("src", data.avatarFileLocation);
-
-            if (!keepCropBox) {
-                $("#avatar-crop-box").addClass("hidden");
+    $("#avatar-crop-box").imagesLoaded(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Login/SaveImage",
+            traditional: true,
+            data: {
+                w: img.css("width"),
+                h: img.css("height"),
+                l: img.css("marginLeft"),
+                t: img.css("marginTop"),
+                fileName: img.attr("src")
             }
+        }).done(function (data) {
+            if (data.success === true) {
+                $("#upload-avatar-preview").attr("src", data.avatarFileLocation);
 
-            $("#id-register-avatar-path").val(data.avatarFileLocation);
-        } else {
-            alert(data.errorMessage);
-        }
-    }).fail(function (e) {
-        alert("Cannot upload avatar at this time");
+                if (!keepCropBox) {
+                    $("#avatar-crop-box").addClass("hidden");
+                }
+
+                $("#id-register-avatar-path").val(data.avatarFileLocation);
+            } else {
+                alert(data.errorMessage);
+            }
+        }).fail(function (e) {
+            alert("Cannot upload avatar at this time");
+        });
     });
 }
