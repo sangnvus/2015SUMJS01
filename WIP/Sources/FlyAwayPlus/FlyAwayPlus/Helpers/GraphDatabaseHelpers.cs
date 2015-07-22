@@ -127,7 +127,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
                                 .Return<int>("Length(collect(c1)) as CommentNumber")
                                 .Results.Single();
             }

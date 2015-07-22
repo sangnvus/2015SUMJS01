@@ -11,6 +11,6 @@
 
     #preview-pane .preview-container {
         overflow: hidden;
-        width: 68px;  /* ToDo - size of the crop window*/
-        height: 68px; /* ToDo - size of the crop window*/
+        width: 100px;  /* ToDo - size of the crop window*/
+        height: 100px; /* ToDo - size of the crop window*/
     }
