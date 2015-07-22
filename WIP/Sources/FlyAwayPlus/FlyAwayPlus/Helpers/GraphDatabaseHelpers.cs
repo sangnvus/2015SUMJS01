@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using FlyAwayPlus.Models.Relationships;
+using System.Collections;
 
 namespace FlyAwayPlus.Helpers
 {
@@ -24,11 +25,6 @@ namespace FlyAwayPlus.Helpers
                         WithParam("newUser", user)
                         .Return<User>("user")
                         .Results.Single();
-        }
-
-        public static string GetNotification(int userID)
-        {
-            return "";
         }
 
         public static bool isLike(int postID, int userID)
@@ -127,7 +123,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
                                 .Return<int>("Length(collect(c1)) as CommentNumber")
                                 .Results.Single();
             }
@@ -771,6 +767,52 @@ namespace FlyAwayPlus.Helpers
                 return true;
             }
             return false;
+        }
+
+        public static List<Notification> GetNotification(int userID, int activityID = 0, int limit = 5)
+        {
+
+            /*
+                * Query:
+                * Find:
+                *     - Search limit post with privacy public
+                * 
+                * optional match (u:user {userID:10000})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)
+                with p, u
+                optional match (p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)
+                WHERE u1.userID <> u.userID and m.activityID < @activityID
+                m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID
+                return dateCreated, u1, p, activity, lastActivityID
+                ORDER BY m.dateCreated
+                limit @limit
+            */
+            List<Notification> listNotification = null;
+
+            string limitActivity = "";
+            if (activityID != 0)
+            {
+                limitActivity = "and m.activityID < " + activityID;
+            }
+            Client.Connect();
+            listNotification = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)")
+                                            .With("p, u")
+                                            .OptionalMatch("(p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)")
+                                            .Where("u1.userID <> u.userID " + limitActivity)
+                                            .With("m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID")
+                                            .Return((dateCreated, u1, p, activity, lastActivityID) => new Notification
+                                            {
+                                                dateCreated = dateCreated.As<String>(),
+                                                activity = activity.As<String>(),
+                                                lastActivityID = lastActivityID.As<Int16>(),
+                                                user = u1.As<User>(),
+                                                post = p.As<Post>()
+                                            })
+                                            //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
+                                            .OrderByDescending("dateCreated, lastActivityID")
+                                            .Limit(limit)
+                                            .Results.ToList();
+
+            return listNotification;
         }
     }
 }
