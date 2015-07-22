@@ -362,6 +362,32 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
+        public static User FindUser(string email)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - find User has email
+                 * 
+                 * MATCH(u:user {userID:@userEmail})
+                    return u
+                 */
+            User user = null;
+            try
+            {
+                Client.Connect();
+                user = Client.Cypher.Match("(u:user {email:'" + email + "'})")
+                                .Return<User>("u")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                user = null;
+            }
+            return user;
+        }
+
         public static List<User> FindFriend(User user)
         {
 
@@ -771,6 +797,19 @@ namespace FlyAwayPlus.Helpers
                 return true;
             }
             return false;
+        }
+
+        public static void ResetPassword(string email)
+        {
+            /*
+             * MATCH (n { email: 'email0@gmail.com' })
+                SET n.email = 'hoangnmse02819@gmail.com'
+                RETURN n
+             */
+            Client.Connect();
+            Client.Cypher.Match("(n { email: '" + email + "' })")
+                           .Set("n.password = 696969 RETURN n")
+                           .ExecuteWithoutResults();
         }
     }
 }

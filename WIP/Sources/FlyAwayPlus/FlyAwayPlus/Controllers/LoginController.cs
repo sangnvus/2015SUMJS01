@@ -274,31 +274,44 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult SendMail()
         {
-            var x = Request["email"];
-            string senderID = "flyawayplus.system@gmail.com";// use sender’s email id here..
-            const string senderPassword = "doan2015"; // sender password here…
-            try
+            var email = Request["email"];
+
+            User user;
+            user = GraphDatabaseHelpers.FindUser(email);
+            if (user != null)
             {
-                var smtp = new SmtpClient
+                GraphDatabaseHelpers.ResetPassword(email);
+
+                string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+                const string senderPassword = "doan2015"; // sender password here…
+                try
                 {
-                    Host = "smtp.gmail.com", // smtp server address here…
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    Credentials = new NetworkCredential(senderID, senderPassword),
-                    Timeout = 30000,
-                };
-                var message = new MailMessage(senderID, x, "subject", "body");
-                smtp.Send(message);
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com", // smtp server address here…
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        Credentials = new NetworkCredential(senderID, senderPassword),
+                        Timeout = 30000,
+                    };
+                    var message = new MailMessage(senderID, email, "Reset password FlyAwayPles",
+                        "Your new password: 123456");
+                    smtp.Send(message);
 
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                }
+                return RedirectToAction("ForgotPassword", "Login");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
-
+                return RedirectToAction("Index", "LookAround");
             }
-
-            return RedirectToAction("Index", "Home");
+            
         }
 
         public ActionResult AuthenGoogle()
