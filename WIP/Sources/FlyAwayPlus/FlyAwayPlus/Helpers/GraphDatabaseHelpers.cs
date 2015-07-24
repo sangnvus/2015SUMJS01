@@ -544,7 +544,7 @@ namespace FlyAwayPlus.Helpers
             Client.Connect();
             list = Client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
                             .Return<Comment>("c1")
-                            //.OrderBy("c1.dateCreated")
+                            .OrderBy("c1.dateCreated")
                             .Results.ToList();
             return list;
         }
@@ -814,8 +814,8 @@ namespace FlyAwayPlus.Helpers
                 {
                     Client.Cypher.Match("(p:post{postID:" + postID + "})-[r:LATEST_COMMENT]->(c:comment), (c1:comment{commentID:" + comment.commentID + "})")
                                     .Delete("r")
-                                    .Create("(p)-[:LATEST_POST]->(c1)")
-                                    .Create("(c1)-[:PREV_POST]->(c)")
+                                    .Create("(p)-[:LATEST_COMMENT]->(c1)")
+                                    .Create("(c1)-[:PREV_COMMENT]->(c)")
                                     .ExecuteWithoutResults();
                 }
                 return true;
@@ -872,14 +872,31 @@ namespace FlyAwayPlus.Helpers
         public static void ResetPassword(string email)
         {
             /*
-             * MATCH (n { email: '@email' })
+             * MATCH (n:user { email: '@email' })
                 n.password = @password
                 RETURN n
              */
             Client.Connect();
-            Client.Cypher.Match("(n { email: '" + email + "' })")
+            Client.Cypher.Match("(n:user { email: '" + email + "' })")
                            .Set("n.password = 696969 RETURN n")
                            .ExecuteWithoutResults();
+        }
+
+        public static bool EditComment(Comment comment)
+        {
+            Client.Connect();
+            try { 
+                    Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
+                           .Set("c.dateCreated = '" + comment.dateCreated + "'")
+                           .Set("c.content = '" + comment.content + "'")
+                           .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
     }
 }

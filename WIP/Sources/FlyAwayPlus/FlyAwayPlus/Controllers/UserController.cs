@@ -92,6 +92,18 @@ namespace FlyAwayPlus.Controllers
             return PartialView("_PostDetailPartial", comment);
         }
 
+        public JsonResult EditComment(int commentID, string content)
+        {
+            Comment comment = new Comment();
+            comment.commentID = commentID;
+            comment.content = content;
+            comment.content = comment.content.Replace("\n", "\\n");
+            comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+
+            bool success = GraphDatabaseHelpers.EditComment(comment);
+            return Json(success);
+        }
+
         public JsonResult Like(int postId)
         {
             User user = UserHelpers.GetCurrentUser(Session);

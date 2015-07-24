@@ -8,3 +8,12 @@
 .comment-list .comment-detail .comment-content {
     margin-left: 40px;
 }
+
+.commenter-content:hover .commenter-edit {
+    display:block;
+}
+.commenter-edit {
+    float:right; 
+    display: none;
+    cursor: pointer;
+}
