@@ -126,7 +126,7 @@ namespace FlyAwayPlus.Controllers
             {
                 var errorData = new
                 {
-                    success = false, 
+                    success = false,
                     errorMessage = "File is of wrong format."
                 };
                 return Json(errorData);
@@ -145,7 +145,7 @@ namespace FlyAwayPlus.Controllers
             var webPath = GetTempSavedFilePath(file);
             var successData = new
             {
-                success = true, 
+                success = true,
                 fileName = webPath.Replace("/", "\\")
             };
             return Json(successData);
@@ -311,7 +311,7 @@ namespace FlyAwayPlus.Controllers
             {
                 return RedirectToAction("Index", "LookAround");
             }
-            
+
         }
 
         public ActionResult AuthenGoogle()
@@ -350,7 +350,7 @@ namespace FlyAwayPlus.Controllers
                     {
                         email = e.Value;
                     }
-                
+
                 }
                 string avatar = google.image.url.Value;
                 avatar = avatar.Substring(0, avatar.LastIndexOf("?sz=") + 4) + "100";
@@ -368,7 +368,7 @@ namespace FlyAwayPlus.Controllers
                         address = a.Value;
                     }
                 }
-                
+
                 // select from DB
                 User newUser = GraphDatabaseHelpers.GetUser(2, email); // Google account: typeID = 2
 
@@ -413,8 +413,8 @@ namespace FlyAwayPlus.Controllers
         // TINY HELPER FUNCTIONS //
         ///////////////////////////
 
-        private const int AvatarStoredWidth = 100;  // Ava size to be saved
-        private const int AvatarStoredHeight = 100; // Ava size to be saved
+        private const int AvatarStoredWidth = 200;  // Ava size to be saved
+        private const int AvatarStoredHeight = 200; // Ava size to be saved
         private const int AvatarScreenWidth = 500;  // Size of image to be showed to resize, crop
 
         private const string TempFolder = "/Temp";
@@ -424,12 +424,12 @@ namespace FlyAwayPlus.Controllers
         private bool IsImage(HttpPostedFileBase file)
         {
             if (file == null) return false;
-            
+
             return file.ContentType.Contains("image") ||
                 FapConstants.ImageFileExtensions.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
         }
 
-        private string GetTempSavedFilePath(HttpPostedFileBase file, int counter = 0)
+        private string GetTempSavedFilePath(HttpPostedFileBase file)
         {
             // Define destination
             var serverPath = HttpContext.Server.MapPath(TempFolder);
@@ -440,18 +440,11 @@ namespace FlyAwayPlus.Controllers
 
             // Generate unique file name
             var fileName = Path.GetFileName(file.FileName);
-            const string prepend = "item_";
-            string finalFileName = prepend + ((counter)) + "_" + fileName;
-            if (System.IO.File.Exists(Path.Combine(serverPath, finalFileName)))
-            {
-                return GetTempSavedFilePath(file, ++counter);
-            }
-
-            finalFileName = SaveTemporaryAvatarFileImage(file, serverPath, finalFileName);
+            fileName = SaveTemporaryAvatarFileImage(file, serverPath, fileName);
 
             // Clean up old files after every save
             CleanUpTempFolder(1);
-            return Path.Combine(TempFolder, finalFileName);
+            return Path.Combine(TempFolder, fileName);
         }
 
         private static string SaveTemporaryAvatarFileImage(HttpPostedFileBase file, string serverPath, string fileName)
@@ -475,7 +468,7 @@ namespace FlyAwayPlus.Controllers
             try
             {
                 var currentUtcNow = DateTime.UtcNow;
-                var serverPath = HttpContext.Server.MapPath("/Temp");
+                var serverPath = HttpContext.Server.MapPath(TempFolder);
                 if (!Directory.Exists(serverPath)) return;
                 var fileEntries = Directory.GetFiles(serverPath);
                 foreach (var fileEntry in fileEntries)
@@ -495,19 +488,19 @@ namespace FlyAwayPlus.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveImage(string t, string l, string h, string w, string fileName)
+        public ActionResult SaveImage(string t, string l, string h, string w, string fileName, int counter = 0)
         {
             try
             {
-                // Calculate dimensions
-                var top = Convert.ToInt32(t.Replace("-", "").Replace("px", ""));
-                var left = Convert.ToInt32(l.Replace("-", "").Replace("px", ""));
-                var height = Convert.ToInt32(h.Replace("-", "").Replace("px", ""));
-                var width = Convert.ToInt32(w.Replace("-", "").Replace("px", ""));
-
-                // Get file from temporary folder
                 if (fileName != null)
                 {
+                    // Calculate dimensions
+                    var top = Convert.ToInt32(t.Replace("-", "").Replace("px", ""));
+                    var left = Convert.ToInt32(l.Replace("-", "").Replace("px", ""));
+                    var height = Convert.ToInt32(h.Replace("-", "").Replace("px", ""));
+                    var width = Convert.ToInt32(w.Replace("-", "").Replace("px", ""));
+
+                    // Get file from temporary folder
                     var fn = Path.Combine(Server.MapPath(MapTempFolder), Path.GetFileName(fileName));
                     // ...get image and resize it, ...
                     var img = new WebImage(fn);
@@ -517,7 +510,8 @@ namespace FlyAwayPlus.Controllers
                     // ... delete the temporary file,...
                     System.IO.File.Delete(fn);
                     // ... and save the new one.
-                    var newFileName = Path.Combine(AvatarPath, Path.GetFileName(fn));
+
+                    var newFileName = Path.Combine(AvatarPath, GetFinalFileName(Path.GetFileName(fn)));
                     var newFileLocation = HttpContext.Server.MapPath(newFileName);
                     var directoryName = Path.GetDirectoryName(newFileLocation);
                     if (directoryName != null && !Directory.Exists(directoryName))
@@ -538,6 +532,20 @@ namespace FlyAwayPlus.Controllers
                 return Json(new { success = false, errorMessage = "Unable to upload file.\nERRORINFO: " + ex.Message });
             }
             return null;
+        }
+
+        private string GetFinalFileName(string fileName, int counter = 0)
+        {
+            var serverPath = HttpContext.Server.MapPath(AvatarPath);
+            // Generate unique file name
+            const string prepend = "item_";
+            string finalFileName = prepend + ((counter)) + "_" + fileName;
+            if (System.IO.File.Exists(Path.Combine(serverPath, finalFileName)))
+            {
+                return GetFinalFileName(fileName, ++counter);
+            }
+
+            return finalFileName;
         }
     }
 }

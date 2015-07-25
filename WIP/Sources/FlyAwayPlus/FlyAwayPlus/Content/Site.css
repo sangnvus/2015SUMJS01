@@ -8,7 +8,6 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
-    margin-top: 50px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -152,10 +151,6 @@ img {
     border-radius: 50%;
     padding: 3px;
     background-color: #ffffff;
-    -webkit-box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
-    -moz-box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
-    -ms-box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
-    box-shadow: 2px 2px 4px -1px rgba(0,0,0,0.65);
 }
 
 .vertical-space-10 {
@@ -183,6 +178,8 @@ img {
     background-color: #ffffff;
     -ms-border-radius: 4px;
     border-radius: 4px;
+    display: flex;
+    float: left;
 }
 
 .padding-5 {
@@ -882,3 +879,168 @@ img {
     cursor: pointer;
 }
 /* AVATAR UPLOAD ENDS */
+
+/* USER PROFILE */
+header {
+    -webkit-box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    -ms-box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    margin: 25px auto 50px;
+    height: 300px;
+    position: relative;
+}
+
+figure.profile-banner {
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+
+figure.profile-picture {
+    background-position: center center;
+    -ms-background-size: cover;
+    background-size: cover;
+    -ms-border-radius: 50%;
+    border-radius: 50%;
+    bottom: -50px;
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0,0,0,0.3);
+    -ms-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0,0,0,0.3);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0,0,0,0.3);
+    height: 148px;
+    left: 150px;
+    position: absolute;
+    width: 148px;
+    z-index: 3;
+}
+
+div.profile-stats {
+    bottom: 0;
+    left: 0;
+    padding: 15px 15px 15px 350px;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    background: #000000;
+    background: rgba(0,0,0,.5);
+}
+
+    div.profile-stats ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        div.profile-stats ul li a {
+            color: #efefef;
+            display: block;
+            float: left;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 50px;
+            -ms-text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+            div.profile-stats ul li a:hover {
+                color: #D91E17;
+                cursor: pointer;
+                font-size: 26px;
+                margin-bottom: -5px;
+            }
+
+    div.profile-stats li span {
+        display: block;
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    div.profile-stats .interact-area {
+        margin: 10px;
+    }
+
+/**********************/
+.frame-container .friend-list-header {
+    background-color: #53A3CD;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 0 20px 0 20px;
+    height: inherit;
+    cursor: pointer;
+}
+
+.frame-container .friend-title-header {
+    -ms-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+    -ms-border-bottom-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin-left: -15px;
+}
+
+.frame-container .view-more-friend-title {
+    -ms-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
+    -ms-border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    margin-right: -15px;
+    margin-left: auto;
+}
+
+.friend-title-header h6 {
+    margin-top: 30%;
+}
+
+.view-more-friend-title h6 {
+    margin-top: 40%;
+}
+
+.frame-container .friend-list-avatar {
+    display: block;
+    float: left;
+    overflow: hidden;
+}
+
+/*Image gallery*/
+#photos-gallery .images-wrapper {
+    position: relative;
+    max-width: 100%;
+    width: 100%;
+    margin-top: 70px;
+}
+
+#photos-gallery .images-wrapper .image-element {
+    position: absolute;
+    background: white;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+    /*Transitions*/
+    -webkit-transition: top 1s ease, left 1s ease;
+    -moz-transition: top 1s ease, left 1s ease;
+    -o-transition: top 1s ease, left 1s ease;
+    -ms-transition: top 1s ease, left 1s ease;
+}
+
+#photos-gallery .images-wrapper .image-element img {
+    -ms-border-radius: 5px;
+    border-radius: 5px
+}
+
+#photos-gallery .images-wrapper .image-element img:hover {
+    cursor: pointer;
+    -ms-opacity: 0.5;
+    opacity: 0.5
+}
+
+#photos-gallery .images-wrapper .image-element .post-actions li {
+    margin: 7px
+}
+
+#photos-gallery .images-wrapper .img-zoom {
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+}
+
+/* USER PROFILE ENDS */

@@ -68,6 +68,7 @@ namespace FlyAwayPlus.Controllers
             }
 
             ViewData["listPostDict"] = listPostDict;
+            ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listPlaceDict"] = listPlaceDict;
             ViewData["timeline"] = timeline;

@@ -273,6 +273,7 @@
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
+    <Content Include="Content\Fancy\jquery.fancybox.css" />
     <Content Include="Content\jquery.fs.stepper.css" />
     <Content Include="Content\jquery.Jcrop.min.css" />
     <Content Include="Content\PostDetailPage\postDetail.css" />
@@ -284,6 +285,7 @@
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\classie.js" />
+    <Content Include="Scripts\Fancy\jquery.fancybox.pack.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />

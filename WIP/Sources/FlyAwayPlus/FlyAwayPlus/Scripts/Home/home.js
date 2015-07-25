@@ -5,13 +5,13 @@
     var pageNumberHot = 1;
 
     var setBlocksit = function () {
-        var conWidth = $("#blog-landing").width();
+        var conWidth = $(".blog-landing").width();
         //my container width
         var gridwidth = 212;
         //alert(conWidth);
         var col = conWidth / gridwidth;
         //alert(col);
-        $("#blog-landing").BlocksIt({
+        $(".blog-landing").BlocksIt({
             numOfCol: Math.floor(col),
             offsetX: 8,
             offsetY: 8
@@ -37,7 +37,8 @@
             postActions.css("opacity", "0");
         });
     };
-
+    var unDislikePost;
+    var likeAjax;
     var likePost = function () {
         $(".btn-like").click(function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
@@ -67,7 +68,7 @@
         var likeIcon = $(post).parentsUntil(".white-panel")
                                 .parent()
                                 .find(".fa-thumbs-o-up");
-        
+
         var likeCountElement = $(this).parentsUntil(".white-panel").parent()
             .find(".like-count");
 
@@ -82,27 +83,26 @@
             $(buttonLike).toggleClass("btn-primary").toggleClass("btn-warning");
         }
     };
-
-    var unDislikePost = function (post) {
+    unDislikePost = function (post) {
         var dislikeIcon = $(post).parentsUntil(".white-panel")
-                                .parent()
-                                .find(".fa-thumbs-o-down");
+            .parent()
+            .find(".fa-thumbs-o-down");
 
         var dislikeCountElement = $(this).parentsUntil(".white-panel").parent()
             .find(".dislike-count");
 
         if (dislikeIcon.hasClass("interacted")) {
             dislikeIcon.toggleClass("interacted")
-                    .toggleClass("fa-thumbs-down");
+                .toggleClass("fa-thumbs-down");
             dislikeCountElement.text(parseInt(dislikeCountElement.text()) - 1);
 
             var buttonDislike = $(post).parentsUntil(".white-panel")
-                                .parent()
-                                .find(".btn-dislike");
+                .parent()
+                .find(".btn-dislike");
             $(buttonDislike).toggleClass("btn-primary").toggleClass("btn-warning");
         }
     };
-
+    var dislikeAjax;
     var dislikePost = function () {
         $(".btn-dislike").click(function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
@@ -149,8 +149,7 @@
             evt.preventDefault();
         });
     };
-
-    var likeAjax = function (post) {
+    likeAjax = function (post) {
         var controller = "/User/Like";
         var postID = parseInt($(post).attr("role"));
         var data = {
@@ -159,8 +158,7 @@
 
         commonModule.callAjax(controller, data, null);
     };
-
-    var dislikeAjax = function (post) {
+    dislikeAjax = function (post) {
         var controller = "/User/Dislike";
         var postID = parseInt($(post).attr("role"));
         var data = {
@@ -169,7 +167,6 @@
 
         commonModule.callAjax(controller, data, null);
     };
-    
     var loadMoreData = function (typePost) {
         if (isCallAjax) {
             return;
@@ -179,7 +176,7 @@
         var data = {
             pageNumber: 1
         };
-        if(typePost == "wish") {
+        if (typePost == "wish") {
             controller = "/Home/LoadMoreWish/";
             data.pageNumber = pageNumberWish++;
         } else if (typePost == "hot") {
@@ -197,7 +194,7 @@
             url: controller,
             data: data,
             success: function (data, textstatus) {
-                $("#blog-landing").append(data);
+                $(".blog-landing").append(data);
                 homeModule.setBlocksit();
                 homeModule.fadeImage();
                 homeModule.likePost();
@@ -212,7 +209,7 @@
             }
         });
     };
-    
+
     return {
         setBlocksit: setBlocksit,
         fadeImage: fadeImage,
@@ -238,8 +235,8 @@ $(window).resize(function () {
 });
 
 $(window).scroll(function () {
-    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-        if (isLoadMore || isLoadMore == "true") {
+    if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+        if (isLoadMore || isLoadMore === "true") {
             homeModule.loadMoreData();
         }
     }
