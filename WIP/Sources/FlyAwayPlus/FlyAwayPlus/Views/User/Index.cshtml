@@ -1,130 +1,145 @@
-﻿@model FlyAwayPlus.Models.User
+﻿<link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
+
+@model FlyAwayPlus.Models.User
 @{
     ViewBag.Title = "User Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
-    var listPost = ViewData["listPostDict"] as Dictionary<string, List<FlyAwayPlus.Models.Post>>;
+    var listPostDict = ViewData["listPostDict"] as Dictionary<string, List<FlyAwayPlus.Models.Post>>;
     var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
     var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
     var timeline = ViewData["timeline"] as List<string>;
     var friend = ViewData["friend"] as List<FlyAwayPlus.Models.User>;
 }
-<link href="~/Content/UserPage/WOW slider/wow-style.css" rel="stylesheet" />
-<link href="~/Content/speech-buble.css" rel="stylesheet" />
 
-<!-- Image Slide -->
-<div>
-    <!-- Start WOWSlider.com BODY section -->
-    <div id="wowslider-container1">
-        <div class="ws_images">
-            <ul>
-                <li><a href="#" target="_blank"><img src="~/Images/background/halong.jpg" alt="Ha Long" title="Ha Long" id="wows1_0" /></a></li>
-                <li><a href="#" target="_blank"><img src="~/Images/background/nhatrang.jpg" alt="Nha Trang" title="Nha Trang" id="wows1_1" /></a></li>
-                <li><a href="#" target="_blank"><img src="~/Images/background/sondoong.jpg" alt="Son Doong" title="Son Doong" id="wows1_2" /></a></li>
-            </ul>
-        </div>
-        <div class="ws_shadow"></div>
-    </div>
-    <script src="~/Scripts/WOW slider/wowslider.js"></script>
-    <script src="~/Scripts/WOW slider/script.js"></script>
-    <!-- End WOWSlider.com BODY section -->
-</div>
+<header>
+    <figure class="profile-banner">
+        <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" />
+    </figure>
+    <figure class="profile-picture"
+            style="background-image: url('/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg')">
+    </figure>
+    <div class="profile-stats">
+        <ul role="tablist">
+            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Places</span></a></li>
+            <li role="presentation"><a href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">182 <span>Photos</span></a></li>
+            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">32 <span>Videos</span></a></li>
+            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">324 <span>Friends</span></a></li>
+        </ul>
 
-<!-- Ava + Info -->
-<div class="col-md-12 frame-container padding-top-30">
-    <div class="col-md-10">
-        <div class="col-md-2">
-            <img src="@Model.avatar" class="circle-image" alt="Avatar" />
-        </div>
-        <div class="col-md-10">
-            <p class="triangle-border left">I am Duc Filan, 22 years old, from Vinh city. I have travelled to 3 places in the world.<br /> Add me as your friend and be on my trips!</p>
+        <div class="interact-area">
+            <a href="javascript:void(0);" class="btn btn-primary pull-right">Add friend</a>
+            <a href="javascript:void(0);" class="btn btn-primary pull-right" style="margin-right: 20px">Message</a>
         </div>
     </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary" style="margin-bottom: 5px; width: 100%">
-            <span class="glyphicon glyphicon-plus"></span>
-            Add as friend
-        </button>
-        <button class="btn btn-primary" style="margin-bottom: 5px; width: 100%">
-            <span class="glyphicon glyphicon-envelope"></span>
-            Conversation
-        </button>
-    </div>
-</div>
+    <h1>Duc Filan</h1>
+</header>
 
 <div class="vertical-space-15"></div>
 
 <!-- Friend list -->
-<div class="col-md-12 frame-container" style="margin-top: 30px">
-    <h3 class="text-center text-capitalize">MY FRIENDS</h3>
-    @if (friend.Count > 17)
-    {
-        for (int index = 0; index < 17; index++)
-        {
-            <div class="padding-5 col-md-2">
-                <img class="circle-image" height="50" src="@friend[index].avatar" alt="Avatar" />
-                <a href="/User/Index/@friend[index].userID"><p class="small text-center">@String.Format("{0} {1}", @friend[index].firstName, @friend[index].lastName)</p></a>
-            </div>
-        }
-        <div class="padding-5 col-md-2">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#myFriend">...</button>
-        </div>
-    }
-    else
-    {
-        foreach (var userFriend in friend)
-        {
-            <div class="padding-5 col-md-2">
-                <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
-                <a href="#"><p class="small text-center">@String.Format("{0} {1}", userFriend.firstName, userFriend.lastName)</p></a>
-            </div>
-        }
-        if (friend.Count == 0)
-        {
-            <p>@String.Format("{0} {1} has no friends", @Model.firstName, @Model.lastName)</p>
-        }
-    }
-</div>
+<div class="col-md-12 frame-container">
+    <div class="friend-list-header friend-title-header">
+        <h6 class="text-capitalize">MY FRIENDS</h6>
+    </div>
 
-<!-- Timeline -->
-<div class="container">
-    <div class="col-md-12">
-        <div class="col-md-12">
-            <div class="timeline">
-                <dl>
-                    @for (int index = 0, indexPost = 0; index < timeline.Count; index++)
-                    {
-                        <dt>@timeline[index]</dt>
-                        foreach (var post in listPost[timeline[index]])
-                        {
-                            var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
-                            var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
-                            indexPost++;
-                            
-                            <dd class="@posPosition clearfix">
-                                <div class="circ"></div>
-                                <div class="time" style="@style">@post.toRealtime()</div>
-                                <div class="events">
-                                    <div class="pull-left">
-                                        <img class="events-object img-rounded" src="@Model.avatar">
-                                    </div>
-                                    <div class="events-body">
-                                        <h4 class="events-heading">@listPlaceDict[@post.postID].name</h4>
-                                        <p>@post.content</p>
-                                    </div>
-                                </div>
-                            </dd>
-                        }
-                    }
-                </dl>
-            </div>
-        </div>
+    <div class="friend-list-avatar">
+        @if (friend.Count > 17)
+        {
+            for (int index = 0; index < 17; index++)
+            {
+                <div class="padding-5 col-md-2">
+                    <img class="circle-image" height="50" src="@friend[index].avatar" alt="Avatar" />
+                </div>
+            }
+        }
+        else
+        {
+            foreach (var userFriend in friend)
+            {
+                <div class="padding-5 col-md-2">
+                    <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
+                </div>
+            }
+            if (friend.Count == 0)
+            {
+                <p>@String.Format("{0} {1} has no friends", @Model.firstName, @Model.lastName)</p>
+            }
+        }
+    </div>
+    <div class="friend-list-header view-more-friend-title">
+        <h6 class="text-capitalize">VIEW ALL</h6>
     </div>
 </div>
 
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="timeline">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="col-md-12">
+                    <div class="timeline">
+                        <dl>
+                            @for (int index = 0, indexPost = 0; index < timeline.Count; index++)
+                            {
+                                <dt>@timeline[index]</dt>
+                                foreach (var post in listPostDict[timeline[index]])
+                                {
+                                    var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
+                                    var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
+                                    indexPost++;
 
+                                    <dd class="@posPosition clearfix">
+                                        <div class="circ"></div>
+                                        <div class="time" style="@style">@post.toRealtime()</div>
+                                        <div class="events">
+                                            <div class="pull-left">
+                                                <img class="events-object img-rounded" src="@Model.avatar">
+                                            </div>
+                                            <div class="events-body">
+                                                <h4 class="events-heading">@listPlaceDict[@post.postID].name</h4>
+                                                <p>@post.content</p>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                }
+                            }
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="photos-gallery">
+        <div class="images-wrapper">
+            @foreach (var image in listPhotoDict)
+            {
+                <div class="image-element">
+                    <img src="/Images/UserUpload/@image.Value.url" class="img-zoom" alt="" />
+                    <div class="dark-wrapper">
+                        <ul class="post-actions" style="padding-left: 0px;">
+                            <li>
+                                <a href="/Images/UserUpload/@image.Value.url" rel="group"
+                                   class="btn btn-primary fancybox"
+                                   title="@listPlaceDict.First(p => p.Key == @image.Key).Value.name"
+                                   style="width: 90px">Enlarge</a>
+                            </li>
+                            <li>
+                                <a href="/Post/Index/@image.Key" class="btn btn-primary" style="width: 90px">View post</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="messages">...</div>
+    <div role="tabpanel" class="tab-pane" id="settings">...</div>
+</div>
+
+<!-- Timeline -->
 <!-- Modal -->
 @if (friend.Count > 17)
 {
@@ -150,3 +165,65 @@
         </div>
     </div>
 }
+
+<script>
+    $(function () {
+        $('a.follow').click(function () {
+            $(this).toggleClass('followed');
+
+            if ($(this).hasClass('followed')) {
+                $(this).text('Request sent');
+                $('.profile-stats ul li:last-child').html('325<span>Friends</span>');
+            }
+            else {
+                $(this).text('Add friend');
+                $('.profile-stats ul li:last-child').html('324<span>Friends</span>');
+            }
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var conWidth = $("#photos-gallery").width();
+            //my container width
+            var gridwidth = 212;
+            //alert(conWidth);
+            var col = conWidth / gridwidth;
+            //alert(col);
+            $(".images-wrapper").BlocksIt({
+                numOfCol: Math.floor(col)
+            });
+        });
+
+        $(".image-element").hover(function () {
+            var postActions = $(this).find(".post-actions");
+
+            postActions.css("visibility", "visible");
+            postActions.css("opacity", "1");
+            postActions.animate({ top: '20px' }, "slow");
+        }, function () {
+            var postActions = $(this).find(".post-actions");
+
+            postActions.animate({ top: '0px' }, "slow");
+            postActions.css("visibility", "hidden");
+            postActions.css("opacity", "0");
+        });
+
+        $(".fancybox").attr('rel', 'gallery').fancybox({
+            openEffect: 'fade',
+            closeEffect: 'elastic',
+            padding: 2,
+            afterLoad: function () {
+                this.title = '<p class="text-center">' + this.title + '</p>';
+            },
+            helpers: {
+                title: {
+                    type: 'inside'
+                },
+                overlay: {
+                    css: {
+                        'background': 'rgba(58, 42, 45, 0.5)'
+                    }
+                }
+            }
+        });
+    });
+</script>
