@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using FlyAwayPlus.Models.Relationships;
+using System.Collections;
 
 namespace FlyAwayPlus.Helpers
 {
@@ -24,11 +25,6 @@ namespace FlyAwayPlus.Helpers
                         WithParam("newUser", user)
                         .Return<User>("user")
                         .Results.Single();
-        }
-
-        public static string GetNotification(int userID)
-        {
-            return "";
         }
 
         public static bool isLike(int postID, int userID)
@@ -127,7 +123,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
+                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
                                 .Return<int>("Length(collect(c1)) as CommentNumber")
                                 .Results.Single();
             }
@@ -263,7 +259,7 @@ namespace FlyAwayPlus.Helpers
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat) }));
+                Client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
                 return true;
             }
             return false;
@@ -280,7 +276,7 @@ namespace FlyAwayPlus.Helpers
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat) }));
+                Client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
                 return true;
             }
             return false;
@@ -318,6 +314,19 @@ namespace FlyAwayPlus.Helpers
 
             return uniqueId;
         }
+
+        public static int GetActivityIncrementId()
+        {
+            Client.Connect();
+            var uniqueId = Client.Cypher.Merge("(id:ActivityUniqueId)")
+                            .OnCreate().Set("id.count = 1")
+                            .OnMatch().Set("id.count = id.count + 1")
+                            .Return<int>("id.count AS uniqueID")
+                            .Results.Single();
+
+            return uniqueId;
+        }
+
         public static User FindUser(Comment comment)
         {
             /*
@@ -407,6 +416,7 @@ namespace FlyAwayPlus.Helpers
 
             return listUser;
         }
+
         public static List<Post> FindLimitWishlist(User user, int skip, int limit)
         {
             /*
@@ -429,6 +439,7 @@ namespace FlyAwayPlus.Helpers
 
             return listPost;
         }
+
         public static void InsertPost(User user, Post post, Photo photo, Place place)
         {
             // Auto increment Id.
@@ -504,6 +515,7 @@ namespace FlyAwayPlus.Helpers
                 }
             }
         }
+
         public static User SearchUser(Post post)
         {
             /**
@@ -532,7 +544,7 @@ namespace FlyAwayPlus.Helpers
             Client.Connect();
             list = Client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
                             .Return<Comment>("c1")
-                //.OrderBy("c.dateCreated")
+                            .OrderBy("c1.dateCreated")
                             .Results.ToList();
             return list;
         }
@@ -550,7 +562,7 @@ namespace FlyAwayPlus.Helpers
             Client.Connect();
             listPost = Client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
                             .ReturnDistinct<Post>("p1")
-                //.OrderByDescending("p.dateCreated")
+                            //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
 
             return listPost;
@@ -654,7 +666,7 @@ namespace FlyAwayPlus.Helpers
             listPost = Client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {userID:" + currentUser.userID + "})")
                             .Where("p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2)")
                             .ReturnDistinct<Post>("p1")
-                //.OrderByDescending("p.dateCreated")
+                            //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
 
             return listPost;
@@ -763,6 +775,18 @@ namespace FlyAwayPlus.Helpers
             {
                 var userRef = userNode.Reference;
                 Client.CreateRelationship(userRef, new UserCreateCommentRelationship(comRef));
+                /*
+                 * Create Commented relationship
+                 * 
+                 * match (u:user{userID:@otherUserID})-[r:COMMENTED]->(p:post{postID:@postID})
+                    delete r
+                    create (u)-[r1:COMMENTED {dateCreated: '2015/07/23 08:05:03', activityID : 10280}]->(p)
+                 */
+                User otherUser = FindUser(comment);
+                Client.Cypher.Match("(u:user{userID:" + otherUser.userID + "})-[r:COMMENTED]->(p:post{postID:" + postID + "})")
+                            .Delete("r")
+                            .Create("(u)-[r1:COMMENTED {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', activityID : " + GetActivityIncrementId() + "}]->(p)")
+                            .ExecuteWithoutResults();
 
                 //Client.CreateRelationship(postRef, new PostHasCommentRelationship(comRef));
                 /*
@@ -781,17 +805,17 @@ namespace FlyAwayPlus.Helpers
 
                 if (oldComment == 0)
                 {
-                    // CREATE New LATEST_POST
+                    // CREATE New LATEST_COMMENT
                     Client.Cypher.Match("(p:post{postID:" + postID + "}), (c:comment{commentID:" + comment.commentID + "})")
-                                    .Create("(p)-[:LATEST_POST]->(c)")
+                                    .Create("(p)-[:LATEST_COMMENT]->(c)")
                                     .ExecuteWithoutResults();
                 }
                 else
                 {
                     Client.Cypher.Match("(p:post{postID:" + postID + "})-[r:LATEST_COMMENT]->(c:comment), (c1:comment{commentID:" + comment.commentID + "})")
                                     .Delete("r")
-                                    .Create("(p)-[:LATEST_POST]->(c1)")
-                                    .Create("(c1)-[:PREV_POST]->(c)")
+                                    .Create("(p)-[:LATEST_COMMENT]->(c1)")
+                                    .Create("(c1)-[:PREV_COMMENT]->(c)")
                                     .ExecuteWithoutResults();
                 }
                 return true;
@@ -799,17 +823,80 @@ namespace FlyAwayPlus.Helpers
             return false;
         }
 
+        public static List<Notification> GetNotification(int userID, int activityID = 0, int limit = 5)
+        {
+
+            /*
+                * Query:
+                * Find:
+                *     - Search limit post with privacy public
+                * 
+                * optional match (u:user {userID:10000})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)
+                with p, u
+                optional match (p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)
+                WHERE u1.userID <> u.userID and m.activityID < @activityID
+                m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID
+                return dateCreated, u1, p, activity, lastActivityID
+                ORDER BY m.dateCreated
+                limit @limit
+            */
+            List<Notification> listNotification = null;
+
+            string limitActivity = "";
+            if (activityID != 0)
+            {
+                limitActivity = "and m.activityID < " + activityID;
+            }
+            Client.Connect();
+            listNotification = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)")
+                                            .With("p, u")
+                                            .OptionalMatch("(p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)")
+                                            .Where("u1.userID <> u.userID " + limitActivity)
+                                            .With("m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID")
+                                            .Return((dateCreated, u1, p, activity, lastActivityID) => new Notification
+                                            {
+                                                dateCreated = dateCreated.As<String>(),
+                                                activity = activity.As<String>(),
+                                                lastActivityID = lastActivityID.As<Int16>(),
+                                                user = u1.As<User>(),
+                                                post = p.As<Post>()
+                                            })
+                                            //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
+                                            .OrderByDescending("dateCreated, lastActivityID")
+                                            .Limit(limit)
+                                            .Results.ToList();
+
+            return listNotification;
+		}
+		
         public static void ResetPassword(string email)
         {
             /*
-             * MATCH (n { email: 'email0@gmail.com' })
-                SET n.email = 'hoangnmse02819@gmail.com'
+             * MATCH (n:user { email: '@email' })
+                n.password = @password
                 RETURN n
              */
             Client.Connect();
-            Client.Cypher.Match("(n { email: '" + email + "' })")
+            Client.Cypher.Match("(n:user { email: '" + email + "' })")
                            .Set("n.password = 696969 RETURN n")
                            .ExecuteWithoutResults();
+        }
+
+        public static bool EditComment(Comment comment)
+        {
+            Client.Connect();
+            try { 
+                    Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
+                           .Set("c.dateCreated = '" + comment.dateCreated + "'")
+                           .Set("c.content = '" + comment.content + "'")
+                           .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
     }
 }

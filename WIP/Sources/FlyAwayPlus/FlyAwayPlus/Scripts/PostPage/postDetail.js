@@ -1,24 +1,4 @@
-﻿$(document).ready(function () {
-    commentHubProxy = $.connection.commentHub;
-
-    commentHubProxy.client.addNewComment = function (content) {
-        $(".comment-list").append(content);
-    }
-
-    $(window).load(function () {
-        postDetailModule.likePost();
-        postDetailModule.dislikePost();
-    });
-
-    $.connection.hub.start().done(function () {
-        $("#idTextareaComment").keydown(function (e) {
-            postDetailModule.handleEnter(e);
-        });
-    });
-    $("#idTextareaComment").elastic();
-});
-
-var postDetailModule = (function () {
+﻿var postDetailModule = (function () {
     var likePost = function () {
         $(".btn-like").click(function () {
             var likeIcon = $(".fa-thumbs-o-up");
@@ -103,6 +83,26 @@ var postDetailModule = (function () {
         commonModule.callAjax(controller, data, null);
     };
     
+    var editCommentAjax = function (comment) {
+        var controller = "/User/EditComment";
+        var commentID = parseInt($(comment).attr("role"));
+        var content = $(comment).val();
+        var data = {
+            commentID: commentID,
+            content: content
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: controller,
+            data: data,
+            success: function (data, textstatus) {
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            }
+        });
+    }
+
     var commentAjax = function (post) {
         var controller = "/User/Comment";
         var postID = parseInt($(post).attr("role"));
@@ -127,7 +127,7 @@ var postDetailModule = (function () {
         });
     }
 
-    var handleEnter = function (evt) {
+    var handleEnter = function (evt, selector) {
         if (evt.keyCode == 13 && evt.shiftKey) {
             if (evt.type == "keydown") {
                 // create new line
@@ -136,7 +136,16 @@ var postDetailModule = (function () {
             evt.preventDefault();
         }
         else if (evt.keyCode == 13) {
-            commentAjax($("#idTextareaComment"));
+            if (selector) {
+                editCommentAjax($(selector));
+                var parent = $(selector).closest(".comment-content");
+                $(selector).hide();
+                $(parent).find("p").text("").append($(selector).val().split("\n").join("<br />"));
+                $(parent).find("p").show();
+            }
+            else {
+                commentAjax($("#idTextareaComment"));
+            }
             evt.preventDefault();
         }
     };
@@ -144,6 +153,66 @@ var postDetailModule = (function () {
     return {
         likePost: likePost,
         dislikePost: dislikePost,
-        handleEnter: handleEnter
+        handleEnter: handleEnter,
+        editCommentAjax: editCommentAjax
     }
 })();
+$(document).ready(function () {
+    commentHubProxy = $.connection.commentHub;
+
+    commentHubProxy.client.addNewComment = function (content) {
+        $(".comment-list").append(content);
+    }
+
+    $(window).load(function () {
+        postDetailModule.likePost();
+        postDetailModule.dislikePost();
+    });
+
+    $.connection.hub.start().done(function () {
+        $("#idTextareaComment").keydown(function (e) {
+            postDetailModule.handleEnter(e);
+        });
+    });
+    $("#idTextareaComment").elastic();
+
+    var checkOutFocus = false;
+    var checkMouse = false;
+    $(".comment-content").find("textarea").focusout(function (evt) {
+        var content = $(this).closest(".comment-content").find("p");
+        if (!checkOutFocus && checkMouse) {
+            $(content).show();
+            $(this).hide();
+        }
+        evt.preventDefault();
+    });
+    
+    
+    $(document).mousedown(function (e) {
+        var container = $(".comment-content").find("textarea");
+        if (container.has(e.target).length === 0) {
+            checkMouse = true;
+        }
+        else {
+            checkMouse = false;
+        }
+    });
+    $(".commenter-edit").click(function (evt) {
+        checkOutFocus = true;
+        var content = $(this).closest(".comment-detail").find(".comment-content");
+        var textarea = $(content).find("textarea");
+
+        $(textarea).val($(textarea).val().split("<br />").join("\n"));
+        $(content).find("p").hide();
+        $(textarea).show();
+
+        $(textarea).keydown(function (e) {
+            checkMouse = false;
+            postDetailModule.handleEnter(e, textarea);
+        });
+
+        $(textarea).elastic();
+        checkOutFocus = false;
+        evt.preventDefault();
+    });
+});

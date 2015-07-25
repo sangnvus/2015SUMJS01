@@ -70,22 +70,7 @@
                                     Notifications
                                 </div>
                                 <hr />
-                                <div class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px!important;">
-                                    @for (int i = 0; i < 15; i++)
-                                    {
-                                        <div style="width:100%; height: 65px;">
-                                            <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
-                                                <!--
-                                                <img class="avatar" style="float:left" src="~/Images/avatar/avatar-default.jpg" />
-                                                -->
-                                                <div style="float:left">
-                                                    <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
-                                                </div>
-                                                <div style="">Duc FiLan da thich ban  tai sao the aaaaaaaaaaaaaaaaaaaaaa</div>
-                                            </a>
-                                        </div>
-                                        <hr />
-                                    }
+                                <div id="idNotification" class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px!important;">
                                 </div>
                                 <div class="notification-footer">
                                     <a href="#">See All</a>
@@ -122,37 +107,108 @@
     @RenderSection("scripts", required: false)
 
     <script>
-        $(function () {
-            $("#btn-notification").click(function () {
-                $(".notification-container").fadeToggle(300);
-                $(".notification-count").fadeOut("slow");
-                return false;
-            });
-
-            //Document Click
-            $(document).click(function () {
-                $(".notification-container").hide();
-            });
-            //Popup Click
-            $(".notification-container").click(function () {
-                return false;
-            });
+    $(function () {
+        $("#btn-notification").click(function () {
+            $(".notification-container").fadeToggle(300);
+            $(".notification-count").fadeOut("slow");
+            return false;
         });
 
-        $(document).ready(function () {
-            notificationHubProxy = $.connection.notificationHub;
+        //Document Click
+        $(document).click(function () {
+            $(".notification-container").hide();
+        });
+        //Popup Click
+        $(".notification-container").click(function () {
+            return false;
+        });
+    });
 
-            notificationHubProxy.client.receiveNotification = function (content) {
-                console.log(content);
+    $(document).ready(function () {
+        var lastActivityID = 0;
+        notificationHubProxy = $.connection.notificationHub;
+
+        notificationHubProxy.client.receiveNotification = function (content) {
+            /*
+                <div style="width:100%; height: 65px;">
+                    <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                        <div style="float:left">
+                            <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                        </div>
+                        <div style="">Duc FiLan da thich ban  tai sao the aaaaaaaaaaaaaaaaaaaaaa</div>
+                    </a>
+                </div>
+                <hr />
+            */
+            content = JSON.parse(content);
+            for (var index = 0; index < content.length; index++) {
+                var notification = content[index];
+                if (notification == null || notification["post"] == null || notification["user"] == null) {
+                    break;
+                }
+                var tmp = "";
+                tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
+                tmp += "<a href='/Post/Index/" + notification["post"]["postID"] + "' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                tmp += "<div style='float:left'>";
+                tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["user"]["avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                tmp += "</div>";
+
+
+                if (notification["activity"] == "COMMENTED") {
+                    tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " commented to your post</div>";
+                }
+                else if (notification["activity"] == "LIKE") {
+                    tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " liked to your post</div>";
+                }
+                else if (notification["activity"] == "DISLIKE") {
+                    tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " disliked to your post</div>";
+                }
+
+                tmp += "</a>";
+                tmp += "</div>";
+                tmp += "<hr />";
+                $("#idNotification").append(tmp);
+                lastActivityID = notification["lastActivityID"];
             }
 
-            $.connection.hub.start().done(function () {
-                var login = '@Session["authenicated"]';
-                if (login != null && login != "") {
-                    notificationHubProxy.server.loadNotification(@Session["userID"]);
+            /*
+            $(".divNotification").each(function () {
+                $(this).click(function (evt) {
+                    //alert($(this).find("a").first().attr("href"));
+                    var btn = $(this).find("a").first();
+                    $(btn).click();
+                    evt.preventDefault();
+                });
+            });
+            */
+        }
+
+        $.connection.hub.start().done(function () {
+            var login = '@Session["authenicated"]';
+            if (login != null && login != "") {
+                    if (lastActivityID == 0) {
+                        notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityID);
+                    }
                 }
             });
-        });
+
+            $('#idNotification').bind('scroll', function (evt) {
+                var scrollPosition = $(this).scrollTop() + $(this).outerHeight();
+                var divTotalHeight = $(this)[0].scrollHeight
+                                      + parseInt($(this).css('padding-top'), 10)
+                                      + parseInt($(this).css('padding-bottom'), 10)
+                                      + parseInt($(this).css('border-top-width'), 10)
+                                      + parseInt($(this).css('border-bottom-width'), 10);
+                //console.log("scrollPosition : " + scrollPosition + ", divTotalHeight: " + divTotalHeight)
+                if (scrollPosition + 5 == divTotalHeight) {
+                    $.connection.hub.start().done(function () {
+                        //alert(lastActivityID);
+                        notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityID);
+                    });
+                    evt.preventDefault();
+                }
+            });
+    });
     </script>
 </body>
 </html>

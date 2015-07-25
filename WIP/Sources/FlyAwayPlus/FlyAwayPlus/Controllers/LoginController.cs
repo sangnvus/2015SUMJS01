@@ -83,7 +83,7 @@ namespace FlyAwayPlus.Controllers
                 {
                     Session["authenicated"] = true;
                     Session["username"] = newUser.firstName + " " + newUser.lastName;
-                    Session["userAva"] = user.avatar;
+                    Session["userAva"] = newUser.avatar;
                     Session["user"] = newUser;
                     Session["userID"] = newUser.userID;
                 }
