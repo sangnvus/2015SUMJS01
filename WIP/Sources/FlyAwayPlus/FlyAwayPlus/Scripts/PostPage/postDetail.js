@@ -97,6 +97,7 @@
             url: controller,
             data: data,
             success: function (data, textstatus) {
+                // send notification
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
             }
@@ -127,6 +128,24 @@
         });
     }
 
+    var deleteComment = function (commentID) {
+        var controller = "/User/DeleteComment";
+        var data = {
+            commentID: commentID
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: controller,
+            data: data,
+            success: function (data, textstatus) {
+                // send notification
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            }
+        });
+    }
+
     var handleEnter = function (evt, selector) {
         if (evt.keyCode == 13 && evt.shiftKey) {
             if (evt.type == "keydown") {
@@ -137,36 +156,117 @@
         }
         else if (evt.keyCode == 13) {
             if (selector) {
-                editCommentAjax($(selector));
-                var parent = $(selector).closest(".comment-content");
-                $(selector).hide();
-                $(parent).find("p").text("").append($(selector).val().split("\n").join("<br />"));
-                $(parent).find("p").show();
+                if ($(selector).val() != "") {
+                    editCommentAjax($(selector));
+                    var parent = $(selector).closest(".comment-content");
+                    $(selector).hide();
+                    $(parent).find("p").text("").append($(selector).val().split("\n").join("<br />"));
+                    $(parent).find("p").show();
+                }
             }
             else {
-                commentAjax($("#idTextareaComment"));
+                if ($("#idTextareaComment").val() != "") {
+                    commentAjax($("#idTextareaComment"));
+                }
             }
             evt.preventDefault();
         }
+    };
+
+    var editCommentEvent = function (selector) {
+        var checkOutFocus = false;
+        var checkMouse = false;
+        $(".comment-content").find("textarea").focusout(function (evt) {
+            var content = $(this).closest(".comment-content").find("p");
+            if (!checkOutFocus && checkMouse) {
+                $(content).show();
+                $(this).hide();
+            }
+            evt.preventDefault();
+        });
+
+        $(document).mousedown(function (e) {
+            var container = $(".comment-content").find("textarea");
+            if (container.has(e.target).length === 0) {
+                checkMouse = true;
+            }
+            else {
+                checkMouse = false;
+            }
+        });
+        $(".commenter-edit").click(function (evt) {
+            checkOutFocus = true;
+            var content = $(this).closest(".comment-detail").find(".comment-content");
+            var textarea = $(content).find("textarea");
+
+            $(textarea).val($(textarea).val().split("<br />").join("\n"));
+            $(content).find("p").hide();
+            $(textarea).show();
+
+            $(textarea).keydown(function (e) {
+                checkMouse = false;
+                postDetailModule.handleEnter(e, textarea);
+            });
+
+            $(textarea).elastic();
+            checkOutFocus = false;
+            evt.preventDefault();
+        });
+
+        $(".commenter-edit").click(function (evt) {
+            checkOutFocus = true;
+            var content = $(this).closest(".comment-detail").find(".comment-content");
+            var textarea = $(content).find("textarea");
+
+            $(textarea).val($(textarea).val().split("<br />").join("\n"));
+            $(content).find("p").hide();
+            $(textarea).show();
+
+            $(textarea).keydown(function (e) {
+                checkMouse = false;
+                postDetailModule.handleEnter(e, textarea);
+            });
+
+            $(textarea).elastic();
+            checkOutFocus = false;
+            evt.preventDefault();
+        });
+    };
+
+    deleteCommentEvent = function () {
+        $(".commenter-delete").click(function (evt) {
+            var commentID = $(this).attr("role");
+            $(this).closest(".comment-detail").remove();
+            postDetailModule.deleteComment(commentID);
+            evt.preventDefault();
+        });
     };
 
     return {
         likePost: likePost,
         dislikePost: dislikePost,
         handleEnter: handleEnter,
-        editCommentAjax: editCommentAjax
+        editCommentAjax: editCommentAjax,
+        deleteComment: deleteComment,
+        editCommentEvent: editCommentEvent,
+        deleteCommentEvent: deleteCommentEvent
     }
 })();
+
 $(document).ready(function () {
     commentHubProxy = $.connection.commentHub;
 
     commentHubProxy.client.addNewComment = function (content) {
         $(".comment-list").append(content);
+        postDetailModule.deleteCommentEvent();
+        postDetailModule.editCommentEvent();
     }
 
     $(window).load(function () {
         postDetailModule.likePost();
         postDetailModule.dislikePost();
+        postDetailModule.deleteCommentEvent();
+        postDetailModule.editCommentEvent();
     });
 
     $.connection.hub.start().done(function () {
@@ -175,44 +275,4 @@ $(document).ready(function () {
         });
     });
     $("#idTextareaComment").elastic();
-
-    var checkOutFocus = false;
-    var checkMouse = false;
-    $(".comment-content").find("textarea").focusout(function (evt) {
-        var content = $(this).closest(".comment-content").find("p");
-        if (!checkOutFocus && checkMouse) {
-            $(content).show();
-            $(this).hide();
-        }
-        evt.preventDefault();
-    });
-    
-    
-    $(document).mousedown(function (e) {
-        var container = $(".comment-content").find("textarea");
-        if (container.has(e.target).length === 0) {
-            checkMouse = true;
-        }
-        else {
-            checkMouse = false;
-        }
-    });
-    $(".commenter-edit").click(function (evt) {
-        checkOutFocus = true;
-        var content = $(this).closest(".comment-detail").find(".comment-content");
-        var textarea = $(content).find("textarea");
-
-        $(textarea).val($(textarea).val().split("<br />").join("\n"));
-        $(content).find("p").hide();
-        $(textarea).show();
-
-        $(textarea).keydown(function (e) {
-            checkMouse = false;
-            postDetailModule.handleEnter(e, textarea);
-        });
-
-        $(textarea).elastic();
-        checkOutFocus = false;
-        evt.preventDefault();
-    });
 });

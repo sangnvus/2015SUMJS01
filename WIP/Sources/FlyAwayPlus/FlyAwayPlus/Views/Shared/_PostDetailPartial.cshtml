@@ -3,6 +3,7 @@
 @{
     var dict = ViewData["dict"] as Dictionary<int, FlyAwayPlus.Models.User>;
     var u = @dict[Model.commentID];
+    string userID = (Session["userID"] == null ? "" : Session["userID"].ToString());
 }
 
 <div class="comment-detail">
@@ -12,7 +13,11 @@
     <div class="commenter-content">
         <span class="commenter-name"><a href="/User/Index/@u.userID">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
         <span class="commenter-post-time" title="@Model.toRealtime()">- @Model.toRealtime()</span>
-        <a class="commenter-edit"><span class="glyphicon glyphicon-edit"></span></a>
+        @if (userID.Equals(u.userID.ToString()))
+        {
+            <a role="@Model.commentID" class="commenter-delete"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="commenter-edit"><span class="glyphicon glyphicon-edit"></span></a>
+        }
     </div>
     <div class="comment-content">
         <p class="comment-content-word" style="word-break:break-all;">

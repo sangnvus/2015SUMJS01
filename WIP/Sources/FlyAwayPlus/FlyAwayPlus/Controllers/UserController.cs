@@ -105,6 +105,13 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
+        public JsonResult DeleteComment(int commentID)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = GraphDatabaseHelpers.DeleteComment(commentID, user.userID);
+            return Json(success);
+        }
+
         public JsonResult Like(int postId)
         {
             User user = UserHelpers.GetCurrentUser(Session);
