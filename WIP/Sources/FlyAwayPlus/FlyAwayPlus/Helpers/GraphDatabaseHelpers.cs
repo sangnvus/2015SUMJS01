@@ -898,5 +898,86 @@ namespace FlyAwayPlus.Helpers
             }
             return true;
         }
+
+        public static bool DeleteComment(int commentID, int userID)
+        {
+            /*
+             * Delete Comment with the following step:
+             *      - Find prev comment of this
+             *      - Find next comment of this
+             *      - Delete relation from prev -> this & this -> next
+             *      - Create relation from prev -> next
+             *      
+             *      - Delete this
+             *      - Update the relation(Commented) of user -> post
+             */ 
+            Client.Connect();
+            Comment prev = null;
+            Comment next = null;
+            Post post = null;
+            try
+            {
+                prev = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
+                        .Return<Comment>("c_prev")
+                        .Results.SingleOrDefault();
+
+                next = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
+                        .Return<Comment>("c_next")
+                        .Results.SingleOrDefault();
+
+                post = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
+                        .Return<Post>("p")
+                        .Results.SingleOrDefault();
+
+                if (prev == null)
+                {
+                    if(next != null) {
+                        Client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
+                                .Create("p-[:LATEST_COMMENT]->c")
+                                .ExecuteWithoutResults();
+                    }
+                }
+                else
+                {
+                    if (next != null)
+                    {
+                        Client.Cypher.Match("(c:comment {commentID:" + prev.commentID + "}), (c1:comment {commentID: " + next.commentID + "})")
+                                .Create("c-[:PREV_COMMENT]->c1")
+                                .ExecuteWithoutResults();
+                    }
+                }
+
+                Client.Cypher.Match("(c:comment {commentID:" + commentID + "})-[r]-()")
+                                .Delete("c,r")
+                                .ExecuteWithoutResults();
+
+                Comment newLast = null;
+                newLast = Client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+                                .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
+                                .Return<Comment>("c1")
+                                .OrderByDescending("c1.dateCreated")
+                                .Results.FirstOrDefault();
+
+                if (newLast == null)
+                {
+                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                                .Delete("r")
+                                .ExecuteWithoutResults();
+                }
+                else
+                {
+                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                                .Set("r.dateCreated = '" + newLast.dateCreated + "'")
+                                .ExecuteWithoutResults();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
     }
 }

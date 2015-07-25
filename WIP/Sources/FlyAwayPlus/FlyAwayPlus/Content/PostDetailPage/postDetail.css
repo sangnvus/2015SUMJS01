@@ -9,10 +9,17 @@
     margin-left: 40px;
 }
 
-.commenter-content:hover .commenter-edit {
+.commenter-content:hover .commenter-edit, .commenter-content:hover .commenter-delete {
     display:block;
 }
+
 .commenter-edit {
+    float:right; 
+    display: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.commenter-delete {
     float:right; 
     display: none;
     cursor: pointer;
