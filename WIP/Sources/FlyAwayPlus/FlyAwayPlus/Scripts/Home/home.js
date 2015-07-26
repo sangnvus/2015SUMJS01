@@ -37,8 +37,6 @@
             postActions.css("opacity", "0");
         });
     };
-    var unDislikePost;
-    var likeAjax;
     var likePost = function () {
         $(".btn-like").click(function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
@@ -83,7 +81,7 @@
             $(buttonLike).toggleClass("btn-primary").toggleClass("btn-warning");
         }
     };
-    unDislikePost = function (post) {
+    var unDislikePost = function (post) {
         var dislikeIcon = $(post).parentsUntil(".white-panel")
             .parent()
             .find(".fa-thumbs-o-down");
@@ -102,7 +100,6 @@
             $(buttonDislike).toggleClass("btn-primary").toggleClass("btn-warning");
         }
     };
-    var dislikeAjax;
     var dislikePost = function () {
         $(".btn-dislike").click(function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
@@ -149,7 +146,7 @@
             evt.preventDefault();
         });
     };
-    likeAjax = function (post) {
+    var likeAjax = function (post) {
         var controller = "/User/Like";
         var postID = parseInt($(post).attr("role"));
         var data = {
@@ -158,7 +155,7 @@
 
         commonModule.callAjax(controller, data, null);
     };
-    dislikeAjax = function (post) {
+    var dislikeAjax = function (post) {
         var controller = "/User/Dislike";
         var postID = parseInt($(post).attr("role"));
         var data = {
@@ -220,6 +217,13 @@
     }
 })();
 
+$(window).scroll(function () {
+    if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+        if (isLoadMore || isLoadMore === "true") {
+            homeModule.loadMoreData();
+        }
+    }
+});
 $(window).load(function () {
     homeModule.setBlocksit();
     homeModule.fadeImage();
@@ -232,12 +236,4 @@ $(window).load(function () {
 //window resize
 $(window).resize(function () {
     homeModule.setBlocksit();
-});
-
-$(window).scroll(function () {
-    if ($(window).scrollTop() === $(document).height() - $(window).height()) {
-        if (isLoadMore || isLoadMore === "true") {
-            homeModule.loadMoreData();
-        }
-    }
 });

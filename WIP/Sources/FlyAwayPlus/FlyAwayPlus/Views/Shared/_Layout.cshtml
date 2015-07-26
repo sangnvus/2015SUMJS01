@@ -49,10 +49,21 @@
                     }
                     else
                     {
-                        <li>
-                            <a href="#" class="remove-background">
+                        <li class="friend-request-li">
+                            <a href="#" class="remove-background" id="id-btn-friend-request">
                                 <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
+                                <span class="friend-request-count badge badge-danger" style="display: none;"></span>
                             </a>
+                            <div class="friend-request-container">
+                                <div class="friend-request-title">
+                                    Friend Request
+                                </div>
+                                <hr />
+                                <div id="idFriendRequest" class="friend-request friend-request-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px!important;">
+                                </div>
+                                <div class="friend-request-footer">
+                                </div>
+                            </div>
                         </li>
                         <li>
                             <a href="#" class="remove-background">
@@ -117,19 +128,97 @@
             return false;
         });
 
-        //Document Click
-        $(document).click(function () {
-            $(".notification-container").hide();
-        });
-        //Popup Click
-        $(".notification-container").click(function () {
+        $("#id-btn-friend-request").click(function () {
+            $(".friend-request-container").fadeToggle(300);
+            $(".friend-request-count").fadeOut("slow");
             return false;
+        });
+
+        //Document Click
+        $(document).click(function (e) {
+            $(".notification-container").hide();
+            $(".friend-request-container").hide();
         });
     });
 
     $(document).ready(function () {
         var lastActivityID = 0;
         notificationHubProxy = $.connection.notificationHub;
+        friendHubProxy = $.connection.friendHub;
+
+        friendHubProxy.client.receiveListFriendRequest = function (content) {
+            /*
+                <div style="width:100%; height: 65px;">
+                    <div href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                        <div style="float:left">
+                            <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                        </div>
+                        <div style="">Duc FiLan sent request friend to you</div>
+                        <div class="">
+                            <button type="button" class="btn btn-success">Accept</button>
+                            <button type="button" class="btn btn-danger">Declare</button>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            */
+            content = JSON.parse(content);
+            var count = 0;
+            for (var index = 0; index < content.length; index++) {
+                var friend = content[index];
+                if (friend == null) {
+                    break;
+                }
+                count++;
+                var tmp = "";
+                tmp += "<div class='cls-friend-request' style='width:100%; height: 65px;'>";
+                tmp += "<div href='#' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                tmp += "<div style='float:left'>";
+                tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + friend["avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                tmp += "</div>";
+                tmp += "<div style=''>" + friend["firstName"] + " " + friend["lastName"] + " sent request friend to you</div>";
+                tmp += "<div class=''>";
+                tmp += "<button type='button' id='id-btn-friend-accept" + friend["userID"] + "' class='btn btn-success'>Accept</button>";
+                tmp += "<button type='button' id='id-btn-friend-decline" + friend["userID"] + "' class='btn btn-danger' style='margin-left:5px;'>Decline</button>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "<hr />";
+                $("#idFriendRequest").append(tmp);
+
+                $("#id-btn-friend-accept" + friend["userID"]).click(function (evt) {
+                    var controller = "/User/AddFriend";
+                    var data = {
+                        userID: parseInt('@Session["userID"]'),
+                        otherUserID: friend["userID"]
+                    };
+
+                    commonModule.callAjax(controller, data, null);
+
+                    $(this).closest(".cls-friend-request").remove();
+                    evt.preventDefault();
+                });
+
+                $("#id-btn-friend-decline" + friend["userID"]).click(function (evt) {
+                    var controller = "/User/DeclineRequestFriend";
+                    var data = {
+                        userID: friend["userID"],
+                        otherUserID: parseInt('@Session["userID"]')
+                    };
+
+                    commonModule.callAjax(controller, data, null);
+                    $(this).closest(".cls-friend-request").remove();
+                    evt.preventDefault();
+                });
+            }
+            if (count > 0) {
+                $("#id-btn-friend-request").find("span").text(count);
+                $("#id-btn-friend-request").find("span").show();
+            }
+            else {
+                $("#id-btn-friend-request").find("span").hide();
+            }
+        }
 
         notificationHubProxy.client.receiveNotification = function (content) {
             /*
@@ -189,29 +278,30 @@
         $.connection.hub.start().done(function () {
             var login = '@Session["authenicated"]';
             if (login != null && login != "") {
-                    if (lastActivityID == 0) {
-                        notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityID);
-                    }
+                if (lastActivityID == 0) {
+                    notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityID);
                 }
-            });
+                friendHubProxy.server.getListFriendRequest(parseInt('@Session["userID"]'));
+            }
+        });
 
-            $('#idNotification').bind('scroll', function (evt) {
-                var scrollPosition = $(this).scrollTop() + $(this).outerHeight();
-                var divTotalHeight = $(this)[0].scrollHeight
-                                      + parseInt($(this).css('padding-top'), 10)
-                                      + parseInt($(this).css('padding-bottom'), 10)
-                                      + parseInt($(this).css('border-top-width'), 10)
-                                      + parseInt($(this).css('border-bottom-width'), 10);
-                //console.log("scrollPosition : " + scrollPosition + ", divTotalHeight: " + divTotalHeight)
-                if (scrollPosition + 5 == divTotalHeight) {
-                    $.connection.hub.start().done(function () {
-                        //alert(lastActivityID);
-                        notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityID);
-                    });
-                    evt.preventDefault();
-                }
-            });
+        $('#idNotification').bind('scroll', function (evt) {
+            var scrollPosition = $(this).scrollTop() + $(this).outerHeight();
+            var divTotalHeight = $(this)[0].scrollHeight
+                                  + parseInt($(this).css('padding-top'), 10)
+                                  + parseInt($(this).css('padding-bottom'), 10)
+                                  + parseInt($(this).css('border-top-width'), 10)
+                                  + parseInt($(this).css('border-bottom-width'), 10);
+            //console.log("scrollPosition : " + scrollPosition + ", divTotalHeight: " + divTotalHeight)
+            if (scrollPosition + 5 == divTotalHeight) {
+                $.connection.hub.start().done(function () {
+                    //alert(lastActivityID);
+                    notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityID);
+                });
+                evt.preventDefault();
+            }
+        });
     });
-    </script>
+</script>
 </body>
 </html>

@@ -39,6 +39,34 @@ namespace FlyAwayPlus.Helpers
             return like != 0;
         }
 
+        public static bool isFriend(int userID, int otherUserID)
+        {
+            // Auto increment Id
+
+            Client.Connect();
+            int friend = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND]->(u1: user{userID: " + otherUserID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.Single();
+
+            return friend != 0;
+        }
+
+        public static string getFriendType(int userID, int otherUserID)
+        {
+            // Auto increment Id
+            if (isFriend(userID, otherUserID))
+            {
+                return "friend";
+            }
+
+            Client.Connect();
+            int friend = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]->(u1: user{userID: " + otherUserID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.Single();
+
+            return friend != 0 ? "request" : "none";
+        }
+
         public static bool isDislike(int postID, int userID)
         {
             // Auto increment Id
@@ -1131,6 +1159,98 @@ namespace FlyAwayPlus.Helpers
                 return null;
             }
             return message;
+        }
+        public static bool SendRequestFriend(int userID, int otherUserID)
+        {
+            Client.Connect();
+            try
+            {
+                Client.Cypher.Match("(u:user {userID:" + userID + "}), (u1:user {userID:" + otherUserID + "})")
+                                    .Create("u-[:FRIEND_REQUEST {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'}]->u1")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool DeclineRequestFriend(int userID, int otherUserID)
+        {
+            Client.Connect();
+            try
+            {
+                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserID + "})")
+                                    .Delete("r")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool AddFriend(int userID, int otherUserID)
+        {
+            Client.Connect();
+            try
+            {
+                Client.Cypher.Match("(u:user {userID:" + userID + "}), (u1:user {userID:" + otherUserID + "})")
+                                    .Create("u-[:FRIEND]->u1")
+                                    .Create("u1-[:FRIEND]->u")
+                                    .ExecuteWithoutResults();
+
+                Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserID + "})")
+                                    .Delete("r")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool Unfriend(int userID, int otherUserID)
+        {
+            Client.Connect();
+            try
+            {
+                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND]-(u1:user {userID:" + otherUserID + "})")
+                                    .Delete("r")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public static List<User> GetListFriendRequest(int userID)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all friend of current user
+                 * 
+                 * match(u1:user{userID:@userID})<-[m:FRIEND_REQUEST]-(u2:user)
+                    return u2;
+                 */
+            List<User> listUser = null;
+            Client.Connect();
+            listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})<-[:FRIEND_REQUEST]-(u2:user)")
+                            .ReturnDistinct<User>("u2")
+                            .Results.ToList();
+
+            return listUser;
         }
     }
 }

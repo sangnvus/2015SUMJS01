@@ -20,15 +20,22 @@ namespace FlyAwayPlus.Hubs
             string conversationID = "";
             for (int i = 0; i < listFriend.Count; i++)
             {
-                if (userID < listFriend[i].userID)
+                if (listFriend[i] == null)
                 {
-                    conversationID = userID + "_" + listFriend[i].userID;
+                    message = null;
                 }
                 else
                 {
-                    conversationID = listFriend[i].userID + "_" + userID;
+                    if (userID < listFriend[i].userID)
+                    {
+                        conversationID = userID + "_" + listFriend[i].userID;
+                    }
+                    else
+                    {
+                        conversationID = listFriend[i].userID + "_" + userID;
+                    }
+                    message = GraphDatabaseHelpers.GetLatestMessage(conversationID);
                 }
-                message = GraphDatabaseHelpers.GetLatestMessage(conversationID);
                 listMessage.Add(message);
             }
             Clients.Caller.receiveListFriend(JsonConvert.SerializeObject(listFriend), JsonConvert.SerializeObject(listMessage));

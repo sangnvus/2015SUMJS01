@@ -249,6 +249,7 @@
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\CommentHub.cs" />
+    <Compile Include="Hubs\FriendHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />

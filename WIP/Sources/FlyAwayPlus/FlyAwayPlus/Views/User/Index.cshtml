@@ -7,11 +7,11 @@
 }
 
 @{
-    var listPostDict = ViewData["listPostDict"] as Dictionary<string, List<FlyAwayPlus.Models.Post>>;
     var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
     var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
-    var timeline = ViewData["timeline"] as List<string>;
     var friend = ViewData["friend"] as List<FlyAwayPlus.Models.User>;
+    var userSession = ViewData["userSession"] as FlyAwayPlus.Models.User;
+    string friendType = ViewData["isFriend"].ToString();
 }
 
 <header>
@@ -19,22 +19,45 @@
         <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" />
     </figure>
     <figure class="profile-picture"
-            style="background-image: url('/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg')">
+            style="background-image: url('@Model.avatar')">
     </figure>
     <div class="profile-stats">
         <ul role="tablist">
+            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Post</span></a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Places</span></a></li>
             <li role="presentation"><a href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">182 <span>Photos</span></a></li>
-            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">32 <span>Videos</span></a></li>
-            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">324 <span>Friends</span></a></li>
+            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">324 <span>Videos</span></a></li>
         </ul>
 
         <div class="interact-area">
-            <a href="javascript:void(0);" class="btn btn-primary pull-right">Add friend</a>
-            <a href="javascript:void(0);" class="btn btn-primary pull-right" style="margin-right: 20px">Message</a>
+            @if (Model.userID == userSession.userID)
+            {
+                <a href="#" id="idEditProfile" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
+            }
+            else if (friendType.Equals("friend"))
+            {
+                <a href="#" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
+                <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
+                <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
+                <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
+            }
+            else if (friendType.Equals("request"))
+            {
+                <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
+    <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
+                <a href="#" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
+                <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
+            }
+            else
+            {
+                <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
+                <a href="#" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
+                <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
+                <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
+            }
         </div>
     </div>
-    <h1>Duc Filan</h1>
+    <h1>@String.Format("{0} {1} has no friends", @Model.firstName, @Model.lastName)</h1>
 </header>
 
 <div class="vertical-space-15"></div>
@@ -79,28 +102,33 @@
     <div role="tabpanel" class="tab-pane active" id="timeline">
         <div class="container">
             <div class="col-md-12">
-                <div class="col-md-12">
+                
+                <div class="blog-landing">
+                    @Html.Partial("_ListPost")
+                </div>
+                
+                    <!--
                     <div class="timeline">
                         <dl>
-                            @for (int index = 0, indexPost = 0; index < timeline.Count; index++)
+                            for (int index = 0, indexPost = 0; index < timeline.Count; index++)
                             {
-                                <dt>@timeline[index]</dt>
+                                <dt>timeline[index]</dt>
                                 foreach (var post in listPostDict[timeline[index]])
                                 {
                                     var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
                                     var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
                                     indexPost++;
 
-                                    <dd class="@posPosition clearfix">
+                                    <dd class="posPosition clearfix">
                                         <div class="circ"></div>
-                                        <div class="time" style="@style">@post.toRealtime()</div>
+                                        <div class="time" style="style">post.toRealtime()</div>
                                         <div class="events">
                                             <div class="pull-left">
-                                                <img class="events-object img-rounded" src="@Model.avatar">
+                                                <img class="events-object img-rounded" src="Model.avatar">
                                             </div>
                                             <div class="events-body">
-                                                <h4 class="events-heading">@listPlaceDict[@post.postID].name</h4>
-                                                <p>@post.content</p>
+                                                <h4 class="events-heading">listPlaceDict[post.postID].name</h4>
+                                                <p>post.content</p>
                                             </div>
                                         </div>
                                     </dd>
@@ -108,10 +136,11 @@
                             }
                         </dl>
                     </div>
-                </div>
+                    -->
             </div>
         </div>
     </div>
+
     <div role="tabpanel" class="tab-pane" id="photos-gallery">
         <div class="images-wrapper">
             @foreach (var image in listPhotoDict)
@@ -167,6 +196,54 @@
 }
 
 <script>
+    var userDetailModule = (function () {
+        var sendRequestFriend = function () {
+            var controller = "/User/SendRequestFriend";
+            var data = {
+                userID: @userSession.userID,
+                otherUserID: @Model.userID
+                };
+
+            commonModule.callAjax(controller, data, null);
+        };
+
+        var unfriend = function () {
+            var controller = "/User/Unfriend";
+            var data = {
+                userID: @Model.userID,
+                otherUserID: @userSession.userID
+                };
+
+            commonModule.callAjax(controller, data, null);
+        };
+
+        return {
+            sendRequestFriend: sendRequestFriend,
+            unfriend: unfriend
+        };
+    })();
+
+    $(document).ready(function () {
+        // idAddfriend
+        // idUnfriend
+        // idEditProfile
+        // idSendMessage
+
+        $("#idAddfriend").click(function (evt) {
+            userDetailModule.sendRequestFriend();
+            $(this).hide();
+            $("#idRequestFriend").show();
+            evt.preventDefault();
+        });
+
+        $("#idUnfriend").click(function (evt) {
+            userDetailModule.unfriend();
+            $(this).hide();
+            $("#idAddfriend").show();
+            evt.preventDefault();
+        });
+    });
+
     $(function () {
         $('a.follow').click(function () {
             $(this).toggleClass('followed');
@@ -225,5 +302,49 @@
                 }
             }
         });
+    });
+
+    function setBlocksit() {
+        var conWidth = $(".blog-landing").width();
+        //my container width
+        var gridwidth = 212;
+        //alert(conWidth);
+        var col = conWidth / gridwidth;
+        //alert(col);
+        $(".blog-landing").BlocksIt({
+            numOfCol: Math.floor(col),
+            offsetX: 8,
+            offsetY: 8
+        });
+    };
+
+    function fadeImage() {
+        $(".dark-wrapper").hover(function () {
+            $(this).find("img").fadeTo(500, 0.5);
+
+            var postActions = $(this).find(".post-actions");
+
+            postActions.css("visibility", "visible");
+            postActions.css("opacity", "1");
+            postActions.animate({ top: '20px' }, "slow");
+        }, function () {
+            $(this).find("img").fadeTo(500, 1);
+
+            var postActions = $(this).find(".post-actions");
+
+            postActions.animate({ top: '0px' }, "slow");
+            postActions.css("visibility", "hidden");
+            postActions.css("opacity", "0");
+        });
+    };
+
+    $(window).load(function () {
+        setBlocksit();
+        fadeImage();
+    });
+
+    //window resize
+    $(window).resize(function () {
+        setBlocksit();
     });
 </script>

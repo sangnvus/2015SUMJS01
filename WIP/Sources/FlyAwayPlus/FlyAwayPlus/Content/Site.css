@@ -869,6 +869,83 @@ img {
     }
 /* NOTIFICATION MENU ENDS */
 
+/* FRIEND REQUEST MENU */
+.friend-request-li {
+    position: relative;
+}
+
+.friend-request-li .friend-request-container {
+    background-color: #fff;
+    border: 1px solid #646464;
+    border: 1px solid rgba(100, 100, 100, .4);
+    -webkit-box-shadow: 0 3px 8px #000000;
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+    overflow: visible;
+    position: absolute;
+    top: 60px;
+    margin-left: -170px;
+    width: 400px;
+    z-index: -1;
+    display: none;
+}
+
+.friend-request-li .friend-request-container:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    color: transparent;
+    border: 10px solid black;
+    border-color: transparent transparent white;
+    margin-top: -20px;
+    margin-left: 188px;
+}
+
+.friend-request-li .friend-request-container .friend-request-title {
+    z-index: 1000;
+    font-weight: bold;
+    padding: 8px;
+    font-size: 13px;
+    background-color: #ffffff;
+    width: 384px;
+}
+
+.friend-request-li .friend-request-container hr {
+    margin-top: 0;
+    margin-bottom: 0;
+    clear: both;
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0));
+    background-image: -moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+    background-image: -ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+    background-image: -o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+}
+
+.friend-request-li .friend-request-container .friend-request-body {
+    padding: 33px 0px 0px 0px !important;
+    min-height: 300px;
+}
+
+.friend-request-li .friend-request-container .friend-request-footer {
+    background-color: #e9eaed;
+    text-align: center;
+    font-weight: bold;
+    padding: 8px;
+    font-size: 12px;
+    border-top: 1px solid #dddddd;
+}
+
+.friend-request-li .friend-request-count {
+    position: absolute;
+    top: 10px;
+    left: 25px;
+    z-index: 1;
+    cursor: pointer;
+}
+/* NOTIFICATION MENU ENDS */
+
 /* AVATAR UPLOAD */
 #avatar-upload-form input[type="file"] {
     display: none;

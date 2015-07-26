@@ -18,6 +18,7 @@ namespace FlyAwayPlus.Controllers
             User user = UserHelpers.GetCurrentUser(Session);
             User userPost;
             List<Comment> listComment;
+            Photo photo = new Photo();
             Dictionary<int, User> dict = new Dictionary<int, User>();
             int likeCount = 0;
             int dislikeCount = 0;
@@ -42,6 +43,7 @@ namespace FlyAwayPlus.Controllers
                 likeCount = GraphDatabaseHelpers.CountLike(post.postID);
                 dislikeCount = GraphDatabaseHelpers.CountDislike(post.postID);
                 userComment = GraphDatabaseHelpers.CountUserComment(post.postID);
+                photo = GraphDatabaseHelpers.FindPhoto(post);
                 foreach (var comment in listComment)
                 {
                     dict.Add(comment.commentID, GraphDatabaseHelpers.FindUser(comment));
@@ -60,7 +62,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["likeCount"] = likeCount;
             ViewData["dislikeCount"] = dislikeCount;
             ViewData["userComment"] = userComment;
-
+            ViewData["photo"] = photo;
             return View(post);
         }
 
