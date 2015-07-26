@@ -1,0 +1,587 @@
+﻿.chatConversation {
+    display: inline-block;
+}
+
+.chatActiveConversations {
+    bottom: 50px;
+    left: 10px;
+    position: fixed;
+    z-index: 700;
+    width: 59px;
+}
+
+.chatActiveConversations .chatConversation {
+    margin-top: 10px;
+}
+
+.chatConversationHead {
+    height: 59px;
+    width: 59px;
+    cursor: pointer;
+    transition: filter 0.3s ease 0s, opacity 0.3s ease 0s;
+}
+
+.chatConversationHead .chatContentContainer {
+    position: relative;
+}
+
+.chatConversationHead .chatConversationHeadClose {
+    left: -1px;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    z-index: 701;
+}
+
+.borderless {
+    background-color: transparent;
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+
+.chatConversationHead .chatConversationHeadClose {
+    left: -1px;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    z-index: 701;
+}
+
+.chatConversationHead:hover .chatConversationHeadClose {
+    visibility: visible;
+}
+
+.accessibilityText {
+    color: transparent;
+    font: 0px/0 serif;
+    position: absolute;
+    text-shadow: none;
+}
+
+.chatConversationHead .headWrapper::after {
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.33) inset;
+    content: " ";
+    height: 59px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 59px;
+}
+.chatConversationHead .headWrapper {
+    background: #fff none repeat scroll 0 0;
+    border-radius: 50%;
+    display: inline-block;
+    height: 59px;
+    overflow: hidden;
+    position: relative;
+    width: 59px;
+}
+.chatActiveConversations .chatConversationHead .headWrapper {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.chatConversationHead img {
+    width: 100%;
+    border: 0 none;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.ConversationHead.normal .headWrapper .noDrag {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+/*
+    Chat Conversation
+*/
+.positionModuleElement.aboveModal.positionModuleFixed {
+    z-index: 752;
+}
+.positionModuleElement.defaultCaret.positionRight {
+    margin-left: 11px;
+}
+.Dropdown.positionModuleElement.active {
+    min-height: 0;
+}
+.positionModuleElement.positionModuleFixed {
+    position: fixed;
+    z-index: 686;
+}
+.positionModuleElement.active {
+    display: block;
+    min-height: 50px;
+    min-width: 50px;
+}
+.Dropdown.aboveModal {
+    z-index: 751;
+}
+.Dropdown.activeConversationDropdown {
+    bottom: 21px !important;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+    margin-left: 14px !important;
+    margin-top: 10px;
+    max-height: 460px;
+    top: auto !important;
+    z-index: 700 !important;
+}
+.positionModuleElement {
+    background: #fff none repeat scroll 0 0;
+    border-radius: 6px;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
+    display: none;
+    position: absolute;
+    z-index: 685;
+}
+.Dropdown {
+    text-align: left;
+}
+
+.Dropdown.activeConversationDropdown .positionModuleCaret.lightGrayConversationsCaretStyle.lightGray {
+    height: 31px;
+    left: -17px;
+    width: 17px;
+}
+.positionModuleElement.aboveModal.positionModuleFixed .positionModuleCaret {
+    z-index: 753;
+}
+.PositionModule > .Module {
+    display: none;
+}
+.positionModuleElement > .Module {
+    display: block;
+}
+
+.ConversationPopup {
+    height: 400px;
+    width: 320px;
+}
+
+.ConversationPopup .convosHeader {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    line-height: 16px;
+    overflow: hidden;
+    padding: 10px;
+    position: relative;
+    z-index: 102;
+}
+
+.ConversationPopup .left {
+    float: left;
+}
+
+.ConversationPopup .convosTitle {
+    color: #333;
+    font-size: 13px;
+    font-weight: 700;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0px;
+}
+.ConversationPopup .convosTitle a {
+    color: #333;
+}
+.ConversationPopup .convosTitle a:hover {
+    text-decoration: underline;
+}
+.ConversationPopup .right {
+    float: right;
+}
+.Button.borderless {
+    background-color: transparent;
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+.Button {
+    outline: medium none;
+    position: relative;
+}
+.Button.conversationClose em {
+    /*background: rgba(0, 0, 0, 0) url("/webapp/style/sprites/webapp-common-desktop-1x.8a62d0db.png") no-repeat scroll -425px -275px;*/
+    height: 14px;
+    width: 14px;
+}
+.Button em {
+    display: inline-block;
+    outline: medium none;
+    position: relative;
+    vertical-align: middle;
+}
+.ConversationPopup .messagesContainer {
+    bottom: 36px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 37px;
+}
+.ConversationPopup .conversationMessagesList {
+    background: #eee none repeat scroll 0 0;
+    bottom: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.ConversationMessages {
+    overflow: hidden;
+}
+.ConversationMessages .messageWrapper:first-child {
+    padding-top: 10px;
+}
+.ConversationMessages .messageWrapper {
+    clear: both;
+    position: relative;
+}
+.ConversationMessages .timeSeparator.firstItem {
+    margin-top: 15px;
+}
+.ConversationMessages .timeSeparator {
+    margin: 5px 0 15px;
+    text-align: center;
+}
+.ConversationMessages .timeSeparator, .ConversationMessages .messageSender {
+    color: #999;
+    font-size: 11px;
+    text-shadow: 0 1px 1px #fff;
+}
+.ConversationMessage.isOwnMessage {
+    background: #444 none repeat scroll 0 0;
+    color: #fff;
+    float: right;
+    right: 10px;
+}
+.ConversationMessage {
+    border-radius: 3px;
+    clear: both;
+    color: #333;
+    display: inline-block;
+    margin: 0 10px 10px;
+    max-width: 236px;
+    position: relative;
+}
+.ConversationMessage.isOwnMessage .messageCaret {
+    /*background: rgba(0, 0, 0, 0) url("/webapp/style/sprites/webapp-common-desktop-1x.8a62d0db.png") no-repeat scroll -503px -225px;*/
+    height: 12px;
+    right: -8px;
+    width: 8px;
+}
+.ConversationMessage .messageCaret {
+    /*background: rgba(0, 0, 0, 0) url("/webapp/style/sprites/webapp-common-desktop-1x.8a62d0db.png") no-repeat scroll -474px -290px;*/
+    bottom: 4px;
+    height: 12px;
+    position: absolute;
+    width: 8px;
+    z-index: 1;
+}
+.ConversationMessage p {
+    font-size: 13px;
+    margin: 0;
+    word-wrap: break-word;
+}
+.ConversationMessage > p {
+    border-radius: 3px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
+    padding: 10px;
+}
+
+.ConversationPopup .inputWrapper {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+}
+.Field {
+    cursor: text;
+    font-size: 13px;
+    position: relative;
+}
+.ConversationPopup .Field .content {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: #fff none repeat scroll 0 0;
+    border-color: #d4d4d4 -moz-use-text-color -moz-use-text-color;
+    border-image: none;
+    border-radius: 0 0 6px 6px;
+    border-style: solid none none;
+    border-width: 1px medium medium;
+    box-shadow: none;
+    color: #333;
+    font-size: 13px;
+    height: 37px;
+    line-height: 16px;
+    padding: 10px;
+    resize: none;
+}
+.TextField .content.autogrow {
+    overflow: hidden;
+}
+.TextField .content {
+    border-radius: 3px;
+    min-height: 1em;
+    padding: 8px;
+    width: 100%;
+    word-wrap: break-word;
+}
+.Field .content {
+    background: #f0f0f0 none repeat scroll 0 0;
+    border: 1px solid #d1d1d1;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.07) inset;
+    box-sizing: border-box;
+    color: #333;
+    display: block;
+    margin: 0;
+}
+
+/*
+    Footer Button Chat
+*/
+.footerButtonsWrapper {
+    bottom: 14px;
+    position: fixed;
+    right: 14px;
+    transform: translateZ(0px);
+    z-index: 680;
+}
+.FooterButtons {
+    position: relative;
+}
+.FooterButtons .buttonInoutWrapper.helpButtonWrapper {
+    animation-delay: 200ms;
+    transition-delay: 200ms;
+    width: 50px;
+    height: 50px;
+}
+.FooterButtons.visible .buttonInoutWrapper {
+    opacity: 1;
+    transform: translateY(0px);
+    transition-duration: 0.85s;
+    transition-timing-function: cubic-bezier(0.19, 1.32, 0.48, 1);
+}
+.Button.footerIcon.borderless {
+    background-color: #fff;
+    padding: 8px;
+    width: 50px;
+    height: 50px;
+}
+.FooterButtons .emptyTutorialButton {
+    display: block;
+}
+.Button.footerIcon {
+    border-radius: 50%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
+}
+.Button.moreFooter i {
+    font-size: 25px;
+}
+.Button em {
+    display: inline-block;
+    outline: medium none;
+    position: relative;
+    vertical-align: middle;
+}
+
+/*
+    Chat friend
+*/
+.positionModuleElement.bigCaret.positionBottom {
+    margin-top: 13px;
+}
+.Dropdown.positionModuleElement.active {
+    min-height: 0;
+}
+.positionModuleElement.positionModuleFixed {
+    position: fixed;
+    z-index: 686;
+}
+.positionModuleElement.active {
+    display: block;
+    min-height: 50px;
+    min-width: 50px;
+}
+.Dropdown.notificationsConversationsNewsDropdown {
+    background: #fff none repeat scroll 0 0;
+    /*display: none;*/
+    height: 451px;
+    width: 331px;
+}
+.NotificationsConversationsDropdown {
+    height: 100%;
+    width: 100%;
+}
+.NotificationsConversationsDropdown .SegmentedController {
+    clear: both;
+    width: 331px;
+}
+.SegmentedController {
+    height: 100%;
+    width: 331px;
+}
+.NotificationsConversationsDropdown .SegmentedController > .content {
+    border-radius: 0 0 6px 6px;
+    border-top: 1px solid #ddd;
+    height: 401px;
+    overflow: hidden;
+}
+.SegmentedController .content {
+    background: #fff none repeat scroll 0 0;
+    border-top: 1px solid #d1d1d1 !important;
+    height: 402px !important;
+    margin-top: 0 !important;
+}
+.ConversationsListDropdown {
+    background-color: #fff;
+    width: 100%;
+}
+.ConversationsListDropdown.withinSegmentedController .convosContent {
+    background: #fff none repeat scroll 0 0;
+}
+.NotificationsConversationsDropdown .convosContent {
+    border-radius: 0 0 6px 6px;
+    border-top: 1px solid #d1d1d1;
+}
+.ConversationsListDropdown .convosContent {
+    bottom: 0;
+    height: auto;
+    left: 0;
+    overflow: auto;
+    position: absolute;
+    right: 0;
+    top: 84px;
+    z-index: 2;
+}
+.Dropdown.notificationsConversationsNewsDropdown li:last-child {
+    padding-bottom: 0;
+}
+.Dropdown.notificationsConversationsNewsDropdown li:first-child {
+    padding-top: 0;
+}
+.ConversationsListDropdown .ConversationListItem {
+    background: #f5f5f5 none repeat scroll 0 0;
+}
+.ConversationListItem.hasTimestamp {
+    height:71px;
+}
+.ConversationListItem {
+    border-bottom: 1px solid #e7e7e7;
+    color: #666;
+    cursor: pointer;
+    height: 35px;
+    overflow: hidden;
+    padding: 10px;
+}
+.ConversationListItem .left {
+    float: left;
+    margin-right: 10px;
+}
+.ConversationListItem .left .ConversationHead {
+    margin-top: 1px;
+}
+.ConversationHead.medium {
+    height: 50px;
+    width: 50px;
+}
+.ConversationHead {
+    cursor: pointer;
+    transition: filter 0.3s ease 0s, opacity 0.3s ease 0s;
+}
+.ConversationHead .contentContainer {
+    position: relative;
+}
+.ConversationHead.medium .headWrapper::after {
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.33) inset;
+    content: " ";
+    height: 50px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 50px;
+}
+.ConversationHead.medium .headWrapper {
+    background: #fff none repeat scroll 0 0;
+    border-radius: 50%;
+    display: inline-block;
+    height: 50px;
+    overflow: hidden;
+    position: relative;
+    width: 50px;
+}
+.ConversationHead img {
+    width: 100%;
+    height: 100%;
+}
+.ConversationHead.medium .headWrapper .noDrag {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.ConversationsListDropdown .ConversationListItem .right {
+    margin-top: 1px;
+}
+.ConversationListItem .title {
+    color: #666;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ConversationListItem .title a {
+    display: inline;
+    line-height: 12px;
+    padding: 0;
+}
+.ConversationsListDropdown.withinSegmentedController .subtitle {
+    color: #333;
+}
+.ConversationListItem .subtitle {
+    color: #666;
+    line-height: 14px;
+    margin: 0 0 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ConversationListItem .timeStamp {
+    color: #acacac;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 2px 0 3px 3px;
+}
+.createConversationTab {
+    border-bottom: 1px solid #ebebeb;
+    color: #5f5f5f;
+    font-weight: bold;
+    height: 36px;
+    vertical-align: middle;
+    width: 100%;
+    padding-top: 8px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.imagesWrapper, .fullWrapper {
+    height: 100%;
+}
+
+.imagesWrapper img {
+    height: 100%;
+}

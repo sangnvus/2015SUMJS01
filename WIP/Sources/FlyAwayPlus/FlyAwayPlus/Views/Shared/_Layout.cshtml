@@ -24,7 +24,7 @@
 
     <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
 
-    <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
+    <!--<link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">-->
 
     <link href="~/Content/morphing-search.css" rel="stylesheet"/>
 
@@ -102,7 +102,10 @@
     </div>
 
     @Html.Action("LoginPartial", "Login")
-
+    @if (@Session["authenicated"] != null && !@Session["authenicated"].ToString().IsEmpty())
+    {
+        @Html.Partial("_ChatConversation")
+    }
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 

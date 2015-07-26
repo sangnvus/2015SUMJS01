@@ -177,5 +177,51 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(success);
         }
+        public JsonResult GetMessage(int friendID)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            List<Message> listMessage = new List<Message>();
+            List<User> listUser = new List<User>();
+            if (user != null)
+            {
+                string conversationID = "";
+                if (user.userID < friendID)
+                {
+                    conversationID = user.userID + "_" + friendID;
+                }
+                else
+                {
+                    conversationID = friendID + "_" + user.userID;
+                }
+                listMessage = GraphDatabaseHelpers.GetListMessage(conversationID, 10);
+                for (int i = 0; i < listMessage.Count; i++)
+                {
+                    listUser.Add(GraphDatabaseHelpers.FindUser(listMessage[i]));
+                }
+            }
+            KeyValuePair<List<Message>, List<User>> returnObject = new KeyValuePair<List<Message>,List<User>>(listMessage, listUser);
+            return Json(returnObject);
+        }
+
+        public JsonResult CreateMessage(int friendID, string content)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            Message message = null;
+            if (user != null)
+            {
+                string conversationID = "";
+                if (user.userID < friendID)
+                {
+                    conversationID = user.userID + "_" + friendID;
+                }
+                else
+                {
+                    conversationID = friendID + "_" + user.userID;
+                }
+                message = GraphDatabaseHelpers.CreateMessage(conversationID, content, user.userID, friendID);
+
+            }
+            return Json(message);
+        }
 	}
 }

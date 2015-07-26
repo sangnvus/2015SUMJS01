@@ -410,13 +410,31 @@ namespace FlyAwayPlus.Helpers
                  */
             List<User> listUser = null;
             Client.Connect();
-            listUser = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:FRIEND]->(u2:user)")
+            listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:FRIEND]->(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
 
             return listUser;
         }
+        public static List<User> FindFriend(int userID)
+        {
 
+            /*
+                 * Query:
+                 * Find:
+                 *     - all friend of current user
+                 * 
+                 * match(u1:user{userID:@userID})-[m:friend]->(u2:user)
+                    return u2;
+                 */
+            List<User> listUser = null;
+            Client.Connect();
+            listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})-[:FRIEND]-(u2:user)")
+                            .ReturnDistinct<User>("u2")
+                            .Results.ToList();
+
+            return listUser;
+        }
         public static List<Post> FindLimitWishlist(User user, int skip, int limit)
         {
             /*
@@ -562,7 +580,7 @@ namespace FlyAwayPlus.Helpers
             Client.Connect();
             listPost = Client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
                             .ReturnDistinct<Post>("p1")
-                            //.OrderByDescending("p.dateCreated")
+                //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
 
             return listPost;
@@ -666,7 +684,7 @@ namespace FlyAwayPlus.Helpers
             listPost = Client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {userID:" + currentUser.userID + "})")
                             .Where("p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2)")
                             .ReturnDistinct<Post>("p1")
-                            //.OrderByDescending("p.dateCreated")
+                //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
 
             return listPost;
@@ -861,14 +879,14 @@ namespace FlyAwayPlus.Helpers
                                                 user = u1.As<User>(),
                                                 post = p.As<Post>()
                                             })
-                                            //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
+                //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
                                             .OrderByDescending("dateCreated, lastActivityID")
                                             .Limit(limit)
                                             .Results.ToList();
 
             return listNotification;
-		}
-		
+        }
+
         public static void ResetPassword(string email)
         {
             /*
@@ -885,11 +903,12 @@ namespace FlyAwayPlus.Helpers
         public static bool EditComment(Comment comment)
         {
             Client.Connect();
-            try { 
-                    Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
-                           .Set("c.dateCreated = '" + comment.dateCreated + "'")
-                           .Set("c.content = '" + comment.content + "'")
-                           .ExecuteWithoutResults();
+            try
+            {
+                Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
+                       .Set("c.dateCreated = '" + comment.dateCreated + "'")
+                       .Set("c.content = '" + comment.content + "'")
+                       .ExecuteWithoutResults();
             }
             catch (Exception e)
             {
@@ -910,7 +929,7 @@ namespace FlyAwayPlus.Helpers
              *      
              *      - Delete this
              *      - Update the relation(Commented) of user -> post
-             */ 
+             */
             Client.Connect();
             Comment prev = null;
             Comment next = null;
@@ -931,7 +950,8 @@ namespace FlyAwayPlus.Helpers
 
                 if (prev == null)
                 {
-                    if(next != null) {
+                    if (next != null)
+                    {
                         Client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
                                 .Create("p-[:LATEST_COMMENT]->c")
                                 .ExecuteWithoutResults();
@@ -978,6 +998,139 @@ namespace FlyAwayPlus.Helpers
                 return false;
             }
             return true;
+        }
+
+        public static Message GetLatestMessage(string conversationID)
+        {
+            Client.Connect();
+            Message message = null;
+            try
+            {
+                message = Client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)")
+                                        .Return<Message>("m")
+                                        .Results.FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            return message;
+        }
+
+        public static List<Message> GetListMessage(string conversationID, int limit = 10)
+        {
+            Client.Connect();
+            List<Message> listMessage = new List<Message>();
+            try
+            {
+                listMessage = Client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
+                                        .ReturnDistinct<Message>("m1")
+                                        .Results.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return new List<Message>();
+            }
+            return listMessage;
+        }
+
+        public static User FindUser(Message message)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - find User has message
+                 * 
+                 * MATCH(u:user)-[:CREATE]->(m:message{messageID:@messageID})
+                    return u
+                 */
+            User user = null;
+            if (message == null)
+            {
+                return user;
+            }
+            Client.Connect();
+            user = Client.Cypher.OptionalMatch("(u:user)-[:CREATE]->(m:message{messageID:" + message.messageID + "})")
+                            .Return<User>("u")
+                            .Results.FirstOrDefault();
+            return user;
+        }
+
+        public static Message CreateMessage(string conversationID, string content, int userID, int otherID)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - Create Message
+                 *     - If not have Conversation between 2 users:
+                 *          + Create Conversation
+                 *          + Create Relation (BELONG_TO) from user to Conversation
+                 *          + Create Relation (BELONG_TO) from otherUser to Conversation
+                 *          + Create Message    
+                 *          + Create Relation (LATEST_MESSAGE) from Conversation to Message
+                 *          + Create Relation (CREATE) from user to message
+                 *       else:     
+                 *          + Create Message 
+                 *          + Delete Relation from (Conversation) to LatestMessage
+                 *          + Create Relation (LATEST_MESSAGE) from Conversation to Message
+                 *          + Create Relation (PREV_MESSAGE) from Message to LatestMessage
+                 *          + Create Relation (CREATE) from user to message
+                 */
+            Message message = null;
+            Conversation conversation = null;
+            Client.Connect();
+
+            try
+            {
+                conversation = Client.Cypher.OptionalMatch("(c:conversation {conversationID:'" + conversationID + "'})")
+                                        .Return<Conversation>("c")
+                                        .Results.FirstOrDefault();
+                message = new Message();
+                message.content = content;
+                message.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+                message.messageID = GetGlobalIncrementId();
+
+                Client.Cypher.Create("(m:message {newMessage})")
+                                    .WithParam("newMessage", message)
+                                    .ExecuteWithoutResults();
+
+                if (conversation == null)
+                {
+                    conversation = new Conversation();
+                    conversation.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+                    conversation.conversationID = conversationID;
+
+                    Client.Cypher.Create("(c:conversation {newConversation})")
+                                        .WithParam("newConversation", conversation)
+                                        .ExecuteWithoutResults();
+
+                    Client.Cypher.Match("(c:conversation {conversationID: '" + conversationID + "'}), (u:user {userID:" + userID + "}), (u1:user {userID:" + otherID + "}), (m:message {messageID:" + message.messageID + "})")
+                                        .Create("u-[:BELONG_TO]->c")
+                                        .Create("u1-[:BELONG_TO]->c")
+                                        .Create("c-[:LATEST_MESSAGE]->m")
+                                        .Create("u-[:CREATE]->m")
+                                        .ExecuteWithoutResults();
+
+                }
+                else
+                {
+                    Client.Cypher.OptionalMatch("(c:conversation {conversationID: '" + conversationID + "'})-[r:LATEST_MESSAGE]->(m1:message), (u:user {userID:" + userID + "}), (m:message {messageID:" + message.messageID + "})")
+                                        .Delete("r")
+                                        .Create("c-[:LATEST_MESSAGE]->m")
+                                        .Create("m-[:PREV_MESSAGE]->m1")
+                                        .Create("u-[:CREATE]->m")
+                                        .ExecuteWithoutResults();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            return message;
         }
     }
 }

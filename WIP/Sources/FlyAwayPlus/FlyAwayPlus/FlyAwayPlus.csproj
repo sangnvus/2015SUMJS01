@@ -247,15 +247,17 @@
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\CommentHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Conversation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Helpers\UploadImage\ImageResult.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
-	<Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Place.cs" />
     <Compile Include="Models\Post.cs" />
@@ -270,6 +272,7 @@
     <Content Include="bin\ASPSnippets.GoogleAPI.dll" />
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
+    <Content Include="Content\chatConversation.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
@@ -413,12 +416,12 @@
     <Content Include="Views\Shared\_PostPartial.cshtml" />
     <Content Include="Views\Shared\_Loading.cshtml" />
     <Content Include="Views\Shared\_ListPost.cshtml" />
-    <Content Include="Views\Shared\_ListChatFriend.cshtml" />
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Login\ForgotPassword.cshtml" />
     <Content Include="Views\Login\UploadAvatar.cshtml" />
     <Content Include="Views\HelpCenter\Index.cshtml" />
+    <Content Include="Views\Shared\_ChatConversation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

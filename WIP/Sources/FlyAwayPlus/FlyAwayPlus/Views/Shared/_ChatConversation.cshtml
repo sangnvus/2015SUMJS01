@@ -1,0 +1,396 @@
+﻿<link href="~/Content/chatConversation.css" rel="stylesheet" />
+<div id="idListConversationFriend" class="chatActiveConversations">
+    <!--
+        Chat Messenger
+    
+    <div class="chatConversation">
+        <div class="chatConversationHead">
+            <div class="chatContentContainer">
+                <button type="button" class="borderless cancelButton chatConversationHeadClose">
+                    <em class="glyphicon glyphicon-remove"></em>
+                    <span class="accessibilityText">X</span>
+                </button>
+                <div title="Nguyen Xuan" class="headWrapper">
+                    <div class="imagesWrapper">
+                        <div class="fullWrapper">
+                            <img src="https://s-media-cache-ak0.pinimg.com/avatars/happicream-1413859240_140.jpg" class="head">
+                        </div>
+                    </div>
+                    <div class="noDrag"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+</div>
+
+<!--
+<div class="Dropdown PositionModule aboveModal activeConversationDropdown positionModuleFixed positionFixed defaultCaret active positionModuleElement positionRight" style="left: 69px; top: -85.5px;">
+    <span class="positionModuleCaret lightGray lightGrayConversationsCaretStyle" style="top: 322.5px;"></span>
+    <div class="ConversationPopup Module">
+        <div class="convosHeader">
+            <div class="left">
+                <h1 class="convosTitle">
+                    <a href="/happicream/">Nguyen Xuan</a>
+                </h1>
+            </div>
+            <div class="right">
+                @*
+                <button type="button" class="Button Module addPersonToActiveChat hidden borderless">
+                    <em></em>
+                    <span class="accessibilityText">Add Person</span>
+                </button>
+                <button type="button" class="Button Module ShowModalButton borderless reportMsgButton">
+                    <em></em>
+                    <span class="accessibilityText">Report Message</span>
+                </button>
+                *@
+                <button type="button" class="Button Module borderless cancelButton conversationClose">
+                    <em></em>
+                    <span class="accessibilityText">Close</span>
+                </button>
+            </div>
+        </div>
+        <div class="messagesContainer">
+            <ul class="conversationMessagesList" style="margin:0px;">
+                <div class="spinner"></div>
+
+                <div class="messagesContent">
+                    <div class="ConversationMessages Module">
+                        <li class="messageWrapper">
+                            <p class="timeSeparator firstItem">
+                                4 hours ago
+                            </p>
+                            <div class="ConversationMessage Module isOwnMessage">
+                                <em class="messageCaret"></em>
+                                <p>aaa</p>
+                            </div>
+                        </li>
+
+                        <li class="messageWrapper">
+                            <div class="ConversationMessage Module isOwnMessage">
+                                <em class="messageCaret"></em>
+                                <p>em test chuc nang chat ti :D</p>
+                            </div>
+                        </li>
+
+                        <li class="messageWrapper">
+                            <div class="ConversationMessage Module isOwnMessage">
+                                <em class="messageCaret"></em>
+                                <p>Vi dang lam social network gong the nay :D</p>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            </ul>
+        </div>
+        <div class="inputWrapper">
+            <div class="Field Module TextField has-value">
+                <textarea placeholder="Add a message" class="content autogrow" autofocus="autofocus"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+<div class="footerButtonsWrapper">
+    <div class="FooterButtons Module visible">
+        <div class="buttonInoutWrapper helpButtonWrapper">
+            <button id="idBtnChatBar" type="button" class="Button DropdownButton Module UserEducationDropdownButton borderless moreFooter footerIcon emptyTutorialButton">
+                <i class="fa fa-fw fa-comments interact-item interact-button"></i>
+                <span class="accessibilityText">More</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="idChatBar" class="Module Dropdown PositionModule notificationsConversationsNewsDropdown positionModuleFixed hideModule positionFixed bigCaret slideIn positionModuleElement positionBottom" 
+     style="right: 76px; bottom: 14px; height: 80%;">
+    <div class="Module NotificationsConversationsDropdown conversationsShowing">
+        <div class="Module SegmentedController">
+            <div class="content">
+                <div class="ConversationsListDropdown Module withinSegmentedController">
+                    
+                    <div class="convosContent" style="top: 0px;">
+                        <div class="createConversationTab" style="width:100%"><span>Message</span></div>
+                        <div class="ConversationsList Module">
+                            <ul id="idListFriend" class="List Module" style="padding: 0px; font-size: 12px;">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#idBtnChatBar").click(function (evt) {
+            $("#idChatBar").toggleClass("active");
+            evt.preventDefault();
+        });
+
+        chatHubProxy = $.connection.chatHub;
+        chatHubProxy.client.receiveListFriend = function (listFriendJSON, listMessageJSON) {
+
+            var listFriend = JSON.parse(listFriendJSON);
+            var listMessage = JSON.parse(listMessageJSON);
+
+            $("#idListFriend").empty();
+            for (var index = 0; index < listFriend.length; index++) {
+                var tmp = "";
+                var friend = listFriend[index];
+                var message = listMessage[index];
+
+                tmp += "<li role='" + friend["userID"] + "' id='idFriendListChat" + friend["userID"] + "' style='list-style: outside none none;'>";
+                tmp += "<div class='ConversationListItem Module hasTimestamp hideable noSelectedStateAvailable'>";
+                tmp += "<div class='left'>";
+                tmp += "<div class='ConversationHead Module medium'>";
+                tmp += "<div class='contentContainer'>";
+                tmp += "<div class='headWrapper'>";
+                tmp += "<div class='imagesWrapper'>";
+                tmp += "<div class='fullWrapper'>";
+                tmp += "<img src='" + friend["avatar"] + "' class='head'>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "<div class='right'>";
+                tmp += "<h4 class='title' style='font-size: 14px; margin-top: 0px;'>";
+                tmp += "<a href='#'><span>" + friend["firstName"] + " " + friend["lastName"] + "</span></a>";
+                tmp += "</h4>";
+                if (message != null && message != "") {
+                    tmp += "<p class='subtitle'>" + message["content"] + "</p>";
+                    tmp += "<p class='timeStamp'>";
+                    tmp += message["dateCreated"];
+                    tmp += "</p>";
+                }
+                else {
+                    tmp += "<p class='subtitle'>There is no conversation. Start chatting with yours friend now!</p>";
+                }
+                tmp += "</div>";
+                tmp += "</div>";
+                tmp += "</li>";
+
+                $("#idListFriend").append(tmp);
+
+                $("#idFriendListChat" + friend["userID"]).click(function (evt) {
+                    chatConversationModule.createChatConversation(this);
+                    evt.preventDefault();
+                });
+            }
+        }
+
+        $.connection.hub.start().done(function () {
+            chatHubProxy.server.getListFriend(parseInt('@Session["userID"]'));
+        });
+    });
+
+    var chatConversationModule = (function () {
+        var listChat = [];
+
+        var createChatConversation = function (selector) {
+            var userID = parseInt($(selector).attr("role"));
+            var avatar = $(selector).find("img").attr("src");
+            var username = $(selector).find(".right").find("a").find("span").text();
+            var idListConversationFriend = "idChatConversationFriend" + userID;
+            var idListConversation = "idChatConversation" + userID;
+            if ($.inArray(userID, listChat) > -1) {
+                return;
+            }
+
+            listChat.push(userID);
+            var tmp = "<div id='" + idListConversationFriend + "' class='chatConversation'>";
+            tmp += "<div class='chatConversationHead'>";
+            tmp += "<div class='chatContentContainer'>";
+            tmp += "<button role='" + userID + "' type='button' class='borderless cancelButton chatConversationHeadClose'>";
+            tmp += "<em class='glyphicon glyphicon-remove'></em>";
+            tmp += "</button>";
+            tmp += "<div role='" + userID + "' title='" + username + "' class='headWrapper'>";
+            tmp += "<div class='imagesWrapper'>";
+            tmp += "<div class='fullWrapper'>";
+            tmp += "<img src=" + avatar + " class='head'>";
+            tmp += "</div>";
+            tmp += "</div>";
+            tmp += "<div class='noDrag'></div>";
+            tmp += "</div>";
+            tmp += "</div>";
+            tmp += "</div>";
+            tmp += "</div>";
+
+            var chatConversation = "<div id='idListConversation" + userID + "' class='hidden Dropdown PositionModule aboveModal activeConversationDropdown positionModuleFixed positionFixed defaultCaret active positionModuleElement positionRight' style='left: 69px; bottom: 14px;'>";
+            chatConversation += "<div class='ConversationPopup Module'>";
+            chatConversation += "<div class='convosHeader'>";
+            chatConversation += "<div class='left'>";
+            chatConversation += "<h1 class='convosTitle'>";
+            chatConversation += "<a href='#'>" + username + "</a>";
+            chatConversation += "</h1>";
+            chatConversation += "</div>";
+            chatConversation += "<div class='right'>";
+            chatConversation += "<button type='button' class='Button Module borderless cancelButton conversationClose'>";
+            chatConversation += "<em class='glyphicon glyphicon-remove'></em>";
+            chatConversation += "<span class='accessibilityText'>Close</span>";
+            chatConversation += "</button>";
+            chatConversation += "</div>";
+            chatConversation += "</div>";
+            chatConversation += "<div class='messagesContainer'>";
+            chatConversation += "<ul class='conversationMessagesList' style='margin:0px;'>";
+            chatConversation += "<div class='spinner'></div>";
+            chatConversation += "<div class='messagesContent'>";
+            chatConversation += "<div id='idMessageList" + userID + "' class='ConversationMessages Module'>";
+            /*
+            chatConversation += "<li class='messageWrapper'>";
+            chatConversation += "<p class='timeSeparator firstItem'>";
+            chatConversation += "4 hours ago";
+            chatConversation += "</p>";
+            chatConversation += "<div class='ConversationMessage Module isOwnMessage'>";
+            chatConversation += "<em class='messageCaret'></em>";
+            chatConversation += "<p>aaa</p>";
+            chatConversation += "</div>";
+            chatConversation += "</li>";
+            */
+            chatConversation += "</div>";
+            chatConversation += "</div>";
+            chatConversation += "</ul>";
+            chatConversation += "</div>";
+            chatConversation += "<div class='inputWrapper'>";
+            chatConversation += "<div class='Field Module TextField has-value'>";
+            chatConversation += "<textarea id='idTextarea" + userID + "' placeholder='Add a message' class='content autogrow' autofocus='autofocus'></textarea>";
+            chatConversation += "</div>";
+            chatConversation += "</div>";
+            chatConversation += "</div>";
+            chatConversation += "</div>";
+
+            $("#idListConversationFriend").append(tmp);
+            $("body").append(chatConversation);
+
+            getMessage(userID, $("#idMessageList" + userID));
+
+            $("#idTextarea" + userID).keydown(function (evt) {
+                if (evt.keyCode == 13) {
+                    var text = $(this).val();
+                    createMessage(userID, text, $("#idMessageList" + userID));
+
+                    $(this).text("").val("");
+                    evt.preventDefault();
+                }
+            });
+
+            $("#" + idListConversationFriend).find("button").click(function (evt) {
+                var id = parseInt($(this).attr("role"));
+                listChat = $.grep(listChat, function (value) {
+                    return value != id;
+                });
+
+                $(this).closest(".chatConversation").remove();
+                $("#idListConversation" + id).remove();
+                evt.preventDefault();
+            });
+
+            $("#" + idListConversationFriend).find(".headWrapper").click(function (evt) {
+                var id = parseInt($(this).attr("role"));
+                for (var index = 0; index < listChat.length; index++) {
+                    if (listChat[index] != id) {
+                        if(!$("#idListConversation" + listChat[index]).hasClass("hidden")) {
+                            $("#idListConversation" + listChat[index]).addClass("hidden");
+                        }
+                    }
+                    else {
+                        $("#idListConversation" + id).toggleClass("hidden");
+                    }
+                }
+
+                evt.preventDefault();
+            });
+
+            $("#idListConversation" + userID).find("div.right").click(function (evt) {
+                $("#idListConversation" + userID).addClass("hidden");
+                evt.preventDefault();
+            });
+        };
+
+        var createMessage = function (friendID, content, selector) {
+            var controller = "/User/CreateMessage";
+
+            var data = {
+                friendID: friendID,
+                content: content
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: controller,
+                data: data,
+                success: function (data, textstatus) {
+                    // send notification
+                    var message = data;
+                    if (message == null) {
+                        return;
+                    }
+                    var tmp = "";
+                    tmp += "<li class='messageWrapper'>";
+                    tmp += "<p class='timeSeparator firstItem'>";
+                    tmp += message["dateCreated"];
+                    tmp += "</p>";
+                    tmp += "<div class='ConversationMessage Module isOwnMessage'>";
+                    tmp += "<em class='messageCaret'></em>";
+                    tmp += "<p>" + message["content"] + "</p>";
+                    tmp += "</div>";
+                    tmp += "</li>";
+
+                    $(selector).append(tmp);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        };
+
+        var getMessage = function (friendID, selector) {
+            var controller = "/User/GetMessage";
+
+            var data = {
+                friendID: friendID
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: controller,
+                data: data,
+                success: function (data, textstatus) {
+                    // send notification
+                    var listMessage = data["Key"];
+                    var listUser = data["Value"];
+                    var userID = parseInt('@Session["userID"]');
+                    for (var index = 0; index < listMessage.length; index++) {
+                        var tmp = "";
+                        var cls = "";
+                        if (listMessage[index] != null) {
+                            tmp += "<li class='messageWrapper'>";
+                            tmp += "<p class='timeSeparator firstItem'>";
+                            tmp += listMessage[index]["dateCreated"];
+                            tmp += "</p>";
+                            if (listUser[index]["userID"] == userID) {
+                                cls = "isOwnMessage";
+                            }
+                            tmp += "<div class='ConversationMessage Module " + cls + "'>";
+                            tmp += "<em class='messageCaret'></em>";
+                            tmp += "<p>" + listMessage[index]["content"] + "</p>";
+                            tmp += "</div>";
+                            tmp += "</li>";
+
+                            $(selector).append(tmp);
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        };
+
+        return {
+            createChatConversation: createChatConversation
+        };
+    })();
+</script>
