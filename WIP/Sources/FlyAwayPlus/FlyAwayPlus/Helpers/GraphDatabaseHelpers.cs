@@ -51,7 +51,7 @@ namespace FlyAwayPlus.Helpers
             return friend != 0;
         }
 
-        public static string getFriendType(int userID, int otherUserID)
+        public static string GetFriendType(int userID, int otherUserID)
         {
             // Auto increment Id
             if (isFriend(userID, otherUserID))
@@ -81,14 +81,56 @@ namespace FlyAwayPlus.Helpers
 
         public static bool isWish(int postID, int userID)
         {
-            // Auto increment Id
-
             Client.Connect();
             int wish = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:post {postID:" + postID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return wish != 0;
+        }
+
+        public static bool IsInWishist(int placeID, int userID)
+        {
+            Client.Connect();
+            int wish = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[r:WISH]->(p:place {placeID:" + placeID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.FirstOrDefault();
+
+            return wish != 0;
+        }
+
+        public static bool AddToWishlist(int placeID, int userID)
+        {
+            try
+            {
+                Client.Connect();
+                Client.Cypher.Match("(u:user {userID:" + userID + "}), (p:place {placeID:" + placeID + "})")
+                                    .Create("(u)-[:WISH]->(p)")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool RemoveFromWishlist(int placeID, int userID)
+        {
+            try
+            {
+                Client.Connect();
+                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:place {placeID:" + placeID + "})")
+                                    .Delete("r")
+                                    .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
 
         public static bool AddToWishList(int postID, int userID)
@@ -466,6 +508,7 @@ namespace FlyAwayPlus.Helpers
             listUser.RemoveAll(item => item == null);
             return listUser;
         }
+
         public static List<User> SuggestFriend(int userID, int limit = 5)
         {
 
@@ -495,9 +538,57 @@ namespace FlyAwayPlus.Helpers
             if (listUser.Count < limit)
             {
                 listUser.AddRange(SuggestNonRelationshipUser(userID, limit - listUser.Count));
-                
+
             }
             return listUser;
+        }
+        public static bool isVisitedPlace(int userID, int placeID)
+        {
+            // Auto increment Id
+
+            Client.Connect();
+            int relation = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:VISITED]->(p:place {placeID:" + placeID + "})")
+                                    .Return<int>("COUNT(r)")
+                                    .Results.Single();
+
+            return relation != 0;
+        }
+
+        public static int NumberOfPost(int placeID)
+        {
+            // Auto increment Id
+
+            Client.Connect();
+            int count = Client.Cypher.Match("(po:post)-[r:AT]->(pl:place {placeID:" + placeID + "})")
+                                   .Return<int>("COUNT(Distinct po)")
+                                   .Results.Single();
+
+            return count;
+        }
+
+        public static List<Place> SuggestPlace(int limit = 5)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all friend of current user
+                 * 
+                 * optional match (pl:place)<-[:AT]-(po:post)
+                    With count(DISTINCT po) as number, pl, po
+                    return pl
+                 */
+            List<Place> listPlace = new List<Place>();
+            Client.Connect();
+            listPlace = Client.Cypher.OptionalMatch("(pl:place)<-[:AT]-(po:post)")
+                            .With("count(DISTINCT po) as number, pl, po")
+                            .OrderByDescending("number")
+                            .ReturnDistinct<Place>("pl")
+                            .Limit(limit)
+                            .Results.ToList();
+            listPlace.RemoveAll(item => item == null);
+
+            return listPlace;
         }
 
         public static List<User> SuggestNonRelationshipUser(int userID, int limit = 5)

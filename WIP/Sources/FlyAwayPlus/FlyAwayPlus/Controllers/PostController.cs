@@ -21,6 +21,12 @@ namespace FlyAwayPlus.Controllers
             List<User> listSuggestFriend = new List<User>();
             List<string> listFriendType = new List<string>();
             List<int> listMutualFriends = new List<int>();
+
+            List<Place> listSuggestPlace = new List<Place>();
+            List<bool> listIsVisitedPlace = new List<bool>();
+            List<int> listNumberOfPost = new List<int>();
+            List<bool> checkWishlist = new List<bool>();
+
             Photo photo = new Photo();
             Dictionary<int, User> dict = new Dictionary<int, User>();
             int likeCount = 0;
@@ -55,8 +61,16 @@ namespace FlyAwayPlus.Controllers
                 listSuggestFriend = GraphDatabaseHelpers.SuggestFriend(user.userID);
                 foreach (var otherUser in listSuggestFriend)
                 {
-                    listFriendType.Add(GraphDatabaseHelpers.getFriendType(user.userID, otherUser.userID));
+                    listFriendType.Add(GraphDatabaseHelpers.GetFriendType(user.userID, otherUser.userID));
                     listMutualFriends.Add(GraphDatabaseHelpers.CountMutualFriend(user.userID, otherUser.userID));
+                }
+
+                listSuggestPlace = GraphDatabaseHelpers.SuggestPlace();
+                foreach (var otherPlace in listSuggestPlace)
+                {
+                    listIsVisitedPlace.Add(GraphDatabaseHelpers.isVisitedPlace(user.userID, otherPlace.placeID));
+                    listNumberOfPost.Add(GraphDatabaseHelpers.NumberOfPost(otherPlace.placeID));
+                    checkWishlist.Add(GraphDatabaseHelpers.IsInWishist(otherPlace.placeID, user.userID));
                 }
             }
             catch (Exception e)
@@ -76,6 +90,11 @@ namespace FlyAwayPlus.Controllers
             ViewData["listSuggestFriend"] = listSuggestFriend;
             ViewData["listFriendType"] = listFriendType;
             ViewData["listMutualFriends"] = listMutualFriends;
+
+            ViewData["listSuggestPlace"] = listSuggestPlace;
+            ViewData["listIsVisitedPlace"] = listIsVisitedPlace;
+            ViewData["listNumberOfPost"] = listNumberOfPost;
+            ViewData["checkWishlist"] = checkWishlist;
             return View(post);
         }
 

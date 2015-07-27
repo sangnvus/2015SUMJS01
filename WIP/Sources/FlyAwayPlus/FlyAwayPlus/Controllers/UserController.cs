@@ -48,7 +48,7 @@ namespace FlyAwayPlus.Controllers
 
             ViewData["userSession"] = userSession;
             ViewData["friend"] = friend;
-            ViewData["isFriend"] = GraphDatabaseHelpers.getFriendType(userSession.userID, user.userID);
+            ViewData["isFriend"] = GraphDatabaseHelpers.GetFriendType(userSession.userID, user.userID);
             return View(user);
         }
 
@@ -202,6 +202,17 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
+        public JsonResult AddWishPlace(int placeID, int userID)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                success = GraphDatabaseHelpers.AddToWishlist(placeID, userID);
+            }
+            return Json(success);
+        }
+
         public JsonResult AddFriend(int userID, int otherUserID)
         {
             User user = UserHelpers.GetCurrentUser(Session);
@@ -256,6 +267,18 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(success);
         }
+
+        public JsonResult RemoveWishPlace(int placeID, int userID)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                success = GraphDatabaseHelpers.RemoveFromWishlist(placeID, userID);
+            }
+            return Json(success);
+        }
+
         public JsonResult GetMessage(int friendID)
         {
             User user = UserHelpers.GetCurrentUser(Session);

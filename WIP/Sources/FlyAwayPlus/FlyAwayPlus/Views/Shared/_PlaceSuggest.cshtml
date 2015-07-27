@@ -1,0 +1,97 @@
+﻿@model FlyAwayPlus.Models.User
+
+<link href="~/Content/placeSuggest.css" rel="stylesheet" />
+@{
+    var listSuggestPlace = ViewData["listSuggestPlace"] as List<FlyAwayPlus.Models.Place>;
+    var listIsVisitedPlace = ViewData["listIsVisitedPlace"] as List<bool>;
+    var listNumberOfPost = ViewData["listNumberOfPost"] as List<int>;
+    var checkWishlist = ViewData["checkWishlist"] as List<bool>;
+}
+<div id="placeToFollow" class="bottomItem">
+    <div class="placeToFollow Module">
+        <h2 class="memoTitle" style="margin:0px;">
+            <a href="#">Visit place<i class="glyphicon glyphicon-circle-arrow-right arrow"></i></a>
+        </h2>
+
+        <ul class="List Module">
+            @for (int index = 0; index < listSuggestPlace.Count; index++)
+            {
+                var suggest = listSuggestPlace[index];
+                <li data-index="@index">
+                    <div class="Module User followPlacesItem small">
+                        <div class="content">
+                            <a href="/Place/@suggest.placeID/">
+                                <span class="thumbImageWrapper">
+                                    <div class="Image Module">
+                                        <div class="heightContainer">
+                                            <!--<img data-src="" alt="" style="" src="">-->
+                                        </div>
+                                    </div>
+                                </span>
+                            </a>
+                            <div class="contactUser">
+                                <a class="contactUsername" href="/Place/@suggest.placeID/">@String.Format("{0} - {1}", suggest.name, listIsVisitedPlace[index] ? "Visited" : "Not visited")</a>
+                                <br />
+                                <p style="margin:0px;">@listNumberOfPost[index] numbers of Post</p>
+                                @if (checkWishlist[index])
+                                {
+                                    <button role="@suggest.placeID" type="button" class="cls-remove-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Remove from wishlist</span>
+                                    </button>
+                                    <button role="@suggest.placeID" style="display:none" type="button" class="cls-add-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Add to wishlist</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button role="@suggest.placeID" type="button" style="display:none" class="cls-remove-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Remove from wishlist</span>
+                                    </button>
+                                    <button role="@suggest.placeID" type="button" class="cls-add-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Add to wishlist</span>
+                                    </button>
+                                }
+                            </div>
+                            <i class="dismiss"></i>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".cls-add-wish").click(function (evt) {
+            var placeID = parseInt($(this).attr("role"));
+
+            var controller = "/User/AddWishPlace/";
+            var data = {
+                userID: @Model.userID,
+                placeID: placeID
+            };
+
+            commonModule.callAjax(controller, data, null);
+
+            $(".PlaceFollowButton[role=" + placeID + "]").show();
+            $(this).hide();
+            evt.preventDefault();
+        });
+
+        $(".cls-remove-wish").click(function (evt) {
+            var placeID = parseInt($(this).attr("role"));
+
+            var controller = "/User/RemoveWishPlace/";
+            var data = {
+                userID: @Model.userID,
+                placeID: placeID
+            };
+            commonModule.callAjax(controller, data, null);
+
+            $(".PlaceFollowButton[role=" + placeID + "]").show();
+            $(this).hide();
+            evt.preventDefault();
+        });
+    });
+</script>
