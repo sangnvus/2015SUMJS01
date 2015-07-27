@@ -18,6 +18,9 @@ namespace FlyAwayPlus.Controllers
             User user = UserHelpers.GetCurrentUser(Session);
             User userPost;
             List<Comment> listComment;
+            List<User> listSuggestFriend = new List<User>();
+            List<string> listFriendType = new List<string>();
+            List<int> listMutualFriends = new List<int>();
             Photo photo = new Photo();
             Dictionary<int, User> dict = new Dictionary<int, User>();
             int likeCount = 0;
@@ -48,6 +51,13 @@ namespace FlyAwayPlus.Controllers
                 {
                     dict.Add(comment.commentID, GraphDatabaseHelpers.FindUser(comment));
                 }
+
+                listSuggestFriend = GraphDatabaseHelpers.SuggestFriend(user.userID);
+                foreach (var otherUser in listSuggestFriend)
+                {
+                    listFriendType.Add(GraphDatabaseHelpers.getFriendType(user.userID, otherUser.userID));
+                    listMutualFriends.Add(GraphDatabaseHelpers.CountMutualFriend(user.userID, otherUser.userID));
+                }
             }
             catch (Exception e)
             {
@@ -63,6 +73,9 @@ namespace FlyAwayPlus.Controllers
             ViewData["dislikeCount"] = dislikeCount;
             ViewData["userComment"] = userComment;
             ViewData["photo"] = photo;
+            ViewData["listSuggestFriend"] = listSuggestFriend;
+            ViewData["listFriendType"] = listFriendType;
+            ViewData["listMutualFriends"] = listMutualFriends;
             return View(post);
         }
 

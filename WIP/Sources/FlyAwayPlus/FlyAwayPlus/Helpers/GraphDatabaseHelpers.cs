@@ -202,6 +202,28 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
+        public static int CountMutualFriend(int userID, int otherUserID)
+        {
+            /*
+             * optional match (u:user {userID:@userID})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:@otherUserID})
+                    With count(DISTINCT mf) AS mutualFriends
+                    RETURN mutualFriends
+             */
+            try
+            {
+                Client.Connect();
+                return Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserID + "})")
+                                .With("count(DISTINCT mf) AS mutualFriends")
+                                .Return<int>("mutualFriends")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
         public static int FindLike(int userID, int postID)
         {
             try
@@ -444,6 +466,75 @@ namespace FlyAwayPlus.Helpers
             listUser.RemoveAll(item => item == null);
             return listUser;
         }
+        public static List<User> SuggestFriend(int userID, int limit = 5)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all friend of current user
+                 * 
+                 * optional match (u:user {userID:@userID})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)
+                    WHERE NOT(u-[:FRIEND]->other)
+                    WITH other,count(DISTINCT mf) AS mutualFriends
+                    ORDER BY mutualFriends DESC
+                    LIMIT @limit
+                    RETURN other
+                 */
+            List<User> listUser = new List<User>();
+            Client.Connect();
+            listUser = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)")
+                            .Where("NOT(u-[:FRIEND]->other)")
+                            .With("other,count(DISTINCT mf) AS mutualFriends")
+                            .OrderByDescending("mutualFriends")
+                            .ReturnDistinct<User>("other")
+                            .Limit(limit)
+                            .Results.ToList();
+            listUser.RemoveAll(item => item == null);
+
+            if (listUser.Count < limit)
+            {
+                listUser.AddRange(SuggestNonRelationshipUser(userID, limit - listUser.Count));
+                
+            }
+            return listUser;
+        }
+
+        public static List<User> SuggestNonRelationshipUser(int userID, int limit = 5)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all friend of current user
+                 * 
+                 * optional match (u:user {userID:@userID})-[:FRIEND]->(u1:user), (other:user)
+                    WHERE NOT(u-[:FRIEND]->other) AND NOT(u1-[:FRIEND]->other)
+                    RETURN other
+                    limit @limit
+                 */
+            List<User> listUser = new List<User>();
+            Client.Connect();
+            listUser = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(u1:user), (other:user)")
+                            .Where("NOT(u-[:FRIEND]->other) AND NOT(u1-[:FRIEND]->other)")
+                            .ReturnDistinct<User>("other")
+                            .Limit(limit)
+                            .Results.ToList();
+            listUser.RemoveAll(item => item == null);
+
+            if (listUser.Count == 0)
+            {
+                listUser = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "}), (other:user)")
+                            .Where("u.userID <> other.userID")
+                            .ReturnDistinct<User>("other")
+                            .Limit(limit)
+                            .Results.ToList();
+            }
+
+            listUser.RemoveAll(item => item == null);
+            return listUser;
+        }
+
         public static List<User> FindFriend(int userID)
         {
 

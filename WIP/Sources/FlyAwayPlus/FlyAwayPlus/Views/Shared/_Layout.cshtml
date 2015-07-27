@@ -38,7 +38,7 @@
         <div class="container">
             <div class="navbar-header">
                 <a href="/Home/" class="navbar-brand">
-                    <img src="../../Images/FAP logo.PNG" alt="FAP" height="40" />
+                    <img src="/Images/FAP logo.PNG" alt="FAP" height="40" />
                 </a>
             </div>
             <div class="navbar-collapse collapse">
@@ -101,13 +101,14 @@
                             </ul>
                         </li>
                     }
+                    
                 </ul>
                 @Html.Partial("_PostPartial")
             </div>
         </div>
     </div>
     <div class="container body-content" style="width:85%; margin-left: 5%;">
-        @Html.Partial("_SearchPartial")
+        @*Html.Partial("_SearchPartial")*@
         @RenderBody()
         <hr />
     </div>
