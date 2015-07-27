@@ -32,7 +32,7 @@
         <div class="interact-area">
             @if (Model.userID == userSession.userID)
             {
-                <a href="#" id="idEditProfile" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
+                <a href="#" id="idEditProfile" data-toggle="modal" data-target="#id-profile-modal" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
             }
             else if (friendType.Equals("friend"))
             {
@@ -44,7 +44,7 @@
             else if (friendType.Equals("request"))
             {
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
-    <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
+                <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
@@ -102,41 +102,41 @@
     <div role="tabpanel" class="tab-pane active" id="timeline">
         <div class="container">
             <div class="col-md-12">
-                
+
                 <div class="blog-landing">
                     @Html.Partial("_ListPost")
                 </div>
-                
-                    <!--
-                    <div class="timeline">
-                        <dl>
-                            for (int index = 0, indexPost = 0; index < timeline.Count; index++)
-                            {
-                                <dt>timeline[index]</dt>
-                                foreach (var post in listPostDict[timeline[index]])
-                                {
-                                    var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
-                                    var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
-                                    indexPost++;
 
-                                    <dd class="posPosition clearfix">
-                                        <div class="circ"></div>
-                                        <div class="time" style="style">post.toRealtime()</div>
-                                        <div class="events">
-                                            <div class="pull-left">
-                                                <img class="events-object img-rounded" src="Model.avatar">
-                                            </div>
-                                            <div class="events-body">
-                                                <h4 class="events-heading">listPlaceDict[post.postID].name</h4>
-                                                <p>post.content</p>
-                                            </div>
+                <!--
+                <div class="timeline">
+                    <dl>
+                        for (int index = 0, indexPost = 0; index < timeline.Count; index++)
+                        {
+                            <dt>timeline[index]</dt>
+                            foreach (var post in listPostDict[timeline[index]])
+                            {
+                                var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
+                                var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
+                                indexPost++;
+
+                                <dd class="posPosition clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time" style="style">post.toRealtime()</div>
+                                    <div class="events">
+                                        <div class="pull-left">
+                                            <img class="events-object img-rounded" src="Model.avatar">
                                         </div>
-                                    </dd>
-                                }
+                                        <div class="events-body">
+                                            <h4 class="events-heading">listPlaceDict[post.postID].name</h4>
+                                            <p>post.content</p>
+                                        </div>
+                                    </div>
+                                </dd>
                             }
-                        </dl>
-                    </div>
-                    -->
+                        }
+                    </dl>
+                </div>
+                -->
             </div>
         </div>
     </div>
@@ -194,6 +194,247 @@
         </div>
     </div>
 }
+@if (Model.userID == userSession.userID) {
+<div class="modal fade" id="id-profile-modal" role="dialog" aria-labelledby="id-profile-modal" aria-hidden="true">
+    <div class="modal-dialog login-modal-wrap">
+        <div class="modal-content">
+            <div class="modal-body login-modal-body">
+                <div class="panel-login">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href="#" class="active">Profile</a>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="id-edit-profile" style="margin-top: -15px">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
+                                                    <div style="width:100%; float:left;">
+                                                        <input name="firstName" style="width: 90%; float:left;" type="text" value="@Model.firstName" class="form-control" placeholder="First Name" />
+                                                    </div>
+                                                    <div class="cls-error-message" style="width:100%; float:left; display:none">
+                                                        <p style="color:red">First Name is required</p>
+                                                    </div>
+                                                    <div style="width:100%; margin-top: 5px; float:left;">
+                                                        <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                        <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="cls-display-info" style="width:100%;">
+                                                    <span>First Name: </span><span><b>@Model.firstName</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
+                                                    <div style="width:100%; float:left;">
+                                                        <input name="lastName" style="width: 90%; float:left;" type="text" value="@Model.lastName" class="form-control" placeholder="Last Name" />
+                                                    </div>
+                                                    <div class="cls-error-message" style="width:100%; float:left; display:none">
+                                                        <p style="color:red">Last Name is required</p>
+                                                    </div>
+                                                    <div style="width:100%; margin-top: 5px; float:left;">
+                                                        <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                        <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="cls-display-info" style="width:100%;">
+                                                    <span>Last Name: </span><span><b>@Model.lastName</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="cls-edit-info" style="width:100%; display: none;">
+                                                    <div style="width:100%; float:left; margin-top:5px;">
+                                                        <input name="phoneNumber" style="width: 90%; float:left;" type="text" value="@Model.phoneNumber" class="form-control" placeholder="Phone Number" />
+                                                    </div>
+                                                    <div class="cls-error-message" style="width:100%; float:left; display:none">
+                                                        <p style="color:red">Phone Number must be a number</p>
+                                                    </div>
+                                                    <div style="width:100%; margin-top: 5px; float:left;">
+                                                        <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                        <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="cls-display-info" style="width:100%;">
+                                                    <span>Phone number: </span>
+                                                    @if (Model.phoneNumber.IsEmpty())
+                                                    {
+                                                        <span><b>Please input your phonenumber</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span><b>@Model.phoneNumber</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
+                                                    <div style="width:100%; float:left;">
+                                                        <input name="dateOfBirth" style="width: 90%; float:left;" type="text" value="@Model.dateOfBirth" class="form-control" placeholder="DOB" />
+                                                    </div>
+                                                    <div style="width:100%; margin-top: 5px; float:left;">
+                                                        <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                        <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="cls-display-info" style="width:100%;">
+                                                    <span>DOB: </span>
+                                                    @if (Model.dateOfBirth.IsEmpty())
+                                                    {
+                                                        <span><b>Please input your DOB</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span><b>@Model.dateOfBirth</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="text-align: center">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                @if (Model.gender.Equals("male"))
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="male" name="gender" data-val-required="Gender is required" data-val="true" checked> Male
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="male" name="gender" data-val-required="Gender is required" data-val="true"> Male
+                                                    </label>
+                                                }
+
+                                                @if (Model.gender.Equals("female"))
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="female" name="gender"> Female
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="female" name="gender"> Female
+                                                    </label>
+                                                }
+
+                                                @if (Model.gender.Equals("other"))
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="other" name="gender"> Other
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="other" name="gender"> Other
+                                                    </label>
+                                                }
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="cls-display-info" style="width:100%;">
+                                                    <span>Adress: </span>
+                                                    @if (Model.address.IsEmpty())
+                                                    {
+                                                        <span><b>Please input your address</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span><b>@Model.address</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                    }
+                                                </div>
+                                                <div class="cls-edit-info" style="width:100%; display:none">
+                                                    <div style="width:100%; float:left;">
+                                                        <input name="address" style="width: 90%; float:left;" type="text" value="@Model.address" class="form-control text-box single-line" placeholder="address" />
+                                                    </div>
+                                                    <div style="width:100%; margin-top: 5px; float:left;">
+                                                        <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                        <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div style="width:100%;">
+                                                    <span>Email: </span>
+                                                    <span><b>@Model.email</b></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="cls-display-info" style="width:100%;">
+                                                    <span>Password: </span>
+                                                    <span><b>******</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                </div>
+                                                <div class="cls-edit-info" style="display:none; width:100%">
+                                                    <div style="width:100%;">
+                                                    <div style=" width:100%; float:left;">
+                                                        <input style="width: 90%; float:left;" type="password" value="" tabindex="8" placeholder="Password" name="New Password" data-val-required="Password is required" data-val-length-min="5" data-val-length-max="50" data-val-length="Must be between 5 and 50 characters" data-val="true" class="form-control text-box single-line">
+
+                                                        <input style="width: 90%; float:left; margin-top: 5px;" type="password" value="" tabindex="9" placeholder="Confirm Password" name="confirmPassword" data-val-equalto-other="*.password" data-val-equalto="Passwords must match" data-val="true" class="form-control text-box single-line">
+                                                    </div>
+                                                    <div class="cls-error-message" style="width:100%; float:left; display:none">
+                                                        <p style="color:red"></p>
+                                                    </div>
+                                                    <div style="width:100%; margin-top: 5px; float:left;">
+                                                        <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                        <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-top:10px;">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <button id="id-edit-profile-btn" tabindex="10" class="form-control btn btn-register">Save</button>
+                                            <input id="id-password" type="hidden" name="password" value="@Model.password" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+}
 
 <script>
     var userDetailModule = (function () {
@@ -217,17 +458,51 @@
             commonModule.callAjax(controller, data, null);
         };
 
+        var editProfileAjax = function(selector) {
+            var controller = "/User/EditProfile";
+            var firstName = $(selector).find("input[name='firstName']").closest(".form-group").find("b").text();
+            var lastName = $(selector).find("input[name='lastName']").closest(".form-group").find("b").text();
+            var address = $(selector).find("input[name='address']").closest(".form-group").find("b").text();
+            var gender = $(selector).find("input[name='gender']:checked").val();
+            var phoneNumber = $(selector).find("input[name='phoneNumber']").closest(".form-group").find("b").text();
+            var dateOfBirth = $(selector).find("input[name='dateOfBirth']").closest(".form-group").find("b").text();
+            var password = $("#id-password").val();
+            
+            if(address.split("Please input").length > 1) {
+                address = "";
+            }
+            if(phoneNumber.split("Please input").length > 1) {
+                phoneNumber = "";
+            }
+            if(dateOfBirth.split("Please input").length > 1) {
+                dateOfBirth = "";
+            }
+
+            var data = {
+                firstName: firstName,
+                lastName: lastName,
+                address: address,
+                gender: gender,
+                phoneNumber: phoneNumber,
+                dateOfBirth: dateOfBirth,
+                password: password
+            };
+
+            commonModule.callAjax(controller, data, null);
+        };
+
         return {
             sendRequestFriend: sendRequestFriend,
+            editProfileAjax: editProfileAjax,
             unfriend: unfriend
         };
     })();
 
     $(document).ready(function () {
-        // idAddfriend
-        // idUnfriend
-        // idEditProfile
-        // idSendMessage
+        $("#id-edit-profile-btn").click(function(evt) {
+            userDetailModule.editProfileAjax($("#id-edit-profile"));
+            $("#id-profile-modal").modal('hide');
+        });
 
         $("#idAddfriend").click(function (evt) {
             userDetailModule.sendRequestFriend();
@@ -240,6 +515,88 @@
             userDetailModule.unfriend();
             $(this).hide();
             $("#idAddfriend").show();
+            evt.preventDefault();
+        });
+
+        var editIcon = $("#id-edit-profile").find(".cls-display-info").find(".glyphicon-edit");
+        $(editIcon).click(function(evt) {
+            var parent = $(this).closest(".form-group");
+            $(parent).find(".cls-edit-info").show();
+            $(parent).find(".cls-display-info").hide();
+
+            $(editIcon).hide();
+            evt.preventDefault();
+        });
+
+        $("#id-edit-profile").find(".cls-edit-ok").click(function(evt) {
+            var parent = $(this).closest(".form-group");
+            
+            if($(this).closest(".cls-edit-info").find("input").length > 1) {
+                // password
+                var input = $(this).closest(".cls-edit-info").find("input");
+                var password =$(input[0]).val();
+                var passwordConfirmed =$(input[1]).val();
+
+                if(password == "") {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password is required");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                if(passwordConfirmed == "") {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password Confirm is required");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                if(password.length < 5 || password.length > 50) {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password must be between 5 and 50 characters");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                if(password != passwordConfirmed) {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password must match");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                
+                $("#id-password").val(password);
+                $(this).closest(".cls-edit-info").find("input").text("").val("");
+            }
+            else {
+                // other field
+                var input = $(this).closest(".cls-edit-info").find("input");
+                var value = $(input).val();
+
+                if(($(input).attr("name") == "phoneNumber" && isNaN(value)) || (value.trim() == "" && $(input).attr("name") != "phoneNumber")) {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
+                $(this).closest(".form-group").find(".cls-display-info").find("b").text(value);
+            }
+
+            $(parent).find(".cls-edit-info").hide();
+            $(parent).find(".cls-display-info").show();
+            $(editIcon).show();
+            evt.preventDefault();
+        });
+
+        $("#id-edit-profile").find(".cls-edit-cancel").click(function(evt) {
+            var parent = $(this).closest(".form-group");
+
+            if($(this).closest(".cls-edit-info").find("input").length > 1) {
+                $(this).closest(".cls-edit-info").find("input").text("").val("");
+            }
+            else {
+                var value = $(parent).find(".cls-display-info").find("b").text().trim();
+                if(value.split("Please input").length > 1) {
+                    value = "";
+                }
+                $(this).closest(".cls-edit-info").find("input").text(value).val(value);
+            }
+            $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
+            $(parent).find(".cls-edit-info").hide();
+            $(parent).find(".cls-display-info").show();
+            $(editIcon).show();
             evt.preventDefault();
         });
     });

@@ -302,5 +302,25 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(message);
         }
+
+        public JsonResult EditProfile(string firstName, string lastName, string address, string gender, string phoneNumber,
+                            string dateOfBirth, string password)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                user.firstName = firstName;
+                user.lastName = lastName;
+                user.address = address;
+                user.gender = gender;
+                user.phoneNumber = phoneNumber;
+                user.dateOfBirth = dateOfBirth;
+                user.password = password;
+
+                success = GraphDatabaseHelpers.EditProfile(user);
+            }
+            return Json(success);
+        }
 	}
 }

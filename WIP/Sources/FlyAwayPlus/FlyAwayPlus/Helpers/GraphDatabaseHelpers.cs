@@ -325,10 +325,10 @@ namespace FlyAwayPlus.Helpers
         public static User GetUser(int typeId, string email)
         {
             Client.Connect();
-            var listUser = Client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
+            var user = Client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
                 .Return<User>("u")
-                .Results.ToList();
-            return listUser.Count == 0 ? null : listUser.First();
+                .Results.FirstOrDefault();
+            return user;
         }
 
         public static int GetGlobalIncrementId()
@@ -436,12 +436,12 @@ namespace FlyAwayPlus.Helpers
                  * match(u1:user{userID:@userID})-[m:friend]->(u2:user)
                     return u2;
                  */
-            List<User> listUser = null;
+            List<User> listUser = new List<User>();
             Client.Connect();
             listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:FRIEND]->(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
-
+            listUser.RemoveAll(item => item == null);
             return listUser;
         }
         public static List<User> FindFriend(int userID)
@@ -455,12 +455,12 @@ namespace FlyAwayPlus.Helpers
                  * match(u1:user{userID:@userID})-[m:friend]->(u2:user)
                     return u2;
                  */
-            List<User> listUser = null;
+            List<User> listUser = new List<User>();
             Client.Connect();
             listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})-[:FRIEND]-(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
-
+            listUser.RemoveAll(item => item == null);
             return listUser;
         }
         public static List<Post> FindLimitWishlist(User user, int skip, int limit)
@@ -474,7 +474,7 @@ namespace FlyAwayPlus.Helpers
                    return p
                    orderby p.dateCreated
                  */
-            List<Post> listPost = null;
+            List<Post> listPost = new List<Post>();
             Client.Connect();
             listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:WISH]->(p:post)")
                             .ReturnDistinct<Post>("p")
@@ -482,7 +482,7 @@ namespace FlyAwayPlus.Helpers
                             .Skip(skip)
                             .Limit(limit)
                             .Results.ToList();
-
+            listPost.RemoveAll(item => item == null);
             return listPost;
         }
 
@@ -586,12 +586,13 @@ namespace FlyAwayPlus.Helpers
                  * match (p:post{postID:@postID})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)
                     return c1
                  */
-            List<Comment> list = null;
+            List<Comment> list = new List<Comment>();
             Client.Connect();
             list = Client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
                             .Return<Comment>("c1")
                             .OrderBy("c1.dateCreated")
                             .Results.ToList();
+            list.RemoveAll(item => item == null);
             return list;
         }
         public static List<Post> FindPostOfUser(User user)
@@ -604,13 +605,13 @@ namespace FlyAwayPlus.Helpers
                  * match (u:user{userID:@userID})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)
                     return p1
                  */
-            List<Post> listPost = null;
+            List<Post> listPost = new List<Post>();
             Client.Connect();
             listPost = Client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
                             .ReturnDistinct<Post>("p1")
                 //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
-
+            listPost.RemoveAll(item => item == null);
             return listPost;
         }
         public static Photo FindPhoto(Post po)
@@ -672,6 +673,7 @@ namespace FlyAwayPlus.Helpers
                             .Return<Post>("p")
                             .OrderByDescending("p.dateCreated")
                             .Results.ToList();
+            listPost.RemoveAll(item => item == null);
             return listPost;
         }
         public static Place FindPlace(Post po)
@@ -714,7 +716,7 @@ namespace FlyAwayPlus.Helpers
                             .ReturnDistinct<Post>("p1")
                 //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
-
+            listPost.RemoveAll(item => item == null);
             return listPost;
         }
         public static List<Post> FindLimitPostFollowing(User user, int skip, int limit)
@@ -733,7 +735,7 @@ namespace FlyAwayPlus.Helpers
                     where p3.privacy = 'public' or (p3 in list1) or (p3 in list2 and p3.privacy='friend')
                     return distinct p3
                  */
-            List<Post> listPost = null;
+            List<Post> listPost = new List<Post>();
             Client.Connect();
             listPost = Client.Cypher.OptionalMatch("(u1:user{userID:" + user.userID + "})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)")
                             .OptionalMatch("(u1)-[:FRIEND]-(u2:user)-[:LATEST_POST]-(b:post)-[:PREV_POST*0..]-(p2:post)")
@@ -745,7 +747,7 @@ namespace FlyAwayPlus.Helpers
                             .Skip(skip)
                             .Limit(limit)
                             .Results.ToList();
-
+            listPost.RemoveAll(item => item == null);
             return listPost;
         }
         public static Post FindPost(int id, User user)
@@ -794,7 +796,7 @@ namespace FlyAwayPlus.Helpers
                     return p
                  */
 
-            List<Post> listPost = null;
+            List<Post> listPost = new List<Post>();
             Client.Connect();
             listPost = Client.Cypher.Match("(p:post)")
                             .Where("p.privacy='public'")
@@ -803,6 +805,8 @@ namespace FlyAwayPlus.Helpers
                             .Skip(skip)
                             .Limit(limit)
                             .Results.ToList();
+
+            listPost.RemoveAll(item => item == null);
             return listPost;
         }
         public static bool InsertComment(int postID, Comment comment, int userID)
@@ -911,7 +915,7 @@ namespace FlyAwayPlus.Helpers
                                             .OrderByDescending("dateCreated, lastActivityID")
                                             .Limit(limit)
                                             .Results.ToList();
-
+            listNotification.RemoveAll(item => item == null);
             return listNotification;
         }
 
@@ -926,6 +930,29 @@ namespace FlyAwayPlus.Helpers
             Client.Cypher.Match("(n:user { email: '" + email + "' })")
                            .Set("n.password = 696969 RETURN n")
                            .ExecuteWithoutResults();
+        }
+
+        public static bool EditProfile(User user)
+        {
+            Client.Connect();
+            try
+            {
+                Client.Cypher.Match("(n:user { userID: " + user.userID + "})")
+                           .Set("n.firstName = '" + user.firstName + "'")
+                           .Set("n.lastName = '" + user.lastName + "'")
+                           .Set("n.address = '" + user.address + "'")
+                           .Set("n.gender = '" + user.gender + "'")
+                           .Set("n.phoneNumber = '" + user.phoneNumber + "'")
+                           .Set("n.dateOfBirth = '" + user.dateOfBirth + "'")
+                           .Set("n.password = '" + user.password + "'")
+                           .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
 
         public static bool EditComment(Comment comment)
@@ -1055,6 +1082,7 @@ namespace FlyAwayPlus.Helpers
                 listMessage = Client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
                                         .ReturnDistinct<Message>("m1")
                                         .Results.ToList();
+                listMessage.RemoveAll(item => item == null);
             }
             catch (Exception e)
             {
@@ -1249,7 +1277,7 @@ namespace FlyAwayPlus.Helpers
             listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})<-[:FRIEND_REQUEST]-(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
-
+            listUser.RemoveAll(item => item == null);
             return listUser;
         }
     }
