@@ -341,6 +341,7 @@
     <Content Include="Scripts\PostPage\postDetail.js" />
     <Content Include="Scripts\jquery.simpleWeather.min.js" />
     <Content Include="Scripts\prettymaps.js" />
+    <Content Include="Scripts\searchKeyword.js" />
     <Content Include="Scripts\site.avatar.js" />
     <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />

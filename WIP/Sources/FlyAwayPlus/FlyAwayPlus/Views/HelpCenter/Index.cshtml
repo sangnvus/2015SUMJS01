@@ -10,9 +10,8 @@
 
     <form class="form-inline" style="text-align: right">
         <div class="form-group">
-            <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
             <div class="input-group">
-                <input style="height: 46px; width: 900px" type="text" class="form-control" id="exampleInputAmount" placeholder="What can we help you?">
+                <input style="height: 46px; width: 900px" type="text" class="form-control" id="keywords" placeholder="What can we help you?">
 
             </div>
         </div>
@@ -26,23 +25,280 @@
         <!-- tabs left -->
         <div class="tabbable">
             <ul class="nav nav-pills nav-stacked col-md-3">
-                <li><a href="#a" data-toggle="tab">One</a></li>
-                <li class="active"><a href="#b" data-toggle="tab">Two</a></li>
-                <li><a href="#c" data-toggle="tab">Twee</a></li>
-                <li><a href="#d" data-toggle="tab">Four</a></li>
-                <li><a href="#e" data-toggle="tab">Five</a></li>
-                <li><a href="#f" data-toggle="tab">Six</a></li>
+                <li class="active"><a href="#login" data-toggle="tab">Login</a></li>
+                <li><a href="#createAccount" data-toggle="tab">Create Account</a></li>
+                <li><a href="#profile" data-toggle="tab">Profile</a></li>
+                <li><a href="#sharing" data-toggle="tab">Sharing</a></li>
+                <li><a href="#chat" data-toggle="tab">Chat</a></li>
             </ul>
             <div class="tab-content col-md-9">
-                <div class="tab-pane active" id="a">Lorem ipsum dolor sit amet, charetra varius rci quis tortor imperdiet venenatis quam sit amet vulputate. Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero.</div>
-                <div class="tab-pane" id="b">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. Aliquam in felis sit amet augue.</div>
-                <div class="tab-pane" id="c">
-                    Thirdamuno, ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum auctor accumsan. Duis pharetra
-                    varius quam sit amet vulputate. Quisque mauris augue, molestie tincidunt condimentum vitae.
+                <div class="tab-pane active" id="login">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                        <b>&nbsp;1.1.	How do I log into my Fly Away Plus account?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse1" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <b>To log into your Fly Away Plus account:</b><br />
+                                    <b>Step 1.</b> Make sure no one else is logged into Fly Away Plus on your computer<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    To log someone else out, click at the top right of your Fly Away Plus homepage and select Log Out<br />
+                                    <b>Step 2.</b> Go to the top of <a href="http://localhost:1644/Home/">www.flyawayplus.com</a> and enter one of the following:<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Email address: You can log in with any email address that is currently listed on your Fly Away Plus account<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Username: You can also log in with your username<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Phone number: If you have a mobile phone number confirmed on your account you can enter it here (skip the
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    zeros before the country code and any symbols)<br />
+                                    <b>Step 3.</b> Enter your password<br />
+                                    <b>Step 4.</b> Click Log In
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                                        <b>&nbsp;1.2.	How do I reset my password?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <b>If you can't log into Fly Away Plus and need to reset your password:</b><br />
+                                    <b>Step 1.</b> Click Login/Signup in the top right of <a href="http://localhost:1644/Home/">www.flyawayplus.com</a><br />
+                                    <b>Step 2.</b> Click Forgot Password<br />
+                                    <b>Step 3.</b> Type the email, phone number, full name or username associated with your account, then click Search and follow the on-screen instructions
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                                        <b>&nbsp;1.3.	How do I log out of Fly Away Plus?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <b>To log out of Fly Away Plus:</b><br />
+                                    <b>Step 1.</b> Click avatar at the top right of any Fly Away Plus page<br />
+                                    <b>Step 2.</b> Select Log Out<br />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="tab-pane" id="d">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. Aliquam in felis sit amet augue.</div>
-                <div class="tab-pane" id="e">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. Aliquam in felis sit amet augue.</div>
-                <div class="tab-pane" id="f">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. Aliquam in felis sit amet augue.</div>
+                <div class="tab-pane" id="createAccount">
+                    <div class="panel-group" id="accordionCreateAccount">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordionCreateAccount" href="#collapseCreateAccount1">
+                                        <b>&nbsp;2.1.	How do I sign up for Fly Away Plus?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCreateAccount1" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <b>If you don't have a Fly Away Plus account, you can sign up for one in a few steps:</b><br />
+                                    <b>Step 1.</b> Go to <a href="http://localhost:1644/Home/">www.flyawayplus.com</a><br />
+                                    <b>Step 2.</b> If you see the signup form, fill out your name, email address or phone number, password, birthday and gender. If you
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    don't see the form, click Sign Up, then fill out the form.<br />
+                                    <b>Step 3.</b> Click Sign Up.<br />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordionCreateAccount" href="#collapseCreateAccount2">
+                                        <b>&nbsp;2.2.	What is the minimum password strength and how can I make my password strong?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCreateAccount2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    When you create a new password, make sure that it's at least 6 characters long. Try to use a complex combination of numbers, letters and punctuation marks.
+                                    If you see a message letting you know the password you entered isn't strong enough, try mixing together uppercase and lowercase letters or making the password longer.
+                                    The password you create should be easy for you to remember but hard for someone else to figure out. For extra security, your Fly Away Plus password should be different than the passwords you use to log into other accounts, like your email or bank account.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="profile">
+                    <div class="panel-group" id="accordionProfile">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordionProfile" href="#collapseProfile1">
+                                        <b>&nbsp;3.1.	What is my profile?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseProfile1" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    Your profile, is your collection of the photos, stories and experiences that tell your story. Your profile also includes your Timeline.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordionProfile" href="#collapseProfile2">
+                                        <b>&nbsp;3.2.	How do I add or change my profile picture?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseProfile2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <b>Your profile picture helps people recognize you on Fly Away Plus. To add a profile picture or change your current profile picture:</b><br />
+                                    <b>Step 1.</b> Go to your profile and hover over your profile picture.<br />
+                                    <b>Step 2.</b> Click Update Profile Picture.<br />
+                                    <b>Step 3.</b> You can:<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    o	Select a photo you've already uploaded or one you're tagged in.<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    o	Upload a photo from your computer.<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    o	Take a new photo.<br />
+                                    <b>Step 4.</b> Crop your photo and click Crop and Save. If you don't want to crop your photo, click Skip Cropping in the bottom left,
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    then click Save Profile Picture.<br />
+                                    <b>Note:</b> Your current profile picture is always public.
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordionProfile" href="#collapseProfile3">
+                                        <b>&nbsp;3.3.	How do I add or change my cover photo?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseProfile3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    A cover photo is the larger photo at the top of your profile, above your profile picture. Like your profile picture, cover photos are public, which means anyone visiting your profile will be able to see them.<br />
+                                    <p></p>
+                                    <b>To add or change your cover photo:</b><br />
+                                    <b>Step 1.</b> Go to your profile<br />
+                                    <b>Step 2.</b> Click Add Cover Photo, or hover over your current cover photo and click Update Cover Photo<br />
+                                    <b>Step 3.</b> Choose whether you want to upload a new photo or pick a photo from one of your existing photo albums<br />
+                                    <b>Step 4.</b> Once you choose a photo, you can reposition it by clicking the image and dragging it up or down<br />
+                                    <b>Step 5.</b> Click Save<br />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordionProfile" href="#collapseProfile4">
+                                        <b>&nbsp;3.4.	How do I post to my Timeline?</b>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseProfile4" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <b>To create a new post:</b><br />
+                                    <b>Step 1.</b> Click Post<br />
+                                    <b>Step 2.</b> Type in any details you want to add<br />
+                                    <b>Step 3.</b> You can also:<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Tag friends<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Add a location<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Add a photo<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    -	Select privacy<br />
+                                    <b>Step 4.</b> Click Post<br />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="sharing">
+                    <div class="tab-pane" id="sharing">
+                        <div class="panel-group" id="accordionSharing">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordionSharing" href="#collapseSharing1">
+                                            <b>&nbsp;4.1.	How do I upload photos?</b>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseSharing1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <b>To add and post photos to Fly Away Plus:</b><br />
+                                        <b>Step 1.</b> Click Post.<br />
+                                        <b>Step 2.</b> Click Photo.<br />
+                                        <b>Step 3.</b> Select the photos you want to add to Fly Away Plus.<br />
+                                        <b>Step 4.</b> Click Post.<br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="chat">
+                    <div class="tab-pane" id="chat">
+                        <div class="panel-group" id="accordionChat">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordionChat" href="#collapseChat1">
+                                            <b>&nbsp;5.1.	How do I start chatting with a friend?</b>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseChat1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <b>To open a chat with friend:</b><br />
+                                        <b>Step 1.</b> Click Chat.<br />
+                                        <b>Step 2.</b> Click the name of the friend you want to chat with.<br />
+                                        <b>Step 3.</b> Once you open a chat with a friend, type your message and press <b>Enter</b>.<br />
+                                        <b>Step 4.</b> Click Post.<br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordionChat" href="#collapseChat2">
+                                            <b>&nbsp;5.2.	How do I close or minimize a chat window?</b>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseChat2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        To close a chat, click the x in the top-right corner of the window or press the Escape (esc) key on your keyboard.<br />
+                                        <p></p>
+                                        To minimize a chat so you can easily access it later, click the top of the chat window. To reopen a minimized chat, just click the collapsed tab.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -52,8 +308,18 @@
 </body>
 </html>
 
-<style>
-    .bgimg {
-        background-image: url('~/Images/background/halong.jpg');
-    }
-</style>
+<script type="text/javascript" src="/Scripts/searchKeyword.js"></script>
+<script type="text/javascript">
+
+    var myHilitor;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        myHilitor = new SearchKeyword("playground");
+        myHilitor.setMatchType("left");
+    }, false);
+
+    document.getElementById("keywords").addEventListener("keyup", function () {
+        myHilitor.apply(this.value);
+    }, false);
+
+</script>
