@@ -23,13 +23,13 @@
             <img src="@(photo[post.postID].url.StartsWith("http") ? "" : "/Images/UserUpload/")@photo[post.postID].url" alt="ALT">
             <ul class="post-actions" style="padding-left:0px;">
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right:20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right:20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right:20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
@@ -68,4 +68,6 @@
 <script>
     var isLoadMore = '@ViewData["isLoadMore"].ToString()';
     var typePost = '@ViewData["typePost"].ToString()';
+
+    
 </script>

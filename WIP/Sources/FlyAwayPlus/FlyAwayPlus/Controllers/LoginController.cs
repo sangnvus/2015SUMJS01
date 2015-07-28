@@ -44,6 +44,10 @@ namespace FlyAwayPlus.Controllers
                     user.dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                     //user.dateOfBirth = DateTime.Now.ToString();
                     user.status = "active";
+                    if (user.avatar.Equals(""))
+                    {
+                        user.avatar = "/Images/avatar/avatar-default.jpg";
+                    }
 
                     // insert user to Database
                     GraphDatabaseHelpers.InsertUser(user);

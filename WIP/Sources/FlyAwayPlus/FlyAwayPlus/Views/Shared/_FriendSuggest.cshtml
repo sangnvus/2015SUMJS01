@@ -1,0 +1,78 @@
+﻿@model FlyAwayPlus.Models.User
+
+<link href="~/Content/friendSuggest.css" rel="stylesheet" />
+@{
+    var listSuggestFriend = ViewData["listSuggestFriend"] as List<FlyAwayPlus.Models.User>;
+    var listFriendType = ViewData["listFriendType"] as List<string>;
+    var listMutualFriends = ViewData["listMutualFriends"] as List<int>;
+}
+<div id="friendsToFollow" class="bottomItem">
+    <div class="FriendsToFollow Module">
+        <h2 class="memoTitle" style="margin:0px;">
+            <a href="#">Find friends<i class="glyphicon glyphicon-circle-arrow-right arrow"></i></a>
+        </h2>
+
+        <ul class="List Module">
+            @for (int index = 0; index < listSuggestFriend.Count; index++)
+            {
+                var suggest = listSuggestFriend[index];
+                <li data-index="@index">
+                    <div class="Module User followFriendsItem small">
+                        <div class="content">
+                            <a href="/User/Index/@suggest.userID/">
+                                <span class="thumbImageWrapper">
+                                    <div class="Image Module">
+                                        <div class="heightContainer">
+                                            <img data-src="@suggest.avatar" alt="@String.Format("{0} {1}", suggest.firstName, suggest.lastName)" style="" src="@suggest.avatar">
+                                        </div>
+                                    </div>
+                                </span>
+                            </a>
+                            <div class="contactUser">
+                                <a class="contactUsername" href="/User/Index/@suggest.userID/">@String.Format("{0} {1}", suggest.firstName, suggest.lastName)</a>
+                                <br />
+                                <p style="margin:0px;">@listMutualFriends[index] mutuals friends</p>
+                                @if (listFriendType[index].Equals("request"))
+                                {
+                                    <button role="@suggest.userID"  type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Waitting for accept</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button role="@suggest.userID" type="button" class="cls-friend-request Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Send Friend Request</span>
+                                    </button>
+                                    <button style="display:none" role="@suggest.userID" type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                        <span class="buttonText">Friend Request Are Sent</span>
+                                    </button>
+                                }
+                            </div>
+                            <i class="dismiss"></i>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".cls-friend-request").click(function (evt) {
+            var otherID = parseInt($(this).attr("role"));
+
+            var controller = "/User/SendRequestFriend";
+            var data = {
+                userID: @Model.userID,
+                otherUserID: otherID
+            };
+
+            commonModule.callAjax(controller, data, null);
+
+            $(".UserFollowButton[role=" + otherID + "]").show();
+            $(this).hide();
+            evt.preventDefault();
+        });
+    });
+</script>

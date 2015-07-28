@@ -4,11 +4,13 @@
     var userPost = ViewData["userPost"] as FlyAwayPlus.Models.User;
     var user = ViewData["user"] as FlyAwayPlus.Models.User;
     var listComment = ViewData["listComment"] as List<FlyAwayPlus.Models.Comment>;
+    var photo = ViewData["photo"] as FlyAwayPlus.Models.Photo;
 }
 <script src="~/Scripts/PostPage/postDetail.js" type="text/javascript"></script>
+<script src="https://connect.facebook.net/en_US/all.js"></script>
 <link href="~/Content/PostDetailPage/postDetail.css" rel="stylesheet" />
 
-<div class="col-md-8 col-md-offset-2">
+<div class="col-md-8 col-md-offset-1" style="margin-top:10px;">
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="post-area">
@@ -19,50 +21,78 @@
                     <div class="post-info-area">
                         <div class="user-name">
                             <a href="/User/Index/@userPost.userID">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
+                        </div>
+                        <span class="post-time">
+                            <span>Shared with @Model.privacy</span>
+                            &nbsp;-&nbsp;
+                            <span>@Model.toRealtime()</span>
+                        </span>
                     </div>
-                    <span class="post-time">
-                        <span>Shared with @Model.privacy</span>
-                        &nbsp;-&nbsp;
-                        <span>@Model.toRealtime()</span>
-                    </span>
-
+                </div>
+                <div class="post-content" style="display:flex;">
+                    <img src="/Images/UserUpload/@photo.url" style="max-height: 100%; margin:auto;" />
+                </div>
+                <div class="post-content">
+                    @Model.content
                 </div>
             </div>
-            <div class="post-content">
-                @Model.content
-            </div>
-        </div>
 
-        <div class="interact-area">
-            <a href="#" role="@Model.postID" class="btn-like"><span>Like</span></a>
-            <a href="#" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
-        </div>
-        <div class="divide-area"></div>
-        <div class="comment-area">
-            <div style="margin: 0 20px 12px">
-                <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
-                <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
-                <a href="#" role="@Model.postID"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
+            <div class="interact-area">
+                <a href="#" role="@Model.postID" class="btn-like"><span>Like</span></a>
+                <a href="#" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
+                <div class="fb-share-button" data-href="http://localhost:1644/Post/Index/@Model.postID" data-layout="button_count"></div>
             </div>
-            <div class="comment-stats">
-                <span>@listComment.Count comments</span>
-            </div>
+            <div class="divide-area"></div>
+            <div class="comment-area">
+                <div style="margin: 0 20px 12px">
+                    <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
+                    <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
+                    <a href="#" role="@Model.postID"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
+                </div>
+                <div class="comment-stats">
+                    <span>@listComment.Count comments</span>
+                </div>
 
-            <div class="comment-list">
-                @foreach (var comment in listComment)
-                {
-                    @Html.Partial("_PostDetailPartial", comment)
-                }
-            </div>
+                <div class="comment-list">
+                    @foreach (var comment in listComment)
+                    {
+                        @Html.Partial("_PostDetailPartial", comment)
+                    }
+                </div>
 
-            <div class="comment-textbox-wrapper">
-                <textarea id="idTextareaComment" role="@Model.postID" class="comment-textbox" style="height:30px;resize:none" placeholder="Input comment..."></textarea>
+                <div class="comment-textbox-wrapper">
+                    <textarea id="idTextareaComment" role="@Model.postID" class="comment-textbox" style="height:30px;resize:none" placeholder="Input comment..."></textarea>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div class="col-md-3" style="margin-top:10px;">
+    @Html.Partial("_PlaceSuggest", user)
+    @Html.Partial("_FriendSuggest", user)
 </div>
 
 <script>
-    
+    /*
+    $(document).ready(function () {
+        $('#shareonfacebook').click(function (e) {
+
+            var controller = "/User/ShareFacebook/";
+            var param = {
+                postID: parseInt($(this).attr("role"))
+            };
+
+            $("div#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: controller,
+                data: param,
+                success: function (data, textstatus) {
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        });
+    });
+    */
 </script>
