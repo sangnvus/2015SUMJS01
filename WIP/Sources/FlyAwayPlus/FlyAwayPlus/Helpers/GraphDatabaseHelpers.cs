@@ -1138,14 +1138,8 @@ namespace FlyAwayPlus.Helpers
         }
 
         public static bool EditProfile(User user)
-        public static bool EditProfile(User user)
         {
             Client.Connect();
-            try { 
-                    Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
-                           .Set("c.dateCreated = '" + comment.dateCreated + "'")
-                           .Set("c.content = '" + comment.content + "'")
-                           .ExecuteWithoutResults();
             try
             {
                 Client.Cypher.Match("(n:user { userID: " + user.userID + "})")
