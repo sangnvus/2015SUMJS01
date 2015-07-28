@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FlyAwayPlus.Helpers;
@@ -70,10 +71,10 @@ namespace FlyAwayPlus.Controllers
             Decimal latitude = Decimal.Parse(Request.Form["lat"]);
             Decimal longitude = Decimal.Parse(Request.Form["lng"]);
             string location = Request.Form["location"];
-            string filename;
+            List<string> images = Request.Form["uploadedimages"].Split('#').ToList();
+            images.RemoveAt(0);
             string privacy = Request.Form["privacy"];
-
-            filename = UploadImage(Request.Files);
+            string uploadedVideoYoutubeId = Request.Form["uploadedvideo"];
 
             Post newPost = new Post
             {
@@ -89,15 +90,17 @@ namespace FlyAwayPlus.Controllers
                 longitude = longitude
             };
 
-            Photo newPhoto = new Photo
+            Video newVideo = new Video
             {
-                dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                url = filename
+                path = uploadedVideoYoutubeId,
+                dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
             };
 
+            List<Photo> newPhotos = images.Select(img => new Photo { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), url = img}).ToList();
+            
             var user = (User)Session["user"];
 
-            GraphDatabaseHelpers.InsertPost(user, newPost, newPhoto, newPlace);
+            GraphDatabaseHelpers.InsertPost(user, newPost, newPhotos, newPlace, newVideo);
 
             return RedirectToAction("Index", "Home");
         }

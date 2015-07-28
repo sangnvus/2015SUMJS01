@@ -337,6 +337,7 @@ img {
     margin: 0 auto;
     display: block;
     background-color: #f7f7f7;
+    -ms-border-radius: 4px;
     border-radius: 4px;
 }
 
@@ -429,6 +430,71 @@ img {
         border-radius: 0;
         margin-top: -20px;
     }
+
+#post-privacy .fa {
+    width: 20px;
+    text-align: center;
+}
+
+#post-modal .add-media-wrapper {
+    width: 96px;
+    height: 96px;
+    border: 2px dashed #DDDDDD;
+    background-color: #fff;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    margin: 5px;
+    cursor: pointer;
+    display: block;
+    float: left;
+}
+
+    #post-modal .add-media-wrapper i {
+        font-size: 25px;
+        text-align: center;
+        color: #ABB7B7;
+        cursor: pointer;
+        margin: 35px 0 0 35px;
+    }
+
+#post-modal #post-image-preview-wrapper {
+    text-align: center;
+}
+
+#post-modal #post-upload-images-progress, #post-modal #post-upload-video-progress {
+    margin: 20px 20px 10px 20px;
+}
+
+#post-modal .upload-media-preview {
+    background: #fff;
+    display: inline-block;
+    vertical-align: top;
+    width: 96px;
+    height: 96px;
+    margin: 5px;
+    -ms-border-radius: 8px;
+    border-radius: 8px;
+}
+
+    #post-modal .upload-media-preview .crop {
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        border: 2px solid #fff;
+        -ms-border-radius: 8px;
+        border-radius: 8px;
+    }
+
+        #post-modal .upload-media-preview .crop img {
+            display: block;
+            margin: auto;
+            position: absolute;
+            top: -100%;
+            right: -100%;
+            bottom: -100%;
+            left: -100%;
+        }
+
 
 /* POST FORM ENDS*/
 
@@ -565,6 +631,7 @@ img {
     }
 
     .sidebar-list a i {
+        -ms-opacity: 0.8;
         opacity: 0.8;
         color: #d91e18;
     }
@@ -896,6 +963,7 @@ figure.profile-banner {
     position: absolute;
     top: 0;
     z-index: 1;
+    max-width: 100%;
 }
 
 figure.profile-picture {
@@ -1009,38 +1077,56 @@ div.profile-stats {
     margin-top: 70px;
 }
 
-#photos-gallery .images-wrapper .image-element {
-    position: absolute;
-    background: white;
-    -ms-border-radius: 5px;
-    border-radius: 5px;
-    /*Transitions*/
-    -webkit-transition: top 1s ease, left 1s ease;
-    -moz-transition: top 1s ease, left 1s ease;
-    -o-transition: top 1s ease, left 1s ease;
-    -ms-transition: top 1s ease, left 1s ease;
-}
+    #photos-gallery .images-wrapper .image-element {
+        position: absolute;
+        background: white;
+        -ms-border-radius: 5px;
+        border-radius: 5px;
+        /*Transitions*/
+        -webkit-transition: top 1s ease, left 1s ease;
+        -moz-transition: top 1s ease, left 1s ease;
+        -o-transition: top 1s ease, left 1s ease;
+        -ms-transition: top 1s ease, left 1s ease;
+    }
 
-#photos-gallery .images-wrapper .image-element img {
-    -ms-border-radius: 5px;
-    border-radius: 5px
-}
+        #photos-gallery .images-wrapper .image-element img {
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+        }
 
-#photos-gallery .images-wrapper .image-element img:hover {
-    cursor: pointer;
-    -ms-opacity: 0.5;
-    opacity: 0.5
-}
+            #photos-gallery .images-wrapper .image-element img:hover {
+                cursor: pointer;
+                -ms-opacity: 0.5;
+                opacity: 0.5;
+            }
 
-#photos-gallery .images-wrapper .image-element .post-actions li {
-    margin: 7px
-}
+        #photos-gallery .images-wrapper .image-element .post-actions li {
+            margin: 7px;
+        }
 
-#photos-gallery .images-wrapper .img-zoom {
-    -webkit-transition: all .2s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    -ms-transition: all .2s ease-in-out;
-}
+    #photos-gallery .images-wrapper .img-zoom {
+        -webkit-transition: all .2s ease-in-out;
+        -moz-transition: all .2s ease-in-out;
+        -o-transition: all .2s ease-in-out;
+        -ms-transition: all .2s ease-in-out;
+    }
 
 /* USER PROFILE ENDS */
+
+/* YOTUBE UPLOAD */
+#post-add-videos-wrapper input {
+    margin: 5px 15px 5px 0;
+}
+
+#post-add-videos-wrapper .upload-button {
+    margin: 5px 25px 0 -25px;
+    height: 90px;
+    padding: 30px 0;
+    font-size: 20px;
+    font-family: "Segoe UI Light", Arial, sans-serif;
+}
+
+textarea {
+    height: 7em;
+}
+/* YOTUBE UPLOAD ENDS */

@@ -26,6 +26,24 @@ namespace FlyAwayPlus.Models.Relationships
         }
     }
 
+    public class PostHasVideoRelationship : Relationship, IRelationshipAllowingSourceNode<Post>, IRelationshipAllowingTargetNode<Video>
+    {
+        public static readonly string TypeKey = "HAS";
+
+        public PostHasVideoRelationship(NodeReference targetNode) : base(targetNode)
+        {
+        }
+
+        public PostHasVideoRelationship(NodeReference targetNode, object data) : base(targetNode, data)
+        {
+        }
+
+        public override string RelationshipTypeKey
+        {
+            get { return TypeKey; }
+        }
+    }
+
     public class PostAtPlaceRelationship : Relationship, IRelationshipAllowingSourceNode<Post>, IRelationshipAllowingTargetNode<Place>
     {
         public static readonly string TypeKey = "AT";

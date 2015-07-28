@@ -73,6 +73,10 @@ namespace FlyAwayPlus.Helpers.UploadImage
             }
         }
 
+        //////////////////////
+        // HELPER FUNCTIONS //
+        //////////////////////
+        
         private bool ValidateExtension(string extension)
         {
             extension = extension.ToLower();

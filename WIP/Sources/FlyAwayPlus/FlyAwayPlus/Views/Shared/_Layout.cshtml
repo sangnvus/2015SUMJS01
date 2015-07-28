@@ -22,8 +22,6 @@
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
 
-    <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
-
     <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
 
     <link href="~/Content/morphing-search.css" rel="stylesheet"/>
@@ -31,7 +29,9 @@
     <script src="~/Scripts/images-loaded.min.js"></script>
 
     <script src="~/Scripts/Fancy/jquery.fancybox.pack.js"></script>
-    <link href="~/Content/Fancy/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/Content/Fancy/jquery.fancybox.css" rel="stylesheet"/>
+
+    <link href="~/Content/bootstrap.dropdowns-enhancement.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar navbar-custom" role="navigation">
@@ -106,7 +106,10 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
-    <script>
+    <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
+
+    <script src="~/Scripts/bootstrap.dropdowns-enhancement.js"></script>
+<script>
     $(function () {
         $("#btn-notification").click(function () {
             $(".notification-container").fadeToggle(300);

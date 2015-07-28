@@ -74,8 +74,8 @@ function initAvatarUpload() {
 }
 
 function updateProgress(percentComplete) {
-    $(".upload-progress").css("width", percentComplete + "%");
-    $(".upload-progress").html(percentComplete + "%");
+    $(".upload-avatar-progress .upload-progress").css("width", percentComplete + "%");
+    $(".upload-avatar-progress .upload-progress").html(percentComplete + "%");
     if (percentComplete === 0) {
         $(".upload-avatar-progress").removeClass("hidden");
     }

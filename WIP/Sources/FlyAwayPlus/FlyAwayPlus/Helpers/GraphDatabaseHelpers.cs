@@ -440,12 +440,17 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public static void InsertPost(User user, Post post, Photo photo, Place place)
+        public static void InsertPost(User user, Post post, List<Photo> photos, Place place, Video video)
         {
             // Auto increment Id.
             post.postID = GetGlobalIncrementId();
-            photo.photoID = GetGlobalIncrementId();
+            foreach (var photo in photos)
+            {
+                photo.photoID = GetGlobalIncrementId();
+            }
+
             place.placeID = GetGlobalIncrementId();
+            video.videoID = GetGlobalIncrementId();
 
             Client.Connect();
 
@@ -455,15 +460,25 @@ namespace FlyAwayPlus.Helpers
                                             .Results.Single()
                                             .Reference;
 
-            NodeReference<Photo> photoRef = Client.Cypher.Create("(p:photo {newPhoto})")
+            List<NodeReference<Photo>> photosRef = new List<NodeReference<Photo>>();
+            foreach (var photo in photos)
+            {
+                photosRef.Add(Client.Cypher.Create("(p:photo {newPhoto})")
                                             .WithParam("newPhoto", photo)
                                             .Return<Node<Photo>>("p")
                                             .Results.Single()
-                                            .Reference;
+                                            .Reference);
+            }
 
             NodeReference<Place> placeRef = Client.Cypher.Create("(p:place {newPlace})")
                                             .WithParam("newPlace", place)
                                             .Return<Node<Place>>("p")
+                                            .Results.Single()
+                                            .Reference;
+
+            NodeReference<Place> videoRef = Client.Cypher.Create("(v:video {newVideo})")
+                                            .WithParam("newVideo", video)
+                                            .Return<Node<Place>>("v")
                                             .Results.Single()
                                             .Reference;
 
@@ -472,16 +487,24 @@ namespace FlyAwayPlus.Helpers
             {
                 var userRef = userNode.Reference;
 
-                Client.CreateRelationship(postRef, new PostHasPhotoRelationship(photoRef));
-                Client.CreateRelationship(postRef, new PostAtPlaceRelationship(placeRef));
+                foreach (var photoRef in photosRef)
+                {
+                    Client.CreateRelationship(postRef, new PostHasPhotoRelationship(photoRef));
+                }
 
-                Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
-                    .Create("(u)-[r:HAS]->(p)")
-                    .ExecuteWithoutResults();
+                Client.CreateRelationship(postRef, new PostAtPlaceRelationship(placeRef));
+                Client.CreateRelationship(postRef, new PostHasVideoRelationship(videoRef));
+
+                foreach (var photo in photos)
+                {
+                    Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
+                                 .Create("(u)-[r:HAS]->(p)")
+                                 .ExecuteWithoutResults();
+                }
 
                 Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
-                    .Create("(u)-[r:VISITED]->(p)")
-                    .ExecuteWithoutResults();
+                             .Create("(u)-[r:VISITED]->(p)")
+                             .ExecuteWithoutResults();
 
                 //Client.CreateRelationship(userRef, new UserHasPostRelationship(postRef));
                 /*
@@ -562,7 +585,7 @@ namespace FlyAwayPlus.Helpers
             Client.Connect();
             listPost = Client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
                             .ReturnDistinct<Post>("p1")
-                            //.OrderByDescending("p.dateCreated")
+                //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
 
             return listPost;
@@ -666,7 +689,7 @@ namespace FlyAwayPlus.Helpers
             listPost = Client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {userID:" + currentUser.userID + "})")
                             .Where("p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2)")
                             .ReturnDistinct<Post>("p1")
-                            //.OrderByDescending("p.dateCreated")
+                //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
 
             return listPost;
@@ -861,14 +884,14 @@ namespace FlyAwayPlus.Helpers
                                                 user = u1.As<User>(),
                                                 post = p.As<Post>()
                                             })
-                                            //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
+                //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
                                             .OrderByDescending("dateCreated, lastActivityID")
                                             .Limit(limit)
                                             .Results.ToList();
 
             return listNotification;
-		}
-		
+        }
+
         public static void ResetPassword(string email)
         {
             /*
@@ -885,11 +908,12 @@ namespace FlyAwayPlus.Helpers
         public static bool EditComment(Comment comment)
         {
             Client.Connect();
-            try { 
-                    Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
-                           .Set("c.dateCreated = '" + comment.dateCreated + "'")
-                           .Set("c.content = '" + comment.content + "'")
-                           .ExecuteWithoutResults();
+            try
+            {
+                Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
+                       .Set("c.dateCreated = '" + comment.dateCreated + "'")
+                       .Set("c.content = '" + comment.content + "'")
+                       .ExecuteWithoutResults();
             }
             catch (Exception e)
             {
@@ -910,7 +934,7 @@ namespace FlyAwayPlus.Helpers
              *      
              *      - Delete this
              *      - Update the relation(Commented) of user -> post
-             */ 
+             */
             Client.Connect();
             Comment prev = null;
             Comment next = null;
@@ -931,7 +955,8 @@ namespace FlyAwayPlus.Helpers
 
                 if (prev == null)
                 {
-                    if(next != null) {
+                    if (next != null)
+                    {
                         Client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
                                 .Create("p-[:LATEST_COMMENT]->c")
                                 .ExecuteWithoutResults();
