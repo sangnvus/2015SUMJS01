@@ -250,8 +250,6 @@
     <Compile Include="Helpers\DateHelpers.cs" />
     <Compile Include="Helpers\FapRelationships.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
-    <Compile Include="Helpers\UploadVideo\YoutubeUploadResult.cs" />
-    <Compile Include="Helpers\UploadVideo\YoutubeUpload.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
@@ -369,7 +367,6 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
-    <Content Include="Helpers\UploadVideo\client_secrets.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

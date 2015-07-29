@@ -131,6 +131,16 @@
         });
 
         chatHubProxy = $.connection.chatHub;
+
+        chatHubProxy.client.getChatMessage = function (content, friendID, userID) {
+            if (userID == '@Session["userID"]') {
+                $("#idFriendListChat" + friendID).trigger("click");
+                if ($("#idListConversation" + friendID).hasClass("hidden")) {
+                    $("#idChatConversationFriend" + friendID).find(".headWrapper").trigger("click");
+                }
+                $("#idMessageList" + friendID).append(content);
+            }
+        }
         chatHubProxy.client.receiveListFriend = function (listFriendJSON, listMessageJSON) {
 
             var listFriend = JSON.parse(listFriendJSON);
@@ -341,6 +351,11 @@
                     tmp += "</li>";
 
                     $(selector).append(tmp);
+
+                    $.connection.hub.start().done(function () {
+                        //getChatMessage
+                        chatHubProxy.server.sendChatMessage(tmp.split("isOwnMessage").join(""), parseInt('@Session["userID"]'), friendID);
+                    });
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                 }

@@ -11,6 +11,11 @@ namespace FlyAwayPlus.Hubs
 {
     public class ChatHub : Hub
     {
+        public void SendChatMessage(string content, int userID, int friendID)
+        {
+            Clients.Others.getChatMessage(content, userID, friendID);
+        }
+
         public void GetListFriend(int userID)
         {
             List<User> listFriend = GraphDatabaseHelpers.FindFriend(userID);
