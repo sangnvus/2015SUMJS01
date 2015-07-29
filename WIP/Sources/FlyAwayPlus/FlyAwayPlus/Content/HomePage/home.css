@@ -8,6 +8,16 @@
     padding: 8px 14px;
 }
 
+.btn-share {
+    margin: 0 20px 0 5px;
+    padding: 8px 14px;
+}
+
+.btn-report {
+    margin: 0 20px 0 5px;
+    padding: 8px 14px;
+}
+
 .chat-sidebar {
     border: 1px solid rgba(29, 49, 91, 0.3);
     height: 100%;

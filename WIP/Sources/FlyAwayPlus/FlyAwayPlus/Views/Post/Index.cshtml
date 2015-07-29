@@ -40,7 +40,8 @@
             <div class="interact-area">
                 <a href="#" role="@Model.postID" class="btn-like"><span>Like</span></a>
                 <a href="#" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
-                <div class="fb-share-button" data-href="http://localhost:1644/Post/Index/@Model.postID" data-layout="button_count"></div>
+                <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
+                <a href="#" role="@Model.postID" id="report_button" class="btn-report"><span>Report</span></a>
             </div>
             <div class="divide-area"></div>
             <div class="comment-area">
@@ -72,27 +73,40 @@
     @Html.Partial("_FriendSuggest", user)
 </div>
 
-<script>
-    /*
+<script type="text/javascript">
     $(document).ready(function () {
-        $('#shareonfacebook').click(function (e) {
-
-            var controller = "/User/ShareFacebook/";
-            var param = {
-                postID: parseInt($(this).attr("role"))
-            };
-
-            $("div#loading").show();
-            $.ajax({
-                type: 'POST',
-                url: controller,
-                data: param,
-                success: function (data, textstatus) {
-                },
-                error: function (xmlHttpRequest, textStatus, errorThrown) {
-                }
+        $('#share_button').click(function (e) {
+            e.preventDefault();
+            FB.init({
+                appId: '974195839291185',
+                status: true,
+                xfbml: true
+            });
+            FB.ui(
+            {
+                method: 'feed',
+                name: '@userPost.firstName'+' @userPost.lastName',
+                link: 'http://localhost:1644/Post/Index/10010#',
+                picture: 'http://localhost:1644/Images/UserUpload/'+'@photo.url',
+                caption: 'FlyAwayPlus.com',
+                description: '@Model.content'
             });
         });
+
+        $('#report_button').click(function (e) {
+
+            var controller = "/User/ReportPost/";
+            var data = {
+                postID: @Model.postID,
+                userReportID: @user.userID,
+                userReportedID: @userPost.userID
+            };
+
+            commonModule.callAjax(controller, data, null);
+
+            alert("This post has been reported!");
+            e.preventDefault();
+        });
     });
-    */
 </script>
+

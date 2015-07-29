@@ -27,6 +27,48 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
+        public static void InsertReportPost(ReportPost reportPost)
+        {
+            // Auto increment Id.
+            reportPost.reportID = GetGlobalIncrementId();
+
+            Client.Connect();
+            NodeReference<ReportPost> reportPostRef = Client.Cypher.Create("(p:reportPost {newReportPost})")
+                                            .WithParam("newReportPost", reportPost)
+                                            .Return<Node<ReportPost>>("p")
+                                            .Results.Single()
+                                            .Reference;
+
+            Client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportID + "})")
+                                 .Create("(p)-[r:REPORT_BY]->(u)")
+                                 .ExecuteWithoutResults();
+
+            Client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportedID + "})")
+                                 .Create("(p)-[r:REPORT_TO]->(u)")
+                                 .ExecuteWithoutResults();
+        }
+
+        public static void InsertReportUser(ReportUser reportUser)
+        {
+            // Auto increment Id.
+            reportUser.reportID = GetGlobalIncrementId();
+
+            Client.Connect();
+            NodeReference<ReportUser> reportPostRef = Client.Cypher.Create("(p:reportUser {newReportUser})")
+                                            .WithParam("newReportUser", reportUser)
+                                            .Return<Node<ReportUser>>("p")
+                                            .Results.Single()
+                                            .Reference;
+
+            Client.Cypher.Match("(p:reportUser {reportID:" + reportUser.reportID + "}), (u:user {userID: " + reportUser.userReportID + "})")
+                                 .Create("(p)-[r:REPORT_BY]->(u)")
+                                 .ExecuteWithoutResults();
+
+            Client.Cypher.Match("(p:reportPost {reportID:" + reportUser.reportID + "}), (u:user {userID: " + reportUser.userReportedID + "})")
+                                 .Create("(p)-[r:REPORT_TO]->(u)")
+                                 .ExecuteWithoutResults();
+        }
+
         public static bool isLike(int postID, int userID)
         {
             // Auto increment Id

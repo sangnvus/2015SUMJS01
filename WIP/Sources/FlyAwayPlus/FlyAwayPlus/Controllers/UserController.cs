@@ -345,5 +345,33 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(success);
         }
+        public JsonResult ReportPost(int postID, int userReportID, int userReportedID)
+        {
+            bool success = false;
+
+            ReportPost reportPost = new ReportPost();
+            reportPost.postID = postID;
+            reportPost.content = "Khong thich";
+            reportPost.userReportID = userReportID;
+            reportPost.userReportedID = userReportedID;
+
+            GraphDatabaseHelpers.InsertReportPost(reportPost);
+
+            return Json(success);
+        }
+
+        public JsonResult ReportUser(int userReportID, int userReportedID)
+        {
+            bool success = false;
+
+            ReportUser reportUser = new ReportUser();
+            reportUser.content = "Khong thich";
+            reportUser.userReportID = userReportID;
+            reportUser.userReportedID = userReportedID;
+
+            GraphDatabaseHelpers.InsertReportUser(reportUser);
+
+            return Json(success);
+        }
 	}
 }

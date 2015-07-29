@@ -39,6 +39,7 @@
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
+                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px">Report</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
             else if (friendType.Equals("request"))
@@ -46,6 +47,7 @@
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
+                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px">Report</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
             else
@@ -53,6 +55,7 @@
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
+                <a href="#" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px">Report</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
         </div>
@@ -502,6 +505,19 @@
         $("#id-edit-profile-btn").click(function(evt) {
             userDetailModule.editProfileAjax($("#id-edit-profile"));
             $("#id-profile-modal").modal('hide');
+        });
+
+        $("#idReport").click(function (evt) {
+            var controller = "/User/ReportUser/";
+            var data = {
+                userReportID: parseInt('@Session["userID"]'),
+                userReportedID: @Model.userID
+            };
+
+            commonModule.callAjax(controller, data, null);
+
+            alert("This user has been reported!");
+            e.preventDefault();
         });
 
         $("#idAddfriend").click(function (evt) {
