@@ -2839,48 +2839,6 @@ a.list-group-item-danger {
         width: 84%;
     }
 }
-/**
- * dropdown-menu
- * --------------------------------------------------
- */
-.dropdown-menu {
-    border: none;
-}
-
-    .dropdown-menu .dropdown-header {
-        padding: 5px 20px;
-        font-size: 14px;
-        font-weight: 700;
-        color: #aab2bd;
-    }
-
-    .dropdown-menu li a {
-        padding: 5px 20px;
-        color: white;
-    }
-
-        .dropdown-menu li a:hover, .dropdown-menu li a:focus, .dropdown-menu .active a, .dropdown-menu .active a:hover, .dropdown-menu .active a:focus {
-            color: white;
-            background-color: #656d78;
-            outline: none;
-        }
-
-    .dropdown-menu .disabled a, .dropdown-menu .disabled a:hover, .dropdown-menu .disabled a:focus {
-        color: #656d78;
-        cursor: default;
-    }
-
-    .dropdown-menu .divider {
-        background-color: #656d78;
-        border-bottom: none;
-    }
-
-.dropup .dropdown-menu {
-    margin-bottom: 0;
-    border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
-}
 
 /**
  * dropdown-submenu

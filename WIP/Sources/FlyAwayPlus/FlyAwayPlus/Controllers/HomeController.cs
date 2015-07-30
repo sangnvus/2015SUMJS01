@@ -101,9 +101,9 @@ namespace FlyAwayPlus.Controllers
 
                 if (user != null)
                 {
-                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.isLike(po.postID, user.userID));
-                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.isDislike(po.postID, user.userID));
-                    isWishDict.Add(po.postID, GraphDatabaseHelpers.isWish(po.postID, user.userID));
+                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.IsLike(po.postID, user.userID));
+                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.IsDislike(po.postID, user.userID));
+                    isWishDict.Add(po.postID, GraphDatabaseHelpers.IsWish(po.postID, user.userID));
                 }
                 else
                 {

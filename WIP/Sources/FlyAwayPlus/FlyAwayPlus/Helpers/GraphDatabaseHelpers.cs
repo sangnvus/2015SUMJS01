@@ -27,7 +27,7 @@ namespace FlyAwayPlus.Helpers
                         .Results.Single();
         }
 
-        public static bool isLike(int postID, int userID)
+        public static bool IsLike(int postID, int userID)
         {
             // Auto increment Id
 
@@ -39,7 +39,7 @@ namespace FlyAwayPlus.Helpers
             return like != 0;
         }
 
-        public static bool isFriend(int userID, int otherUserID)
+        public static bool IsFriend(int userID, int otherUserID)
         {
             // Auto increment Id
 
@@ -54,7 +54,7 @@ namespace FlyAwayPlus.Helpers
         public static string GetFriendType(int userID, int otherUserID)
         {
             // Auto increment Id
-            if (isFriend(userID, otherUserID))
+            if (IsFriend(userID, otherUserID))
             {
                 return "friend";
             }
@@ -67,7 +67,7 @@ namespace FlyAwayPlus.Helpers
             return friend != 0 ? "request" : "none";
         }
 
-        public static bool isDislike(int postID, int userID)
+        public static bool IsDislike(int postID, int userID)
         {
             // Auto increment Id
 
@@ -79,7 +79,7 @@ namespace FlyAwayPlus.Helpers
             return dislike != 0;
         }
 
-        public static bool isWish(int postID, int userID)
+        public static bool IsWish(int postID, int userID)
         {
             Client.Connect();
             int wish = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:post {postID:" + postID + "})")
@@ -137,8 +137,8 @@ namespace FlyAwayPlus.Helpers
         {
             Client.Connect();
 
-            NodeReference<Post> postRef = getNodePost(postID).Reference;
-            Node<User> userNode = getNodeUser(userID);
+            NodeReference<Post> postRef = GetNodePost(postID).Reference;
+            Node<User> userNode = GetNodeUser(userID);
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
@@ -342,7 +342,7 @@ namespace FlyAwayPlus.Helpers
 
         public static bool InsertDislike(int userID, int postID)
         {
-            Node<User> userNode = getNodeUser(userID);
+            Node<User> userNode = GetNodeUser(userID);
 
             NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
                                             .Return<Node<Post>>("p")
@@ -359,7 +359,7 @@ namespace FlyAwayPlus.Helpers
 
         public static bool InsertLike(int userID, int postID)
         {
-            Node<User> userNode = getNodeUser(userID);
+            Node<User> userNode = GetNodeUser(userID);
 
             NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
                                             .Return<Node<Post>>("p")
@@ -374,13 +374,13 @@ namespace FlyAwayPlus.Helpers
             return false;
         }
 
-        public static Node<User> getNodeUser(int id)
+        public static Node<User> GetNodeUser(int id)
         {
             Client.Connect();
             return Client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
         }
 
-        public static Node<Post> getNodePost(int id)
+        public static Node<Post> GetNodePost(int id)
         {
             Client.Connect();
             return Client.Cypher.Match("(p:post {postID: " + id + "})").Return<Node<Post>>("p").Results.FirstOrDefault();
@@ -542,7 +542,7 @@ namespace FlyAwayPlus.Helpers
             }
             return listUser;
         }
-        public static bool isVisitedPlace(int userID, int placeID)
+        public static bool IsVisitedPlace(int userID, int placeID)
         {
             // Auto increment Id
 
@@ -645,6 +645,7 @@ namespace FlyAwayPlus.Helpers
             listUser.RemoveAll(item => item == null);
             return listUser;
         }
+
         public static List<Post> FindLimitWishlist(User user, int skip, int limit)
         {
             /*
@@ -710,7 +711,7 @@ namespace FlyAwayPlus.Helpers
                                             .Results.Single()
                                             .Reference;
 
-            Node<User> userNode = getNodeUser(user.userID);
+            Node<User> userNode = GetNodeUser(user.userID);
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
@@ -800,6 +801,7 @@ namespace FlyAwayPlus.Helpers
             list.RemoveAll(item => item == null);
             return list;
         }
+
         public static List<Post> FindPostOfUser(User user)
         {
             /*
@@ -819,6 +821,7 @@ namespace FlyAwayPlus.Helpers
             listPost.RemoveAll(item => item == null);
             return listPost;
         }
+
         public static Photo FindPhoto(Post po)
         {
 
@@ -841,6 +844,7 @@ namespace FlyAwayPlus.Helpers
                             .First();
             return photo;
         }
+
         public static User FindUser(Post post)
         {
             /*
@@ -858,6 +862,7 @@ namespace FlyAwayPlus.Helpers
                             .Results.Single();
             return user;
         }
+
         public static List<Post> SearchAllPost()
         {
 
@@ -881,6 +886,7 @@ namespace FlyAwayPlus.Helpers
             listPost.RemoveAll(item => item == null);
             return listPost;
         }
+
         public static Place FindPlace(Post po)
         {
 
@@ -903,6 +909,7 @@ namespace FlyAwayPlus.Helpers
                             .First();
             return place;
         }
+
         public static List<Post> FindPostOfOtherUser(User currentUser, User otherUser)
         {
             /*
@@ -924,6 +931,7 @@ namespace FlyAwayPlus.Helpers
             listPost.RemoveAll(item => item == null);
             return listPost;
         }
+
         public static List<Post> FindLimitPostFollowing(User user, int skip, int limit)
         {
             /*
@@ -955,6 +963,7 @@ namespace FlyAwayPlus.Helpers
             listPost.RemoveAll(item => item == null);
             return listPost;
         }
+
         public static Post FindPost(int id, User user)
         {
             /*
@@ -988,6 +997,7 @@ namespace FlyAwayPlus.Helpers
                 return p;
             }
         }
+
         public static List<Post> SearchLimitPost(int skip, int limit)
         {
 
@@ -1014,6 +1024,7 @@ namespace FlyAwayPlus.Helpers
             listPost.RemoveAll(item => item == null);
             return listPost;
         }
+
         public static bool InsertComment(int postID, Comment comment, int userID)
         {
             // Auto increment Id
@@ -1025,7 +1036,7 @@ namespace FlyAwayPlus.Helpers
                         .Return<Node<Comment>>("c")
                         .Results.Single().Reference;
 
-            Node<User> userNode = getNodeUser(userID);
+            Node<User> userNode = GetNodeUser(userID);
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
@@ -1191,22 +1202,19 @@ namespace FlyAwayPlus.Helpers
              *      - Update the relation(Commented) of user -> post
              */
             Client.Connect();
-            Comment prev = null;
-            Comment next = null;
-            Post post = null;
             try
             {
-                prev = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
-                        .Return<Comment>("c_prev")
-                        .Results.SingleOrDefault();
+                var prev = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
+                    .Return<Comment>("c_prev")
+                    .Results.SingleOrDefault();
 
-                next = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
-                        .Return<Comment>("c_next")
-                        .Results.SingleOrDefault();
+                var next = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
+                    .Return<Comment>("c_next")
+                    .Results.SingleOrDefault();
 
-                post = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
-                        .Return<Post>("p")
-                        .Results.SingleOrDefault();
+                var post = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
+                    .Return<Post>("p")
+                    .Results.SingleOrDefault();
 
                 if (prev == null)
                 {
@@ -1231,12 +1239,11 @@ namespace FlyAwayPlus.Helpers
                                 .Delete("c,r")
                                 .ExecuteWithoutResults();
 
-                Comment newLast = null;
-                newLast = Client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
-                                .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
-                                .Return<Comment>("c1")
-                                .OrderByDescending("c1.dateCreated")
-                                .Results.FirstOrDefault();
+                var newLast = Client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+                    .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
+                    .Return<Comment>("c1")
+                    .OrderByDescending("c1.dateCreated")
+                    .Results.FirstOrDefault();
 
                 if (newLast == null)
                 {
@@ -1393,6 +1400,7 @@ namespace FlyAwayPlus.Helpers
             }
             return message;
         }
+
         public static bool SendRequestFriend(int userID, int otherUserID)
         {
             Client.Connect();
@@ -1484,6 +1492,83 @@ namespace FlyAwayPlus.Helpers
                             .Results.ToList();
             listUser.RemoveAll(item => item == null);
             return listUser;
+        }
+
+        public static bool DeletePost(int postId)
+        {
+            DeleteRelatedPhotos(postId);
+
+            try
+            {
+                var prev = Client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})<-[:PREV_POST*1..1]-(p_prev:post)")
+                    .Return<Comment>("p_prev")
+                    .Results.SingleOrDefault();
+
+                var next = Client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})-[:PREV_POST*1..1]->(p_next:post)")
+                    .Return<Comment>("p_next")
+                    .Results.SingleOrDefault();
+
+                if (prev == null)
+                {
+                    if (next != null)
+                    {
+                        Client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
+                                .Create("p-[:LATEST_COMMENT]->c")
+                                .ExecuteWithoutResults();
+                    }
+                }
+                else
+                {
+                    if (next != null)
+                    {
+                        Client.Cypher.Match("(c:comment {commentID:" + prev.commentID + "}), (c1:comment {commentID: " + next.commentID + "})")
+                                .Create("c-[:PREV_COMMENT]->c1")
+                                .ExecuteWithoutResults();
+                    }
+                }
+
+                Client.Cypher.Match("(c:comment {commentID:" + commentID + "})-[r]-()")
+                                .Delete("c,r")
+                                .ExecuteWithoutResults();
+
+                var newLast = Client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+                    .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
+                    .Return<Comment>("c1")
+                    .OrderByDescending("c1.dateCreated")
+                    .Results.FirstOrDefault();
+
+                if (newLast == null)
+                {
+                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                                .Delete("r")
+                                .ExecuteWithoutResults();
+                }
+                else
+                {
+                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                                .Set("r.dateCreated = '" + newLast.dateCreated + "'")
+                                .ExecuteWithoutResults();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+
+            Client.Cypher.OptionalMatch("(p:Post {postID: " + postId + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
+                         .Delete("c1")
+                         .ExecuteWithoutResults();
+
+            return true;
+        }
+
+        private static void DeleteRelatedPhotos(int postId)
+        {
+            Client.Cypher.OptionalMatch("(p:Post {postID: " + postId + "})-[r:HAS]-(pt:Photo)")
+                .Delete("r, pt")
+                .ExecuteWithoutResults();
         }
     }
 }

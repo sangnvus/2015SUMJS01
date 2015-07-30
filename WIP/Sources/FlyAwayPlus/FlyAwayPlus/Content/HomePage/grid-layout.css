@@ -102,7 +102,8 @@
     height: auto;
     position: relative;
     width: 100%;
-    overflow: hidden;
+    display: flex;
+    float: left
 }
 /*#user-info*/
 
@@ -120,8 +121,8 @@
 }
 
 .user-info .avatar {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     max-width: 100%;
     
     -ms-background-size: cover;
@@ -154,6 +155,14 @@
     font-size: 11px;
 }
 /*#post-time*/
+
+.user-info #post-list-post-option:hover {
+    color: #A92733
+}
+
+.user-info .post-list-post-option:hover {
+    margin-top: -20px;
+}
 
 .btn-circle.btn-lg {
     position: relative;

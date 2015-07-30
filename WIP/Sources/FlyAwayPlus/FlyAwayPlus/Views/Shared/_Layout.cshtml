@@ -7,12 +7,8 @@
 
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/Scripts/common.js")
     @Scripts.Render("~/Scripts/jquery.validate.js")
     @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
-    <script src="~/Scripts/blocksit.min.js"></script>
-    <script src="~/Scripts/jquery.elastic.source.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="/signalr/hubs"></script>
 
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -22,20 +18,15 @@
     @Styles.Render("~/Content/font-awesome.css")
     @Styles.Render("~/Content/bootstrap-social.css")
 
-    <!--<link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">-->
+    <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
 
     <link href="~/Content/morphing-search.css" rel="stylesheet" />
 
-    <script src="~/Scripts/images-loaded.min.js"></script>
-
-    <script src="~/Scripts/Fancy/jquery.fancybox.pack.js"></script>
     <link href="~/Content/Fancy/jquery.fancybox.css" rel="stylesheet" />
 
     <link href="~/Content/bootstrap.dropdowns-enhancement.min.css" rel="stylesheet" />
 
     <link href="~/Content/sweetalert.css" rel="stylesheet" />
-</head>
-<body>
     <script>
         (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -43,7 +34,10 @@
             js = d.createElement(s); js.id = id;
             js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.4";
             fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));</script>
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+</head>
+<body>
     <div class="navbar navbar-custom" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -130,6 +124,14 @@
     }
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script src="~/Scripts/blocksit.min.js"></script>
+    <script src="~/Scripts/bootstrap.dropdowns-enhancement.js"></script>
+    <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
+    <script src="~/Scripts/images-loaded.min.js"></script>
+    <script src="~/Scripts/Fancy/jquery.fancybox.pack.js"></script>
+    <script src="~/Scripts/jquery.elastic.source.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
 
     <script>
         $(function () {

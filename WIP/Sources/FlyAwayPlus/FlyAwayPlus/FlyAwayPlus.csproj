@@ -250,8 +250,6 @@
     <Compile Include="Helpers\DateHelpers.cs" />
     <Compile Include="Helpers\FapRelationships.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
-    <Compile Include="Helpers\UploadVideo\YoutubeUploadResult.cs" />
-    <Compile Include="Helpers\UploadVideo\YoutubeUpload.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
@@ -292,6 +290,7 @@
     <Content Include="Content\placeSuggest.css" />
     <Content Include="Content\PostDetailPage\postDetail.css" />
     <Content Include="Content\morphing-search.css" />
+    <Content Include="Content\sweetalert.css" />
     <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
@@ -304,6 +303,7 @@
     <Content Include="Scripts\Fancy\jquery.fancybox.pack.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\youtube-upload.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />
     <Content Include="Scripts\jquery.form.min.js" />
@@ -342,12 +342,10 @@
     <Content Include="Images\UIHelper\WOW slider\pause.png" />
     <Content Include="Images\UIHelper\WOW slider\play.png" />
     <Content Include="Images\upload.png" />
-    <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.Jcrop.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
-    <Content Include="Scripts\jquery.timeago.js" />
     <Content Include="Scripts\LookAround\logger.js" />
     <Content Include="Scripts\PostPage\postDetail.js" />
     <Content Include="Scripts\jquery.simpleWeather.min.js" />
@@ -369,7 +367,6 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
-    <Content Include="Helpers\UploadVideo\client_secrets.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
