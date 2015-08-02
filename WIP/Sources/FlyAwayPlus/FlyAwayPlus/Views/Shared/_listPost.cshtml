@@ -32,9 +32,12 @@
 
             @if (@video[post.postID] != null)
             {
-                <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.postID].path?enablejsapi=1&wmode=opaque">
-                    <img src="http://img.youtube.com/vi/@video[post.postID].path/0.jpg" alt="@video[post.postID]">
-                </a>
+                <div class="video-overlay">
+                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.postID].path?enablejsapi=1&wmode=opaque">
+                        <img src="http://img.youtube.com/vi/@video[post.postID].path/0.jpg" alt="@video[post.postID]">
+                        <span class="video-thumbnail-button"></span>
+                    </a>
+                </div>
             }
             <ul class="post-actions" style="padding-left: 0px;">
                 <li>
@@ -131,28 +134,26 @@
 
         // Initialise the fancyBox after the DOM is loaded
         $(document).ready(function () {
-            $(".fancybox")
-                .attr('rel', 'gallery')
-                .fancybox({
-                    openEffect: 'fade',
-                    closeEffect: 'elastic',
-                    nextEffect: 'none',
-                    prevEffect: 'none',
-                    padding: 0,
-                    margin: 70,
-                    beforeShow: function () {
-                        // Find the iframe ID
-                        var id = $.fancybox.inner.find('iframe').attr('id');
+            $(".fancybox").attr('rel', 'gallery').fancybox({
+                openEffect: 'fade',
+                closeEffect: 'elastic',
+                nextEffect: 'none',
+                prevEffect: 'none',
+                padding: 0,
+                margin: 70,
+                beforeShow: function () {
+                    // Find the iframe ID
+                    var id = $.fancybox.inner.find('iframe').attr('id');
 
-                        // Create video player object and add event listeners
-                        var player = new YT.Player(id, {
-                            events: {
-                                'onReady': onPlayerReady,
-                                'onStateChange': onPlayerStateChange
-                            }
-                        });
-                    }
-                });
+                    // Create video player object and add event listeners
+                    var player = new YT.Player(id, {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+            });
         });
 
     }
