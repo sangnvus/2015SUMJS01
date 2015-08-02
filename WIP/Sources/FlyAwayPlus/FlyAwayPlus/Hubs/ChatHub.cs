@@ -18,9 +18,9 @@ namespace FlyAwayPlus.Hubs
 
         public void GetListFriend(int userID)
         {
-            List<User> listFriend = GraphDatabaseHelpers.FindFriend(userID);
+            List<User> listFriend = GraphDatabaseHelpers.Instance.FindFriend(userID);
             List<Message> listMessage = new List<Message>();
-            User currentUser = GraphDatabaseHelpers.FindUser(userID);
+            User currentUser = GraphDatabaseHelpers.Instance.FindUser(userID);
             Message message = null;
             string conversationID = "";
             for (int i = 0; i < listFriend.Count; i++)
@@ -39,7 +39,7 @@ namespace FlyAwayPlus.Hubs
                     {
                         conversationID = listFriend[i].userID + "_" + userID;
                     }
-                    message = GraphDatabaseHelpers.GetLatestMessage(conversationID);
+                    message = GraphDatabaseHelpers.Instance.GetLatestMessage(conversationID);
                 }
                 listMessage.Add(message);
             }

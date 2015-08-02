@@ -12,7 +12,7 @@ namespace FlyAwayPlus.Hubs
     {
         public void LoadNotification(int userID, int lastActivityID)
         {
-            var listNotification = GraphDatabaseHelpers.GetNotification(userID, lastActivityID, 5);
+            var listNotification = GraphDatabaseHelpers.Instance.GetNotification(userID, lastActivityID, 5);
             Clients.Caller.receiveNotification(JsonConvert.SerializeObject(listNotification));
         }
     }

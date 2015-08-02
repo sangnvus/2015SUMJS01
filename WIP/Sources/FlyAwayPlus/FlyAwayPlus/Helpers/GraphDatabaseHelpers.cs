@@ -1,76 +1,101 @@
-﻿using FlyAwayPlus.Models;
-using Neo4jClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Web;
+using FlyAwayPlus.Models;
 using FlyAwayPlus.Models.Relationships;
-using System.Collections;
+using Neo4jClient;
 
 namespace FlyAwayPlus.Helpers
 {
-    public class GraphDatabaseHelpers
+    public class GraphDatabaseHelpers : SingletonBase<GraphDatabaseHelpers>
     {
-        private static readonly GraphClient Client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
+        private readonly GraphClient _client;
 
-        public static void InsertUser(User user)
+        private GraphDatabaseHelpers()
+        {
+            _client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
+        }
+
+        public void InsertUser(User user)
         {
             // Auto increment Id.
             user.userID = GetGlobalIncrementId();
+            _client.Connect();
 
-            Client.Connect();
-            var userRef = Client.Cypher.
-                        Create("(user:user {newUser})").
-                        WithParam("newUser", user)
-                        .Return<User>("user")
-                        .Results.Single();
+            _client.Cypher
+                   .Create("(user:user {newUser})")
+                   .WithParam("newUser", user)
+                   .ExecuteWithoutResults();
         }
 
-public static void InsertReportPost(ReportPost reportPost)
+        public void InsertReportPost(ReportPost reportPost)
         {
             // Auto increment Id.
             reportPost.reportID = GetGlobalIncrementId();
 
-            Client.Connect();
-            NodeReference<ReportPost> reportPostRef = Client.Cypher.Create("(p:reportPost {newReportPost})")
-                                            .WithParam("newReportPost", reportPost)
-                                            .Return<Node<ReportPost>>("p")
-                                            .Results.Single()
-                                            .Reference;
+            _client.Connect();
+            NodeReference<ReportPost> reportPostRef = _client.Cypher.Create("(p:reportPost {newReportPost})")
+                                                                    .WithParam("newReportPost", reportPost)
+                                                                    .Return<Node<ReportPost>>("p")
+                                                                    .Results.Single()
+                                                                    .Reference;
 
-            Client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportID + "})")
+            _client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportID + "})")
                                  .Create("(p)-[r:REPORT_BY]->(u)")
                                  .ExecuteWithoutResults();
 
-            Client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportedID + "})")
+            _client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportedID + "})")
                                  .Create("(p)-[r:REPORT_TO]->(u)")
                                  .ExecuteWithoutResults();
         }
-        public static bool IsLike(int postID, int userID)        {
+
+        public void InsertReportUser(ReportUser reportUser)
+        {
+            // Auto increment Id.
+            reportUser.reportID = GetGlobalIncrementId();
+
+            _client.Connect();
+            NodeReference<ReportUser> reportPostRef = _client.Cypher.Create("(p:reportUser {newReportUser})")
+                                            .WithParam("newReportUser", reportUser)
+                                            .Return<Node<ReportUser>>("p")
+                                            .Results.Single()
+                                            .Reference;
+
+            _client.Cypher.Match("(p:reportUser {reportID:" + reportUser.reportID + "}), (u:user {userID: " + reportUser.userReportID + "})")
+                                 .Create("(p)-[r:REPORT_BY]->(u)")
+                                 .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(p:reportPost {reportID:" + reportUser.reportID + "}), (u:user {userID: " + reportUser.userReportedID + "})")
+                                 .Create("(p)-[r:REPORT_TO]->(u)")
+                                 .ExecuteWithoutResults();
+        }
+
+        public bool IsLike(int postID, int userID)
+        {
             // Auto increment Id
 
-            Client.Connect();
-            int like = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:LIKE]->(p:post {postID:" + postID + "})")
+            _client.Connect();
+            int like = _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:LIKE]->(p:post {postID:" + postID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return like != 0;
         }
 
-        public static bool IsFriend(int userID, int otherUserID)
+        public bool IsFriend(int userID, int otherUserID)
         {
             // Auto increment Id
 
-            Client.Connect();
-            int friend = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND]->(u1: user{userID: " + otherUserID + "})")
+            _client.Connect();
+            int friend = _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND]->(u1: user{userID: " + otherUserID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return friend != 0;
         }
 
-        public static string GetFriendType(int userID, int otherUserID)
+        public string GetFriendType(int userID, int otherUserID)
         {
             // Auto increment Id
             if (IsFriend(userID, otherUserID))
@@ -78,52 +103,52 @@ public static void InsertReportPost(ReportPost reportPost)
                 return "friend";
             }
 
-            Client.Connect();
-            int friend = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]->(u1: user{userID: " + otherUserID + "})")
+            _client.Connect();
+            int friend = _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]->(u1: user{userID: " + otherUserID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return friend != 0 ? "request" : "none";
         }
 
-        public static bool IsDislike(int postID, int userID)
+        public bool IsDislike(int postID, int userID)
         {
             // Auto increment Id
 
-            Client.Connect();
-            int dislike = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:DISLIKE]->(p:post {postID:" + postID + "})")
+            _client.Connect();
+            int dislike = _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:DISLIKE]->(p:post {postID:" + postID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return dislike != 0;
         }
 
-        public static bool IsWish(int postID, int userID)
+        public bool IsWish(int postID, int userID)
         {
-            Client.Connect();
-            int wish = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:post {postID:" + postID + "})")
+            _client.Connect();
+            int wish = _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:post {postID:" + postID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return wish != 0;
         }
 
-        public static bool IsInWishist(int placeID, int userID)
+        public bool IsInWishist(int placeID, int userID)
         {
-            Client.Connect();
-            int wish = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[r:WISH]->(p:place {placeID:" + placeID + "})")
+            _client.Connect();
+            int wish = _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[r:WISH]->(p:place {placeID:" + placeID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.FirstOrDefault();
 
             return wish != 0;
         }
 
-        public static bool AddToWishlist(int placeID, int userID)
+        public bool AddToWishlist(int placeID, int userID)
         {
             try
             {
-                Client.Connect();
-                Client.Cypher.Match("(u:user {userID:" + userID + "}), (p:place {placeID:" + placeID + "})")
+                _client.Connect();
+                _client.Cypher.Match("(u:user {userID:" + userID + "}), (p:place {placeID:" + placeID + "})")
                                     .Create("(u)-[:WISH]->(p)")
                                     .ExecuteWithoutResults();
             }
@@ -135,12 +160,12 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool RemoveFromWishlist(int placeID, int userID)
+        public bool RemoveFromWishlist(int placeID, int userID)
         {
             try
             {
-                Client.Connect();
-                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:place {placeID:" + placeID + "})")
+                _client.Connect();
+                _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:place {placeID:" + placeID + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -152,27 +177,27 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool AddToWishList(int postID, int userID)
+        public bool AddToWishList(int postID, int userID)
         {
-            Client.Connect();
+            _client.Connect();
 
             NodeReference<Post> postRef = GetNodePost(postID).Reference;
             Node<User> userNode = GetNodeUser(userID);
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserWishPostRelationship(postRef));
+                _client.CreateRelationship(userRef, new UserWishPostRelationship(postRef));
                 return true;
             }
             return false;
         }
 
-        public static bool RemoveFromWishList(int postID, int userID)
+        public bool RemoveFromWishList(int postID, int userID)
         {
             try
             {
-                Client.Connect();
-                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:post {postID:" + postID + "})")
+                _client.Connect();
+                _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:WISH]->(p:post {postID:" + postID + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -183,7 +208,8 @@ public static void InsertReportPost(ReportPost reportPost)
             }
             return true;
         }
-        public static int CountUserComment(int postID)
+
+        public int CountUserComment(int postID)
         {
             /*
              * Match (p:post {postID:@postID})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
@@ -191,8 +217,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:COMMENTED]-(u:user)")
+                _client.Connect();
+                return _client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:COMMENTED]-(u:user)")
                                 .Return<int>("COUNT(distinct u)")
                                 .Results.Single();
             }
@@ -203,7 +229,7 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static int CountComment(int postID)
+        public int CountComment(int postID)
         {
             /*
              * match(p:post {postID:@postID})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)
@@ -211,8 +237,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
+                _client.Connect();
+                return _client.Cypher.Match("(p:post {postID:" + postID + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
                                 .Return<int>("Length(collect(c1)) as CommentNumber")
                                 .Results.Single();
             }
@@ -223,7 +249,7 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static int CountDislike(int postID)
+        public int CountDislike(int postID)
         {
             /*
              * Match (p:post {postID:@postID})<-[r:DISLIKE]-(u:user)
@@ -231,8 +257,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:DISLIKE]-(u:user)")
+                _client.Connect();
+                return _client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:DISLIKE]-(u:user)")
                                 .Return<int>("COUNT(distinct r)")
                                 .Results.Single();
             }
@@ -243,7 +269,7 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static int CountLike(int postID)
+        public int CountLike(int postID)
         {
             /*
              * Match (p:post {postID:@postID})<-[r:LIKE]-(u:user)
@@ -251,8 +277,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                return Client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:LIKE]-(u:user)")
+                _client.Connect();
+                return _client.Cypher.Match("(p:post {postID:" + postID + "})<-[r:LIKE]-(u:user)")
                                 .Return<int>("COUNT(DISTINCT r)")
                                 .Results.Single();
             }
@@ -263,7 +289,7 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static int CountMutualFriend(int userID, int otherUserID)
+        public int CountMutualFriend(int userID, int otherUserID)
         {
             /*
              * optional match (u:user {userID:@userID})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:@otherUserID})
@@ -272,8 +298,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                return Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserID + "})")
+                _client.Connect();
+                return _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserID + "})")
                                 .With("count(DISTINCT mf) AS mutualFriends")
                                 .Return<int>("mutualFriends")
                                 .Results.Single();
@@ -285,12 +311,12 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static int FindLike(int userID, int postID)
+        public int FindLike(int userID, int postID)
         {
             try
             {
-                Client.Connect();
-                return Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:LIKE]->(p:post {postID:" + postID + "})")
+                _client.Connect();
+                return _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:LIKE]->(p:post {postID:" + postID + "})")
                                 .Return<int>("COUNT(r)")
                                 .Results.Single();
             }
@@ -301,12 +327,12 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static int FindDislike(int userID, int postID)
+        public int FindDislike(int userID, int postID)
         {
             try
             {
-                Client.Connect();
-                return Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:DISLIKE]->(p:post {postID:" + postID + "})")
+                _client.Connect();
+                return _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:DISLIKE]->(p:post {postID:" + postID + "})")
                                 .Return<int>("COUNT(r)")
                                 .Results.Single();
             }
@@ -317,7 +343,7 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static bool DeleteLike(int userID, int postID)
+        public bool DeleteLike(int userID, int postID)
         {
             /**
              * Match(u:user {userID:@userID})-[r:like]->(p:post {postID:@postID})
@@ -325,8 +351,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:LIKE]->(p:post {postID:" + postID + "})")
+                _client.Connect();
+                _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:LIKE]->(p:post {postID:" + postID + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
             }
@@ -338,7 +364,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool DeleteDislike(int userID, int postID)
+        public bool DeleteDislike(int userID, int postID)
         {
             /**
              * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
@@ -346,8 +372,8 @@ public static void InsertReportPost(ReportPost reportPost)
              */
             try
             {
-                Client.Connect();
-                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:DISLIKE]->(p:post {postID:" + postID + "})")
+                _client.Connect();
+                _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:DISLIKE]->(p:post {postID:" + postID + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
             }
@@ -359,65 +385,65 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool InsertDislike(int userID, int postID)
+        public bool InsertDislike(int userID, int postID)
         {
             Node<User> userNode = GetNodeUser(userID);
 
-            NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
+            NodeReference<Post> postRef = _client.Cypher.Match("(p:post {postID:" + postID + "})")
                                             .Return<Node<Post>>("p")
                                             .Results.Single()
                                             .Reference;
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
+                _client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
                 return true;
             }
             return false;
         }
 
-        public static bool InsertLike(int userID, int postID)
+        public bool InsertLike(int userID, int postID)
         {
             Node<User> userNode = GetNodeUser(userID);
 
-            NodeReference<Post> postRef = Client.Cypher.Match("(p:post {postID:" + postID + "})")
+            NodeReference<Post> postRef = _client.Cypher.Match("(p:post {postID:" + postID + "})")
                                             .Return<Node<Post>>("p")
                                             .Results.Single()
                                             .Reference;
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
+                _client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
                 return true;
             }
             return false;
         }
 
-        public static Node<User> GetNodeUser(int id)
+        public Node<User> GetNodeUser(int id)
         {
-            Client.Connect();
-            return Client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
+            _client.Connect();
+            return _client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
         }
 
-        public static Node<Post> GetNodePost(int id)
+        public Node<Post> GetNodePost(int id)
         {
-            Client.Connect();
-            return Client.Cypher.Match("(p:post {postID: " + id + "})").Return<Node<Post>>("p").Results.FirstOrDefault();
+            _client.Connect();
+            return _client.Cypher.Match("(p:post {postID: " + id + "})").Return<Node<Post>>("p").Results.FirstOrDefault();
         }
 
-        public static User GetUser(int typeId, string email)
+        public User GetUser(int typeId, string email)
         {
-            Client.Connect();
-            var user = Client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
+            _client.Connect();
+            var user = _client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
         }
 
-        public static int GetGlobalIncrementId()
+        public int GetGlobalIncrementId()
         {
-            Client.Connect();
-            var uniqueId = Client.Cypher.Merge("(id:GlobalUniqueId)")
+            _client.Connect();
+            var uniqueId = _client.Cypher.Merge("(id:GlobalUniqueId)")
                             .OnCreate().Set("id.count = 1")
                             .OnMatch().Set("id.count = id.count + 1")
                             .Return<int>("id.count AS uniqueID")
@@ -426,10 +452,10 @@ public static void InsertReportPost(ReportPost reportPost)
             return uniqueId;
         }
 
-        public static int GetActivityIncrementId()
+        public int GetActivityIncrementId()
         {
-            Client.Connect();
-            var uniqueId = Client.Cypher.Merge("(id:ActivityUniqueId)")
+            _client.Connect();
+            var uniqueId = _client.Cypher.Merge("(id:ActivityUniqueId)")
                             .OnCreate().Set("id.count = 1")
                             .OnMatch().Set("id.count = id.count + 1")
                             .Return<int>("id.count AS uniqueID")
@@ -438,7 +464,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return uniqueId;
         }
 
-        public static User FindUser(Comment comment)
+        public User FindUser(Comment comment)
         {
             /*
                  * Query:
@@ -449,14 +475,14 @@ public static void InsertReportPost(ReportPost reportPost)
                     return u
                  */
             User user = null;
-            Client.Connect();
-            user = Client.Cypher.Match("(u:user)-[:CREATE]->(c:comment{commentID:" + comment.commentID + "})")
+            _client.Connect();
+            user = _client.Cypher.Match("(u:user)-[:CREATE]->(c:comment{commentID:" + comment.commentID + "})")
                             .Return<User>("u")
                             .Results.Single();
             return user;
         }
 
-        public static User FindUser(int id)
+        public User FindUser(int id)
         {
             /*
                  * Query:
@@ -469,8 +495,8 @@ public static void InsertReportPost(ReportPost reportPost)
             User user = null;
             try
             {
-                Client.Connect();
-                user = Client.Cypher.Match("(u:user {userID:" + id + "})")
+                _client.Connect();
+                user = _client.Cypher.Match("(u:user {userID:" + id + "})")
                                 .Return<User>("u")
                                 .Results.Single();
             }
@@ -482,7 +508,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return user;
         }
 
-        public static User FindUser(string email)
+        public User FindUser(string email)
         {
             /*
                  * Query:
@@ -495,8 +521,8 @@ public static void InsertReportPost(ReportPost reportPost)
             User user = null;
             try
             {
-                Client.Connect();
-                user = Client.Cypher.Match("(u:user {email:'" + email + "'})")
+                _client.Connect();
+                user = _client.Cypher.Match("(u:user {email:'" + email + "'})")
                                 .Return<User>("u")
                                 .Results.Single();
             }
@@ -508,7 +534,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return user;
         }
 
-        public static List<User> FindFriend(User user)
+        public List<User> FindFriend(User user)
         {
 
             /*
@@ -520,15 +546,15 @@ public static void InsertReportPost(ReportPost reportPost)
                     return u2;
                  */
             List<User> listUser = new List<User>();
-            Client.Connect();
-            listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:FRIEND]->(u2:user)")
+            _client.Connect();
+            listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:FRIEND]->(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
             listUser.RemoveAll(item => item == null);
             return listUser;
         }
 
-        public static List<User> SuggestFriend(int userID, int limit = 5)
+        public List<User> SuggestFriend(int userID, int limit = 5)
         {
 
             /*
@@ -544,8 +570,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     RETURN other
                  */
             List<User> listUser = new List<User>();
-            Client.Connect();
-            listUser = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)")
+            _client.Connect();
+            listUser = _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)")
                             .Where("NOT(u-[:FRIEND]->other)")
                             .With("other,count(DISTINCT mf) AS mutualFriends")
                             .OrderByDescending("mutualFriends")
@@ -561,31 +587,32 @@ public static void InsertReportPost(ReportPost reportPost)
             }
             return listUser;
         }
-        public static bool IsVisitedPlace(int userID, int placeID)
+
+        public bool IsVisitedPlace(int userID, int placeID)
         {
             // Auto increment Id
 
-            Client.Connect();
-            int relation = Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:VISITED]->(p:place {placeID:" + placeID + "})")
+            _client.Connect();
+            int relation = _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:VISITED]->(p:place {placeID:" + placeID + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
             return relation != 0;
         }
 
-        public static int NumberOfPost(int placeID)
+        public int NumberOfPost(int placeID)
         {
             // Auto increment Id
 
-            Client.Connect();
-            int count = Client.Cypher.Match("(po:post)-[r:AT]->(pl:place {placeID:" + placeID + "})")
+            _client.Connect();
+            int count = _client.Cypher.Match("(po:post)-[r:AT]->(pl:place {placeID:" + placeID + "})")
                                    .Return<int>("COUNT(Distinct po)")
                                    .Results.Single();
 
             return count;
         }
 
-        public static List<Place> SuggestPlace(int limit = 5)
+        public List<Place> SuggestPlace(int limit = 5)
         {
 
             /*
@@ -598,8 +625,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     return pl
                  */
             List<Place> listPlace = new List<Place>();
-            Client.Connect();
-            listPlace = Client.Cypher.OptionalMatch("(pl:place)<-[:AT]-(po:post)")
+            _client.Connect();
+            listPlace = _client.Cypher.OptionalMatch("(pl:place)<-[:AT]-(po:post)")
                             .With("count(DISTINCT po) as number, pl, po")
                             .OrderByDescending("number")
                             .ReturnDistinct<Place>("pl")
@@ -610,7 +637,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPlace;
         }
 
-        public static List<User> SuggestNonRelationshipUser(int userID, int limit = 5)
+        public List<User> SuggestNonRelationshipUser(int userID, int limit = 5)
         {
 
             /*
@@ -624,8 +651,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     limit @limit
                  */
             List<User> listUser = new List<User>();
-            Client.Connect();
-            listUser = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(u1:user), (other:user)")
+            _client.Connect();
+            listUser = _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:FRIEND]->(u1:user), (other:user)")
                             .Where("NOT(u-[:FRIEND]->other) AND NOT(u1-[:FRIEND]->other)")
                             .ReturnDistinct<User>("other")
                             .Limit(limit)
@@ -634,7 +661,7 @@ public static void InsertReportPost(ReportPost reportPost)
 
             if (listUser.Count == 0)
             {
-                listUser = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "}), (other:user)")
+                listUser = _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "}), (other:user)")
                             .Where("u.userID <> other.userID")
                             .ReturnDistinct<User>("other")
                             .Limit(limit)
@@ -645,7 +672,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listUser;
         }
 
-        public static List<User> FindFriend(int userID)
+        public List<User> FindFriend(int userID)
         {
 
             /*
@@ -657,15 +684,15 @@ public static void InsertReportPost(ReportPost reportPost)
                     return u2;
                  */
             List<User> listUser = new List<User>();
-            Client.Connect();
-            listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})-[:FRIEND]-(u2:user)")
+            _client.Connect();
+            listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})-[:FRIEND]-(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
             listUser.RemoveAll(item => item == null);
             return listUser;
         }
 
-        public static List<Post> FindLimitWishlist(User user, int skip, int limit)
+        public List<Post> FindLimitWishlist(User user, int skip, int limit)
         {
             /*
                  * Query:
@@ -677,8 +704,8 @@ public static void InsertReportPost(ReportPost reportPost)
                    orderby p.dateCreated
                  */
             List<Post> listPost = new List<Post>();
-            Client.Connect();
-            listPost = Client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:WISH]->(p:post)")
+            _client.Connect();
+            listPost = _client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:WISH]->(p:post)")
                             .ReturnDistinct<Post>("p")
                             .OrderByDescending("p.dateCreated")
                             .Skip(skip)
@@ -688,69 +715,66 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPost;
         }
 
-        public static void InsertPost(User user, Post post, List<Photo> photos, Place place, Video video)
+        public void InsertPost(User user, Post post, List<Photo> photos, Place place, Video video)
         {
             // Auto increment Id.
-            post.postID = GetGlobalIncrementId();
+            SpecifyIds(ref post, ref photos, ref place, ref video);
+
+            _client.Connect();
+
+            _client.Cypher.Create("(p:post {newPost})")
+                         .WithParam("newPost", post)
+                         .ExecuteWithoutResults();
+
             foreach (var photo in photos)
             {
-                photo.photoID = GetGlobalIncrementId();
+                _client.Cypher.Create("(p:photo {newPhoto})")
+                             .WithParam("newPhoto", photo)
+                             .ExecuteWithoutResults();
             }
 
-            place.placeID = GetGlobalIncrementId();
-            video.videoID = GetGlobalIncrementId();
+            _client.Cypher.Create("(p:place {newPlace})")
+                         .WithParam("newPlace", place)
+                         .ExecuteWithoutResults();
 
-            Client.Connect();
-
-            NodeReference<Post> postRef = Client.Cypher.Create("(p:post {newPost})")
-                                            .WithParam("newPost", post)
-                                            .Return<Node<Post>>("p")
-                                            .Results.Single()
-                                            .Reference;
-
-            List<NodeReference<Photo>> photosRef = new List<NodeReference<Photo>>();
-            foreach (var photo in photos)
-            {
-                photosRef.Add(Client.Cypher.Create("(p:photo {newPhoto})")
-                                            .WithParam("newPhoto", photo)
-                                            .Return<Node<Photo>>("p")
-                                            .Results.Single()
-                                            .Reference);
-            }
-
-            NodeReference<Place> placeRef = Client.Cypher.Create("(p:place {newPlace})")
-                                            .WithParam("newPlace", place)
-                                            .Return<Node<Place>>("p")
-                                            .Results.Single()
-                                            .Reference;
-
-            NodeReference<Place> videoRef = Client.Cypher.Create("(v:video {newVideo})")
-                                            .WithParam("newVideo", video)
-                                            .Return<Node<Place>>("v")
-                                            .Results.Single()
-                                            .Reference;
+            _client.Cypher.Create("(v:video {newVideo})")
+                         .WithParam("newVideo", video)
+                         .ExecuteWithoutResults();
 
             Node<User> userNode = GetNodeUser(user.userID);
             if (userNode != null)
             {
-                var userRef = userNode.Reference;
+                var existingPlace = FindExistingPlace(place);
 
-                foreach (var photoRef in photosRef)
+                if (existingPlace == null)
                 {
-                    Client.CreateRelationship(postRef, new PostHasPhotoRelationship(photoRef));
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + place.placeID + "})")
+                             .Create("(po)-[r:AT]->(pl)")
+                             .ExecuteWithoutResults();
+                }
+                else
+                {
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + existingPlace.placeID + "})")
+                                 .Create("(po)-[r:AT]->(pl)")
+                                 .ExecuteWithoutResults();
                 }
 
-                Client.CreateRelationship(postRef, new PostAtPlaceRelationship(placeRef));
-                Client.CreateRelationship(postRef, new PostHasVideoRelationship(videoRef));
+                _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (vi:video {videoID: " + video.videoID + "})")
+                             .Create("(po)-[r:HAS]->(vi)")
+                             .ExecuteWithoutResults();
 
                 foreach (var photo in photos)
                 {
-                    Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pt:photo {photoID: " + photo.photoID + "})")
+                                 .Create("(po)-[r:HAS]->(pt)")
+                                 .ExecuteWithoutResults();
+
+                    _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
                                  .Create("(u)-[r:HAS]->(p)")
                                  .ExecuteWithoutResults();
                 }
 
-                Client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
+                _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
                              .Create("(u)-[r:VISITED]->(p)")
                              .ExecuteWithoutResults();
 
@@ -765,20 +789,20 @@ public static void InsertReportPost(ReportPost reportPost)
                  *  else do the following step:
                  *      1. CREATE LATEST_POST relationship from user to newPost
                  */
-                int oldPost = Client.Cypher.Match("(u:user{userID:" + user.userID + "})-[:LATEST_POST]->(p:post)")
+                int oldPost = _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[:LATEST_POST]->(p:post)")
                                     .Return<int>("COUNT (p)")
                                     .Results.Single();
 
                 if (oldPost == 0)
                 {
                     // CREATE New LATEST_POST
-                    Client.Cypher.Match("(u:user{userID:" + user.userID + "}), (p1:post{postID:" + post.postID + "})")
+                    _client.Cypher.Match("(u:user{userID:" + user.userID + "}), (p1:post{postID:" + post.postID + "})")
                                     .Create("(u)-[:LATEST_POST]->(p1)")
                                     .ExecuteWithoutResults();
                 }
                 else
                 {
-                    Client.Cypher.Match("(u:user{userID:" + user.userID + "})-[r:LATEST_POST]->(p:post), (p1:post{postID:" + post.postID + "})")
+                    _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[r:LATEST_POST]->(p:post), (p1:post{postID:" + post.postID + "})")
                                     .Delete("r")
                                     .Create("(u)-[:LATEST_POST]->(p1)")
                                     .Create("(p1)-[:PREV_POST]->(p)")
@@ -787,21 +811,33 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static User SearchUser(Post post)
+        private void SpecifyIds(ref Post post, ref List<Photo> photos, ref Place place, ref Video video)
+        {
+            post.postID = GetGlobalIncrementId();
+            foreach (var photo in photos)
+            {
+                photo.photoID = GetGlobalIncrementId();
+            }
+
+            place.placeID = GetGlobalIncrementId();
+            video.videoID = GetGlobalIncrementId();
+        }
+
+        public User SearchUser(int postId)
         {
             /**
              * match (p:post{postID:1003})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
                 return u
              */
             User user = null;
-            Client.Connect();
-            user = Client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
+            _client.Connect();
+            user = _client.Cypher.Match("(p:post{postID:" + postId + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
                             .ReturnDistinct<User>("u")
                             .Results.Single();
             return user;
         }
 
-        public static List<Comment> FindComment(Post post)
+        public List<Comment> FindComment(Post post)
         {
             /*
                  * Query:
@@ -812,8 +848,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     return c1
                  */
             List<Comment> list = new List<Comment>();
-            Client.Connect();
-            list = Client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+            _client.Connect();
+            list = _client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
                             .Return<Comment>("c1")
                             .OrderBy("c1.dateCreated")
                             .Results.ToList();
@@ -821,7 +857,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return list;
         }
 
-        public static List<Post> FindPostOfUser(User user)
+        public List<Post> FindPostOfUser(User user)
         {
             /*
                  * Query:
@@ -832,8 +868,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     return p1
                  */
             List<Post> listPost = new List<Post>();
-            Client.Connect();
-            listPost = Client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
+            _client.Connect();
+            listPost = _client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
                             .ReturnDistinct<Post>("p1")
                 //.OrderByDescending("p.dateCreated")
                             .Results.ToList();
@@ -841,7 +877,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPost;
         }
 
-        public static Photo FindPhoto(Post po)
+        public List<Photo> FindPhoto(int postId)
         {
 
             /*
@@ -853,18 +889,27 @@ public static void InsertReportPost(ReportPost reportPost)
                     return ph
                  */
 
-            Photo photo = null;
-            Client.Connect();
-            photo = Client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:HAS]->(ph:photo)")
+            _client.Connect();
+            return _client.Cypher.Match("(po:post {postID:" + postId + "})-[:HAS]->(ph:photo)")
                             .Return<Photo>("ph")
                             .OrderBy("ph.photoID")
                             .Results
-                            .ToList()
-                            .First();
-            return photo;
+                            .ToList();
         }
 
-        public static User FindUser(Post post)
+        public Video FindVideo(int postId)
+        {
+            _client.Connect();
+
+            return _client.Cypher.Match("(po:post {postID:" + postId + "})-[:HAS]->(v:video)")
+                            .Return<Video>("v")
+                            .OrderBy("v.videoID")
+                            .Results
+                            .ToList()
+                            .FirstOrDefault();
+        }
+
+        public User FindUser(Post post)
         {
             /*
                  * Query:
@@ -875,14 +920,14 @@ public static void InsertReportPost(ReportPost reportPost)
                     return u
                  */
             User user = null;
-            Client.Connect();
-            user = Client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
+            _client.Connect();
+            user = _client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
                             .Return<User>("u")
                             .Results.Single();
             return user;
         }
 
-        public static List<Post> SearchAllPost()
+        public List<Post> SearchAllPost()
         {
 
             /*
@@ -896,8 +941,8 @@ public static void InsertReportPost(ReportPost reportPost)
                  */
 
             List<Post> listPost = null;
-            Client.Connect();
-            listPost = Client.Cypher.Match("(p:post)")
+            _client.Connect();
+            listPost = _client.Cypher.Match("(p:post)")
                             .Where("p.privacy='public'")
                             .Return<Post>("p")
                             .OrderByDescending("p.dateCreated")
@@ -906,7 +951,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPost;
         }
 
-        public static Place FindPlace(Post po)
+        public Place FindPlace(Post po)
         {
 
             /*
@@ -919,17 +964,26 @@ public static void InsertReportPost(ReportPost reportPost)
                  */
 
             Place place = null;
-            Client.Connect();
-            place = Client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:AT]->(pl:place)")
-                            .Return<Place>("pl")
-                            .OrderBy("pl.placeID")
-                            .Results
-                            .ToList()
-                            .First();
+            _client.Connect();
+            place = _client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:AT]->(pl:place)")
+                                 .Return<Place>("pl")
+                                 .OrderBy("pl.placeID")
+                                 .Results
+                                 .ToList()
+                                 .First();
             return place;
         }
 
-        public static List<Post> FindPostOfOtherUser(User currentUser, User otherUser)
+        public Place FindExistingPlace(Place place)
+        {
+            _client.Connect();
+            return _client.Cypher.Match("(pl:place {longitude: '" + place.longitude + "', latitude: '" + place.latitude +
+                                       "', name: '" + place.name + "'})")
+                                .Return<Place>("pl")
+                                .Results.FirstOrDefault();
+        }
+
+        public List<Post> FindPostOfOtherUser(User currentUser, User otherUser)
         {
             /*
                  * Query:
@@ -941,8 +995,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     return p1
                  */
             List<Post> listPost = null;
-            Client.Connect();
-            listPost = Client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {userID:" + currentUser.userID + "})")
+            _client.Connect();
+            listPost = _client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {userID:" + currentUser.userID + "})")
                             .Where("p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2)")
                             .ReturnDistinct<Post>("p1")
                 //.OrderByDescending("p.dateCreated")
@@ -951,7 +1005,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPost;
         }
 
-        public static List<Post> FindLimitPostFollowing(User user, int skip, int limit)
+        public List<Post> FindLimitPostFollowing(User user, int skip, int limit)
         {
             /*
                  * Query:
@@ -968,8 +1022,8 @@ public static void InsertReportPost(ReportPost reportPost)
                     return distinct p3
                  */
             List<Post> listPost = new List<Post>();
-            Client.Connect();
-            listPost = Client.Cypher.OptionalMatch("(u1:user{userID:" + user.userID + "})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)")
+            _client.Connect();
+            listPost = _client.Cypher.OptionalMatch("(u1:user{userID:" + user.userID + "})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)")
                             .OptionalMatch("(u1)-[:FRIEND]-(u2:user)-[:LATEST_POST]-(b:post)-[:PREV_POST*0..]-(p2:post)")
                             .With("collect(distinct p1) as list1, collect(distinct p2) as list2")
                             .Match("(p3:post)")
@@ -983,7 +1037,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPost;
         }
 
-        public static Post FindPost(int id, User user)
+        public Post FindPost(int id, User user)
         {
             /*
                  * Query:
@@ -996,13 +1050,13 @@ public static void InsertReportPost(ReportPost reportPost)
                     RETURN COUNT(c)
                  */
             Post p = null;
-            Client.Connect();
-            p = Client.Cypher.Match("(p:post {postID:" + id + "})")
+            _client.Connect();
+            p = _client.Cypher.Match("(p:post {postID:" + id + "})")
                             .ReturnDistinct<Post>("p")
                             .Results.SingleOrDefault();
             if (p == null || !p.privacy.Equals("public"))
             {
-                int path = Client.Cypher.Match("(u:user {userID:" + user.userID + "}),(p:post { postID: " + id + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
+                int path = _client.Cypher.Match("(u:user {userID:" + user.userID + "}),(p:post { postID: " + id + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
                             .ReturnDistinct<int>("COUNT(c)")
                             .Results.Single();
                 if (path != 0)
@@ -1017,7 +1071,7 @@ public static void InsertReportPost(ReportPost reportPost)
             }
         }
 
-        public static List<Post> SearchLimitPost(int skip, int limit)
+        public List<Post> SearchLimitPost(int skip, int limit)
         {
 
             /*
@@ -1031,8 +1085,8 @@ public static void InsertReportPost(ReportPost reportPost)
                  */
 
             List<Post> listPost = new List<Post>();
-            Client.Connect();
-            listPost = Client.Cypher.Match("(p:post)")
+            _client.Connect();
+            listPost = _client.Cypher.Match("(p:post)")
                             .Where("p.privacy='public'")
                             .Return<Post>("p")
                             .OrderByDescending("p.dateCreated")
@@ -1044,13 +1098,13 @@ public static void InsertReportPost(ReportPost reportPost)
             return listPost;
         }
 
-        public static bool InsertComment(int postID, Comment comment, int userID)
+        public bool InsertComment(int postID, Comment comment, int userID)
         {
             // Auto increment Id
             comment.commentID = GetGlobalIncrementId();
 
-            Client.Connect();
-            NodeReference<Comment> comRef = Client.Cypher.Create("(c:comment {newComment})").
+            _client.Connect();
+            NodeReference<Comment> comRef = _client.Cypher.Create("(c:comment {newComment})").
                         WithParam("newComment", comment)
                         .Return<Node<Comment>>("c")
                         .Results.Single().Reference;
@@ -1059,7 +1113,7 @@ public static void InsertReportPost(ReportPost reportPost)
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                Client.CreateRelationship(userRef, new UserCreateCommentRelationship(comRef));
+                _client.CreateRelationship(userRef, new UserCreateCommentRelationship(comRef));
                 /*
                  * Create Commented relationship
                  * 
@@ -1068,7 +1122,7 @@ public static void InsertReportPost(ReportPost reportPost)
                     create (u)-[r1:COMMENTED {dateCreated: '2015/07/23 08:05:03', activityID : 10280}]->(p)
                  */
                 User otherUser = FindUser(comment);
-                Client.Cypher.Match("(u:user{userID:" + otherUser.userID + "})-[r:COMMENTED]->(p:post{postID:" + postID + "})")
+                _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "})-[r:COMMENTED]->(p:post{postID:" + postID + "})")
                             .Delete("r")
                             .Create("(u)-[r1:COMMENTED {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', activityID : " + GetActivityIncrementId() + "}]->(p)")
                             .ExecuteWithoutResults();
@@ -1084,20 +1138,20 @@ public static void InsertReportPost(ReportPost reportPost)
                  *  else do the following step:
                  *      1. CREATE LATEST_COMMENT relationship from user to newPost
                  */
-                int oldComment = Client.Cypher.Match("(p:post{postID:" + postID + "})-[:LATEST_COMMENT]->(c:comment)")
+                int oldComment = _client.Cypher.Match("(p:post{postID:" + postID + "})-[:LATEST_COMMENT]->(c:comment)")
                                     .Return<int>("COUNT (c)")
                                     .Results.Single();
 
                 if (oldComment == 0)
                 {
                     // CREATE New LATEST_COMMENT
-                    Client.Cypher.Match("(p:post{postID:" + postID + "}), (c:comment{commentID:" + comment.commentID + "})")
+                    _client.Cypher.Match("(p:post{postID:" + postID + "}), (c:comment{commentID:" + comment.commentID + "})")
                                     .Create("(p)-[:LATEST_COMMENT]->(c)")
                                     .ExecuteWithoutResults();
                 }
                 else
                 {
-                    Client.Cypher.Match("(p:post{postID:" + postID + "})-[r:LATEST_COMMENT]->(c:comment), (c1:comment{commentID:" + comment.commentID + "})")
+                    _client.Cypher.Match("(p:post{postID:" + postID + "})-[r:LATEST_COMMENT]->(c:comment), (c1:comment{commentID:" + comment.commentID + "})")
                                     .Delete("r")
                                     .Create("(p)-[:LATEST_COMMENT]->(c1)")
                                     .Create("(c1)-[:PREV_COMMENT]->(c)")
@@ -1108,7 +1162,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return false;
         }
 
-        public static List<Notification> GetNotification(int userID, int activityID = 0, int limit = 5)
+        public List<Notification> GetNotification(int userID, int activityID = 0, int limit = 5)
         {
 
             /*
@@ -1132,8 +1186,8 @@ public static void InsertReportPost(ReportPost reportPost)
             {
                 limitActivity = "and m.activityID < " + activityID;
             }
-            Client.Connect();
-            listNotification = Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)")
+            _client.Connect();
+            listNotification = _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)")
                                             .With("p, u")
                                             .OptionalMatch("(p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)")
                                             .Where("u1.userID <> u.userID " + limitActivity)
@@ -1154,25 +1208,25 @@ public static void InsertReportPost(ReportPost reportPost)
             return listNotification;
         }
 
-        public static void ResetPassword(string email)
+        public void ResetPassword(string email)
         {
             /*
              * MATCH (n:user { email: '@email' })
                 n.password = @password
                 RETURN n
              */
-            Client.Connect();
-            Client.Cypher.Match("(n:user { email: '" + email + "' })")
+            _client.Connect();
+            _client.Cypher.Match("(n:user { email: '" + email + "' })")
                            .Set("n.password = 696969 RETURN n")
                            .ExecuteWithoutResults();
         }
 
-        public static bool EditProfile(User user)
+        public bool EditProfile(User user)
         {
-            Client.Connect();
+            _client.Connect();
             try
             {
-                Client.Cypher.Match("(n:user { userID: " + user.userID + "})")
+                _client.Cypher.Match("(n:user { userID: " + user.userID + "})")
                            .Set("n.firstName = '" + user.firstName + "'")
                            .Set("n.lastName = '" + user.lastName + "'")
                            .Set("n.address = '" + user.address + "'")
@@ -1190,12 +1244,12 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool EditComment(Comment comment)
+        public bool EditComment(Comment comment)
         {
-            Client.Connect();
+            _client.Connect();
             try
             {
-                Client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
+                _client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
                        .Set("c.dateCreated = '" + comment.dateCreated + "'")
                        .Set("c.content = '" + comment.content + "'")
                        .ExecuteWithoutResults();
@@ -1208,7 +1262,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool DeleteComment(int commentID, int userID)
+        public bool DeleteComment(int commentID, int userID)
         {
             /*
              * Delete Comment with the following step:
@@ -1220,18 +1274,18 @@ public static void InsertReportPost(ReportPost reportPost)
              *      - Delete this
              *      - Update the relation(Commented) of user -> post
              */
-            Client.Connect();
+            _client.Connect();
             try
             {
-                var prev = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
+                var prev = _client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
                     .Return<Comment>("c_prev")
                     .Results.SingleOrDefault();
 
-                var next = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
+                var next = _client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
                     .Return<Comment>("c_next")
                     .Results.SingleOrDefault();
 
-                var post = Client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
+                var post = _client.Cypher.OptionalMatch("(c:comment {commentID:" + commentID + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
                     .Return<Post>("p")
                     .Results.SingleOrDefault();
 
@@ -1239,7 +1293,7 @@ public static void InsertReportPost(ReportPost reportPost)
                 {
                     if (next != null)
                     {
-                        Client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
+                        _client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
                                 .Create("p-[:LATEST_COMMENT]->c")
                                 .ExecuteWithoutResults();
                     }
@@ -1248,51 +1302,54 @@ public static void InsertReportPost(ReportPost reportPost)
                 {
                     if (next != null)
                     {
-                        Client.Cypher.Match("(c:comment {commentID:" + prev.commentID + "}), (c1:comment {commentID: " + next.commentID + "})")
+                        _client.Cypher.Match("(c:comment {commentID:" + prev.commentID + "}), (c1:comment {commentID: " + next.commentID + "})")
                                 .Create("c-[:PREV_COMMENT]->c1")
                                 .ExecuteWithoutResults();
                     }
                 }
 
-                Client.Cypher.Match("(c:comment {commentID:" + commentID + "})-[r]-()")
+                _client.Cypher.Match("(c:comment {commentID:" + commentID + "})-[r]-()")
                                 .Delete("c,r")
                                 .ExecuteWithoutResults();
 
-                var newLast = Client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
-                    .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
-                    .Return<Comment>("c1")
-                    .OrderByDescending("c1.dateCreated")
-                    .Results.FirstOrDefault();
-
-                if (newLast == null)
+                if (post != null)
                 {
-                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
-                                .Delete("r")
-                                .ExecuteWithoutResults();
-                }
-                else
-                {
-                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
-                                .Set("r.dateCreated = '" + newLast.dateCreated + "'")
-                                .ExecuteWithoutResults();
-                }
+                    var newLast = _client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+                        .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
+                        .Return<Comment>("c1")
+                        .OrderByDescending("c1.dateCreated")
+                        .Results.FirstOrDefault();
 
+                    if (newLast == null)
+                    {
+                        _client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                                     .Delete("r")
+                                     .ExecuteWithoutResults();
+                    }
+                    else
+                    {
+                        _client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                                     .Set("r.dateCreated = '" + newLast.dateCreated + "'")
+                                     .ExecuteWithoutResults();
+                    }
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return false;
             }
+
             return true;
         }
 
-        public static Message GetLatestMessage(string conversationID)
+        public Message GetLatestMessage(string conversationID)
         {
-            Client.Connect();
+            _client.Connect();
             Message message = null;
             try
             {
-                message = Client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)")
+                message = _client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)")
                                         .Return<Message>("m")
                                         .Results.FirstOrDefault();
             }
@@ -1304,13 +1361,13 @@ public static void InsertReportPost(ReportPost reportPost)
             return message;
         }
 
-        public static List<Message> GetListMessage(string conversationID, int limit = 10)
+        public List<Message> GetListMessage(string conversationID, int limit = 10)
         {
-            Client.Connect();
+            _client.Connect();
             List<Message> listMessage = new List<Message>();
             try
             {
-                listMessage = Client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
+                listMessage = _client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationID + "' })-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
                                         .ReturnDistinct<Message>("m1")
                                         .Results.ToList();
                 listMessage.RemoveAll(item => item == null);
@@ -1323,7 +1380,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return listMessage;
         }
 
-        public static User FindUser(Message message)
+        public User FindUser(Message message)
         {
             /*
                  * Query:
@@ -1338,14 +1395,14 @@ public static void InsertReportPost(ReportPost reportPost)
             {
                 return user;
             }
-            Client.Connect();
-            user = Client.Cypher.OptionalMatch("(u:user)-[:CREATE]->(m:message{messageID:" + message.messageID + "})")
+            _client.Connect();
+            user = _client.Cypher.OptionalMatch("(u:user)-[:CREATE]->(m:message{messageID:" + message.messageID + "})")
                             .Return<User>("u")
                             .Results.FirstOrDefault();
             return user;
         }
 
-        public static Message CreateMessage(string conversationID, string content, int userID, int otherID)
+        public Message CreateMessage(string conversationID, string content, int userID, int otherID)
         {
             /*
                  * Query:
@@ -1367,11 +1424,11 @@ public static void InsertReportPost(ReportPost reportPost)
                  */
             Message message = null;
             Conversation conversation = null;
-            Client.Connect();
+            _client.Connect();
 
             try
             {
-                conversation = Client.Cypher.OptionalMatch("(c:conversation {conversationID:'" + conversationID + "'})")
+                conversation = _client.Cypher.OptionalMatch("(c:conversation {conversationID:'" + conversationID + "'})")
                                         .Return<Conversation>("c")
                                         .Results.FirstOrDefault();
                 message = new Message();
@@ -1379,7 +1436,7 @@ public static void InsertReportPost(ReportPost reportPost)
                 message.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                 message.messageID = GetGlobalIncrementId();
 
-                Client.Cypher.Create("(m:message {newMessage})")
+                _client.Cypher.Create("(m:message {newMessage})")
                                     .WithParam("newMessage", message)
                                     .ExecuteWithoutResults();
 
@@ -1389,11 +1446,11 @@ public static void InsertReportPost(ReportPost reportPost)
                     conversation.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                     conversation.conversationID = conversationID;
 
-                    Client.Cypher.Create("(c:conversation {newConversation})")
+                    _client.Cypher.Create("(c:conversation {newConversation})")
                                         .WithParam("newConversation", conversation)
                                         .ExecuteWithoutResults();
 
-                    Client.Cypher.Match("(c:conversation {conversationID: '" + conversationID + "'}), (u:user {userID:" + userID + "}), (u1:user {userID:" + otherID + "}), (m:message {messageID:" + message.messageID + "})")
+                    _client.Cypher.Match("(c:conversation {conversationID: '" + conversationID + "'}), (u:user {userID:" + userID + "}), (u1:user {userID:" + otherID + "}), (m:message {messageID:" + message.messageID + "})")
                                         .Create("u-[:BELONG_TO]->c")
                                         .Create("u1-[:BELONG_TO]->c")
                                         .Create("c-[:LATEST_MESSAGE]->m")
@@ -1403,7 +1460,7 @@ public static void InsertReportPost(ReportPost reportPost)
                 }
                 else
                 {
-                    Client.Cypher.OptionalMatch("(c:conversation {conversationID: '" + conversationID + "'})-[r:LATEST_MESSAGE]->(m1:message), (u:user {userID:" + userID + "}), (m:message {messageID:" + message.messageID + "})")
+                    _client.Cypher.OptionalMatch("(c:conversation {conversationID: '" + conversationID + "'})-[r:LATEST_MESSAGE]->(m1:message), (u:user {userID:" + userID + "}), (m:message {messageID:" + message.messageID + "})")
                                         .Delete("r")
                                         .Create("c-[:LATEST_MESSAGE]->m")
                                         .Create("m-[:PREV_MESSAGE]->m1")
@@ -1420,12 +1477,12 @@ public static void InsertReportPost(ReportPost reportPost)
             return message;
         }
 
-        public static bool SendRequestFriend(int userID, int otherUserID)
+        public bool SendRequestFriend(int userID, int otherUserID)
         {
-            Client.Connect();
+            _client.Connect();
             try
             {
-                Client.Cypher.Match("(u:user {userID:" + userID + "}), (u1:user {userID:" + otherUserID + "})")
+                _client.Cypher.Match("(u:user {userID:" + userID + "}), (u1:user {userID:" + otherUserID + "})")
                                     .Create("u-[:FRIEND_REQUEST {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'}]->u1")
                                     .ExecuteWithoutResults();
             }
@@ -1437,12 +1494,12 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool DeclineRequestFriend(int userID, int otherUserID)
+        public bool DeclineRequestFriend(int userID, int otherUserID)
         {
-            Client.Connect();
+            _client.Connect();
             try
             {
-                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserID + "})")
+                _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserID + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -1454,17 +1511,17 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool AddFriend(int userID, int otherUserID)
+        public bool AddFriend(int userID, int otherUserID)
         {
-            Client.Connect();
+            _client.Connect();
             try
             {
-                Client.Cypher.Match("(u:user {userID:" + userID + "}), (u1:user {userID:" + otherUserID + "})")
+                _client.Cypher.Match("(u:user {userID:" + userID + "}), (u1:user {userID:" + otherUserID + "})")
                                     .Create("u-[:FRIEND]->u1")
                                     .Create("u1-[:FRIEND]->u")
                                     .ExecuteWithoutResults();
 
-                Client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserID + "})")
+                _client.Cypher.OptionalMatch("(u:user {userID:" + userID + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserID + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -1476,12 +1533,12 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static bool Unfriend(int userID, int otherUserID)
+        public bool Unfriend(int userID, int otherUserID)
         {
-            Client.Connect();
+            _client.Connect();
             try
             {
-                Client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND]-(u1:user {userID:" + otherUserID + "})")
+                _client.Cypher.Match("(u:user {userID:" + userID + "})-[r:FRIEND]-(u1:user {userID:" + otherUserID + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -1493,7 +1550,7 @@ public static void InsertReportPost(ReportPost reportPost)
             return true;
         }
 
-        public static List<User> GetListFriendRequest(int userID)
+        public List<User> GetListFriendRequest(int userID)
         {
 
             /*
@@ -1505,70 +1562,28 @@ public static void InsertReportPost(ReportPost reportPost)
                     return u2;
                  */
             List<User> listUser = null;
-            Client.Connect();
-            listUser = Client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})<-[:FRIEND_REQUEST]-(u2:user)")
+            _client.Connect();
+            listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + userID + "})<-[:FRIEND_REQUEST]-(u2:user)")
                             .ReturnDistinct<User>("u2")
                             .Results.ToList();
             listUser.RemoveAll(item => item == null);
             return listUser;
         }
 
-        public static bool DeletePost(int postId)
+        public bool DeletePost(int postId)
         {
-            DeleteRelatedPhotos(postId);
+            _client.Connect();
+            User user = SearchUser(postId);
+
+            DeleteRelatedPhotosAndRelationships(postId, user.userID);
+            DeletePlaceRelationship(postId);
 
             try
             {
-                var prev = Client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})<-[:PREV_POST*1..1]-(p_prev:post)")
-                    .Return<Comment>("p_prev")
-                    .Results.SingleOrDefault();
-
-                var next = Client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})-[:PREV_POST*1..1]->(p_next:post)")
-                    .Return<Comment>("p_next")
-                    .Results.SingleOrDefault();
-
-                if (prev == null)
-                {
-                    if (next != null)
-                    {
-                        Client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
-                                .Create("p-[:LATEST_COMMENT]->c")
-                                .ExecuteWithoutResults();
-                    }
-                }
-                else
-                {
-                    if (next != null)
-                    {
-                        Client.Cypher.Match("(c:comment {commentID:" + prev.commentID + "}), (c1:comment {commentID: " + next.commentID + "})")
-                                .Create("c-[:PREV_COMMENT]->c1")
-                                .ExecuteWithoutResults();
-                    }
-                }
-
-                Client.Cypher.Match("(c:comment {commentID:" + commentID + "})-[r]-()")
-                                .Delete("c,r")
-                                .ExecuteWithoutResults();
-
-                var newLast = Client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
-                    .Where("(:user {userID:" + userID + "})-[:CREATE]->(c1)")
-                    .Return<Comment>("c1")
-                    .OrderByDescending("c1.dateCreated")
-                    .Results.FirstOrDefault();
-
-                if (newLast == null)
-                {
-                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
-                                .Delete("r")
-                                .ExecuteWithoutResults();
-                }
-                else
-                {
-                    Client.Cypher.OptionalMatch("(u:user {userID: " + userID + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
-                                .Set("r.dateCreated = '" + newLast.dateCreated + "'")
-                                .ExecuteWithoutResults();
-                }
-
+                //TODO: Remove likes, dislike
+                DeleteCommentsAndRelationship(postId);
+                RebuildPostsChainFlow(user.userID, postId);
+                DeletePostAndRelationships(postId);
             }
             catch (Exception e)
             {
@@ -1576,18 +1591,77 @@ public static void InsertReportPost(ReportPost reportPost)
                 return false;
             }
 
-            Client.Cypher.OptionalMatch("(p:Post {postID: " + postId + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
-                         .Delete("c1")
-                         .ExecuteWithoutResults();
-
             return true;
         }
+        #region DELETE POST HELPERS
 
-        private static void DeleteRelatedPhotos(int postId)
+        private void DeleteCommentsAndRelationship(int postId)
         {
-            Client.Cypher.OptionalMatch("(p:Post {postID: " + postId + "})-[r:HAS]-(pt:Photo)")
-                .Delete("r, pt")
+            _client.Cypher.Match("(post{postID: " + postId + "})-[lcr:LATEST_COMMENT]->(lc:comment)-[pcrs:PREV_COMMENT*]->(pc:comment), ()-[ccrl:CREATE]->lc,()-[ccrp:CREATE]->pc")
+                          .ForEach("(pcr IN pcrs| DELETE pcr)")
+                         .Delete("lcr, ccrl, ccrp, lc, pc")
+                         .ExecuteWithoutResults();
+        }
+
+        private void DeletePostAndRelationships(int postId)
+        {
+            _client.Cypher.Match("(p:post {postID:" + postId + "})-[r]-()")
+                .Delete("p,r")
                 .ExecuteWithoutResults();
         }
+
+        private void RebuildPostsChainFlow(int userId, int postId)
+        {
+            var prev = FindPrevPost(postId);
+            var next = FindNextPost(postId);
+
+            if (prev == null)
+            {
+                if (next != null)
+                {
+                    _client.Cypher.Match("(u:user {userID:" + userId + "}), (p:post {postID: " + next.postID + "})")
+                        .Create("(u)-[:LATEST_POST]->(p)")
+                        .ExecuteWithoutResults();
+                }
+            }
+            else
+            {
+                if (next != null)
+                {
+                    _client.Cypher.Match("(pp:post {postID:" + prev.postID + "}), (pn:post {postID: " + next.postID + "})")
+                        .Create("pp-[:PREV_POST]->pn")
+                        .ExecuteWithoutResults();
+                }
+            }
+        }
+
+        private Post FindNextPost(int postId)
+        {
+            return _client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})-[:PREV_POST*1..1]->(p_next:post)")
+                .Return<Post>("p_next")
+                .Results.SingleOrDefault();
+        }
+
+        private Post FindPrevPost(int postId)
+        {
+            return _client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})<-[:PREV_POST*1..1]-(p_prev:post)")
+                .Return<Post>("p_prev")
+                .Results.SingleOrDefault();
+        }
+
+        private void DeletePlaceRelationship(int postId)
+        {
+            _client.Cypher.Match("(post{postID: " + postId + "})-[r1:AT]->(place)<-[r2:VISITED]-(user)")
+                         .Delete("r1, r2")
+                         .ExecuteWithoutResults();
+        }
+
+        private void DeleteRelatedPhotosAndRelationships(int postId, int userId)
+        {
+            _client.Cypher.OptionalMatch("(p:Post {postID: " + postId + "})-[r1:HAS]-(pt:Photo)<-[r2:HAS]-(u:User {userID: " + userId + "})")
+                .Delete("r1, r2, pt")
+                .ExecuteWithoutResults();
+        }
+        #endregion
     }
 }

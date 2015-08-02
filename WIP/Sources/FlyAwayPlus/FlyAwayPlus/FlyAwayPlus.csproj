@@ -248,8 +248,8 @@
     </Compile>
     <Compile Include="Helpers\FAPConstants.cs" />
     <Compile Include="Helpers\DateHelpers.cs" />
-    <Compile Include="Helpers\FapRelationships.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
+    <Compile Include="Helpers\SingletonBase.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Hubs\ChatHub.cs" />

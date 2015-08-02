@@ -6,7 +6,6 @@
 
     var setBlocksit = function () {
         var conWidth = $(".blog-landing").width();
-        //my container width
         var gridwidth = 212;
         //alert(conWidth);
         var col = conWidth / gridwidth;

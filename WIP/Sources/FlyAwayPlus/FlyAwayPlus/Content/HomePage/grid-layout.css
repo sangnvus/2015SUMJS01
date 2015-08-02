@@ -156,12 +156,9 @@
 }
 /*#post-time*/
 
-.user-info #post-list-post-option:hover {
-    color: #A92733
-}
-
 .user-info .post-list-post-option:hover {
     margin-top: -20px;
+    color: #A92733
 }
 
 .btn-circle.btn-lg {

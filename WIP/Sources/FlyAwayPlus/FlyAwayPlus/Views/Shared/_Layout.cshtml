@@ -9,7 +9,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/Scripts/jquery.validate.js")
     @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
-    <script src="/signalr/hubs"></script>
 
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/bootflat.css" rel="stylesheet" />
@@ -19,13 +18,9 @@
     @Styles.Render("~/Content/bootstrap-social.css")
 
     <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
-
     <link href="~/Content/morphing-search.css" rel="stylesheet" />
-
     <link href="~/Content/Fancy/jquery.fancybox.css" rel="stylesheet" />
-
     <link href="~/Content/bootstrap.dropdowns-enhancement.min.css" rel="stylesheet" />
-
     <link href="~/Content/sweetalert.css" rel="stylesheet" />
 
     <script>
@@ -126,6 +121,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
+    <script src="~/Scripts/sweetalert.min.js"></script>
     <script src="~/Scripts/blocksit.min.js"></script>
     <script src="~/Scripts/bootstrap.dropdowns-enhancement.js"></script>
     <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
@@ -133,6 +129,8 @@
     <script src="~/Scripts/Fancy/jquery.fancybox.pack.js"></script>
     <script src="~/Scripts/jquery.elastic.source.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="http://www.youtube.com/player_api"></script>
 
     <script>
         $(function () {

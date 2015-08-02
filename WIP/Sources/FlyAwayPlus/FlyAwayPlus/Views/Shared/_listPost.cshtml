@@ -1,8 +1,10 @@
-﻿@foreach (var post in ViewData["listPost"] as List<FlyAwayPlus.Models.Post>)
-{
-    var photo = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
-    var place = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
-    var user = ViewData["listUserDict"] as Dictionary<int, FlyAwayPlus.Models.User>;
+﻿@using FlyAwayPlus.Models
+
+@{
+    var photo = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
+    var place = ViewData["listPlaceDict"] as Dictionary<int, Place>;
+    var video = ViewData["listVideoDict"] as Dictionary<int, Video>;
+    var user = ViewData["listUserDict"] as Dictionary<int, User>;
     var dislike = ViewData["dislikeCount"] as Dictionary<int, int>;
     var like = ViewData["likeCount"] as Dictionary<int, int>;
     var comment = ViewData["commentCount"] as Dictionary<int, int>;
@@ -10,7 +12,10 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var isWishDict = ViewData["isWishDict"] as Dictionary<int, bool>;
+}
 
+@foreach (var post in ViewData["listPost"] as List<Post>)
+{
     string btnWishClass = isWishDict[post.postID] ? "btn-warning" : "btn-primary";
     string btnLikeClass = isLikeDict[post.postID] ? "btn-warning" : "btn-primary";
     string btnDislikeClass = isDislikeDict[post.postID] ? "btn-warning" : "btn-primary";
@@ -20,16 +25,26 @@
 
     <div class="white-panel">
         <div class="dark-wrapper">
-            <img src="@(photo[post.postID].url.StartsWith("http") ? "" : "/Images/UserUpload/")@photo[post.postID].url" alt="ALT">
-            <ul class="post-actions" style="padding-left:0px;">
+            @foreach (var p in photo[post.postID])
+            {
+                <img src="@(p.url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.url" alt="@p.url">
+            }
+
+            @if (@video[post.postID] != null)
+            {
+                <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.postID].path?enablejsapi=1&wmode=opaque">
+                    <img src="http://img.youtube.com/vi/@video[post.postID].path/0.jpg" alt="@video[post.postID]">
+                </a>
+            }
+            <ul class="post-actions" style="padding-left: 0px;">
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right:20px;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right:20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right:20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
@@ -81,11 +96,64 @@
     var isLoadMore = '@ViewData["isLoadMore"].ToString()';
     var typePost = '@ViewData["typePost"].ToString()';
 
-    $(function() {
-        $(".post-post-list-post-option-delete").click(function() {
+    $(function () {
+        $(".post-post-list-post-option-delete").click(function () {
             $(this).parentsUntil(".white-panel").parent().remove();
+            homeModule.setBlocksit();
+            var abc = $(this).attr("value");
 
-
+            $.ajax({
+                type: "POST",
+                url: "/Post/DeletePost",
+                data: { postId: $(this).attr("value") },
+                error: function () {
+                    sweetAlert("Cannot delete post. Try again later.");
+                }
+            });
         });
     });
+
+    // Fires whenever a player has finished loading
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    // Fires when the player's state changes.
+    function onPlayerStateChange(event) {
+        // Go to the next video after the current one is finished playing
+        if (event.data === 0) {
+            $.fancybox.next();
+        }
+    }
+
+    // The API will call this function when the page has finished downloading the JavaScript for the player API
+    function onYouTubePlayerAPIReady() {
+
+        // Initialise the fancyBox after the DOM is loaded
+        $(document).ready(function () {
+            $(".fancybox")
+                .attr('rel', 'gallery')
+                .fancybox({
+                    openEffect: 'fade',
+                    closeEffect: 'elastic',
+                    nextEffect: 'none',
+                    prevEffect: 'none',
+                    padding: 0,
+                    margin: 70,
+                    beforeShow: function () {
+                        // Find the iframe ID
+                        var id = $.fancybox.inner.find('iframe').attr('id');
+
+                        // Create video player object and add event listeners
+                        var player = new YT.Player(id, {
+                            events: {
+                                'onReady': onPlayerReady,
+                                'onStateChange': onPlayerStateChange
+                            }
+                        });
+                    }
+                });
+        });
+
+    }
 </script>
