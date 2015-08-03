@@ -143,5 +143,9 @@ namespace FlyAwayPlus.Controllers
         {
             GraphDatabaseHelpers.Instance.DeletePost(postId);
         }
+        public void EditPost(int postId, string newContent)
+        {
+            GraphDatabaseHelpers.Instance.EditPost(postId, newContent);
+        }
     }
 }

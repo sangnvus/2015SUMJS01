@@ -91,7 +91,7 @@
         #photos-gallery .images-wrapper .image-element .post-actions, .white-panel .dark-wrapper .post-actions {
             position: absolute;
             visibility: hidden;
-            top: 0px;
+            top: 20px;
             z-index: 1;
             -ms-opacity: 0;
             opacity: 0;

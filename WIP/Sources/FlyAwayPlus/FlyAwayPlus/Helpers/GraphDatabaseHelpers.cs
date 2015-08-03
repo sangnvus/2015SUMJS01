@@ -1663,5 +1663,23 @@ namespace FlyAwayPlus.Helpers
                 .ExecuteWithoutResults();
         }
         #endregion
+
+        public bool EditPost(int postId, string newContent)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(p:post { postID: " + postId + " })")
+                       .Set("p.dateCreated = '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'")
+                       .Set("p.content = '" + newContent + "'")
+                       .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
     }
 }
