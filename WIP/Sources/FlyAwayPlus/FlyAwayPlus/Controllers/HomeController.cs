@@ -43,7 +43,7 @@ namespace FlyAwayPlus.Controllers
                 /*
                  * Search limit public post
                  */
-                listPost = GraphDatabaseHelpers.SearchLimitPost(skip, RecordsPerPage);
+                listPost = GraphDatabaseHelpers.Instance.SearchLimitPost(skip, RecordsPerPage);
                 FindRelatedInformationPost(listPost);
             }
             else
@@ -51,7 +51,7 @@ namespace FlyAwayPlus.Controllers
                 /**
                  * Search limit following post
                  */
-                listPost = GraphDatabaseHelpers.FindLimitPostFollowing(user, skip, RecordsPerPage);
+                listPost = GraphDatabaseHelpers.Instance.FindLimitPostFollowing(user, skip, RecordsPerPage);
                 FindRelatedInformationPost(listPost);
             }
             
@@ -78,7 +78,8 @@ namespace FlyAwayPlus.Controllers
         private void FindRelatedInformationPost(List<Post> listPost)
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
+            Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
+            Dictionary<int, Video> listVideoDict = new Dictionary<int, Video>();
             Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
             Dictionary<int, User> listUserDict = new Dictionary<int, User>();
             Dictionary<int, int> dictLikeCount = new Dictionary<int, int>();
@@ -91,19 +92,20 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.FindPhoto(po));
-                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.FindPlace(po));
-                listUserDict.Add(po.postID, GraphDatabaseHelpers.FindUser(po));
-                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.CountLike(po.postID));
-                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.CountDislike(po.postID));
-                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.CountComment(po.postID));
-                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.CountUserComment(po.postID));
+                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
+                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
+                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
+                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
+                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
+                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
+                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
+                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
 
                 if (user != null)
                 {
-                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.isLike(po.postID, user.userID));
-                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.isDislike(po.postID, user.userID));
-                    isWishDict.Add(po.postID, GraphDatabaseHelpers.isWish(po.postID, user.userID));
+                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsLike(po.postID, user.userID));
+                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsDislike(po.postID, user.userID));
+                    isWishDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsWish(po.postID, user.userID));
                 }
                 else
                 {
@@ -115,6 +117,7 @@ namespace FlyAwayPlus.Controllers
 
             ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
+            ViewData["listVideoDict"] = listVideoDict;
             ViewData["listPlaceDict"] = listPlaceDict;
             ViewData["listUserDict"] = listUserDict;
             ViewData["dislikeCount"] = dictDislikeCount;
@@ -144,7 +147,7 @@ namespace FlyAwayPlus.Controllers
                 /**
                  * Search limit following post
                  */
-                var listPost = GraphDatabaseHelpers.FindLimitWishlist(user, skip, RecordsPerPage);
+                var listPost = GraphDatabaseHelpers.Instance.FindLimitWishlist(user, skip, RecordsPerPage);
                 FindRelatedInformationPost(listPost);
             }
 

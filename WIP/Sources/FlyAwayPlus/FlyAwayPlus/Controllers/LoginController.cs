@@ -33,7 +33,7 @@ namespace FlyAwayPlus.Controllers
                 user.typeID = 0; // Fap Account
 
                 // select from DB
-                User newUser = GraphDatabaseHelpers.GetUser(user.typeID, user.email);
+                User newUser = GraphDatabaseHelpers.Instance.GetUser(user.typeID, user.email);
 
                 /*
                  *  Insert into Graph DB 
@@ -50,7 +50,7 @@ namespace FlyAwayPlus.Controllers
                     }
 
                     // insert user to Database
-                    GraphDatabaseHelpers.InsertUser(user);
+                    GraphDatabaseHelpers.Instance.InsertUser(user);
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace FlyAwayPlus.Controllers
             {
                 user.typeID = 0;
 
-                var newUser = GraphDatabaseHelpers.GetUser(user.typeID, user.email);
+                var newUser = GraphDatabaseHelpers.Instance.GetUser(user.typeID, user.email);
 
                 if (newUser == null)
                 {
@@ -201,7 +201,7 @@ namespace FlyAwayPlus.Controllers
             string email = me.email;
 
             // select from DB
-            User newUser = GraphDatabaseHelpers.GetUser(1, email); // Facebook account: typeID = 1
+            User newUser = GraphDatabaseHelpers.Instance.GetUser(1, email); // Facebook account: typeID = 1
             string facebookID = me.id;
 
             /*
@@ -227,7 +227,7 @@ namespace FlyAwayPlus.Controllers
                 // Facebook account
 
                 // insert user to Database
-                GraphDatabaseHelpers.InsertUser(newUser);
+                GraphDatabaseHelpers.Instance.InsertUser(newUser);
             }
 
             // Set the auth cookie
@@ -281,10 +281,10 @@ namespace FlyAwayPlus.Controllers
             var email = Request["email"];
 
             User user;
-            user = GraphDatabaseHelpers.FindUser(email);
+            user = GraphDatabaseHelpers.Instance.FindUser(email);
             if (user != null)
             {
-                GraphDatabaseHelpers.ResetPassword(email);
+                GraphDatabaseHelpers.Instance.ResetPassword(email);
 
                 string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
                 const string senderPassword = "doan2015"; // sender password here…
@@ -374,7 +374,7 @@ namespace FlyAwayPlus.Controllers
                 }
 
                 // select from DB
-                User newUser = GraphDatabaseHelpers.GetUser(2, email); // Google account: typeID = 2
+                User newUser = GraphDatabaseHelpers.Instance.GetUser(2, email); // Google account: typeID = 2
 
                 /*
                  *  Insert into Graph DB 
@@ -399,7 +399,7 @@ namespace FlyAwayPlus.Controllers
                     // Google account
 
                     // insert user to Database
-                    GraphDatabaseHelpers.InsertUser(newUser);
+                    GraphDatabaseHelpers.Instance.InsertUser(newUser);
                 }
 
                 // Set the auth cookie

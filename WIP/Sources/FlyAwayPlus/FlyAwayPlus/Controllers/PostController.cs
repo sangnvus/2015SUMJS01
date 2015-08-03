@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using FlyAwayPlus.Helpers;
-using FlyAwayPlus.Helpers.UploadImage;
 using FlyAwayPlus.Models;
 
 namespace FlyAwayPlus.Controllers
@@ -41,37 +39,39 @@ namespace FlyAwayPlus.Controllers
 
             try
             {
-                post = GraphDatabaseHelpers.FindPost(id, user);
+                post = GraphDatabaseHelpers.Instance.FindPost(id, user);
                 if (post == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
 
-                userPost = GraphDatabaseHelpers.SearchUser(post);
-                listComment = GraphDatabaseHelpers.FindComment(post);
+                userPost = GraphDatabaseHelpers.Instance.SearchUser(post.postID);
+                listComment = GraphDatabaseHelpers.Instance.FindComment(post);
 
-                likeCount = GraphDatabaseHelpers.CountLike(post.postID);
-                dislikeCount = GraphDatabaseHelpers.CountDislike(post.postID);
-                userComment = GraphDatabaseHelpers.CountUserComment(post.postID);
-                photo = GraphDatabaseHelpers.FindPhoto(post);
+                likeCount = GraphDatabaseHelpers.Instance.CountLike(post.postID);
+                dislikeCount = GraphDatabaseHelpers.Instance.CountDislike(post.postID);
+                userComment = GraphDatabaseHelpers.Instance.CountUserComment(post.postID);
+
+                // TODO: Change to list of photos.
+                photo = GraphDatabaseHelpers.Instance.FindPhoto(post.postID).FirstOrDefault();
                 foreach (var comment in listComment)
                 {
-                    dict.Add(comment.commentID, GraphDatabaseHelpers.FindUser(comment));
+                    dict.Add(comment.commentID, GraphDatabaseHelpers.Instance.FindUser(comment));
                 }
 
-                listSuggestFriend = GraphDatabaseHelpers.SuggestFriend(user.userID);
+                listSuggestFriend = GraphDatabaseHelpers.Instance.SuggestFriend(user.userID);
                 foreach (var otherUser in listSuggestFriend)
                 {
-                    listFriendType.Add(GraphDatabaseHelpers.GetFriendType(user.userID, otherUser.userID));
-                    listMutualFriends.Add(GraphDatabaseHelpers.CountMutualFriend(user.userID, otherUser.userID));
+                    listFriendType.Add(GraphDatabaseHelpers.Instance.GetFriendType(user.userID, otherUser.userID));
+                    listMutualFriends.Add(GraphDatabaseHelpers.Instance.CountMutualFriend(user.userID, otherUser.userID));
                 }
 
-                listSuggestPlace = GraphDatabaseHelpers.SuggestPlace();
+                listSuggestPlace = GraphDatabaseHelpers.Instance.SuggestPlace();
                 foreach (var otherPlace in listSuggestPlace)
                 {
-                    listIsVisitedPlace.Add(GraphDatabaseHelpers.isVisitedPlace(user.userID, otherPlace.placeID));
-                    listNumberOfPost.Add(GraphDatabaseHelpers.NumberOfPost(otherPlace.placeID));
-                    checkWishlist.Add(GraphDatabaseHelpers.IsInWishist(otherPlace.placeID, user.userID));
+                    listIsVisitedPlace.Add(GraphDatabaseHelpers.Instance.IsVisitedPlace(user.userID, otherPlace.placeID));
+                    listNumberOfPost.Add(GraphDatabaseHelpers.Instance.NumberOfPost(otherPlace.placeID));
+                    checkWishlist.Add(GraphDatabaseHelpers.Instance.IsInWishist(otherPlace.placeID, user.userID));
                 }
             }
             catch (Exception e)
@@ -134,40 +134,18 @@ namespace FlyAwayPlus.Controllers
             
             var user = (User)Session["user"];
 
-            GraphDatabaseHelpers.InsertPost(user, newPost, newPhotos, newPlace, newVideo);
+            GraphDatabaseHelpers.Instance.InsertPost(user, newPost, newPhotos, newPlace, newVideo);
 
             return RedirectToAction("Index", "Home");
         }
 
-        private string UploadImage(HttpFileCollectionBase files)
+        public void DeletePost(int postId)
         {
-            // TODO: Multiple file names.
-            string filename = string.Empty;
-            foreach (string item in files)
-            {
-                var file = files[item];
-                if (file == null || file.ContentLength == 0)
-                    continue;
-
-                if (file.ContentLength <= 0) continue;
-                ImageUpload imageUpload = new ImageUpload
-                {
-                    Width = FapConstants.UploadedImageMaxWidthPixcel,
-                    Height = FapConstants.UploadedImageMaxHeightPixcel
-                };
-                ImageResult imageResult = imageUpload.RenameUploadFile(file);
-
-                if (imageResult.Success)
-                {
-                    filename = imageResult.ImageName;
-                }
-                else
-                {
-                    // TODO: ERROR message.
-                    ViewBag.Error = imageResult.ErrorMessage;
-                }
-            }
-            return filename;
+            GraphDatabaseHelpers.Instance.DeletePost(postId);
+        }
+        public void EditPost(int postId, string newContent)
+        {
+            GraphDatabaseHelpers.Instance.EditPost(postId, newContent);
         }
     }
 }

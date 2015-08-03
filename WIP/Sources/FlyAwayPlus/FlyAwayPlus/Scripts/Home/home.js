@@ -6,7 +6,6 @@
 
     var setBlocksit = function () {
         var conWidth = $(".blog-landing").width();
-        //my container width
         var gridwidth = 212;
         //alert(conWidth);
         var col = conWidth / gridwidth;
@@ -26,13 +25,11 @@
 
             postActions.css("visibility", "visible");
             postActions.css("opacity", "1");
-            postActions.animate({ top: '20px' }, "slow");
         }, function () {
             $(this).find("img").fadeTo(500, 1);
 
             var postActions = $(this).find(".post-actions");
 
-            postActions.animate({ top: '0px' }, "slow");
             postActions.css("visibility", "hidden");
             postActions.css("opacity", "0");
         });

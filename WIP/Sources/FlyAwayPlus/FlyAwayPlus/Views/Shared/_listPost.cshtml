@@ -1,8 +1,10 @@
-﻿@foreach (var post in ViewData["listPost"] as List<FlyAwayPlus.Models.Post>)
-{
-    var photo = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
-    var place = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
-    var user = ViewData["listUserDict"] as Dictionary<int, FlyAwayPlus.Models.User>;
+﻿@using FlyAwayPlus.Models
+
+@{
+    var photo = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
+    var place = ViewData["listPlaceDict"] as Dictionary<int, Place>;
+    var video = ViewData["listVideoDict"] as Dictionary<int, Video>;
+    var user = ViewData["listUserDict"] as Dictionary<int, User>;
     var dislike = ViewData["dislikeCount"] as Dictionary<int, int>;
     var like = ViewData["likeCount"] as Dictionary<int, int>;
     var comment = ViewData["commentCount"] as Dictionary<int, int>;
@@ -10,26 +12,42 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var isWishDict = ViewData["isWishDict"] as Dictionary<int, bool>;
+}
 
+@foreach (var post in ViewData["listPost"] as List<Post>)
+{
     string btnWishClass = isWishDict[post.postID] ? "btn-warning" : "btn-primary";
     string btnLikeClass = isLikeDict[post.postID] ? "btn-warning" : "btn-primary";
     string btnDislikeClass = isDislikeDict[post.postID] ? "btn-warning" : "btn-primary";
 
     string btnLikeIconClass = isLikeDict[post.postID] ? "interacted fa-thumbs-up" : "";
     string btnDislikeIconClass = isDislikeDict[post.postID] ? "interacted fa-thumbs-down" : "";
-    
+
     <div class="white-panel">
         <div class="dark-wrapper">
-            <img src="@(photo[post.postID].url.StartsWith("http") ? "" : "/Images/UserUpload/")@photo[post.postID].url" alt="ALT">
-            <ul class="post-actions" style="padding-left:0px;">
+            @foreach (var p in photo[post.postID])
+            {
+                <img src="@(p.url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.url" alt="@p.url">
+            }
+
+            @if (@video[post.postID] != null)
+            {
+                <div class="video-overlay">
+                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.postID].path?enablejsapi=1&wmode=opaque">
+                        <img src="http://img.youtube.com/vi/@video[post.postID].path/0.jpg" alt="@video[post.postID]">
+                        <span class="video-thumbnail-button"></span>
+                    </a>
+                </div>
+            }
+            <ul class="post-actions" style="padding-left: 0px;">
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right:20px;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right:20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right:20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
@@ -42,7 +60,7 @@
             @if (!string.IsNullOrEmpty(post.content))
             {
                 <div class="divider"></div>
-                <p>@post.content</p>
+                <p class="board-post-content">@post.content</p>
             }
 
             <div class="user-interacted-area">
@@ -53,21 +71,134 @@
             </div>
             <div class="divider"></div>
             <div class="user-info">
-                <img src="@user[post.postID].avatar" alt="@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)" class="avatar" style="width:35px; height:35px;" />
-                <div>
+                <img src="@user[post.postID].avatar" alt="@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)" class="avatar" />
+                <div style="width: 100%">
                     <a href="/User/Index/@user[post.postID].userID">
                         <div class="name-user">@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)</div>
                     </a>
                     <div class="post-time">@post.toRealtime()</div>
+                </div>
+
+                <div class="dropdown">
+                    <span class="glyphicon glyphicon-option-vertical post-list-post-option" data-toggle="dropdown" aria-hidden="true"></span>
+                    <ul class="dropdown-menu bullet pull-center post-list-post-option-actions" role="menu" style="margin-top: -20px">
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.postID" href="#" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.postID" href="#">Delete</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 }
 
+<div class="modal fade" id="edit-post-modal" tabindex="-1" role="dialog" aria-labelledby="edit-post-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="edit-post-modal-label">Edit post</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="edit-post-message-text" class="control-label">Post content:</label>
+                        <textarea class="form-control" id="edit-post-message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="edit-post-modal-save-button" value="">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var isLoadMore = '@ViewData["isLoadMore"].ToString()';
     var typePost = '@ViewData["typePost"].ToString()';
 
-    
+    $(function () {
+        $(".post-post-list-post-option-delete").click(function () {
+            $(this).parentsUntil(".white-panel").parent().remove();
+            homeModule.setBlocksit();
+
+            $.ajax({
+                type: "POST",
+                url: "/Post/DeletePost",
+                data: { postId: $(this).attr("value") },
+                error: function () {
+                    sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
+                }
+            });
+
+            $("#edit-post-modal").on("show.bs.modal", function (event) {
+                var editButton = $(event.relatedTarget);
+
+                var postId = editButton.attr("value");
+                var oldMessage = editButton.parentsUntil("panel-content-wrapper").parent().find("board-post-content").text();
+
+                var modal = $(this);
+                modal.find(".modal-body textarea").val(oldMessage);
+                modal.find(".modal-body #edit-post-modal-save-button").attr("value", postId);
+            });
+
+            $("#edit-post-modal-save-button").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "/Post/EditPost",
+                    data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
+                    error: function () {
+                        sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            });
+        });
+    });
+
+    // Fires whenever a player has finished loading
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    // Fires when the player's state changes.
+    function onPlayerStateChange(event) {
+        // Go to the next video after the current one is finished playing
+        if (event.data === 0) {
+            $.fancybox.next();
+        }
+    }
+
+    // The API will call this function when the page has finished downloading the JavaScript for the player API
+    function onYouTubePlayerAPIReady() {
+
+        // Initialise the fancyBox after the DOM is loaded
+        $(document).ready(function () {
+            $(".fancybox").attr('rel', 'gallery').fancybox({
+                openEffect: 'fade',
+                closeEffect: 'elastic',
+                nextEffect: 'none',
+                prevEffect: 'none',
+                padding: 0,
+                margin: 70,
+                beforeShow: function () {
+                    // Find the iframe ID
+                    var id = $.fancybox.inner.find('iframe').attr('id');
+
+                    // Create video player object and add event listeners
+                    var player = new YT.Player(id, {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+            });
+        });
+
+    }
 </script>

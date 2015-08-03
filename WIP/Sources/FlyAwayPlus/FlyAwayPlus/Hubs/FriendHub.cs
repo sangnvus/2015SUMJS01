@@ -13,7 +13,7 @@ namespace FlyAwayPlus.Hubs
     {
         public void GetListFriendRequest(int userID)
         {
-            List<User> listFriend = GraphDatabaseHelpers.GetListFriendRequest(userID);
+            List<User> listFriend = GraphDatabaseHelpers.Instance.GetListFriendRequest(userID);
             Clients.Caller.receiveListFriendRequest(JsonConvert.SerializeObject(listFriend));
         }
     }

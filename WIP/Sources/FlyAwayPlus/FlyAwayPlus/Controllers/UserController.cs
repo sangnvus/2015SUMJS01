@@ -28,27 +28,27 @@ namespace FlyAwayPlus.Controllers
             if (userSession.userID == id || id == 0)
             {
                 user = userSession;
-                listPost = GraphDatabaseHelpers.FindPostOfUser(userSession);
-                friend = GraphDatabaseHelpers.FindFriend(userSession);
+                listPost = GraphDatabaseHelpers.Instance.FindPostOfUser(userSession);
+                friend = GraphDatabaseHelpers.Instance.FindFriend(userSession);
 
                 FindRelatedInformationPost(listPost);
             }
             else
             {
-                user = GraphDatabaseHelpers.FindUser(id);
+                user = GraphDatabaseHelpers.Instance.FindUser(id);
                 if (user == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                listPost = GraphDatabaseHelpers.FindPostOfOtherUser(userSession, user);
-                friend = GraphDatabaseHelpers.FindFriend(user);
+                listPost = GraphDatabaseHelpers.Instance.FindPostOfOtherUser(userSession, user);
+                friend = GraphDatabaseHelpers.Instance.FindFriend(user);
 
                 FindRelatedInformationPost(listPost);
             }
 
             ViewData["userSession"] = userSession;
             ViewData["friend"] = friend;
-            ViewData["isFriend"] = GraphDatabaseHelpers.GetFriendType(userSession.userID, user.userID);
+            ViewData["isFriend"] = GraphDatabaseHelpers.Instance.GetFriendType(userSession.userID, user.userID);
             return View(user);
         }
 
@@ -68,19 +68,21 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.FindPhoto(po));
-                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.FindPlace(po));
-                listUserDict.Add(po.postID, GraphDatabaseHelpers.FindUser(po));
-                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.CountLike(po.postID));
-                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.CountDislike(po.postID));
-                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.CountComment(po.postID));
-                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.CountUserComment(po.postID));
+
+                // TODO: Change to list of photos.
+                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID).FirstOrDefault());
+                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
+                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
+                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
+                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
+                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
+                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
 
                 if (user != null)
                 {
-                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.isLike(po.postID, user.userID));
-                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.isDislike(po.postID, user.userID));
-                    isWishDict.Add(po.postID, GraphDatabaseHelpers.isWish(po.postID, user.userID));
+                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsLike(po.postID, user.userID));
+                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsDislike(po.postID, user.userID));
+                    isWishDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsWish(po.postID, user.userID));
                 }
                 else
                 {
@@ -121,7 +123,7 @@ namespace FlyAwayPlus.Controllers
             comment.content = comment.content.Replace("\n","\\n");
             comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
 
-            bool success = GraphDatabaseHelpers.InsertComment(postId, comment, user.userID);
+            bool success = GraphDatabaseHelpers.Instance.InsertComment(postId, comment, user.userID);
             dict.Add(comment.commentID, user);
             
             ViewData["dict"] = dict;
@@ -136,14 +138,14 @@ namespace FlyAwayPlus.Controllers
             comment.content = comment.content.Replace("\n", "\\n");
             comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
 
-            bool success = GraphDatabaseHelpers.EditComment(comment);
+            bool success = GraphDatabaseHelpers.Instance.EditComment(comment);
             return Json(success);
         }
 
         public JsonResult DeleteComment(int commentID)
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            bool success = GraphDatabaseHelpers.DeleteComment(commentID, user.userID);
+            bool success = GraphDatabaseHelpers.Instance.DeleteComment(commentID, user.userID);
             return Json(success);
         }
 
@@ -153,17 +155,17 @@ namespace FlyAwayPlus.Controllers
             Boolean success = false;
             if (user != null)
             {
-                int like = GraphDatabaseHelpers.FindLike(user.userID, postId);
+                int like = GraphDatabaseHelpers.Instance.FindLike(user.userID, postId);
                 if (like == 0)
                 {
                     // User like post and delete exist dislike
-                    success = GraphDatabaseHelpers.InsertLike(user.userID, postId);
-                    GraphDatabaseHelpers.DeleteDislike(user.userID, postId);
+                    success = GraphDatabaseHelpers.Instance.InsertLike(user.userID, postId);
+                    GraphDatabaseHelpers.Instance.DeleteDislike(user.userID, postId);
                 }
                 else
                 {
                     // delete exist like post
-                    GraphDatabaseHelpers.DeleteLike(user.userID, postId);
+                    GraphDatabaseHelpers.Instance.DeleteLike(user.userID, postId);
                 }
             }
             return Json(success);
@@ -175,17 +177,17 @@ namespace FlyAwayPlus.Controllers
             Boolean success = false;
             if (user != null)
             {
-                int dislike = GraphDatabaseHelpers.FindDislike(user.userID, postId);
+                int dislike = GraphDatabaseHelpers.Instance.FindDislike(user.userID, postId);
                 if (dislike == 0)
                 {
                     // user dislike post and delete exist like
-                    success = GraphDatabaseHelpers.InsertDislike(user.userID, postId);
-                    GraphDatabaseHelpers.DeleteLike(user.userID, postId);
+                    success = GraphDatabaseHelpers.Instance.InsertDislike(user.userID, postId);
+                    GraphDatabaseHelpers.Instance.DeleteLike(user.userID, postId);
                 }
                 else
                 {
                     // delete exist dislike
-                    GraphDatabaseHelpers.DeleteDislike(user.userID, postId);
+                    GraphDatabaseHelpers.Instance.DeleteDislike(user.userID, postId);
                 }
             }
             return Json(success);
@@ -197,7 +199,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.AddToWishList(postID, user.userID);
+                success = GraphDatabaseHelpers.Instance.AddToWishList(postID, user.userID);
             }
             return Json(success);
         }
@@ -208,7 +210,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.AddToWishlist(placeID, userID);
+                success = GraphDatabaseHelpers.Instance.AddToWishlist(placeID, userID);
             }
             return Json(success);
         }
@@ -219,7 +221,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.AddFriend(userID, otherUserID);
+                success = GraphDatabaseHelpers.Instance.AddFriend(userID, otherUserID);
             }
             return Json(success);
         }
@@ -230,7 +232,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.DeclineRequestFriend(userID, otherUserID);
+                success = GraphDatabaseHelpers.Instance.DeclineRequestFriend(userID, otherUserID);
             }
             return Json(success);
         }
@@ -241,7 +243,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.SendRequestFriend(userID, otherUserID);
+                success = GraphDatabaseHelpers.Instance.SendRequestFriend(userID, otherUserID);
             }
             return Json(success);
         }
@@ -252,7 +254,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.Unfriend(userID, otherUserID);
+                success = GraphDatabaseHelpers.Instance.Unfriend(userID, otherUserID);
             }
             return Json(success);
         }
@@ -263,7 +265,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.RemoveFromWishList(postID, user.userID);
+                success = GraphDatabaseHelpers.Instance.RemoveFromWishList(postID, user.userID);
             }
             return Json(success);
         }
@@ -274,7 +276,7 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
             if (user != null)
             {
-                success = GraphDatabaseHelpers.RemoveFromWishlist(placeID, userID);
+                success = GraphDatabaseHelpers.Instance.RemoveFromWishlist(placeID, userID);
             }
             return Json(success);
         }
@@ -295,10 +297,10 @@ namespace FlyAwayPlus.Controllers
                 {
                     conversationID = friendID + "_" + user.userID;
                 }
-                listMessage = GraphDatabaseHelpers.GetListMessage(conversationID, 10);
+                listMessage = GraphDatabaseHelpers.Instance.GetListMessage(conversationID, 10);
                 for (int i = 0; i < listMessage.Count; i++)
                 {
-                    listUser.Add(GraphDatabaseHelpers.FindUser(listMessage[i]));
+                    listUser.Add(GraphDatabaseHelpers.Instance.FindUser(listMessage[i]));
                 }
             }
             KeyValuePair<List<Message>, List<User>> returnObject = new KeyValuePair<List<Message>,List<User>>(listMessage, listUser);
@@ -320,7 +322,7 @@ namespace FlyAwayPlus.Controllers
                 {
                     conversationID = friendID + "_" + user.userID;
                 }
-                message = GraphDatabaseHelpers.CreateMessage(conversationID, content, user.userID, friendID);
+                message = GraphDatabaseHelpers.Instance.CreateMessage(conversationID, content, user.userID, friendID);
 
             }
             return Json(message);
@@ -341,7 +343,7 @@ namespace FlyAwayPlus.Controllers
                 user.dateOfBirth = dateOfBirth;
                 user.password = password;
 
-                success = GraphDatabaseHelpers.EditProfile(user);
+                success = GraphDatabaseHelpers.Instance.EditProfile(user);
             }
             return Json(success);
         }
@@ -355,7 +357,7 @@ namespace FlyAwayPlus.Controllers
             reportPost.userReportID = userReportID;
             reportPost.userReportedID = userReportedID;
 
-            GraphDatabaseHelpers.InsertReportPost(reportPost);
+            GraphDatabaseHelpers.Instance.InsertReportPost(reportPost);
 
             return Json(success);
         }
@@ -369,7 +371,7 @@ namespace FlyAwayPlus.Controllers
             reportUser.userReportID = userReportID;
             reportUser.userReportedID = userReportedID;
 
-            GraphDatabaseHelpers.InsertReportUser(reportUser);
+            GraphDatabaseHelpers.Instance.InsertReportUser(reportUser);
 
             return Json(success);
         }
