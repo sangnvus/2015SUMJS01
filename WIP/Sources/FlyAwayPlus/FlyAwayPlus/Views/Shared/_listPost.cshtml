@@ -95,29 +95,6 @@
     </div>
 }
 
-<div class="modal fade" id="edit-post-modal" tabindex="-1" role="dialog" aria-labelledby="edit-post-modal-label">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="edit-post-modal-label">Edit post</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="edit-post-message-text" class="control-label">Post content:</label>
-                        <textarea class="form-control" id="edit-post-message-text"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="edit-post-modal-save-button" value="">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     var isLoadMore = '@ViewData["isLoadMore"].ToString()';
     var typePost = '@ViewData["typePost"].ToString()';
@@ -134,28 +111,6 @@
                 error: function () {
                     sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
                 }
-            });
-
-            $("#edit-post-modal").on("show.bs.modal", function (event) {
-                var editButton = $(event.relatedTarget);
-
-                var postId = editButton.attr("value");
-                var oldMessage = editButton.parentsUntil("panel-content-wrapper").parent().find("board-post-content").text();
-
-                var modal = $(this);
-                modal.find(".modal-body textarea").val(oldMessage);
-                modal.find(".modal-body #edit-post-modal-save-button").attr("value", postId);
-            });
-
-            $("#edit-post-modal-save-button").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "/Post/EditPost",
-                    data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
-                    error: function () {
-                        sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
-                    }
-                });
             });
         });
     });
