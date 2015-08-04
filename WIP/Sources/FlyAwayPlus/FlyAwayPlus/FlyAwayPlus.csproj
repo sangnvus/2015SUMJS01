@@ -292,6 +292,7 @@
     <Content Include="Content\placeSuggest.css" />
     <Content Include="Content\PostDetailPage\postDetail.css" />
     <Content Include="Content\morphing-search.css" />
+    <Content Include="Content\Room\room-list.css" />
     <Content Include="Content\sweetalert.css" />
     <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Content\Site.avatar.css" />

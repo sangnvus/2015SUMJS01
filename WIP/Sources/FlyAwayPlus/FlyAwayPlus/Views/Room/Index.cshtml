@@ -2,10 +2,45 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="~/Content/jquery.fs.stepper.css" rel="stylesheet" />
-<script src="~/Scripts/jquery.fs.stepper.js"></script>
+<link href="~/Content/Room/room-list.css" rel="stylesheet"/>
 
-<button class="btn btn-primary" data-toggle="modal" data-target="#add-room-modal">Add Room</button>
+<div class="blog-landing">
+
+    @for (int i = 0; i < 10; i++)
+    {
+        <div class="gurney_hallek_profile_card card">
+            <div class="wall-container">
+                <img class="wall-pic" src="http://www.transformingourselves.com/Images/Meditation-leaf.jpg" />
+            </div>
+            <div class="profile">
+                <div class="profile-pic-border">
+                    <img class="profile-pic" src="http://finalstronghold.com/wp-content/uploads/2012/08/neuromancer-250x250.jpg" />
+                </div>
+                <h2> Gurney hallek </h2>
+                <p>Master at Arms and Grand Stategist for the house atreides. </p>
+            </div>
+            <div class="social-container">
+                <div class=" social seen">
+                    <p>
+                        <span class="social-icon">i</span>172
+                    </p>
+                </div>
+                <div class=" social middle shared">
+                    <p>
+                        <span class="social-icon">O</span>34
+                    </p>
+                </div>
+                <div class=" social liked">
+                    <p>
+                        <span class="social-icon">+</span>210
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<button class="btn btn-primary hidden" data-toggle="modal" data-target="#add-room-modal">Add Room</button>
 
 <!-- Modal -->
 <div class="modal fade" id="add-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 50px">
