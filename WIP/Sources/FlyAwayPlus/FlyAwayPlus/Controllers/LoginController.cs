@@ -63,6 +63,31 @@ namespace FlyAwayPlus.Controllers
                 Session["userAva"] = user.avatar;
                 Session["userID"] = user.userID;
                 UserHelpers.SetCurrentUser(Session, user);
+
+                //Send email confirm
+                string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+                const string senderPassword = "doan2015"; // sender password here…
+                try
+                {
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com", // smtp server address here…
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        Credentials = new NetworkCredential(senderID, senderPassword),
+                        Timeout = 30000,
+                    };
+                    var message = new MailMessage(senderID, user.email, "Getting started on FlyAwayPlus",
+                        "Welcome to FlyAwayPlus, "+user.firstName+" "+user.lastName+"!");
+                    smtp.Send(message);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                }
             }
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -299,8 +324,8 @@ namespace FlyAwayPlus.Controllers
                         Credentials = new NetworkCredential(senderID, senderPassword),
                         Timeout = 30000,
                     };
-                    var message = new MailMessage(senderID, email, "Reset password FlyAwayPles",
-                        "Your new password: 123456");
+                    var message = new MailMessage(senderID, email, "Reset password FlyAwayPlus",
+                        "Your new password: 696969");
                     smtp.Send(message);
 
                 }
@@ -313,7 +338,7 @@ namespace FlyAwayPlus.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "LookAround");
+                return RedirectToAction("Index", "Home");
             }
 
         }
