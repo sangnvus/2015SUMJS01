@@ -7,7 +7,7 @@
 }
 
 @{
-    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, FlyAwayPlus.Models.Photo>;
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<FlyAwayPlus.Models.Photo>>;
     var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
     var friend = ViewData["friend"] as List<FlyAwayPlus.Models.User>;
     var userSession = ViewData["userSession"] as FlyAwayPlus.Models.User;
@@ -149,11 +149,11 @@
             @foreach (var image in listPhotoDict)
             {
                 <div class="image-element">
-                    <img src="/Images/UserUpload/@image.Value.url" class="img-zoom" alt="" />
+                    <img src="/Images/UserUpload/@image.Value.First().url" class="img-zoom" alt="" />
                     <div class="dark-wrapper">
                         <ul class="post-actions" style="padding-left: 0px;">
                             <li>
-                                <a href="/Images/UserUpload/@image.Value.url" rel="group"
+                                <a href="/Images/UserUpload/@image.Value.First().url" rel="group"
                                    class="btn btn-primary fancybox"
                                    title="@listPlaceDict.First(p => p.Key == @image.Key).Value.name"
                                    style="width: 90px">Enlarge</a>

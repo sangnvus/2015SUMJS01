@@ -55,7 +55,8 @@ namespace FlyAwayPlus.Controllers
         private void FindRelatedInformationPost(List<Post> listPost)
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            Dictionary<int, Photo> listPhotoDict = new Dictionary<int, Photo>();
+            Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
+            Dictionary<int, Video> listVideoDict = new Dictionary<int, Video>();
             Dictionary<int, Place> listPlaceDict = new Dictionary<int, Place>();
             Dictionary<int, User> listUserDict = new Dictionary<int, User>();
             Dictionary<int, int> dictLikeCount = new Dictionary<int, int>();
@@ -68,9 +69,8 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-
-                // TODO: Change to list of photos.
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID).FirstOrDefault());
+                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
+                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
                 listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
                 listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
                 dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
@@ -94,6 +94,7 @@ namespace FlyAwayPlus.Controllers
 
             ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
+            ViewData["listVideoDict"] = listVideoDict;
             ViewData["listPlaceDict"] = listPlaceDict;
             ViewData["listUserDict"] = listUserDict;
             ViewData["dislikeCount"] = dictDislikeCount;
