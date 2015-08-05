@@ -534,6 +534,25 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
+        public List<User> ListAllUsers()
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all current user
+                 * 
+                 * match(u1:user)
+                    return u1;
+                 */
+            List<User> listAllUsers = new List<User>();
+            _client.Connect();
+            listAllUsers = _client.Cypher.OptionalMatch("(u1:user)")
+                            .ReturnDistinct<User>("u1")
+                            .Results.ToList();
+            return listAllUsers;
+        }
+
         public List<User> FindFriend(User user)
         {
 

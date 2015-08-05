@@ -1,0 +1,44 @@
+﻿@using FlyAwayPlus.Models
+
+@{
+    var listAllUsers = ViewData["listAllUsers"] as List<User>;
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @try
+            {
+                foreach (User user in listAllUsers)
+                {
+                    <tr>
+                        <td>@user.firstName</td>
+                        <td>@user.lastName</td>
+                        <td>@user.email</td>
+                    </tr>
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        </tbody>
+    </table>
+}
+<html lang="en">
+    <head>
+        <title>
+            Admin Page
+        </title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <p></p>
+    </body>
+</html>
+<script>
+</script>
