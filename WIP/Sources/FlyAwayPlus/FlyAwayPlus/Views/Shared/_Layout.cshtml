@@ -113,7 +113,7 @@
                                     <div>
                                         <span class="cls-select-label">Search</span>
                                         <input id="id-search-input" name="keyword" class="cls-search-input" type="text" placeholder="..." value="">
-                                        <i class="cls-search-i glyphicon glyphicon-search"></i>
+                                        <i id="id-search-input-i" class="cls-search-i glyphicon glyphicon-search"></i>
                                     </div>
                                 </div>
                             </div>
@@ -145,6 +145,7 @@
     <script src="~/Scripts/Fancy/jquery.fancybox.pack.js"></script>
     <script src="~/Scripts/jquery.elastic.source.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/Scripts/common.js"></script>
     <script src="/signalr/hubs"></script>
     <script src="http://www.youtube.com/player_api"></script>
 
@@ -162,7 +163,13 @@
                     evt.preventDefault();
                 }
             });
-
+            /*
+            $("#id-search-input-i").click(function (evt) {
+                alert("x");
+                $(this).closest("form").submit();
+                evt.preventDefault();
+            });
+            */
             $("#id-btn-friend-request").click(function () {
                 $(".friend-request-container").fadeToggle(300);
                 $(".friend-request-count").fadeOut("slow");
