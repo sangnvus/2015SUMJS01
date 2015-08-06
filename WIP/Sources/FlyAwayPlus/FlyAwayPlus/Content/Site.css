@@ -1207,3 +1207,33 @@ textarea {
     height: 7em;
 }
 /* USER PROFILE ENDS */
+
+/* SEARCH BAR START*/
+.cls-select-label {
+    color: #424242;
+    font-size: 100%;
+    line-height: 35px;
+    padding-left: 10px;
+    position: absolute;
+    z-index: 20;
+}
+.cls-search-input {
+    color: #afb4b6;
+    font-weight: 300;
+    padding-left: 72px;
+    border-radius: 3px;
+    padding-right: 24px;
+    height: 35px;
+    width: 100%;
+}
+.cls-search-i {
+    font-size: 18px;
+    right: 8px;
+    top: 8px;
+    color: #afb4b6;
+    cursor: pointer;
+    margin-left: -20px;
+    position: absolute;
+    z-index: 20;
+}
+/* SEARCH BAR ENDS*/

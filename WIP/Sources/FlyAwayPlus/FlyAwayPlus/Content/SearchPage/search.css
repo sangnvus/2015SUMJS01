@@ -36,7 +36,7 @@ div .search-result > section {
 }
 
 #idSearchPeople > div {
-    width: 19%;
+    width: 32%;
     float: left;
     padding: 5px;
 }
@@ -113,4 +113,142 @@ a:hover, a:focus {
 
 #idSearchRate > div:nth-of-type(1) {
     border-right: 1px solid #ccd1d9;
+}
+
+.UserNews.split .bottomItem {
+    margin-top: 13px;
+}
+.UserNews.split .topItem, .UserNews.split .bottomItem {
+    background: #fff none repeat scroll 0 0;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+}
+#idSearchPeople {
+    background: #fff none repeat scroll 0 0;
+    width: 100%;
+}
+#idSearchPeople .memoTitle {
+    border-top: medium none;
+}
+#idSearchPeople h2, #idSearchPeople .memoTitle, #idSearchPeople .memoFooter {
+    border-top: 1px solid #e0e0e0;
+    color: #5f5f5f;
+    font-size: 14px;
+    font-weight: 700;
+}
+#idSearchPeople h2, #idSearchPeople .memoTitle, #idSearchPeople .memoFooter {
+    border-top: 1px solid #e0e0e0;
+    color: #5f5f5f;
+    font-size: 14px;
+    font-weight: 700;
+}
+#idSearchPeople h2 a, #idSearchPeople .memoTitle a, #idSearchPeople .memoFooter a {
+    color: inherit;
+    display: block;
+    padding: 11px 0 12px 14px;
+}
+#idSearchPeople h2 a, #idSearchPeople .memoTitle a, #idSearchPeople .memoFooter a {
+    color: inherit;
+    display: block;
+    padding: 11px 0 12px 14px;
+}
+#idSearchPeople .arrow {
+    /*background: rgba(0, 0, 0, 0) url("/webapp/style/sprites/webapp-common-above_the_fold-1x.20428f0e.png") no-repeat scroll -204px -157px;*/
+    float: right;
+    height: 13px;
+    margin: 0 12px 0 0;
+    width: 12px;
+}
+#idSearchPeople .List {
+    border-top: 1px solid #e0e0e0;
+    padding: 10px 0;
+}
+.#friendsToFollow {
+    background: #fff none repeat scroll 0 0;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+}
+
+#idSearchPeople li {
+    list-style: outside none none;
+    padding: 0;
+}
+
+.User.followFriendsItem::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.User.followFriendsItem {
+    font-size: 11px;
+    line-height: 1.2em;
+    padding: 5px 14px;
+    position: relative;
+}
+.User.followFriendsItem .thumbImageWrapper::after {
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.33) inset;
+    content: " ";
+    height: 35px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 35px;
+}
+.User.small .thumbImageWrapper::after {
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.33) inset;
+    content: " ";
+    height: 35px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 35px;
+}
+.User.followFriendsItem .thumbImageWrapper {
+    float: left;
+    height: 35px;
+    position: relative;
+    width: 35px;
+}
+.User.small .thumbImageWrapper {
+    height: 35px;
+    position: relative;
+    width: 35px;
+}
+#idSearchPeople .Image {
+    max-width: 100%;
+    position: relative;
+}
+.User.followFriendsItem .thumbImageWrapper img {
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+}
+.User.small .thumbImageWrapper img {
+    vertical-align: top;
+}
+.User.followFriendsItem .contactUser {
+    margin-left: 40px;
+}
+.User.followFriendsItem .contactUsername {
+    color: #717171;
+    font-weight: 700;
+}
+.User.followFriendsItem .UserFollowButton {
+    color: #bd081c;
+}
+.Button.borderless {
+    background-color: transparent;
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+.FollowButton:not(.primary):not(.followed):not(.disabled) .buttonText {
+    color: #bd081c;
+}
+#idSearchPeople h2:hover, #idSearchPeople .memoTitle:hover, .User.followFriendsItem:hover {
+    background: #f3f3f3 none repeat scroll 0 0;
 }

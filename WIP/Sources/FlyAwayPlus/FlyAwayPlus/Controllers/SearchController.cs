@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FlyAwayPlus.Helpers;
+using FlyAwayPlus.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,8 +17,14 @@ namespace FlyAwayPlus.Controllers
             return View();
         }
 
-        public ActionResult Search()
+        public ActionResult Search(string keyword = "")
         {
+            List<User> listUser = GraphDatabaseHelpers.Instance.searchUserByKeyword(keyword.ToUpper());
+            List<Place> listPlace = GraphDatabaseHelpers.Instance.searchPlaceByKeyword(keyword.ToUpper());
+
+            ViewData["listUser"] = listUser;
+            ViewData["listPlace"] = listPlace;
+            ViewData["keyword"] = keyword;
             return View();
         }
 

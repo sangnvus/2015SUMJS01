@@ -1715,5 +1715,57 @@ namespace FlyAwayPlus.Helpers
             }
             return true;
         }
+
+        public List<User> searchUserByKeyword(string keyword)
+        {
+            List<User> listUser = new List<User>();
+            /*
+             * match (u:user)
+                where upper(u.firstName + ' ' + u.lastName) =~ '.*@keyword.*'
+                return u
+             */
+            try
+            {
+                listUser = _client.Cypher
+                       .Match("(u:user)")
+                       .Where("upper(u.firstName + ' ' + u.lastName) =~ '.*" + keyword + ".*'")
+                       .ReturnDistinct<User>("u")
+                       .Results.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listUser = new List<User>();
+            }
+
+            listUser.RemoveAll(item => item == null);
+            return listUser;
+        }
+
+        public List<Place> searchPlaceByKeyword(string keyword)
+        {
+            List<Place> listPlace = new List<Place>();
+            /*
+             * match (p:place)
+                where upper(p.name) =~ '.*@keyword.*'
+                return p
+             */
+            try
+            {
+                listPlace = _client.Cypher
+                   .Match("(p:place)")
+                   .Where("upper(p.name) =~ '.*" + keyword + ".*'")
+                   .ReturnDistinct<Place>("p")
+                   .Results.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPlace = new List<Place>();
+            }
+
+            listPlace.RemoveAll(item => item == null);
+            return listPlace;
+        }
     }
 }

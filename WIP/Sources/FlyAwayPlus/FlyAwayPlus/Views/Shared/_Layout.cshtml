@@ -104,6 +104,22 @@
 
                 </ul>
                 @Html.Partial("_PostPartial")
+
+                <form action="/Search/Search">
+                    <ul class="nav nav-bar navbar-left" style="margin-top: 7px; border:none">
+                        <li style="border:none">
+                            <div class="" style="width:480px; border:none">
+                                <div class="select auto-complete" style="display:inline-block; width:100%; border:none">
+                                    <div>
+                                        <span class="cls-select-label">Search</span>
+                                        <input id="id-search-input" name="keyword" class="cls-search-input" type="text" placeholder="..." value="">
+                                        <i class="cls-search-i glyphicon glyphicon-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
             </div>
         </div>
     </div>
@@ -140,24 +156,22 @@
                 return false;
             });
 
+            $("#id-search-input").keydown(function (evt) {
+                if (evt.keyCode == 13) {
+                    $(this).closest("form").submit();
+                    evt.preventDefault();
+                }
+            });
 
             $("#id-btn-friend-request").click(function () {
                 $(".friend-request-container").fadeToggle(300);
                 $(".friend-request-count").fadeOut("slow");
                 return false;
             });
-            $(function () {
-                $("#btn-notification").click(function () {
-                    $(".notification-container").fadeToggle(300);
-                    $(".notification-count").fadeOut("slow");
-                    return false;
-                });
 
-                //Document Click
-                $(document).click(function (e) {
-                    $(".notification-container").hide();
-                    $(".friend-request-container").hide();
-                });
+            $(document).click(function (e) {
+                $(".notification-container").hide();
+                $(".friend-request-container").hide();
             });
 
             var lastActivityId = 0;
@@ -245,7 +259,7 @@
                         <div style="float:left">
                             <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                         </div>
-                        <div style="">Duc FiLan da thich ban  tai sao the aaaaaaaaaaaaaaaaaaaaaa</div>
+                        <div style="">Duc FiLan liked your post</div>
                     </a>
                 </div>
                 <hr />
