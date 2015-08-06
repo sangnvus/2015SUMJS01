@@ -17,6 +17,15 @@ namespace FlyAwayPlus.Helpers
             _client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
         }
 
+        public string GetEmailByUserId(int userID)
+        {
+            _client.Connect();
+            string email = _client.Cypher.Match("(u:user {userID:" + userID + "})")
+                                    .Return<string>("n.email")
+                                    .Results.Single();
+            return email;
+        }
+
         public void LockUser(int userId)
         {
             /*
