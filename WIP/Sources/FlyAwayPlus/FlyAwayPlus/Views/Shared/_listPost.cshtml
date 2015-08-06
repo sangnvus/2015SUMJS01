@@ -102,7 +102,7 @@
     $(function () {
         $(".post-post-list-post-option-delete").click(function () {
             $(this).parentsUntil(".white-panel").parent().remove();
-            homeModule.setBlocksit();
+            commonModule.setBlocksit($(".blog-landing"), 212);
 
             $.ajax({
                 type: "POST",

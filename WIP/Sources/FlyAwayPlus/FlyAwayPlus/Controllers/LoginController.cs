@@ -309,7 +309,13 @@ namespace FlyAwayPlus.Controllers
             user = GraphDatabaseHelpers.Instance.FindUser(email);
             if (user != null)
             {
-                GraphDatabaseHelpers.Instance.ResetPassword(email);
+                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                var random = new Random();
+                var newPassword = new string(
+                    Enumerable.Repeat(chars, 8)
+                              .Select(s => s[random.Next(s.Length)])
+                              .ToArray());
+                GraphDatabaseHelpers.Instance.ResetPassword(email, newPassword);
 
                 string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
                 const string senderPassword = "doan2015"; // sender password here…
@@ -325,7 +331,7 @@ namespace FlyAwayPlus.Controllers
                         Timeout = 30000,
                     };
                     var message = new MailMessage(senderID, email, "Reset password FlyAwayPlus",
-                        "Your new password: 696969");
+                        "Your new password: " + newPassword);
                     smtp.Send(message);
 
                 }

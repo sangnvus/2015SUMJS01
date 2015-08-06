@@ -5,16 +5,7 @@
     var pageNumberHot = 1;
 
     var setBlocksit = function () {
-        var conWidth = $(".blog-landing").width();
-        var gridwidth = 212;
-        //alert(conWidth);
-        var col = conWidth / gridwidth;
-        //alert(col);
-        $(".blog-landing").BlocksIt({
-            numOfCol: Math.floor(col),
-            offsetX: 8,
-            offsetY: 8
-        });
+        commonModule.setBlocksit($(".blog-landing"), 212);
     };
 
     var fadeImage = function () {
@@ -34,6 +25,7 @@
             postActions.css("opacity", "0");
         });
     };
+
     var likePost = function () {
         $(".btn-like").click(function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
@@ -221,6 +213,7 @@ $(window).scroll(function () {
         }
     }
 });
+
 $(window).load(function () {
     homeModule.setBlocksit();
     homeModule.fadeImage();
