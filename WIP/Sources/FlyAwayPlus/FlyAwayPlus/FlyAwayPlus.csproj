@@ -307,6 +307,7 @@
     <Content Include="Scripts\Fancy\jquery.fancybox.pack.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\jquery.fakecrop.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\youtube-upload.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />
@@ -335,9 +336,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\avatar\avatar-7.jpg" />
-    <Content Include="Images\background\halong.jpg" />
-    <Content Include="Images\background\nhatrang.jpg" />
-    <Content Include="Images\background\sondoong.jpg" />
     <Content Include="Images\FAP logo.PNG" />
     <Content Include="Images\UIHelper\WOW slider\arrows.png" />
     <Content Include="Images\UIHelper\WOW slider\bullet.png" />
@@ -371,6 +369,8 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
+    <Content Include="fonts\Lato.woff2" />
+    <Content Include="fonts\Quicksand.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -445,6 +445,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\background\" />
     <Folder Include="Images\UserUpload\UserAvatar\" />
     <Folder Include="Views\Upload\" />
   </ItemGroup>
