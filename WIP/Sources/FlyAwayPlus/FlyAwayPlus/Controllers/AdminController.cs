@@ -19,5 +19,21 @@ namespace FlyAwayPlus.Controllers
             ViewData["listAllUsers"] = listAllUsers;
             return View();
         }
-	}
+
+        public JsonResult LockUser(int userId)
+        {
+            bool success = false;
+            GraphDatabaseHelpers.Instance.LockUser(userId);
+
+            return Json(success);
+        }
+
+        public JsonResult UnlockUser(int userId)
+        {
+            bool success = false;
+            GraphDatabaseHelpers.Instance.UnlockUser(userId);
+
+            return Json(success);
+        }
+    }
 }
