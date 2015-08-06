@@ -19,12 +19,23 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Search(string keyword = "")
         {
-            List<User> listUser = GraphDatabaseHelpers.Instance.searchUserByKeyword(keyword.ToUpper());
-            List<Place> listPlace = GraphDatabaseHelpers.Instance.searchPlaceByKeyword(keyword.ToUpper());
+            List<User> listUser = GraphDatabaseHelpers.Instance.SearchUserByKeyword(keyword.ToUpper());
+            List<Place> listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword(keyword.ToUpper());
+            Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
+            Dictionary<int, int> numberOfPostDict = new Dictionary<int, int>();
+
+            foreach (var place in listPlace)
+            {
+                listPhotoDict.Add(place.placeID, GraphDatabaseHelpers.Instance.SearchPhotoInPlace(place.placeID));
+                numberOfPostDict.Add(place.placeID, GraphDatabaseHelpers.Instance.CountPostAtPlace(place.placeID));
+            }
+
 
             ViewData["listUser"] = listUser;
             ViewData["listPlace"] = listPlace;
             ViewData["keyword"] = keyword;
+            ViewData["listPhotoDict"] = listPhotoDict;
+            ViewData["numberOfPostDict"] = numberOfPostDict;
             return View();
         }
 

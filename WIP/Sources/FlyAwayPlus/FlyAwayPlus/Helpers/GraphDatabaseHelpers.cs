@@ -1727,7 +1727,7 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public List<User> searchUserByKeyword(string keyword)
+        public List<User> SearchUserByKeyword(string keyword)
         {
             List<User> listUser = new List<User>();
             /*
@@ -1735,6 +1735,7 @@ namespace FlyAwayPlus.Helpers
                 where upper(u.firstName + ' ' + u.lastName) =~ '.*@keyword.*'
                 return u
              */
+            _client.Connect();
             try
             {
                 listUser = _client.Cypher
@@ -1753,7 +1754,7 @@ namespace FlyAwayPlus.Helpers
             return listUser;
         }
 
-        public List<Place> searchPlaceByKeyword(string keyword)
+        public List<Place> SearchPlaceByKeyword(string keyword)
         {
             List<Place> listPlace = new List<Place>();
             /*
@@ -1761,6 +1762,7 @@ namespace FlyAwayPlus.Helpers
                 where upper(p.name) =~ '.*@keyword.*'
                 return p
              */
+            _client.Connect();
             try
             {
                 listPlace = _client.Cypher
@@ -1777,6 +1779,66 @@ namespace FlyAwayPlus.Helpers
 
             listPlace.RemoveAll(item => item == null);
             return listPlace;
+        }
+
+        public List<Photo> SearchPhotoInPlace(int placeID)
+        {
+            /*
+             * match(pl:place {placeID:@placeID})<-[:AT]-(p:post)
+                with pl, p
+                optional match (p)<-[:LIKE]-(u:user)
+                with p, COUNT(Distinct u) as number
+                match (ph:photo)<-[:HAS]-(p)
+                return ph, number
+                ORDER BY number DESC
+             */
+            List<Photo> listPhoto = new List<Photo>();
+            _client.Connect();
+            try
+            {
+                listPhoto = _client.Cypher
+                   .Match("(pl:place {placeID:" + placeID + "})<-[:AT]-(p:post)")
+                   .With("pl, p")
+                   .OptionalMatch("(p)<-[:LIKE]-(u:user)")
+                   .With("p, COUNT(Distinct u) as number")
+                   .Match("(ph:photo)<-[:HAS]-(p)")
+                   .With("ph, number")
+                   .OrderByDescending("number")
+                   .Limit(4)
+                   .ReturnDistinct<Photo>("ph")
+                   .Results.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPhoto = new List<Photo>();
+            }
+
+            listPhoto.RemoveAll(item => item == null);
+            return listPhoto;
+        }
+
+        public int CountPostAtPlace(int placeID)
+        {
+            /*
+             * optional match (pl:place {placeID:@placeID})<-[:AT]-(p:post)
+                return COUNT(p)
+             */
+            int numberOfPost = 0;
+            _client.Connect();
+            try
+            {
+                numberOfPost = _client.Cypher
+                   .OptionalMatch("(pl:place {placeID:" + placeID + "})<-[:AT]-(p:post)")
+                   .ReturnDistinct<int>("COUNT (p)")
+                   .Results.First();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                numberOfPost = 0;
+            }
+            return numberOfPost;
         }
     }
 }
