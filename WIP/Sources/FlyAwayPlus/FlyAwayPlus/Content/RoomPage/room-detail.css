@@ -1,4 +1,239 @@
-﻿.full-width {
+﻿#room-detail-wrapper {
+    margin-top: 50px;
+}
+
+    #room-detail-wrapper .room-detail-interact-area,
+    #room-detail-wrapper .room-detail-plan-area,
+    #room-detail-wrapper .room-detail-post-list,
+    #room-detail-wrapper .room-detail-right-area {
+        padding: 10px;
+    }
+
+    #room-detail-wrapper .light-divider {
+        height: 1px;
+        margin: 5px 10px 0 10px;
+        overflow: hidden;
+        background-color: #ffffff;
+    }
+
+    #room-detail-wrapper .dark-divider {
+        height: 1px;
+        margin: 5px 10px 0 10px;
+        overflow: hidden;
+        background-color: #95A5A5;
+        width: 100%;
+    }
+
+    #room-detail-wrapper .room-detail-infor {
+        height: 200px;
+        display: block;
+        overflow: hidden;
+        position: relative;
+        -ms-border-top-left-radius: 8px;
+        border-top-left-radius: 8px;
+        -ms-border-bottom-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        padding: 0;
+    }
+
+        #room-detail-wrapper .room-detail-infor .room-detail-cover {
+            width: 100%;
+            height: 200px;
+            background-position: 50%;
+            background-repeat: no-repeat;
+            -ms-background-size: cover;
+            background-size: cover;
+            margin: 0 auto;
+            max-width: 1000px;
+            -ms-border-top-left-radius: 8px;
+            border-top-left-radius: 8px;
+            -ms-border-bottom-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        #room-detail-wrapper .room-detail-infor .room-detail-darkwrapper {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            -ms-opacity: 0.5;
+            opacity: 0.5;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #room-detail-wrapper .room-detail-infor .room-detail-infor-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #fff;
+            width: 100%;
+            height: auto;
+        }
+
+            #room-detail-wrapper .room-detail-infor .room-detail-infor-text h3 {
+                margin: 15px 15px 0 15px;
+                font-size: 100%;
+                font-family: 'Seogoe UI Light', 'Calibri', 'Arial';
+                font-size: 30px;
+                text-transform: uppercase;
+                white-space: nowrap;
+                overflow: hidden !important;
+                -moz-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+            }
+
+        #room-detail-wrapper .room-detail-infor .room-detail-infor-description {
+            padding: 0 15px 0 10px;
+            margin-top: 10px;
+            border-left: 3px solid #2589cc;
+            margin-left: 15px;
+            font-style: italic;
+            font-size: 14px;
+            font-family: 'Calibri', 'Arial';
+            max-height: 70px;
+            overflow: auto !important;
+            text-align: justify;
+            position: relative;
+        }
+
+        #room-detail-wrapper .room-detail-infor .room-detail-infor-milestones {
+            list-style: none;
+            margin: 10px 0 0 15px;
+            padding: 0;
+            font-size: 15px;
+            font-family: 'Seogoe UI', 'Calibri', 'Arial';
+        }
+
+            #room-detail-wrapper .room-detail-infor .room-detail-infor-milestones p {
+                margin-bottom: 0;
+                width: 80px;
+                display: inline-block;
+            }
+
+            #room-detail-wrapper .room-detail-infor .room-detail-infor-milestones .fa {
+                margin-right: 5px;
+            }
+
+    #room-detail-wrapper .room-detail-interact-area {
+        height: 200px;
+        background-color: #ffffff;
+        -ms-border-top-right-radius: 8px;
+        border-top-right-radius: 8px;
+        -ms-border-bottom-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+        #room-detail-wrapper .room-detail-interact-area div {
+            margin-bottom: 10px;
+        }
+
+        #room-detail-wrapper .room-detail-interact-area .room-detail-admin-avatar {
+            text-align: center;
+        }
+
+            #room-detail-wrapper .room-detail-interact-area .room-detail-admin-avatar img {
+                text-align: center;
+                padding: 2px;
+                background-color: #3bafda;
+            }
+
+    #room-detail-wrapper .room-detail-request-join,
+    #room-detail-wrapper .room-detail-btn-copy-roomid {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    #room-detail-wrapper .room-detail-plan-area {
+        margin-top: 20px;
+        display: block;
+        overflow: hidden;
+        position: relative;
+        -ms-border-radius: 8px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        color: #213140;
+        padding: 0;
+    }
+
+        #room-detail-wrapper .room-detail-plan-area .room-detail-infor-text h3 {
+            margin: 15px 15px 0 15px;
+            font-size: 100%;
+            font-family: 'Seogoe UI Light', 'Calibri', 'Arial';
+            font-size: 30px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden !important;
+            -moz-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
+
+        #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs {
+            list-style: none;
+        }
+
+        #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs {
+            display: block;
+            clear: both;
+            width: 100%;
+            padding: 0;
+            height: 35px;
+            background-color: #6CB9F1;
+        }
+
+            #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs li {
+                float: left;
+                position: relative;
+                display: inline;
+                text-align: center;
+                border-right: 1px solid #ffffff;
+            }
+
+                #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs li:last-child {
+                    border-right: none;
+                }
+
+                #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs li a {
+                    color: #ffffff;
+                }
+
+                #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs li:focus,
+                #room-detail-wrapper .room-detail-plan-area .room-detail-plan-tabs li:active {
+                    font-weight: bold;
+                    background-color: #19B5FF;
+                }
+
+    #room-detail-wrapper .room-detail-user-list {
+        margin-top: 20px;
+        padding: 0;
+        background-color: #ffffff;
+    }
+
+    #room-detail-wrapper .room-detail-left-area {
+        margin-top: 20px;
+        padding: 0;
+    }
+
+        #room-detail-wrapper .room-detail-left-area .room-detail-posting-area {
+            padding: 0;
+            margin: 0 10px 10px 10px;
+            background-color: transparent;
+            max-width: 100%
+        }
+
+#room-detail-wrapper .room-detail-left-area .room-detail-post-list {
+            height: 400px;
+            background-color: #ff4500;
+        }
+
+    #room-detail-wrapper .room-detail-right-area {
+        margin-top: 20px;
+        height: 520px;
+        background-color: #ee82ee;
+    }
+
+/* SHITTY OLD DESIGN */
+/*.full-width {
     width: 100%;
 }
 
@@ -251,8 +486,6 @@ div .row {
     margin-top: 0px !important;
 }
 
-/* Chat Widget
-=================================================================== */
 .chat {
   position: relative;
   background: white;
@@ -430,4 +663,4 @@ div .row {
 }
 .chat.alt .conversation {
   width: auto;
-}
+}*/

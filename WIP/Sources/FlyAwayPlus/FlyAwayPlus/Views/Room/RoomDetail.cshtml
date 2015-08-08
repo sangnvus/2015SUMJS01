@@ -3,3 +3,214 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/Content/RoomPage/room-detail.css" rel="stylesheet" />
+
+<div id="room-detail-wrapper">
+    <div>
+        <!--INFO-->
+        <div class="col-md-10 room-detail-infor">
+            <div class="room-detail-cover" style="background-image: url(/Images/background/nhatrang2.jpg)"><!--BG--></div>
+            <div class="room-detail-darkwrapper"></div>
+            <div class="room-detail-infor-text">
+                <h3>Da Nang Beautiful Beach</h3>
+                <div class="light-divider"><!--DIVIDER--></div>
+                <div class="room-detail-infor-description">
+                    Local beaches are good for swimming all year round, but especially from May to August when the waves are gentle. On some of these beaches, lifeguard teams work from 5am to 8pm daily to ensure the safety of swimmers.
+                </div>
+
+                <ul class="room-detail-infor-milestones">
+                    <li>
+                        <i class="fa fa-at"></i>
+                        <p>LOCATION:</p>&nbsp; <span>Hanoi Railway Station, Lê Duẩn, Khâm Thiên, Đống Đa, Hanoi, Vietnam</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-calendar-o"></i>
+                        <p>START DATE:</p>&nbsp; <span>Thursday, 22 Dec 2015</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-clock-o"></i>
+                        <p>DURING:</p>&nbsp; <span>22 days</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-2 room-detail-interact-area">
+            <div class="room-detail-admin-avatar">
+                <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Background.jpg" alt="Admin" />
+            </div>
+            <div>
+                <a href="#" class="btn btn-primary room-detail-request-join">Request join</a>
+            </div>
+            <div>
+                <a href="#" class="btn btn-primary room-detail-btn-copy-roomid" type="button">Copy room ID</a>
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="&#64;friend">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!--INFO ENDS-->
+    <!--PLANNING-->
+    <div class="col-md-12 room-detail-plan-area">
+        <div>
+            <!-- Nav tabs -->
+            <div>
+                <ul class="room-detail-plan-tabs" role="tablist">
+                    <li role="presentation" class="active col-md-4"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">General</a></li>
+                    <li role="presentation" class="col-md-4"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Timeline</a></li>
+                    <li role="presentation" class="col-md-4"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Estimation</a></li>
+                </ul>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">...</div>
+                <div role="tabpanel" class="tab-pane" id="profile">...</div>
+                <div role="tabpanel" class="tab-pane" id="messages">...</div>
+            </div>
+        </div>
+    </div>
+    <!--PLANNING ENDS-->
+    <!--USER LIST-->
+    <div class="col-md-12 room-detail-user-list">
+        <div class="col-md-12 frame-container">
+            <div class="friend-list-header friend-title-header">
+                <h6 class="text-capitalize">MEMBERS</h6>
+            </div>
+
+            <div class="friend-list-avatar">
+                @for (int i = 0; i < 5; i++)
+                {
+                    <div class="padding-5 col-md-2">
+                        <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Eunji.jpg" alt="Avatar" />
+                    </div>
+                }
+            </div>
+            <div class="friend-list-header view-more-friend-title">
+                <h6 class="text-capitalize">VIEW ALL</h6>
+            </div>
+        </div>
+    </div>
+    <!--USER LIST ENDS-->
+
+    <div>
+        <div class="col-md-6 room-detail-left-area">
+            <!--POSTING-->
+            <div class="share-post-box room-detail-posting-area">
+                <div class="panel panel-default boder-radius">
+                    <div class="panel-body">
+                        <div class="">
+                            <textarea class="form-control message"
+                                      rows="10" cols="40"
+                                      id="status_message" name="message"
+                                      placeholder="What do you want to share?"
+                                      style="height: 62px; overflow: hidden;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="panel-footer border-radius-bottom-left border-radius-bottom-right">
+                        <div class="row">
+                            <div class="helper-elements-wrapper">
+                                <!-- IMAGES -->
+                                <div id="post-add-images-wrapper" class="hidden">
+                                    <div id="post-image-preview-wrapper">
+                                        <!-- Preview for to-be-uploaded photos -->
+                                    </div>
+
+                                    <div class="progress progress-striped active hidden" id="post-upload-images-progress">
+                                        <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Uploading...</div>
+                                    </div>
+
+                                    <div class="add-media-wrapper">
+                                        <label for="post-images-upload" class="custom-file-upload">
+                                            <i class="fa fa-plus"></i>
+                                        </label>
+                                        <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload" name="files[]" class="hidden" multiple>
+                                    </div>
+                                    <input type="hidden" name="uploadedimages" />
+                                </div>
+
+                                <!-- VIDEOS -->
+                                <div id="post-add-videos-wrapper" class="hidden">
+                                    <span id="signinButton" class="pre-sign-in">
+                                        <span class="g-signin"
+                                              data-callback="oauth2Callback"
+                                              data-clientid="802653758880-3ufqkq2gkpo7hqrimk0pr07isen9r8qu.apps.googleusercontent.com"
+                                              data-cookiepolicy="single_host_origin"
+                                              data-scope="https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload">
+                                        </span>
+                                    </span>
+
+                                    <div class="post-sign-in">
+                                        <p id="post-video-file-name" style="text-align: center"></p>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="upload-media-preview">
+                                                    <div class="crop">
+                                                        <img src="/Images/UIHelper/youtube.png" alt="Youtube preview" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-7" style="margin: 0 20px 0 -20px">
+                                                <input class="form-control" id="video-upload-title" type="text" placeholder="Title for video">
+                                                <textarea class="form-control" id="video-upload-description" placeholder="Description for video"></textarea>
+                                            </div>
+
+                                            <a href="#" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button">UPLOAD</a>
+                                        </div>
+
+                                        <div class="progress progress-striped active hidden" id="post-upload-video-progress">
+                                            <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                        </div>
+
+                                        <div class="add-media-wrapper">
+                                            <label for="post-video-upload" class="custom-file-upload">
+                                                <i class="fa fa-plus"></i>
+                                            </label>
+
+                                            <input id="post-video-upload" type="file" class="hidden" accept="video/*">
+                                        </div>
+
+                                        <input type="hidden" name="uploadedvideo" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" id="id-picture-button">
+                                            <i class="fa fa-picture-o"></i> Photo
+                                        </a>
+                                        <a class="btn btn-default" id="id-video-button">
+                                            <i class="fa fa-video-camera"></i> Video
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input class="btn btn-primary" name="submit" type="submit" value="Post">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--POSTING ENDS-->
+            <!--POST LIST-->
+            <div class="room-detail-post-list">
+
+            </div>
+            <!--POST LIST ENDS-->
+        </div>
+        <div class="col-md-6 room-detail-right-area">
+
+        </div>
+    </div>
+</div>
