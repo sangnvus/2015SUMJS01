@@ -63,28 +63,10 @@
         });
     };
 
-    var setBlocksit = function (objBlog, width) {
-        objBlog = objBlog ? objBlog : $(".blog-landing");
-        width = width ? width : 320;
-
-        $(objBlog).each(function (evt) {
-            var conWidth = $(this).width();
-            var gridwidth = width;
-
-            var col = conWidth / gridwidth;
-
-            $(this).BlocksIt({
-                numOfCol: Math.floor(col),
-                offsetX: 8,
-                offsetY: 8
-            });
-        });
-    };
 
     return {
         convertTime: convertTime,
-        callAjax: callAjax,
-        setBlocksit: setBlocksit
+        callAjax: callAjax
     }
 })();
 

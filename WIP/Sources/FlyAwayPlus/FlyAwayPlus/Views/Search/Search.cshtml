@@ -7,11 +7,13 @@
     string keyword = ViewData["keyword"].ToString();
     var listUser = ViewData["listUser"] as List<FlyAwayPlus.Models.User>;
     var listPlace = ViewData["listPlace"] as List<FlyAwayPlus.Models.Place>;
-
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<FlyAwayPlus.Models.Photo>>;
+    var numberOfPostDict = ViewData["numberOfPostDict"] as Dictionary<int, int>;
 }
 <link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
 <link href="~/Content/HomePage/gridLayout.css" rel="stylesheet" />
 <link href="~/Content/SearchPage/search.css" rel="stylesheet" />
+<link href="~/Content/Room/room-list.css">
 
 <div class="container">
     <div class="full-width">
@@ -28,18 +30,46 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active full-width" id="idSearchPlace">
-                <div class="full-width search-result" style="margin-top: 10px;">
-                    <section id="idSearchPlaceResult">
-                        <article class="white-panel">
-                            <img src="http://www.mediademon.com/wp-content/uploads/2013/07/Blog-Post-Imagery5.png" alt="ALT">
-                            <h1><a href="SearchDetail">Putting users first with flat design</a></h1>
-                            <div class="divider"></div>
-                        </article>
+            <div role="tabpanel" class="tab-pane full-width blog-landing active" id="idSearchPlace">
+                @foreach (var place in listPlace)
+                {
+                    if (listPhotoDict[place.placeID] == null || listPhotoDict[place.placeID].Count == 0)
+                    {
+                        continue;
+                    }
+                    <div class="place-result-container">
+                        <div class="place-result-header">
+                            <div style="position:absolute; width:100%; height:100%">
+                                <span class="boardPinCount">
+                                    <div class="Module PinCount">
+                                        <span class="pinIcon glyphicon glyphicon-pencil"></span> @numberOfPostDict[place.placeID]
+                                    </div>
+                                </span>
+                                <div class="place-result-bio" alt="@place.name" style="background-image:url(/Images/UserUpload/@listPhotoDict[place.placeID][0].url)"><!--BG--></div>
+                            </div>
+                        </div>
 
-                    </section>
-                </div>
+                        <div class="place-result-content" style="display:block; float:left">
+                            <div class="place-result-place-name">
+                                <a href="/Search/SearchDetail/@place.placeID">
+                                    <h3>@place.name</h3>
+                                </a>
+                            </div>
+                            <ul class="boardThumbs">
+                                @for (int index = 1; index < listPhotoDict[place.placeID].Count; index++)
+                                {
+                                    <li>
+                                        <span class="hoverMask"></span>
+                                        <img style="" class="thumb" src="/Images/UserUpload/@listPhotoDict[place.placeID][index].url">
+                                    </li>
+                                }
+                            </ul>
+                            <a href="#"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                        </div>
+                    </div>
+                }
             </div>
+
             <div role="tabpanel" class="tab-pane full-width" id="idSearchPeople">
                 @foreach (var user in listUser)
                 {
@@ -72,45 +102,8 @@
                     </div>
                 }
             </div>
-            <div role="tabpanel" class="tab-pane full-width" id="idSearchRoom">
-                <div class="full-width search-room search-result" style="margin-top: 10px;" id="idSearchRoomResult">
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-1.jpg" />
-                        <h1><a class="center-block">Room 001</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-2.jpg" />
-                        <h1><a class="center-block">Room 002</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-3.jpg" />
-                        <h1><a class="center-block">Room 003</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-4.jpg" />
-                        <h1><a class="center-block">Room 004</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-5.jpg" />
-                        <h1><a class="center-block">Room 005</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-6.jpg" />
-                        <h1><a class="center-block">Room 006</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-1.jpg" />
-                        <h1><a class="center-block">Room 001</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-2.jpg" />
-                        <h1><a class="center-block">Room 002</a></h1>
-                    </div>
-                    <div>
-                        <img class="img-responsive img-thumbnail full-width" src="~/Images/avatar/avatar-3.jpg" />
-                        <h1><a class="center-block">Room 003</a></h1>
-                    </div>
-                </div>
+            <div role="tabpanel" class="blog-landing tab-pane full-width" id="idSearchRoom" style="max-width:100%;">
+                @Html.Partial("_ListRoomPartial")
             </div>
         </div>
     </div>
@@ -122,52 +115,20 @@
 
 <script src="~/Scripts/HomePage/pinterest_grid.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#idSearchPlaceResult').pinterest_grid({
-            no_columns: 4,
-            padding_x: 20,
-            padding_y: 20,
-            margin_bottom: 50,
-            single_column_breakpoint: 700
-        });
-
-        $('.blog-landing').pinterest_grid({
-            no_columns: 4,
-            padding_x: 20,
-            padding_y: 20,
-            margin_bottom: 50,
-            single_column_breakpoint: 700
-        });
-
-        /*
-        $("#idBtnSearchRoom").one("click", function () {
-            alert("x");
-            $("#idSearchRoomResult").css("width", $("#idSearchPeopleResult").css("width"));
-            $("#idSearchRoomResult").css("height", $("#idSearchPeopleResult").css("height"));
-            $("#idSearchRoomResult").pinterest_grid({
-                no_columns: 4,
-                padding_x: 20,
-                padding_y: 20,
-                margin_bottom: 50,
-                single_column_breakpoint: 700
-            });
-            //$("#idSearchRoomResult").find("img").css("max-width", "240px");
-            //$("#idSearchRoomResult").find(".white-panel").css("width", "260px");
-        });
-        */
-
-        $("#idSearchPeople").find("img.img-circle")
-            .mouseenter(function () {
-                var parent = $(this).parent();
-                var height = Number($(parent).height());
-                var width = Number($(parent).width());
-
-                $(parent).find("div").first().css("margin-top", -height / 2 + "px");
-                $(parent).find("div").first().css("margin-left", width / 2 + "px");
-                $(parent).find("div").first().show();
-            })
-            .mouseleave(function () {
-                $(this).parent().find("div").first().hide();
-            })
+    $(function () {
+        commonModule.setBlocksit($(".blog-landing"), 250);
     });
+
+    //window resize
+    $(window).resize(function () {
+        commonModule.setBlocksit($(".blog-landing"), 250);
+    });
+
+    $('#idBtnSearchPlace').on('shown.bs.tab', function (e) {
+        commonModule.setBlocksit($("#idSearchPlace"), 250);
+    });
+    $('#idBtnSearchRoom').on('shown.bs.tab', function (e) {
+        commonModule.setBlocksit($("#idSearchRoom"), 250);
+    });
+
 </script>

@@ -677,20 +677,6 @@
         });
     });
 
-    function setBlocksit() {
-        var conWidth = $(".blog-landing").width();
-        //my container width
-        var gridwidth = 212;
-        //alert(conWidth);
-        var col = conWidth / gridwidth;
-        //alert(col);
-        $(".blog-landing").BlocksIt({
-            numOfCol: Math.floor(col),
-            offsetX: 8,
-            offsetY: 8
-        });
-    };
-
     function fadeImage() {
         $(".dark-wrapper").hover(function () {
             $(this).find("img").fadeTo(500, 0.5);
@@ -712,12 +698,12 @@
     };
 
     $(window).load(function () {
-        setBlocksit();
+        commonModule.setBlocksit($(".blog-landing"), 212);
         fadeImage();
     });
 
     //window resize
     $(window).resize(function () {
-        setBlocksit();
+        commonModule.setBlocksit($(".blog-landing"), 212);
     });
 </script>

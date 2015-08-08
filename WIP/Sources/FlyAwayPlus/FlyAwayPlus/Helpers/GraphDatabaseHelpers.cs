@@ -17,6 +17,41 @@ namespace FlyAwayPlus.Helpers
             _client = new GraphClient(new Uri(ConfigurationManager.AppSettings["dbGraphUri"]));
         }
 
+        public string GetEmailByUserId(int userID)
+        {
+            _client.Connect();
+            string email = _client.Cypher.Match("(u:user {userID:" + userID + "})")
+                                    .Return<string>("n.email")
+                                    .Results.Single();
+            return email;
+        }
+
+        public void LockUser(int userId)
+        {
+            /*
+             * MATCH (n:user { userID: userId })
+                SET n.status = 'lock'
+                RETURN n
+             */
+            _client.Connect();
+            _client.Cypher.Match("(n:user { userID: " + userId + " })")
+                           .Set("n.status = 'lock' RETURN n")
+                           .ExecuteWithoutResults();
+        }
+
+        public void UnlockUser(int userId)
+        {
+            /*
+             * MATCH (n:user { userID: userId })
+                SET n.status = 'lock'
+                RETURN n
+             */
+            _client.Connect();
+            _client.Cypher.Match("(n:user { userID: " + userId + " })")
+                           .Set("n.status = 'active' RETURN n")
+                           .ExecuteWithoutResults();
+        }
+
         public void InsertUser(User user)
         {
             // Auto increment Id.
@@ -736,111 +771,98 @@ namespace FlyAwayPlus.Helpers
 
         public void InsertPost(User user, Post post, List<Photo> photos, Place place, Video video)
         {
+            // Auto increment Id.
+            SpecifyIds(ref post, ref photos, ref place, ref video);
+
             _client.Connect();
 
-            SpecifyIds(ref post, ref photos, ref place, ref video);
-            InsertNodes(post, photos, place, video);
-
-            if (GetNodeUser(user.userID) == null) return;
-
-            InsertRelationships(user, post, photos, place, video);
-            RebuildLatestPostFlow(user, post);
-        }
-        #region INSERT POST HELPER FUNCTIONS
-        private void RebuildLatestPostFlow(User user, Post post)
-        {
-            if (IsUserHasPost(user))
-            {
-                CreateFirstLatestRelationship(user.userID, post.postID);
-            }
-            else
-            {
-                JoinNewLatestRelationshipToExisingPosts(user.userID, post.postID);
-            }
-        }
-
-        private void JoinNewLatestRelationshipToExisingPosts(int userID, int postID)
-        {
-            _client.Cypher.Match("(u:user{userID:" + userID + "})-[r:LATEST_POST]->(p:post), (p1:post{postID:" +
-                                 postID + "})")
-                .Delete("r")
-                .Create("(u)-[:LATEST_POST]->(p1)")
-                .Create("(p1)-[:PREV_POST]->(p)")
-                .ExecuteWithoutResults();
-        }
-
-        private void CreateFirstLatestRelationship(int userID, int postID)
-        {
-            _client.Cypher.Match("(u:user{userID:" + userID + "}), (p1:post{postID:" + postID + "})")
-                .Create("(u)-[:LATEST_POST]->(p1)")
-                .ExecuteWithoutResults();
-        }
-
-        private bool IsUserHasPost(User user)
-        {
-            return _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[:LATEST_POST]->(p:post)")
-                .Return<int>("COUNT (p)")
-                .Results.Single() > 0;
-        }
-
-        private void InsertRelationships(User user, Post post, List<Photo> photos, Place place, Video video)
-        {
-            var existingPlace = FindExistingPlace(place);
-
-            if (existingPlace == null)
-            {
-                _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + place.placeID + "})")
-                    .Create("(po)-[r:AT]->(pl)")
-                    .ExecuteWithoutResults();
-            }
-            else
-            {
-                _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + existingPlace.placeID +
-                                     "})")
-                    .Create("(po)-[r:AT]->(pl)")
-                    .ExecuteWithoutResults();
-            }
-
-            _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (vi:video {videoID: " + video.videoID + "})")
-                .Create("(po)-[r:HAS]->(vi)")
-                .ExecuteWithoutResults();
-
-            foreach (var photo in photos)
-            {
-                _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pt:photo {photoID: " + photo.photoID + "})")
-                    .Create("(po)-[r:HAS]->(pt)")
-                    .ExecuteWithoutResults();
-
-                _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
-                    .Create("(u)-[r:HAS]->(p)")
-                    .ExecuteWithoutResults();
-            }
-
-            _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
-                .Create("(u)-[r:VISITED]->(p)")
-                .ExecuteWithoutResults();
-        }
-
-        private void InsertNodes(Post post, List<Photo> photos, Place place, Video video)
-        {
             _client.Cypher.Create("(p:post {newPost})")
-                .WithParam("newPost", post)
-                .ExecuteWithoutResults();
+                         .WithParam("newPost", post)
+                         .ExecuteWithoutResults();
 
             foreach (var photo in photos)
             {
                 _client.Cypher.Create("(p:photo {newPhoto})")
-                    .WithParam("newPhoto", photo)
-                    .ExecuteWithoutResults();
+                             .WithParam("newPhoto", photo)
+                             .ExecuteWithoutResults();
             }
 
             _client.Cypher.Create("(p:place {newPlace})")
-                .WithParam("newPlace", place)
-                .ExecuteWithoutResults();
+                         .WithParam("newPlace", place)
+                         .ExecuteWithoutResults();
 
             _client.Cypher.Create("(v:video {newVideo})")
-                .WithParam("newVideo", video)
-                .ExecuteWithoutResults();
+                         .WithParam("newVideo", video)
+                         .ExecuteWithoutResults();
+
+            Node<User> userNode = GetNodeUser(user.userID);
+            if (userNode != null)
+            {
+                var existingPlace = FindExistingPlace(place);
+
+                if (existingPlace == null)
+                {
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + place.placeID + "})")
+                             .Create("(po)-[r:AT]->(pl)")
+                             .ExecuteWithoutResults();
+                }
+                else
+                {
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + existingPlace.placeID + "})")
+                                 .Create("(po)-[r:AT]->(pl)")
+                                 .ExecuteWithoutResults();
+                }
+
+                _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (vi:video {videoID: " + video.videoID + "})")
+                             .Create("(po)-[r:HAS]->(vi)")
+                             .ExecuteWithoutResults();
+
+                foreach (var photo in photos)
+                {
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pt:photo {photoID: " + photo.photoID + "})")
+                                 .Create("(po)-[r:HAS]->(pt)")
+                                 .ExecuteWithoutResults();
+
+                    _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
+                                 .Create("(u)-[r:HAS]->(p)")
+                                 .ExecuteWithoutResults();
+                }
+
+                _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
+                             .Create("(u)-[r:VISITED]->(p)")
+                             .ExecuteWithoutResults();
+
+                //Client.CreateRelationship(userRef, new UserHasPostRelationship(postRef));
+                /*
+                 * Check User has post:
+                 *  if yes do the following step:
+                 *      1. DELETE the LATEST_POST relationship from user to oldPost
+                 *      2. CREATE LATEST_POST relationship from user to newPost
+                 *      3. CREATE PREV_POST relationship from newPost to oldPost
+                 *      
+                 *  else do the following step:
+                 *      1. CREATE LATEST_POST relationship from user to newPost
+                 */
+                int oldPost = _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[:LATEST_POST]->(p:post)")
+                                    .Return<int>("COUNT (p)")
+                                    .Results.Single();
+
+                if (oldPost == 0)
+                {
+                    // CREATE New LATEST_POST
+                    _client.Cypher.Match("(u:user{userID:" + user.userID + "}), (p1:post{postID:" + post.postID + "})")
+                                    .Create("(u)-[:LATEST_POST]->(p1)")
+                                    .ExecuteWithoutResults();
+                }
+                else
+                {
+                    _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[r:LATEST_POST]->(p:post), (p1:post{postID:" + post.postID + "})")
+                                    .Delete("r")
+                                    .Create("(u)-[:LATEST_POST]->(p1)")
+                                    .Create("(p1)-[:PREV_POST]->(p)")
+                                    .ExecuteWithoutResults();
+                }
+            }
         }
 
         private void SpecifyIds(ref Post post, ref List<Photo> photos, ref Place place, ref Video video)
@@ -855,8 +877,6 @@ namespace FlyAwayPlus.Helpers
             video.videoID = GetGlobalIncrementId();
         }
 
-        #endregion
-        
         public User SearchUser(int postId)
         {
             /**
@@ -1242,16 +1262,16 @@ namespace FlyAwayPlus.Helpers
             return listNotification;
         }
 
-        public void ResetPassword(string email)
+        public void ResetPassword(string email, string newPassword)
         {
             /*
              * MATCH (n:user { email: '@email' })
-                n.password = @password
+                SET n.password = @password
                 RETURN n
              */
             _client.Connect();
             _client.Cypher.Match("(n:user { email: '" + email + "' })")
-                           .Set("n.password = 696969 RETURN n")
+                           .Set("n.password = '" + newPassword + "' RETURN n")
                            .ExecuteWithoutResults();
         }
 
@@ -1627,7 +1647,7 @@ namespace FlyAwayPlus.Helpers
 
             return true;
         }
-        #region DELETE POST HELPER FUNCTIONS
+        #region DELETE POST HELPERS
 
         private void DeleteCommentsAndRelationship(int postId)
         {
@@ -1716,7 +1736,7 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public List<User> searchUserByKeyword(string keyword)
+        public List<User> SearchUserByKeyword(string keyword)
         {
             List<User> listUser = new List<User>();
             /*
@@ -1724,6 +1744,7 @@ namespace FlyAwayPlus.Helpers
                 where upper(u.firstName + ' ' + u.lastName) =~ '.*@keyword.*'
                 return u
              */
+            _client.Connect();
             try
             {
                 listUser = _client.Cypher
@@ -1742,7 +1763,7 @@ namespace FlyAwayPlus.Helpers
             return listUser;
         }
 
-        public List<Place> searchPlaceByKeyword(string keyword)
+        public List<Place> SearchPlaceByKeyword(string keyword)
         {
             List<Place> listPlace = new List<Place>();
             /*
@@ -1750,6 +1771,7 @@ namespace FlyAwayPlus.Helpers
                 where upper(p.name) =~ '.*@keyword.*'
                 return p
              */
+            _client.Connect();
             try
             {
                 listPlace = _client.Cypher
@@ -1766,6 +1788,66 @@ namespace FlyAwayPlus.Helpers
 
             listPlace.RemoveAll(item => item == null);
             return listPlace;
+        }
+
+        public List<Photo> SearchPhotoInPlace(int placeID)
+        {
+            /*
+             * match(pl:place {placeID:@placeID})<-[:AT]-(p:post)
+                with pl, p
+                optional match (p)<-[:LIKE]-(u:user)
+                with p, COUNT(Distinct u) as number
+                match (ph:photo)<-[:HAS]-(p)
+                return ph, number
+                ORDER BY number DESC
+             */
+            List<Photo> listPhoto = new List<Photo>();
+            _client.Connect();
+            try
+            {
+                listPhoto = _client.Cypher
+                   .Match("(pl:place {placeID:" + placeID + "})<-[:AT]-(p:post)")
+                   .With("pl, p")
+                   .OptionalMatch("(p)<-[:LIKE]-(u:user)")
+                   .With("p, COUNT(Distinct u) as number")
+                   .Match("(ph:photo)<-[:HAS]-(p)")
+                   .With("ph, number")
+                   .OrderByDescending("number")
+                   .Limit(4)
+                   .ReturnDistinct<Photo>("ph")
+                   .Results.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPhoto = new List<Photo>();
+            }
+
+            listPhoto.RemoveAll(item => item == null);
+            return listPhoto;
+        }
+
+        public int CountPostAtPlace(int placeID)
+        {
+            /*
+             * optional match (pl:place {placeID:@placeID})<-[:AT]-(p:post)
+                return COUNT(p)
+             */
+            int numberOfPost = 0;
+            _client.Connect();
+            try
+            {
+                numberOfPost = _client.Cypher
+                   .OptionalMatch("(pl:place {placeID:" + placeID + "})<-[:AT]-(p:post)")
+                   .ReturnDistinct<int>("COUNT (p)")
+                   .Results.First();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                numberOfPost = 0;
+            }
+            return numberOfPost;
         }
     }
 }

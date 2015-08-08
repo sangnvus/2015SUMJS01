@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using FlyAwayPlus.Models;
@@ -359,6 +361,32 @@ namespace FlyAwayPlus.Controllers
             reportPost.userReportedID = userReportedID;
 
             GraphDatabaseHelpers.Instance.InsertReportPost(reportPost);
+
+            //Send warning email to reported user
+            var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedID);
+            string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+            const string senderPassword = "doan2015"; // sender password here…
+            try
+            {
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com", // smtp server address here…
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(senderID, senderPassword),
+                    Timeout = 30000,
+                };
+                var message = new MailMessage(senderID, email, "Report post",
+                    "Your post is reported");
+                smtp.Send(message);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
 
             return Json(success);
         }

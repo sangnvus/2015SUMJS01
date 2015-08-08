@@ -252,3 +252,131 @@ a:hover, a:focus {
 #idSearchPeople h2:hover, #idSearchPeople .memoTitle:hover, .User.followFriendsItem:hover {
     background: #f3f3f3 none repeat scroll 0 0;
 }
+
+/* SEARCH PLACE RESULT START*/
+.boardPinCount {
+    background-color: rgba(68, 68, 68, 0.7);
+    border-radius: 2px;
+    bottom: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) inset, 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #fff;
+    left: 3px;
+    padding: 3px 6px;
+    position: absolute;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.7);
+}
+.PinCount .pinIcon {
+    display: inline-block;
+    height: 9px;
+    margin-right: 5px;
+    width: 7px;
+}
+.boardThumbs li .thumb {
+    border-radius: 3px;
+    height: 69.3333px;
+    width: 100%;
+}
+.boardThumbs::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.boardThumbs {
+    padding: 8px;
+    list-style: outside none none;
+    max-width: 100%;
+    margin-bottom: 0px;
+}
+.boardThumbs li::after {
+    border-radius: 3px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.33) inset;
+    content: " ";
+    height: 69.3333px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.boardThumbs li:first-child {
+    margin-left: 0px;
+}
+
+.boardThumbs li {
+    display: inline;
+    float: left;
+    height: 69.3333px;
+    margin-left: 8px;
+    position: relative;
+    width: 31%;
+    padding: 0;
+    list-style: outside none none;
+    max-width: 100%;
+}
+.blog-landing {
+    max-width: 100%;
+    position: relative;
+    width: 100%;
+}
+.place-result-container {
+    background-color: #ffffff;
+    border-bottom: 2px solid #d7d7d7;
+    border-radius: 8px;
+    margin: 3em auto 1em;
+    padding-bottom: 5px;
+    position: absolute;
+    transition: top 1s ease 0s, left 1s ease 0s;
+    margin-top: 0px !important;
+}
+.place-result-container .place-result-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: block;
+    overflow: hidden;
+    padding-bottom: 2em;
+    position: relative;
+    height: 171px;
+}
+.place-result-container .place-result-bio {
+    background-position: 50% center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 171px;
+    margin: 0 auto;
+    max-width: 1000px;
+    width: 100%;
+}
+.place-result-container .place-result-place-name {
+    padding: 0 15px;
+    margin-top: 5px;
+}
+.place-result-container .place-result-place-name h3 {
+    color: #1e8bc3;
+    font-family: "Seogoe UI Light","Calibri","Arial";
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 3px;
+    margin-top: 0;
+    overflow: hidden !important;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.place-result-container .place-result-view-detail {
+    background-color: #2589cc;
+    border-radius: 5px;
+    color: white;
+    font-family: "Seogoe UI","Calibri","Arial";
+    margin: 8px;
+    padding: 0.5em;
+    text-align: center;
+    transition-duration: 0.3s;
+    transition-property: all;
+    transition-timing-function: ease;
+    width: 248px;
+}
+ul {
+    padding: 0px;
+}
+/* SEARCH PLACE RESULT END*/
