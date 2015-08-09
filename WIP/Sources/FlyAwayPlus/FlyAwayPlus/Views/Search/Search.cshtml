@@ -9,11 +9,12 @@
     var listPlace = ViewData["listPlace"] as List<FlyAwayPlus.Models.Place>;
     var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<FlyAwayPlus.Models.Photo>>;
     var numberOfPostDict = ViewData["numberOfPostDict"] as Dictionary<int, int>;
+    var wishlist = ViewData["wishlist"] as Dictionary<int, bool>;
 }
 <link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
 <link href="~/Content/HomePage/gridLayout.css" rel="stylesheet" />
 <link href="~/Content/SearchPage/search.css" rel="stylesheet" />
-<link href="~/Content/Room/room-list.css">
+<link href="~/Content/Room/room-list.css" rel="stylesheet" />
 
 <div class="container">
     <div class="full-width">
@@ -64,7 +65,16 @@
                                     </li>
                                 }
                             </ul>
-                            <a href="#"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                            @if (wishlist[place.placeID])
+                            {
+                                <a class="cls-add-wishlist-btn" style="display:none;" role="@place.placeID" href="#"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                                <a class="cls-remove-wishlist-btn" role="@place.placeID" href="#"><div class="place-result-view-detail">Remove From Wishlist</div></a>
+                            }
+                            else
+                            {
+                                <a class="cls-add-wishlist-btn" role="@place.placeID" href="#"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                                <a class="cls-remove-wishlist-btn" style="display:none;" role="@place.placeID" href="#"><div class="place-result-view-detail">Remove From Wishlist</div></a>
+                            }
                         </div>
                     </div>
                 }
@@ -117,6 +127,42 @@
 <script>
     $(function () {
         commonModule.setBlocksit($(".blog-landing"), 250);
+
+        $(".cls-add-wishlist-btn").click(function (evt) {
+            var controller = "/User/AddWishPlace/";
+            var userID = '@Session["userID"]';
+            if (userID.trim().length == 0) {
+                alert("You must login first!!!");
+            }
+            else {
+                var data = {
+                    placeID: parseInt($(this).attr("role")),
+                    userID: parseInt(userID)
+                };
+                commonModule.callAjax(controller, data, null);
+                $(this).hide();
+                $(this).closest(".place-result-content").find(".cls-remove-wishlist-btn").show();
+            }
+            evt.preventDefault();
+        });
+
+        $(".cls-remove-wishlist-btn").click(function (evt) {
+            var controller = "/User/RemoveWishPlace/";
+            var userID = '@Session["userID"]';
+            if (userID.trim().length == 0) {
+                alert("You must login first!!!");
+            }
+            else {
+                var data = {
+                    placeID: parseInt($(this).attr("role")),
+                    userID: parseInt(userID)
+                };
+                commonModule.callAjax(controller, data, null);
+                $(this).hide();
+                $(this).closest(".place-result-content").find(".cls-add-wishlist-btn").show();
+            }
+            evt.preventDefault();
+        });
     });
 
     //window resize

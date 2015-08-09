@@ -20,7 +20,7 @@
     @Styles.Render("~/Content/bootstrap-social.css")
 
     <link href="http://fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
-    <link href="~/Content/morphing-search.css" rel="stylesheet" />
+    <link href="~/Content/common.css" rel="stylesheet" />
     <link href="~/Content/Fancy/jquery.fancybox.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.dropdowns-enhancement.min.css" rel="stylesheet" />
     <link href="~/Content/sweetalert.css" rel="stylesheet" />
@@ -130,7 +130,7 @@
         @RenderBody()
         <hr />
     </div>
-
+    @Html.Partial("_TagFriendPartial")
     @Html.Action("LoginPartial", "Login")
     @if (@Session["authenicated"] != null && !@Session["authenicated"].ToString().IsEmpty())
     {
@@ -161,8 +161,11 @@
 
             $("#id-search-input").keydown(function (evt) {
                 if (evt.keyCode == 13) {
-                    $(this).closest("form").submit();
-                    evt.preventDefault();
+                    if ($(this).val().trim().length != 0) {
+                        $(this).val($(this).val().trim());
+                        $(this).closest("form").submit();
+                        evt.preventDefault();
+                    }
                 }
             });
             /*

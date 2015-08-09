@@ -1173,11 +1173,14 @@ namespace FlyAwayPlus.Helpers
                  * 
                  * match (u:user{userID:@otherUserID})-[r:COMMENTED]->(p:post{postID:@postID})
                     delete r
-                    create (u)-[r1:COMMENTED {dateCreated: '2015/07/23 08:05:03', activityID : 10280}]->(p)
+                    create (u)-[r1:COMMENTED {dateCreated: @now, activityID : @activityID}]->(p)
                  */
                 User otherUser = FindUser(comment);
                 _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "})-[r:COMMENTED]->(p:post{postID:" + postID + "})")
-                            .Delete("r")
+                            .Delete("r").
+                            ExecuteWithoutResults();
+
+                _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "}), (p:post{postID:" + postID + "})")
                             .Create("(u)-[r1:COMMENTED {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', activityID : " + GetActivityIncrementId() + "}]->(p)")
                             .ExecuteWithoutResults();
 
@@ -1604,7 +1607,7 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public List<User> GetListFriendRequest(int userID)
+        public List<User> GetListFriend(int userID)
         {
 
             /*

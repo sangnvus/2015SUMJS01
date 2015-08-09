@@ -37,3 +37,80 @@
 .mini-screen-btn {
     background-image: url(../../../data/img/arrow-up-blue.png) !important;
 }
+
+/* TAG FRIEND START*/
+.tab_complete_ui {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
+    line-height: 1.4rem;
+    min-width: 300px;
+    padding: 0;
+    position: absolute;
+    z-index: 100000;
+}
+.monkey_scroll_hider {
+    overflow: hidden;
+}
+.tab_complete_ui .tab_complete_ui_scroller {
+    max-height: 454px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.tab_complete_ui ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.tab_complete_ui li.tab_complete_ui_item {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border-color: -moz-use-text-color -moz-use-text-color #fff;
+    border-image: none;
+    border-style: none none solid;
+    border-width: 0 0 1px;
+    cursor: pointer;
+    font-family: Lato,appleLogo,sans-serif;
+    font-size: 0.9rem;
+    overflow: hidden;
+    padding: 3px 10px 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+li {
+    line-height: 1.5rem;
+    margin: 0;
+}
+.tab_complete_ui ul.type_members .member_image {
+    margin-right: 0.4rem;
+    margin-top: -2px;
+    vertical-align: middle;
+}
+.member_image.thumb_24 {
+    height: 24px;
+    width: 24px;
+}
+.member_image {
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    border-radius: 0.2rem;
+    display: inline-block;
+    border: 0 none;
+    max-width: 100%;
+}
+.tab_complete_ui ul.type_members .broadcast, .tab_complete_ui ul.type_members .username {
+    font-weight: 900;
+    margin-right: 0.4rem;
+}
+.tab_complete_ui li.tab_complete_ui_item:hover {
+    background: #439fe0 none repeat scroll 0 0;
+    border-bottom-color: #2a80b9;
+    color: #fff !important;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+}
+/* TAG FRIEND END*/

@@ -5,6 +5,7 @@
     var user = ViewData["user"] as FlyAwayPlus.Models.User;
     var listComment = ViewData["listComment"] as List<FlyAwayPlus.Models.Comment>;
     var photo = ViewData["photo"] as FlyAwayPlus.Models.Photo;
+    var listFriend = ViewData["listFriend"] as List<FlyAwayPlus.Models.User>;
 }
 <script src="~/Scripts/PostPage/postDetail.js" type="text/javascript"></script>
 <script src="https://connect.facebook.net/en_US/all.js"></script>
@@ -85,7 +86,7 @@
             FB.ui(
             {
                 method: 'feed',
-                name: '@userPost.firstName'+' @userPost.lastName',
+                name: '@userPost.firstName' + ' @userPost.lastName',
                 link: 'http://localhost:1644/Post/Index/10010#',
                 picture: 'http://localhost:1644/Images/UserUpload/'+'@photo.url',
                 caption: 'FlyAwayPlus.com',
