@@ -23,11 +23,21 @@ namespace FlyAwayPlus.Controllers
             List<Place> listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword(keyword.ToUpper());
             Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
             Dictionary<int, int> numberOfPostDict = new Dictionary<int, int>();
+            Dictionary<int, bool> wishlist = new Dictionary<int, bool>();
+            User user = UserHelpers.GetCurrentUser(Session);
 
             foreach (var place in listPlace)
             {
                 listPhotoDict.Add(place.placeID, GraphDatabaseHelpers.Instance.SearchPhotoInPlace(place.placeID));
                 numberOfPostDict.Add(place.placeID, GraphDatabaseHelpers.Instance.CountPostAtPlace(place.placeID));
+                if (user == null)
+                {
+                    wishlist.Add(place.placeID, false);
+                }
+                else
+                {
+                    wishlist.Add(place.placeID, GraphDatabaseHelpers.Instance.IsInWishist(place.placeID, user.userID));
+                }
             }
 
 
@@ -36,6 +46,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["keyword"] = keyword;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["numberOfPostDict"] = numberOfPostDict;
+            ViewData["wishlist"] = wishlist;
             return View();
         }
 

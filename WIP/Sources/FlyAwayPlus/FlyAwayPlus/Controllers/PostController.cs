@@ -18,6 +18,7 @@ namespace FlyAwayPlus.Controllers
             User userPost;
             List<Comment> listComment;
             List<User> listSuggestFriend = new List<User>();
+            List<User> listFriend = new List<User>();
             List<string> listFriendType = new List<string>();
             List<int> listMutualFriends = new List<int>();
 
@@ -46,6 +47,7 @@ namespace FlyAwayPlus.Controllers
                 }
 
                 userPost = GraphDatabaseHelpers.Instance.SearchUser(post.postID);
+                listFriend = GraphDatabaseHelpers.Instance.GetListFriend(user.userID);
                 listComment = GraphDatabaseHelpers.Instance.FindComment(post);
 
                 likeCount = GraphDatabaseHelpers.Instance.CountLike(post.postID);
@@ -96,6 +98,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listIsVisitedPlace"] = listIsVisitedPlace;
             ViewData["listNumberOfPost"] = listNumberOfPost;
             ViewData["checkWishlist"] = checkWishlist;
+            ViewData["listFriend"] = listFriend;
             return View(post);
         }
 

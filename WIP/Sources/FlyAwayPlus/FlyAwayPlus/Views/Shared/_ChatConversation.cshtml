@@ -146,6 +146,28 @@
             var listFriend = JSON.parse(listFriendJSON);
             var listMessage = JSON.parse(listMessageJSON);
 
+            if (postDetailModule) {
+                postDetailModule.setListFriend(listFriend);
+
+                $(".comment-content-word").each(function () {
+                    var value = $(this).text();
+                    var pattern = /@@([0-9a-z A-Z]*):/g;
+                    var tagFriend = value.match(pattern);
+                    if (tagFriend) {
+                        var username = "";
+                        var replaceUser = "";
+
+                        for (var index = 0; index < tagFriend.length; index++) {
+                            username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                            replaceUser = "<a href='/User/Index/" + postDetailModule.findUserID(username) + "'>" + username + "</a>";
+                            value = value.split(tagFriend[index]).join(replaceUser);
+                        }
+
+                        $(this).html("").append(value);
+                    }
+                });
+            }
+
             $("#idListFriend").empty();
             for (var index = 0; index < listFriend.length; index++) {
                 var tmp = "";

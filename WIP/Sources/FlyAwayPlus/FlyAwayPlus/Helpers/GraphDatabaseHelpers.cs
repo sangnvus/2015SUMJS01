@@ -1147,11 +1147,14 @@ namespace FlyAwayPlus.Helpers
                  * 
                  * match (u:user{userID:@otherUserID})-[r:COMMENTED]->(p:post{postID:@postID})
                     delete r
-                    create (u)-[r1:COMMENTED {dateCreated: '2015/07/23 08:05:03', activityID : 10280}]->(p)
+                    create (u)-[r1:COMMENTED {dateCreated: @now, activityID : @activityID}]->(p)
                  */
                 User otherUser = FindUser(comment);
                 _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "})-[r:COMMENTED]->(p:post{postID:" + postId + "})")
-                            .Delete("r")
+                            .Delete("r").
+                            ExecuteWithoutResults();
+
+                _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "}), (p:post{postID:" + postId + "})")
                             .Create("(u)-[r1:COMMENTED {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', activityID : " + GetActivityIncrementId() + "}]->(p)")
                             .ExecuteWithoutResults();
 
@@ -1588,11 +1591,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all friend of current user
                  * 
-                 * match(u1:user{userID:@userID})<-[m:FRIEND_REQUEST]-(u2:user)
+                 * match(u1:user{userId:@userId})<-[m:FRIEND_REQUEST]-(u2:user)
                     return u2;
                  */
             _client.Connect();
-            var listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + userId + "})<-[:FRIEND_REQUEST]-(u2:user)")
+            var listUser = _client.Cypher.OptionalMatch("(u1:user {userId:" + userId + "})<-[:FRIEND_REQUEST]-(u2:user)")
                 .ReturnDistinct<User>("u2")
                 .Results.ToList();
             listUser.RemoveAll(item => item == null);
