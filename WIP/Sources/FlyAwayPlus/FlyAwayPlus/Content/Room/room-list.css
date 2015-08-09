@@ -4,24 +4,8 @@
     width: 100%;
 }
 
-.room-list-container .room-list-header {
-    display: block;
-    overflow: hidden;
-    position: relative;
-    padding-bottom: 2em;
-    -moz-border-radius-topleft: 8px;
-    -webkit-border-top-left-radius: 8px;
-    -ms-border-top-left-radius: 8px;
-    border-top-left-radius: 8px;
-    -moz-border-radius-topright: 8px;
-    -webkit-border-top-right-radius: 8px;
-    -ms-border-top-right-radius: 8px;
-    border-top-right-radius: 8px;
-}
-
 .room-list-container {
     position: absolute;
-    margin: 3em auto 1em auto;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     -ms-border-radius: 8px;
@@ -37,6 +21,21 @@
     -ms-transition: top 1s ease, left 1s ease;
 }
 
+    .room-list-container .room-list-header {
+        display: block;
+        overflow: hidden;
+        position: relative;
+        padding-bottom: 2em;
+        -moz-border-radius-topleft: 8px;
+        -webkit-border-top-left-radius: 8px;
+        -ms-border-top-left-radius: 8px;
+        border-top-left-radius: 8px;
+        -moz-border-radius-topright: 8px;
+        -webkit-border-top-right-radius: 8px;
+        -ms-border-top-right-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
     .room-list-container .room-list-bio {
         width: 100%;
         height: 171px;
@@ -48,194 +47,194 @@
         max-width: 1000px;
     }
 
-.room-list-container .room-list-avatarcontainer {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    margin: auto;
-    width: 70px;
-    height: 70px;
-    display: block;
-}
-
-    .room-list-container .room-list-avatarcontainer:hover > .room-list-hover {
-        -ms-opacity: 1;
-        opacity: 1;
+    .room-list-container .room-list-avatarcontainer {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        margin: auto;
+        width: 70px;
+        height: 70px;
+        display: block;
     }
 
-.room-list-container .room-list-place-name {
-    padding: 0 15px 0 15px;
-}
-
-    .room-list-container .room-list-place-name h3 {
-        margin-top: 0;
-        font-size: 100%;
-        color: #1E8BC3;
-        font-family: 'Seogoe UI Light', 'Calibri', 'Arial';
-        font-size: 20px;
-        margin-bottom: 3px;
-        font-weight: 400;
-        text-transform: uppercase;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden !important;
-        -moz-text-overflow: ellipsis;
-        text-overflow: ellipsis;
-    }
-
-.room-list-container .room-list-description {
-    padding: 0 15px 0 10px;
-    border-left: 3px solid #2589cc;
-    margin-left: 15px;
-    font-style: italic;
-    font-size: 14px;
-    font-family: 'Calibri', 'Arial';
-    height: 80px;
-    overflow: hidden !important;
-    text-align: justify;
-    position: relative
-}
-
-.room-list-container .room-list-description:after {
-  content: "";
-  text-align: right;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 20%;
-  height: 1.2em;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
-}
-
-.room-list-container .room-list-avatar {
-    width: 100%;
-    border: 2px solid #fff;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-}
-
-    .room-list-container .room-list-avatar img {
-        width: 65px;
-        height: 65px;
-    }
-
-    .room-list-container .room-list-avatar:hover + .room-list-hover {
-        -ms-opacity: 1;
-        opacity: 1;
-        cursor: pointer;
-    }
-
-.room-list-container .room-list-hover {
-    position: absolute;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-    background-color: #3498db;
-    top: 0;
-    font-size: 1.8em;
-    text-align: center;
-    color: white;
-    padding-top: 25%;
-    -ms-opacity: 0;
-    opacity: 0;
-    font-weight: 300;
-    border: 2px solid #fff;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-    border-radius: 50%;
-    -webkit-transition-property: all;
-    -moz-transition-property: all;
-    -o-transition-property: all;
-    -ms-transition-property: all;
-    transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -moz-transition-duration: 0.5s;
-    -o-transition-duration: 0.5s;
-    -ms-transition-duration: 0.5s;
-    transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease;
-    -moz-transition-timing-function: ease;
-    -o-transition-timing-function: ease;
-    -ms-transition-timing-function: ease;
-    transition-timing-function: ease;
-}
-
-.room-list-container .room-list-data {
-    margin-top: .6em;
-    color: #34495E;
-}
-
-    .room-list-container .room-list-data .room-list-no-current-member {
-        color: #D91E17;
-        margin: 0;
-        font-style: normal;
-    }
-
-    .room-list-container .room-list-data ul {
-        -webkit-padding-start: 0;
-    }
-
-    .room-list-container .room-list-data li {
-        width: 32%;
-        text-align: center;
-        display: inline-block;
-        font-size: 1.5em;
-        font-family: 'Seogoe UI', 'Calibri', 'Arial';
-        border-right: solid 1px #bdc3c7;
-    }
-
-        .room-list-container .room-list-data li:last-child {
-            border: none;
+        .room-list-container .room-list-avatarcontainer:hover > .room-list-hover {
+            -ms-opacity: 1;
+            opacity: 1;
         }
 
-        .room-list-container .room-list-data li span {
-            display: block;
+    .room-list-container .room-list-place-name {
+        padding: 0 15px 0 15px;
+    }
+
+        .room-list-container .room-list-place-name h3 {
+            margin-top: 0;
+            font-size: 100%;
+            color: #1E8BC3;
+            font-family: 'Seogoe UI Light', 'Calibri', 'Arial';
+            font-size: 20px;
+            margin-bottom: 3px;
+            font-weight: 400;
             text-transform: uppercase;
-            font-family: 'Seogoe UI', 'Calibri', 'Arial';
-            font-size: .6em;
-            font-weight: 500;
-            color: #2D3E50;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden !important;
+            -moz-text-overflow: ellipsis;
+            text-overflow: ellipsis;
         }
 
-.room-list-container .room-list-view-detail {
-    margin: 1.5em auto 0 auto;
-    background-color: #2589cc;
-    width: 150px;
-    color: white;
-    font-family: 'Seogoe UI', 'Calibri', 'Arial';
-    text-align: center;
-    padding: .5em;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-transition-property: all;
-    -moz-transition-property: all;
-    -o-transition-property: all;
-    -ms-transition-property: all;
-    transition-property: all;
-    -webkit-transition-duration: 0.3s;
-    -moz-transition-duration: 0.3s;
-    -o-transition-duration: 0.3s;
-    -ms-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-    -webkit-transition-timing-function: ease;
-    -moz-transition-timing-function: ease;
-    -o-transition-timing-function: ease;
-    -ms-transition-timing-function: ease;
-    transition-timing-function: ease;
-}
-
-    .room-list-container .room-list-view-detail:hover {
-        background-color: #167abd;
-        cursor: pointer;
+    .room-list-container .room-list-description {
+        padding: 0 15px 0 10px;
+        border-left: 3px solid #2589cc;
+        margin-left: 15px;
+        font-style: italic;
+        font-size: 14px;
+        font-family: 'Calibri', 'Arial';
+        height: 80px;
+        overflow: hidden !important;
+        text-align: justify;
+        position: relative;
     }
+
+        .room-list-container .room-list-description:after {
+            content: "";
+            text-align: right;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 20%;
+            height: 1.2em;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+        }
+
+    .room-list-container .room-list-avatar {
+        width: 100%;
+        border: 2px solid #fff;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+        -o-border-radius: 50%;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .room-list-container .room-list-avatar img {
+            width: 65px;
+            height: 65px;
+        }
+
+        .room-list-container .room-list-avatar:hover + .room-list-hover {
+            -ms-opacity: 1;
+            opacity: 1;
+            cursor: pointer;
+        }
+
+    .room-list-container .room-list-hover {
+        position: absolute;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        background-color: #3498db;
+        top: 0;
+        font-size: 1.8em;
+        text-align: center;
+        color: white;
+        padding-top: 25%;
+        -ms-opacity: 0;
+        opacity: 0;
+        font-weight: 300;
+        border: 2px solid #fff;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+        -o-border-radius: 50%;
+        border-radius: 50%;
+        -webkit-transition-property: all;
+        -moz-transition-property: all;
+        -o-transition-property: all;
+        -ms-transition-property: all;
+        transition-property: all;
+        -webkit-transition-duration: 0.5s;
+        -moz-transition-duration: 0.5s;
+        -o-transition-duration: 0.5s;
+        -ms-transition-duration: 0.5s;
+        transition-duration: 0.5s;
+        -webkit-transition-timing-function: ease;
+        -moz-transition-timing-function: ease;
+        -o-transition-timing-function: ease;
+        -ms-transition-timing-function: ease;
+        transition-timing-function: ease;
+    }
+
+    .room-list-container .room-list-data {
+        margin-top: .6em;
+        color: #34495E;
+    }
+
+        .room-list-container .room-list-data .room-list-no-current-member {
+            color: #D91E17;
+            margin: 0;
+            font-style: normal;
+        }
+
+        .room-list-container .room-list-data ul {
+            -webkit-padding-start: 0;
+        }
+
+        .room-list-container .room-list-data li {
+            width: 32%;
+            text-align: center;
+            display: inline-block;
+            font-size: 1.5em;
+            font-family: 'Seogoe UI', 'Calibri', 'Arial';
+            border-right: solid 1px #bdc3c7;
+        }
+
+            .room-list-container .room-list-data li:last-child {
+                border: none;
+            }
+
+            .room-list-container .room-list-data li span {
+                display: block;
+                text-transform: uppercase;
+                font-family: 'Seogoe UI', 'Calibri', 'Arial';
+                font-size: .6em;
+                font-weight: 500;
+                color: #2D3E50;
+            }
+
+    .room-list-container .room-list-view-detail {
+        margin: 1.5em auto 0 auto;
+        background-color: #2589cc;
+        width: 150px;
+        color: white;
+        font-family: 'Seogoe UI', 'Calibri', 'Arial';
+        text-align: center;
+        padding: .5em;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-transition-property: all;
+        -moz-transition-property: all;
+        -o-transition-property: all;
+        -ms-transition-property: all;
+        transition-property: all;
+        -webkit-transition-duration: 0.3s;
+        -moz-transition-duration: 0.3s;
+        -o-transition-duration: 0.3s;
+        -ms-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+        -webkit-transition-timing-function: ease;
+        -moz-transition-timing-function: ease;
+        -o-transition-timing-function: ease;
+        -ms-transition-timing-function: ease;
+        transition-timing-function: ease;
+    }
+
+        .room-list-container .room-list-view-detail:hover {
+            background-color: #167abd;
+            cursor: pointer;
+        }

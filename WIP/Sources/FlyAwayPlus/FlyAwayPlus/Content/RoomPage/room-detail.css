@@ -4,7 +4,6 @@
 
     #room-detail-wrapper .room-detail-interact-area,
     #room-detail-wrapper .room-detail-plan-area,
-    #room-detail-wrapper .room-detail-post-list,
     #room-detail-wrapper .room-detail-right-area {
         padding: 10px;
     }
@@ -134,8 +133,6 @@
 
             #room-detail-wrapper .room-detail-interact-area .room-detail-admin-avatar img {
                 text-align: center;
-                padding: 2px;
-                background-color: #3bafda;
             }
 
     #room-detail-wrapper .room-detail-request-join,
@@ -216,14 +213,15 @@
 
         #room-detail-wrapper .room-detail-left-area .room-detail-posting-area {
             padding: 0;
-            margin: 0 10px 10px 10px;
+            margin: 0 10px 10px 0;
             background-color: transparent;
-            max-width: 100%
+            max-width: 100%;
         }
 
-#room-detail-wrapper .room-detail-left-area .room-detail-post-list {
-            height: 400px;
-            background-color: #ff4500;
+        #room-detail-wrapper .room-detail-left-area .room-detail-post-list {
+            padding: 0;
+            margin: 0 10px 0 0;
+            background-color: transparent;
         }
 
     #room-detail-wrapper .room-detail-right-area {
@@ -231,6 +229,91 @@
         height: 520px;
         background-color: #ee82ee;
     }
+
+
+.tabs-cat {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    margin-top: 5px
+}
+
+    .tabs-cat .cate-item {
+        position: relative;
+        padding-bottom: 20px;
+        overflow: hidden;
+    }
+
+        .tabs-cat .cate-item .fa {
+            font-size: 35px;
+            color: #4fc1e9;
+            margin-top: 0;
+            max-width: 100%;
+        }
+
+        .tabs-cat .cate-item:last-child:after {
+            display: none;
+        }
+
+        .tabs-cat .cate-item.active:before, .tabs-cat .cate-item:hover:before {
+            bottom: 0;
+        }
+
+        .tabs-cat .cate-item:before {
+            position: absolute;
+            bottom: -17px;
+            left: 50%;
+            content: '';
+            border: 17px solid transparent;
+            border-bottom-color: #4fc1e9;
+            -webkit-transform: translate(-50%,0);
+            -moz-transform: translate(-50%,0);
+            -ms-transform: translate(-50%,0);
+            -o-transform: translate(-50%,0);
+            -webkit-transition: all .2s linear;
+            -moz-transition: all .2s linear;
+            -ms-transition: all .2s linear;
+            -o-transition: all .2s linear;
+        }
+
+        .tabs-cat .cate-item:after {
+            width: 0;
+            top: 0;
+            bottom: 35px;
+            border-left: 1px solid #fff;
+            right: 0;
+            position: absolute;
+            content: '';
+            display: block;
+        }
+
+        .tabs-cat .cate-item a {
+            text-decoration: none;
+            display: block;
+        }
+
+        .tabs-cat .cate-item span {
+            color: #4fc1e9;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tabs-cat .cate-item img {
+            margin-top: 15px;
+        }
+
+.room-detail-plan-area .tab-content {
+    padding-top: 0;
+}
+
+.form-cn {
+    background-color: #ffffff;
+    background-color: rgba(255,255,255,.85);
+    padding: 20px 30px 30px;
+    border-top: 5px solid #4fc1e9;
+}
+
 
 /* SHITTY OLD DESIGN */
 /*.full-width {

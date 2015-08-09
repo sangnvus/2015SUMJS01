@@ -519,12 +519,11 @@ img {
 
     .post-area .post-info {
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     .post-area .post-content {
-        margin: 0 0 0 0;
-        padding: 0 20px 20px 0;
+        margin-bottom: 10px;
         -moz-text-overflow: ellipsis;
         text-overflow: ellipsis;
     }
@@ -1265,6 +1264,16 @@ textarea {
     border-radius: 8px !important;
 }
 
+.border-radius-top-left {
+    -ms-border-top-left-radius: 8px !important;
+    border-top-left-radius: 8px !important;
+}
+
+.border-radius-top-right {
+    -ms-border-top-right-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
 .border-radius-bottom-left {
     -ms-border-bottom-left-radius: 8px !important;
     border-bottom-left-radius: 8px !important;
@@ -1274,3 +1283,12 @@ textarea {
     -ms-border-bottom-right-radius: 8px !important;
     border-bottom-right-radius: 8px !important;
 }
+
+.comment-box {
+    -moz-resize: none;
+    -ms-resize: none;
+    -o-resize: none;
+    resize: none;
+    height: 31px;
+}
+

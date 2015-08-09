@@ -4,6 +4,7 @@
 }
 
 <link href="~/Content/RoomPage/room-detail.css" rel="stylesheet" />
+<link href="~/Content/Room/room-list.css" rel="stylesheet" />
 
 <div id="room-detail-wrapper">
     <div>
@@ -58,18 +59,45 @@
         <div>
             <!-- Nav tabs -->
             <div>
-                <ul class="room-detail-plan-tabs" role="tablist">
-                    <li role="presentation" class="active col-md-4"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">General</a></li>
-                    <li role="presentation" class="col-md-4"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Timeline</a></li>
-                    <li role="presentation" class="col-md-4"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Estimation</a></li>
+                <ul class="tabs-cat text-center row">
+                    <li class="cate-item col-xs-4 active">
+                        <a data-toggle="tab" href="#room-detail-plan-tab-general" title="" aria-expanded="true">
+                            <span>General</span>
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="cate-item col-xs-4">
+                        <a data-toggle="tab" href="#room-detail-plan-tab-timeline" title="" aria-expanded="false">
+                            <span>Timeline</span>
+                            <i class="fa fa-calendar"></i>
+                        </a>
+                    </li>
+                    <li class="cate-item col-xs-4">
+                        <a data-toggle="tab" href="#room-detail-plan-tab-estimation" title="" aria-expanded="false">
+                            <span>Estimation</span>
+                            <i class="fa fa-dollar"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">...</div>
-                <div role="tabpanel" class="tab-pane" id="profile">...</div>
-                <div role="tabpanel" class="tab-pane" id="messages">...</div>
+                <!-- general -->
+                <div class="form-cn room-detail-plan-tab-general tab-pane active" id="room-detail-plan-tab-general">
+                    1
+                </div>
+                <!-- End general -->
+                <!-- timeline -->
+                <div class="form-cn room-detail-plan-tab-timeline tab-pane" id="room-detail-plan-tab-timeline">
+                    2
+                </div>
+                <!-- End timeline -->
+                <!-- estimation -->
+                <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
+                    3
+                </div>
+                <!-- End estimation -->
             </div>
         </div>
     </div>
@@ -84,9 +112,9 @@
             <div class="friend-list-avatar">
                 @for (int i = 0; i < 5; i++)
                 {
-                    <div class="padding-5 col-md-2">
-                        <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Eunji.jpg" alt="Avatar" />
-                    </div>
+                <div class="padding-5 col-md-2">
+                    <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Eunji.jpg" alt="Avatar" />
+                </div>
                 }
             </div>
             <div class="friend-list-header view-more-friend-title">
@@ -205,7 +233,53 @@
             <!--POSTING ENDS-->
             <!--POST LIST-->
             <div class="room-detail-post-list">
+                @for (int i = 0; i < 10; i++)
+                {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="post-area">
+                            <div class="post-info">
+                                <div class="user-avatar">
+                                    <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" alt="Username's avatar" class="img-circle" />
+                                </div>
+                                <div class="post-info-area">
+                                    <div class="user-name">
+                                        <a href="/User/Index/1">Duc Filan</a>
+                                    </div>
+                                    <span class="post-time">
+                                        <span>16 Sep 2013 21:36</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... nhưng phần lớn vẫn còn mắc phải nhược điểm là khiến cho người dùng cảm thấy mệt mỏi, chóng mặt khi sử dụng.
+                            </div>
+                        </div>
 
+                        <div class="interact-area">
+                            <a href="#" class="btn-like"><span>Like</span></a>
+                            <a href="#" class="btn-dislike"><span>Dislike</span></a>
+                            <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
+                            <a href="#" id="report_button" class="btn-report"><span>Report</span></a>
+                        </div>
+                        <div class="divide-area"></div>
+                        <div class="comment-area">
+                            <div style="margin: 0 20px 12px">
+                                <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">18</b>&nbsp;
+                                <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">18</b>&nbsp;
+                                <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">18</b>
+                            </div>
+                            <div class="comment-stats">
+                                <span>18 comments</span>
+                            </div>
+
+                            <div class="comment-textbox-wrapper">
+                                <textarea id="idTextareaComment" class="comment-textbox comment-box" placeholder="Input comment..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
             </div>
             <!--POST LIST ENDS-->
         </div>
