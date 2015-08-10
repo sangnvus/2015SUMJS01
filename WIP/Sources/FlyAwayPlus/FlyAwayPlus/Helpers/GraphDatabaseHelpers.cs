@@ -1583,7 +1583,7 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public List<User> GetListFriendRequest(int userId)
+        public List<User> GetListFriend(int userId)
         {
 
             /*

@@ -9,7 +9,7 @@ namespace FlyAwayPlus.Models
     {
         public int reportID { get; set; }
         public int postID { get; set; }
-        public string content { get; set; }
+        public int typeRepost { get; set; }
         public int userReportID { get; set; }
         public int userReportedID { get; set; }
     }

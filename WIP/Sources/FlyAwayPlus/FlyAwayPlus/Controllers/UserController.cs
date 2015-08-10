@@ -350,13 +350,13 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(success);
         }
-        public JsonResult ReportPost(int postID, int userReportID, int userReportedID)
+        public JsonResult ReportPost(int postID, int userReportID, int userReportedID, int typeReport)
         {
             bool success = false;
 
             ReportPost reportPost = new ReportPost();
             reportPost.postID = postID;
-            reportPost.content = "Khong thich";
+            reportPost.typeRepost = typeReport;
             reportPost.userReportID = userReportID;
             reportPost.userReportedID = userReportedID;
 
@@ -391,12 +391,12 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
-        public JsonResult ReportUser(int userReportID, int userReportedID)
+        public JsonResult ReportUser(int userReportID, int userReportedID, int typeReport)
         {
             bool success = false;
 
             ReportUser reportUser = new ReportUser();
-            reportUser.content = "Khong thich";
+            reportUser.typeReport = typeReport;
             reportUser.userReportID = userReportID;
             reportUser.userReportedID = userReportedID;
 
