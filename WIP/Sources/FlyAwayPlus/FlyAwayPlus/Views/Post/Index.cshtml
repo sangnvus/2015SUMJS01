@@ -42,8 +42,60 @@
                 <a href="#" role="@Model.postID" class="btn-like"><span>Like</span></a>
                 <a href="#" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
                 <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
-                <a href="#" role="@Model.postID" id="report_button" class="btn-report"><span>Report</span></a>
+                <a href="#" role="@Model.postID" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Help us to know what's happening</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-md-1">
+                                            <div>
+                                                <img src="/Images/UserUpload/@photo.url" height="100px" width="70px">
+                                                <p>By @userPost.firstName @userPost.lastName</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <div class="row" style="margin-left: 20px">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="optradio" value="1">This post annoying or unpleasant</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="margin-left: 20px">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="optradio" value="2">I think this post should not appear on FlyAwayPlus</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row" style="margin-left: 20px">
+                                                <div class="radio">
+                                                    <label><input type="radio" name="optradio" value="3">This post is spam</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" disabled id="closeBtn">Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="divide-area"></div>
             <div class="comment-area">
                 <div style="margin: 0 20px 12px">
@@ -94,20 +146,34 @@
             });
         });
 
-        $('#report_button').click(function (e) {
+        $('input:radio[name=optradio]').click(function () {
+            var checkval = $(this).val();
+            $('#closeBtn').prop('disabled', (checkval == null));
+            
+        });
+
+        $('#closeBtn').click(function (e) {
 
             var controller = "/User/ReportPost/";
             var data = {
                 postID: @Model.postID,
-                userReportID: @user.userID,
-                userReportedID: @userPost.userID
+                userReportID: parseInt('@Session["userID"]'),
+                userReportedID: @userPost.userID,
+                typeReport: $('input[name="optradio"]:checked').val()
             };
 
             commonModule.callAjax(controller, data, null);
 
-            alert("This post has been reported!");
+            alert("This user has been reported!");
             e.preventDefault();
         });
+        
     });
 </script>
 
+<style type="text/css">
+    div.inline {
+        float: left;
+        margin-right: 10px
+    }
+</style>

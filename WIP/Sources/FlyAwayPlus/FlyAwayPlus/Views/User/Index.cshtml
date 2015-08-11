@@ -39,7 +39,7 @@
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
-                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px">Report</a>
+                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
             else if (friendType.Equals("request"))
@@ -47,7 +47,7 @@
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
-                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px">Report</a>
+                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
             else
@@ -55,7 +55,7 @@
                 <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
-                <a href="#" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px">Report</a>
+                <a href="#" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
                 <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
         </div>
@@ -439,6 +439,60 @@
 </div>
 }
 
+@if (Model.userID != userSession.userID)
+{
+    <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Help us to know what's happening</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row">
+
+                                    <div class="col-md-1">
+                                        <div>
+                                            <img src="@Model.avatar" height="100px" width="70px">
+                                            <p>By @Model.firstName @Model.lastName</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="row" style="margin-left: 20px">
+                                            <div class="radio">
+                                                <label><input type="radio" name="optradio" value="1">This post annoying or unpleasant</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-left: 20px">
+                                            <div class="radio">
+                                                <label><input type="radio" name="optradio" value="2">I think this post should not appear on FlyAwayPlus</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-left: 20px">
+                                            <div class="radio">
+                                                <label><input type="radio" name="optradio" value="3">This post is spam</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" disabled id="closeBtn">Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+}
+
 <script>
     var userDetailModule = (function () {
         var sendRequestFriend = function () {
@@ -470,7 +524,7 @@
             var phoneNumber = $(selector).find("input[name='phoneNumber']").closest(".form-group").find("b").text();
             var dateOfBirth = $(selector).find("input[name='dateOfBirth']").closest(".form-group").find("b").text();
             var password = $("#id-password").val();
-            
+
             if(address.split("Please input").length > 1) {
                 address = "";
             }
@@ -507,11 +561,19 @@
             $("#id-profile-modal").modal('hide');
         });
 
-        $("#idReport").click(function (evt) {
+        $('input:radio[name=optradio]').click(function () {
+            var checkval = $(this).val();
+            $('#closeBtn').prop('disabled', (checkval == null));
+
+        });
+
+        $('#closeBtn').click(function (e) {
+
             var controller = "/User/ReportUser/";
             var data = {
                 userReportID: parseInt('@Session["userID"]'),
-                userReportedID: @Model.userID
+                userReportedID: @Model.userID,
+                typeReport: $('input[name="optradio"]:checked').val()
             };
 
             commonModule.callAjax(controller, data, null);
@@ -546,7 +608,7 @@
 
         $("#id-edit-profile").find(".cls-edit-ok").click(function(evt) {
             var parent = $(this).closest(".form-group");
-            
+
             if($(this).closest(".cls-edit-info").find("input").length > 1) {
                 // password
                 var input = $(this).closest(".cls-edit-info").find("input");
@@ -573,7 +635,7 @@
                     $(this).closest(".cls-edit-info").find(".cls-error-message").show();
                     return;
                 }
-                
+
                 $("#id-password").val(password);
                 $(this).closest(".cls-edit-info").find("input").text("").val("");
             }
