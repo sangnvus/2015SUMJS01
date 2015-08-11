@@ -1221,7 +1221,7 @@ namespace FlyAwayPlus.Helpers
                 .With("p, u")
                 .OptionalMatch("(p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)")
                 .Where("u1.userID <> u.userID " + limitActivity)
-                .With("m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID")
+                .With("m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityId")
                 .Return((dateCreated, u1, p, activity, lastActivityId) => new Notification
                 {
                     dateCreated = dateCreated.As<String>(),
