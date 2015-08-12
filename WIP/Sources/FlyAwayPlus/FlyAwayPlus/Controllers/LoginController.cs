@@ -301,10 +301,8 @@ namespace FlyAwayPlus.Controllers
             return View();
         }
 
-        public ActionResult SendMail()
+        public JsonResult SendMail(string email)
         {
-            var email = Request["email"];
-
             User user;
             user = GraphDatabaseHelpers.Instance.FindUser(email);
             if (user != null)
@@ -340,11 +338,11 @@ namespace FlyAwayPlus.Controllers
                     Console.WriteLine(ex.Message);
 
                 }
-                return RedirectToAction("ForgotPassword", "Login");
+                return Json(true);
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return Json(false);
             }
 
         }
