@@ -580,12 +580,12 @@ img {
         font-size: 13px;
     }
 
-.comment-area .comment-textbox-wrapper {
+.comment-textbox-wrapper {
     margin: 0 20px 0 20px;
     padding-bottom: 10px;
 }
 
-    .comment-area .comment-textbox-wrapper .comment-textbox {
+    .comment-textbox-wrapper .comment-textbox {
         width: 100%;
         border: 1px solid #ddd;
         padding: 6px 8px;
@@ -1291,4 +1291,3 @@ textarea {
     resize: none;
     height: 31px;
 }
-

@@ -1195,7 +1195,6 @@ namespace FlyAwayPlus.Helpers
 
         public List<Notification> GetNotification(int userId, int activityId = 0, int limit = 5)
         {
-
             /*
                 * Query:
                 * Find:
