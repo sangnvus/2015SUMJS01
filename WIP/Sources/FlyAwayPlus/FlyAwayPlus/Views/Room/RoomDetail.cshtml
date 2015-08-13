@@ -85,7 +85,23 @@
             <div class="tab-content">
                 <!-- general -->
                 <div class="form-cn room-detail-plan-tab-general tab-pane active" id="room-detail-plan-tab-general">
-                    1
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label class="sr-only input-group-addon" for="general-plan-label">Label</label>
+                            <label class="sr-only" for="general-plan-detail">Detail</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">Label</div>
+                                <input type="text" class="form-control" id="general-plan-label">
+                                <div class="input-group-addon">Detail</div>
+                                <input type="text" class="form-control" id="general-plan-detail">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+
+
                 </div>
                 <!-- End general -->
                 <!-- timeline -->
@@ -112,9 +128,9 @@
             <div class="friend-list-avatar">
                 @for (int i = 0; i < 5; i++)
                 {
-                <div class="padding-5 col-md-2">
-                    <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Eunji.jpg" alt="Avatar" />
-                </div>
+                    <div class="padding-5 col-md-2">
+                        <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Eunji.jpg" alt="Avatar" />
+                    </div>
                 }
             </div>
             <div class="friend-list-header view-more-friend-title">
@@ -235,56 +251,94 @@
             <div class="room-detail-post-list">
                 @for (int i = 0; i < 10; i++)
                 {
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="post-area">
-                            <div class="post-info">
-                                <div class="user-avatar">
-                                    <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" alt="Username's avatar" class="img-circle" />
-                                </div>
-                                <div class="post-info-area">
-                                    <div class="user-name">
-                                        <a href="/User/Index/1">Duc Filan</a>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="post-area">
+                                <div class="post-info">
+                                    <div class="user-avatar">
+                                        <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" alt="Username's avatar" class="img-circle" />
                                     </div>
-                                    <span class="post-time">
-                                        <span>16 Sep 2013 21:36</span>
-                                    </span>
+                                    <div class="post-info-area">
+                                        <div class="user-name">
+                                            <a href="/User/Index/1">Duc Filan</a>
+                                        </div>
+                                        <span class="post-time">
+                                            <span>16 Sep 2013 21:36</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="post-content">
+                                    Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... nhưng phần lớn vẫn còn mắc phải nhược điểm là khiến cho người dùng cảm thấy mệt mỏi, chóng mặt khi sử dụng.
                                 </div>
                             </div>
-                            <div class="post-content">
-                                Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... nhưng phần lớn vẫn còn mắc phải nhược điểm là khiến cho người dùng cảm thấy mệt mỏi, chóng mặt khi sử dụng.
-                            </div>
-                        </div>
 
-                        <div class="interact-area">
-                            <a href="#" class="btn-like"><span>Like</span></a>
-                            <a href="#" class="btn-dislike"><span>Dislike</span></a>
-                            <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
-                            <a href="#" id="report_button" class="btn-report"><span>Report</span></a>
-                        </div>
-                        <div class="divide-area"></div>
-                        <div class="comment-area">
-                            <div style="margin: 0 20px 12px">
-                                <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">18</b>&nbsp;
-                                <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">18</b>&nbsp;
-                                <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">18</b>
+                            <div class="interact-area">
+                                <a href="#" class="btn-like"><span>Like</span></a>
+                                <a href="#" class="btn-dislike"><span>Dislike</span></a>
+                                <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
+                                <a href="#" id="report_button" class="btn-report"><span>Report</span></a>
                             </div>
-                            <div class="comment-stats">
-                                <span>18 comments</span>
-                            </div>
+                            <div class="divide-area"></div>
+                            <div class="comment-area">
+                                <div style="margin: 0 20px 12px">
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">18</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">18</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">18</b>
+                                </div>
+                                <div class="comment-stats">
+                                    <span>18 comments</span>
+                                </div>
 
-                            <div class="comment-textbox-wrapper">
-                                <textarea id="idTextareaComment" class="comment-textbox comment-box" placeholder="Input comment..."></textarea>
+                                <div class="comment-textbox-wrapper">
+                                    <textarea id="idTextareaComment" class="comment-textbox comment-box" placeholder="Input comment..."></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 }
             </div>
             <!--POST LIST ENDS-->
         </div>
         <div class="col-md-6 room-detail-right-area">
-
+            <ol class="discussion">
+                @for (int i = 0; i < 5; i++)
+                {
+                    <li class="other">
+                        <div class="avatar">
+                            <img src="/Images/UserUpload/UserAvatar/item_0_2.jpg" />
+                        </div>
+                        <div class="messages" style="border-bottom: #19B5FF 3px solid">
+                            <p>Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... </p>
+                            <time datetime="16 Sep 2013 21:36"><a href="/User/Index?userID=1">Duc Filan</a> • 51 min</time>
+                        </div>
+                    </li>
+                    <li class="self">
+                        <div class="avatar">
+                            <img src="/Images/UserUpload/UserAvatar/item_0_Background.jpg" />
+                        </div>
+                        <div class="messages" style="border-bottom: #F96A0E 3px solid">
+                            <p>Nhưng phần lớn vẫn còn mắc phải nhược điểm.</p>
+                            <p>Khiến cho người dùng cảm thấy mệt mỏi.</p>
+                            <time datetime="16 Sep 2013 21:36"><a href="/User/Index?userID=1">Dương Thanh Toán</a> • 37 mins</time>
+                        </div>
+                    </li>
+                    <li class="other">
+                        <div class="avatar">
+                            <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" />
+                        </div>
+                        <div class="messages" style="border-bottom: #2DCC70 3px solid">
+                            <p>Chóng mặt khi sử dụng?</p>
+                            <p>
+                                Vâng đúng là chóng mặt khi sử dụng!
+                            </p>
+                            <time datetime="16 Sep 2013 21:36"><a href="/User/Index?userID=1">Chu Khánh Di</a> • just now</time>
+                        </div>
+                    </li>
+                }
+            </ol>
+            <div class="room-detail-chat-type comment-textbox-wrapper">
+                <textarea class="comment-textbox comment-box" placeholder="Input message..."></textarea>
+            </div>
         </div>
     </div>
 </div>
