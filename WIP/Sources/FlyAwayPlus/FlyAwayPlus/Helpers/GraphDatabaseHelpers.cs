@@ -259,13 +259,13 @@ namespace FlyAwayPlus.Helpers
         public int CountComment(int postId)
         {
             /*
-             * match(p:post {postID:@postID})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)
+             * match(p:post {postID:@postID})-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)
                     return Length(collect(c1)) as CommentNumber
              */
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(p:post {postID:" + postId + "})-[:LATEST_COMMENT]->(c:comment)-[PREVIOUS_COMMENT*0..]->(c1:comment)")
+                return _client.Cypher.Match("(p:post {postID:" + postId + "})-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)")
                                 .Return<int>("Length(collect(c1)) as CommentNumber")
                                 .Results.Single();
             }
@@ -961,6 +961,23 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
+        public User FindUserByPostInRoom(Post post)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - find User has post
+                 * 
+                 * match (p:post{postID:@postID})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
+                    return u
+                 */
+            _client.Connect();
+            var user = _client.Cypher.Match("(p:post{postID:" + post.postID + "})<-[:CREATE]-(u:user)")
+                .Return<User>("u")
+                .Results.Single();
+            return user;
+        }
+
         public List<Post> SearchAllPost()
         {
 
@@ -997,12 +1014,21 @@ namespace FlyAwayPlus.Helpers
                  */
 
             _client.Connect();
-            var place = _client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:AT]->(pl:place)")
-                .Return<Place>("pl")
-                .OrderBy("pl.placeID")
-                .Results
-                .ToList()
-                .First();
+            Place place = null;
+            try
+            {
+                place = _client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:AT]->(pl:place)")
+                    .Return<Place>("pl")
+                    .OrderBy("pl.placeID")
+                    .Results
+                    .ToList()
+                    .First();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                place = null;
+            }
             return place;
         }
 
@@ -1390,6 +1416,24 @@ namespace FlyAwayPlus.Helpers
             }
             return message;
         }
+        public List<Message> GetListMessageInRoom(int roomID)
+        {
+            _client.Connect();
+            List<Message> listMessage = new List<Message>();
+            try
+            {
+                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
+                                        .Return<Message>("m1")
+                                        .Results.ToList();
+                listMessage.RemoveAll(item => item == null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listMessage = new List<Message>();
+            }
+            return listMessage;
+        }
 
         public List<Message> GetListMessage(string conversationId, int limit = 10)
         {
@@ -1431,6 +1475,15 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
+        public Message CreateMessageInRoom(int roomID, int userID, string content)
+        {
+            _client.Connect();
+            var conversation = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})-[:HAS]->(c:conversation)")
+                    .Return<Conversation>("c")
+                    .Results.FirstOrDefault();
+
+            return CreateMessage(conversation.conversationID, content, userID, 0);
+        }
         public Message CreateMessage(string conversationId, string content, int userId, int otherId)
         {
             /*
@@ -1826,5 +1879,130 @@ namespace FlyAwayPlus.Helpers
             }
             return numberOfPost;
         }
+
+        public List<Post> FindPostInRoom(int roomID, int postID, int limit = 5)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - List Post in room
+                 * 
+                 */
+            _client.Connect();
+            List<Post> listPost = new List<Post>();
+            try
+            {
+                listPost = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
+                    //.Where("p2.id < " + postID)
+                    .ReturnDistinct<Post>("p2")
+                    .Limit(limit)
+                    .Results.ToList();
+
+                listPost.RemoveAll(item => item == null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return listPost;
+            }
+            return listPost;
+        }
+
+        public List<User> FindUserInRoom(int roomID)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - List User in room
+                 * 
+                 */
+            _client.Connect();
+            List<User> listUser = new List<User>();
+            try
+            {
+                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})<-[j:JOIN {type:" + FapConstants.JOIN_MEMBER + "}]-(u:user)")
+                    .ReturnDistinct<User>("u")
+                    .Results.ToList();
+
+                listUser.RemoveAll(item => item == null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return listUser;
+            }
+            return listUser;
+        }
+
+        public User FindAdminInRoom(int roomID)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - List User in room
+                 * 
+                 */
+            _client.Connect();
+            User admin = new User();
+            try
+            {
+                admin = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})<-[j:JOIN {type:" + FapConstants.JOIN_ADMIN + "}]-(u:user)")
+                    .ReturnDistinct<User>("u")
+                    .Results.FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return admin;
+            }
+            return admin;
+        }
+
+        public List<User> FindUserRequestJoinRoom(int roomID)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     - List User in room
+                 * 
+                 */
+            _client.Connect();
+            List<User> listUser = new List<User>();
+            try
+            {
+                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})<-[j:JOIN {type:" + FapConstants.JOIN_REQUEST + "}]-(u:user)")
+                    .ReturnDistinct<User>("u")
+                    .Results.ToList();
+
+                listUser.RemoveAll(item => item == null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return listUser;
+            }
+            return listUser;
+        }
+
+        public List<Message> GetListMessageInRoom(int roomID, int messageID)
+        {
+            _client.Connect();
+            List<Message> listMessage = new List<Message>();
+            try
+            {
+                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID: " + roomID + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
+                                        //.Where("p1.messageID < " + messageID)
+                                        .ReturnDistinct<Message>("m1")
+                                        .Results.Reverse<Message>().ToList();
+                listMessage.RemoveAll(item => item == null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return new List<Message>();
+            }
+            return listMessage;
+        }
+
     }
 }
