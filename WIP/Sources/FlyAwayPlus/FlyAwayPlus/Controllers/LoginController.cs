@@ -79,7 +79,7 @@ namespace FlyAwayPlus.Controllers
                         Timeout = 30000,
                     };
                     var message = new MailMessage(senderID, user.email, "Getting started on FlyAwayPlus",
-                        "Welcome to FlyAwayPlus, "+user.firstName+" "+user.lastName+"!");
+                        "Welcome to FlyAwayPlus, " + user.firstName + " " + user.lastName + "!");
                     smtp.Send(message);
 
                 }
@@ -554,10 +554,10 @@ namespace FlyAwayPlus.Controllers
 
                     img.Save(newFileLocation);
                     return Json(new
-                                {
-                                    success = true,
-                                    avatarFileLocation = newFileName
-                                });
+                    {
+                        success = true,
+                        avatarFileLocation = newFileName
+                    });
                 }
             }
             catch (Exception ex)
