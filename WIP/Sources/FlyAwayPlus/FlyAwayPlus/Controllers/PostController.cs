@@ -105,8 +105,8 @@ namespace FlyAwayPlus.Controllers
         public RedirectToRouteResult Add(FormCollection form)
         {
             string message = Request.Form["message"];
-            Decimal latitude = Decimal.Parse(Request.Form["lat"]);
-            Decimal longitude = Decimal.Parse(Request.Form["lng"]);
+            Double latitude = Double.Parse(Request.Form["lat"]);
+            Double longitude = Double.Parse(Request.Form["lng"]);
             string location = Request.Form["location"];
             List<string> images = Request.Form["uploadedimages"].Split('#').ToList();
             images.RemoveAt(0);
