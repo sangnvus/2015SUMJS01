@@ -14,7 +14,7 @@ namespace FlyAwayPlus.Models
 
         public string toRealtime()
         {
-            return DateHelpers.displayRealtime(this.dateCreated);
+            return DateHelpers.Instance.DisplayRealtime(this.dateCreated);
         }
     }
 }

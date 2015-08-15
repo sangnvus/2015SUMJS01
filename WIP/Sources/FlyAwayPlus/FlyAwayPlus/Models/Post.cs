@@ -1,8 +1,4 @@
 ﻿using FlyAwayPlus.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace FlyAwayPlus.Models
 {
@@ -15,7 +11,7 @@ namespace FlyAwayPlus.Models
 
         public string toRealtime()
         {
-            return DateHelpers.displayRealtime(this.dateCreated);
+            return DateHelpers.Instance.DisplayRealtime(dateCreated);
         }
     }
 }

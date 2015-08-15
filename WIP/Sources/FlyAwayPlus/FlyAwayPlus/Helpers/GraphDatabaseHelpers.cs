@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using FlyAwayPlus.Models;
 using FlyAwayPlus.Models.Relationships;
@@ -1825,6 +1826,71 @@ namespace FlyAwayPlus.Helpers
                 numberOfPost = 0;
             }
             return numberOfPost;
+        }
+
+        public bool CreateNewPlanEvent(Plan newPlan)
+        {
+            newPlan.PlanId = GetActivityIncrementId();
+            _client.Connect();
+
+            _client.Cypher
+                   .Create("(plan:plan {newPlan})")
+                   .WithParam("newPlan", newPlan)
+                   .ExecuteWithoutResults();
+
+            return true;
+        }
+
+        public List<Plan> LoadAllPlansInDateRange(DateTime fromDate, DateTime toDate)
+        {
+            //DateTime fromDate = DateHelpers.Instance.ConvertFromUnixTimestamp(start) ?? DateTime.MinValue;
+
+            List<Plan> listPlan;
+            _client.Connect();
+            try
+            {
+                listPlan = _client.Cypher
+                       .Match("(p:plan)")
+                       .ReturnDistinct<Plan>("p")
+                       .Results.ToList()
+                       .Where(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimePlanFormat, CultureInfo.InvariantCulture) >= fromDate
+                                   && DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimePlanFormat, CultureInfo.InvariantCulture).AddMinutes(p.LengthInMinute) <= toDate)
+                       .ToList();
+                }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPlan = new List<Plan>();
+            }
+
+            return listPlan;
+        }
+
+        public IEnumerable<object> LoadAppointmentSummaryInDateRange(double start, double end)
+        {
+            DateTime fromDate = DateTime.MinValue;
+            DateTime toDate = DateTime.MaxValue;
+
+            IEnumerable<object> listPlan;
+            _client.Connect();
+            try
+            {
+                listPlan = _client.Cypher
+                       .Match("(p:plan)")
+                       .ReturnDistinct<Plan>("p")
+                       .Results.ToList()
+                       .Where(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimePlanFormat, CultureInfo.InvariantCulture) >= fromDate
+                                   && DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimePlanFormat, CultureInfo.InvariantCulture).AddMinutes(p.LengthInMinute) <= toDate)
+                       .GroupBy(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimePlanFormat, CultureInfo.InvariantCulture).Date)
+                       .Select(x => new { DateTimeScheduled = x.Key, Count = x.Count() });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPlan = new List<Plan>();
+            }
+
+            return listPlan;
         }
     }
 }
