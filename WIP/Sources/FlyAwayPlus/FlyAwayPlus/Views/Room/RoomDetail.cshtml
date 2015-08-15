@@ -1,4 +1,5 @@
-﻿
+﻿@using FlyAwayPlus.Models
+
 <link href="~/Content/fullcalendar.css" rel="stylesheet" />
 <script src="~/Scripts/moment.js"></script>
 <script src="~/Scripts/fullcalendar.js"></script>
@@ -141,6 +142,27 @@
 </script>
 }
 
+@{
+    var admin = ViewData["admin"] as User;
+    var listUserInRoom = ViewData["listUserInRoom"] as List<User>;
+    var listUserRequestJoinRoom = ViewData["listUserRequestJoinRoom"] as List<User>;
+    var listMessage = ViewData["listMessage"] as List<Message>;
+    var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
+    int userID = Int16.Parse(@Session["userID"].ToString());
+    
+    var listPost = ViewData["listPost"] as List<Post>;
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
+    var listVideoDict = ViewData["listVideoDict"] as Dictionary<int, Video>;
+    var listUserDict = ViewData["listUserDict"] as Dictionary<int, User>;
+    var dictDislikeCount = ViewData["dislikeCount"] as Dictionary<int, int>;
+    var dictLikeCount = ViewData["likeCount"] as Dictionary<int, int>;
+    var dictCommentCount = ViewData["commentCount"] as Dictionary<int, int>;
+    var dictUserCommentCount = ViewData["userCommentCount"] as Dictionary<int, int>;
+    var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
+    var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
+    var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
+    int roomID = Int16.Parse(ViewData["roomID"].ToString());
+}
 <div id="room-detail-wrapper">
     <div>
         <!--INFO-->
@@ -172,7 +194,7 @@
         </div>
         <div class="col-md-2 room-detail-interact-area">
             <div class="room-detail-admin-avatar">
-                <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Background.jpg" alt="Admin" />
+                <img class="circle-image" height="50" src="@admin.avatar" alt="Admin" />
             </div>
             <div>
                 <a href="#" class="btn btn-primary room-detail-request-join">Request join</a>
@@ -285,10 +307,10 @@
             </div>
 
             <div class="friend-list-avatar">
-                @for (int i = 0; i < 5; i++)
+                @foreach(User user in listUserInRoom)
                 {
                     <div class="padding-5 col-md-2">
-                        <img class="circle-image" height="50" src="/Images/UserUpload/UserAvatar/item_0_Eunji.jpg" alt="Avatar" />
+                        <img class="circle-image" height="50" src="@user.avatar" alt="Avatar" />
                     </div>
                 }
             </div>
@@ -408,26 +430,33 @@
             <!--POSTING ENDS-->
             <!--POST LIST-->
             <div class="room-detail-post-list">
-                @for (int i = 0; i < 10; i++)
+                @for (int index = 0; index < listPost.Count; index++)
                 {
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="post-area">
                                 <div class="post-info">
                                     <div class="user-avatar">
-                                        <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" alt="Username's avatar" class="img-circle" />
+                                        <img src="@listUserDict[listPost[index].postID].avatar" alt="@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)'s avatar" class="img-circle" />
                                     </div>
                                     <div class="post-info-area">
                                         <div class="user-name">
-                                            <a href="/User/Index/1">Duc Filan</a>
+                                            <a href="/User/Index/1">@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)</a>
                                         </div>
                                         <span class="post-time">
-                                            <span>16 Sep 2013 21:36</span>
+                                            <span>@listPost[index].toRealtime()</span>
                                         </span>
                                     </div>
                                 </div>
+                                
+                                <div class="post-content" style="display:flex;">
+                                    @foreach (var photo in listPhotoDict[listPost[index].postID])
+                                    {
+                                        <img src="/Images/UserUpload/@photo.url" style="max-height: 100%; margin:auto;" />
+                                    }
+                                </div>
                                 <div class="post-content">
-                                    Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... nhưng phần lớn vẫn còn mắc phải nhược điểm là khiến cho người dùng cảm thấy mệt mỏi, chóng mặt khi sử dụng.
+                                    @listPost[index].content
                                 </div>
                             </div>
 
@@ -440,14 +469,19 @@
                             <div class="divide-area"></div>
                             <div class="comment-area">
                                 <div style="margin: 0 20px 12px">
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">18</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">18</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">18</b>
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[listPost[index].postID]</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[listPost[index].postID]</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[listPost[index].postID]</b>
                                 </div>
                                 <div class="comment-stats">
-                                    <span>18 comments</span>
+                                    <span>@dictCommentCount[listPost[index].postID] comments</span>
                                 </div>
-
+                                <div class="comment-list">
+                                    @foreach (var comment in dictListComment[listPost[index].postID])
+                                    {
+                                        @Html.Partial("_PostDetailPartial", comment)
+                                    }
+                                </div>
                                 <div class="comment-textbox-wrapper">
                                     <textarea id="idTextareaComment" class="comment-textbox comment-box" placeholder="Input comment..."></textarea>
                                 </div>
@@ -459,48 +493,36 @@
             <!--POST LIST ENDS-->
         </div>
         <div class="col-md-6 room-detail-right-area">
-            <ol class="discussion">
-                @for (int i = 0; i < 5; i++)
+            <ol id="id-chat-list" class="discussion">
+                <li class="other">
+                    <div class="avatar">
+                        <img src="~/Images/FAP logo.png" class="img-circle" />
+                    </div>
+                    <div class="messages" style="border-bottom: #19B5FF 3px solid">
+                        <p><b>This is the very beginning of the room, which created by @String.Format("{0} {1}", @admin.firstName, @admin.lastName) on time</b></p>
+                        <time datetime=""><a href="/Home/Index/">Fly Away Plus System</a></time>
+                    </div>
+                </li>
+                @for (int index = 0; index < listMessage.Count; index++)
                 {
-                    <li class="other">
+                    <li class="@String.Format("{0}", userID == listUserOwnMessage[index].userID ? "self" : "other")">
                         <div class="avatar">
-                            <img src="/Images/UserUpload/UserAvatar/item_0_2.jpg" />
+                            <img src="@listUserOwnMessage[index].avatar" class="img-circle" />
                         </div>
                         <div class="messages" style="border-bottom: #19B5FF 3px solid">
-                            <p>Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... </p>
-                            <time datetime="16 Sep 2013 21:36"><a href="/User/Index?userID=1">Duc Filan</a> • 51 min</time>
-                        </div>
-                    </li>
-                    <li class="self">
-                        <div class="avatar">
-                            <img src="/Images/UserUpload/UserAvatar/item_0_Background.jpg" />
-                        </div>
-                        <div class="messages" style="border-bottom: #F96A0E 3px solid">
-                            <p>Nhưng phần lớn vẫn còn mắc phải nhược điểm.</p>
-                            <p>Khiến cho người dùng cảm thấy mệt mỏi.</p>
-                            <time datetime="16 Sep 2013 21:36"><a href="/User/Index?userID=1">Dương Thanh Toán</a> • 37 mins</time>
-                        </div>
-                    </li>
-                    <li class="other">
-                        <div class="avatar">
-                            <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" />
-                        </div>
-                        <div class="messages" style="border-bottom: #2DCC70 3px solid">
-                            <p>Chóng mặt khi sử dụng?</p>
-                            <p>
-                                Vâng đúng là chóng mặt khi sử dụng!
-                            </p>
-                            <time datetime="16 Sep 2013 21:36"><a href="/User/Index?userID=1">Chu Khánh Di</a> • just now</time>
+                            <p>@listMessage[index].content</p>
+                            <time datetime="@listMessage[index].dateCreated"><a href="/User/Index/@listUserOwnMessage[index].userID">@String.Format("{0} {1}", @listUserOwnMessage[index].firstName, @listUserOwnMessage[index].lastName)</a> @listMessage[index].dateCreated</time>
                         </div>
                     </li>
                 }
             </ol>
             <div class="room-detail-chat-type comment-textbox-wrapper">
-                <textarea class="comment-textbox comment-box" placeholder="Input message..."></textarea>
+                <textarea id="id-textarea-chat-room" class="comment-textbox comment-box" placeholder="Input message..."></textarea>
             </div>
         </div>
     </div>
 </div>
+
 
 <div id="popupEventForm" class="modal fade">
     <div class="modal-header"><h3>Add new event</h3></div>
@@ -522,3 +544,67 @@
         <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save event</button>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        if (typeof (chatHubProxy) === "undefined") {
+            chatHubProxy = $.connection.chatHub;
+        }
+        $.connection.hub.start().done(function () {
+            chatHubProxy.server.getListMessageInRoom(@roomID);
+        });
+
+        chatHubProxy.client.getMessageInRoom = function (content) {
+            $("#id-chat-list").append(content);
+        }
+
+        $("#id-textarea-chat-room").keydown(function (evt) {
+            if (evt.keyCode == 13) {
+                var text = $(this).val();
+                createMessageInRoom(text, $("#id-chat-list"));
+                $(this).text("").val("");
+                evt.preventDefault();
+            }
+        });
+
+        var createMessageInRoom = function (content, selector) {
+            var controller = "/User/CreateMessageInRoom/";
+
+            var data = {
+                roomID: @roomID,
+                content: content
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: controller,
+                data: data,
+                success: function (data, textstatus) {
+                    // send notification
+                    var message = data;
+                    if (message == null) {
+                        return;
+                    }
+                    var tmp = "";
+                    tmp += "<li class='self'>";
+                    tmp += "<div class='avatar'>";
+                    tmp += "<img src='" + $("#id-avatar-current-user").attr("src") + "' class='img-circle' />";
+                    tmp += "</div>";
+                    tmp += "<div class='messages' style='border-bottom: #19B5FF 3px solid'>";
+                    tmp += "<p>" + message["content"] + "</p>";
+                    tmp += "<time datetime='" + message["dateCreated"] + "'><a href='/User/Index/@userID'>" + $("#id-avatar-current-user").attr("alt") + "</a>" + message["dateCreated"] + "</time>";
+                    tmp += "</div>";
+                    tmp += "</li>";
+
+                    $(selector).append(tmp);
+
+                    $.connection.hub.start().done(function () {
+                        chatHubProxy.server.sendChatMessageInRoom(tmp.replace("self", "other"), @roomID);
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        };
+    });
+
+</script>

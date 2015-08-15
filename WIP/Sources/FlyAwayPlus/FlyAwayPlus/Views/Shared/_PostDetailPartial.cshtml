@@ -5,7 +5,7 @@
     var u = @dict[Model.commentID];
     string userID = (Session["userID"] == null ? "" : Session["userID"].ToString());
 }
-
+<link href="~/Content/PostDetailPage/postDetail.css" rel="stylesheet" />
 <div class="comment-detail">
     <div class="commenter-avatar">
         <img src="@u.avatar" alt="@String.Format("{0} {1}", u.firstName, u.lastName)" />

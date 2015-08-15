@@ -343,7 +343,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\avatar\avatar-7.jpg" />
-    <Content Include="Images\FAP logo.PNG" />
+    <Content Include="Images\FAP logo.png" />
     <Content Include="Images\UIHelper\WOW slider\arrows.png" />
     <Content Include="Images\UIHelper\WOW slider\bullet.png" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.svg" />

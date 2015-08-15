@@ -41,7 +41,7 @@
         <div class="container">
             <div class="navbar-header">
                 <a href="/Home/" class="navbar-brand">
-                    <img src="/Images/FAP logo.PNG" alt="FAP" height="40" />
+                    <img src="/Images/FAP logo.png" alt="FAP" height="40" />
                 </a>
             </div>
             <div class="navbar-collapse collapse">
@@ -93,7 +93,7 @@
                         </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
-                                <img src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/avatar/avatar-default.jpg" : @Session["userAva"])"
+                                <img id="id-avatar-current-user" src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/avatar/avatar-default.jpg" : @Session["userAva"])"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>

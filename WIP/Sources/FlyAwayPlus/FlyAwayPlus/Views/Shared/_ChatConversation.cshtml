@@ -129,8 +129,9 @@
             $("#idChatBar").toggleClass("active");
             evt.preventDefault();
         });
-
-        chatHubProxy = $.connection.chatHub;
+        if (typeof (chatHubProxy) === "undefined") {
+            chatHubProxy = $.connection.chatHub;
+        }
 
         chatHubProxy.client.getChatMessage = function (content, friendID, userID) {
             if (userID == '@Session["userID"]') {
@@ -145,8 +146,7 @@
 
             var listFriend = JSON.parse(listFriendJSON);
             var listMessage = JSON.parse(listMessageJSON);
-
-            if (postDetailModule) {
+            if (typeof (postDetailModule) != "undefined") {
                 postDetailModule.setListFriend(listFriend);
 
                 $(".comment-content-word").each(function () {

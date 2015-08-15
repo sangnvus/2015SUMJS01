@@ -331,6 +331,18 @@ namespace FlyAwayPlus.Controllers
             return Json(message);
         }
 
+        public JsonResult CreateMessageInRoom(int roomID, string content)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            Message message = null;
+            if (user != null)
+            {
+                message = GraphDatabaseHelpers.Instance.CreateMessageInRoom(roomID, user.userID, content);
+
+            }
+            return Json(message);
+        }
+
         public JsonResult EditProfile(string firstName, string lastName, string address, string gender, string phoneNumber,
                             string dateOfBirth, string password)
         {
