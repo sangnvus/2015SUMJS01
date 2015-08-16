@@ -9,22 +9,24 @@
     var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
     var friend = ViewData["friend"] as List<FlyAwayPlus.Models.User>;
     var userSession = ViewData["userSession"] as FlyAwayPlus.Models.User;
+    var listPost = ViewData["listPost"] as List<FlyAwayPlus.Models.Post>;
     string friendType = ViewData["isFriend"].ToString();
 }
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
 <header>
     <figure class="profile-banner">
-        <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" />
+        <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" class="img-responsive" />
     </figure>
     <figure class="profile-picture"
             style="background-image: url('@Model.avatar')">
     </figure>
     <div class="profile-stats">
         <ul role="tablist">
-            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Post</span></a></li>
+            <li role="presentation"><a href="#">@String.Format("{0} {1}", Model.firstName, Model.lastName)</a></li>
+            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Post</span></a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Places</span></a></li>
             <li role="presentation"><a href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">182 <span>Photos</span></a></li>
-            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">324 <span>Videos</span></a></li>
+            <li role="presentation"><a href="#messages" style="margin-right:10px;" aria-controls="messages" role="tab" data-toggle="tab">324 <span>Videos</span></a></li>
         </ul>
 
         <div class="interact-area">
@@ -38,7 +40,6 @@
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
                 <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
-                <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
             else if (friendType.Equals("request"))
             {
@@ -46,7 +47,6 @@
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
                 <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
-                <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
             else
             {
@@ -54,7 +54,6 @@
                 <a href="#" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
                 <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
                 <a href="#" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
-                <a href="#" id="idSendMessage" class="btn btn-primary pull-right" style="margin-right: 10px">Message</a>
             }
         </div>
     </div>
@@ -65,8 +64,8 @@
 
 <!-- Friend list -->
 <div class="col-md-12 frame-container">
-    <div class="friend-list-header friend-title-header">
-        <h6 class="text-capitalize">MY FRIENDS</h6>
+    <div class="friend-list-header friend-title-header" style="overflow:hidden">
+        <span class="text-capitalize" style="display: block; margin-top: 18px;">MY FRIENDS</span>
     </div>
 
     <div class="friend-list-avatar">
@@ -93,8 +92,8 @@
             }
         }
     </div>
-    <div class="friend-list-header view-more-friend-title">
-        <h6 class="text-capitalize">VIEW ALL</h6>
+    <div class="friend-list-header view-more-friend-title" style="overflow:hidden">
+        <span id="id-view-all-friend" class="text-capitalize" style="display: block; margin-top: 18px;">VIEW ALL</span>
     </div>
 </div>
 
@@ -107,37 +106,6 @@
                 <div class="blog-landing">
                     @Html.Partial("_ListPost")
                 </div>
-
-                <!--
-                <div class="timeline">
-                    <dl>
-                        for (int index = 0, indexPost = 0; index < timeline.Count; index++)
-                        {
-                            <dt>timeline[index]</dt>
-                            foreach (var post in listPostDict[timeline[index]])
-                            {
-                                var posPosition = (indexPost % 2 == 0) ? "pos-right" : "pos-left";
-                                var style = (indexPost % 2 == 0) ? "width: 150px; margin-left: -150px;" : "";
-                                indexPost++;
-
-                                <dd class="posPosition clearfix">
-                                    <div class="circ"></div>
-                                    <div class="time" style="style">post.toRealtime()</div>
-                                    <div class="events">
-                                        <div class="pull-left">
-                                            <img class="events-object img-rounded" src="Model.avatar">
-                                        </div>
-                                        <div class="events-body">
-                                            <h4 class="events-heading">listPlaceDict[post.postID].name</h4>
-                                            <p>post.content</p>
-                                        </div>
-                                    </div>
-                                </dd>
-                            }
-                        }
-                    </dl>
-                </div>
-                -->
             </div>
         </div>
     </div>
@@ -171,8 +139,6 @@
 
 <!-- Timeline -->
 <!-- Modal -->
-@if (friend.Count > 17)
-{
     <div class="modal fade" id="myFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 40px">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -194,7 +160,7 @@
             </div>
         </div>
     </div>
-}
+
 @if (Model.userID == userSession.userID) {
 <div class="modal fade" id="id-profile-modal" role="dialog" aria-labelledby="id-profile-modal" aria-hidden="true">
     <div class="modal-dialog login-modal-wrap">
@@ -554,9 +520,21 @@
     })();
 
     $(document).ready(function () {
+        $("#id-view-all-friend").click(function(evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                //alert("x");
+                $("#myFriend").modal("show");
+                evt.handled = true;
+            }
+        });
+
         $("#id-edit-profile-btn").click(function(evt) {
-            userDetailModule.editProfileAjax($("#id-edit-profile"));
-            $("#id-profile-modal").modal('hide');
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                userDetailModule.editProfileAjax($("#id-edit-profile"));
+                $("#id-profile-modal").modal('hide');
+
+                evt.handled = true;
+            }
         });
 
         $('input:radio[name=optradio]').click(function () {

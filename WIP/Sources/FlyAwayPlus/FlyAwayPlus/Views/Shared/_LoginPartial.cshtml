@@ -8,7 +8,7 @@
 
 @model FlyAwayPlus.Models.User
 
-<div id="login-modal" data-backdrop="static" data-keyboard="false" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="login-modal" style="margin-top: 30px;" data-backdrop="static" data-keyboard="false" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog login-modal-wrap">
         <div class="modal-content">
             <div class="modal-body login-modal-body">
@@ -49,11 +49,11 @@
 
                                     <div class="form-group">
                                         @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", id = "id_login_email", placeholder = "Email Address", tabindex = "1", type = "email" } })
-                                        @Html.ValidationMessageFor(model => model.email)
+                                        @Html.ValidationMessageFor(model => model.email, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                     </div>
                                     <div class="form-group">
                                         @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", id = "id_login_password", placeholder = "Password", tabindex = "2", type = "password" } })
-                                        @Html.ValidationMessageFor(model => model.password)
+                                        @Html.ValidationMessageFor(model => model.password, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                     </div>
                                     <div class="form-group text-center">
                                         <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
@@ -90,13 +90,13 @@
                                             <div class="col-xs-12 col-sm-6 col-md-6">
                                                 <div class="form-group">
                                                     @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control", id = "id_regiser_first_name", placeholder = "First Name", tabindex = "1" } })
-                                                    @Html.ValidationMessageFor(model => model.firstName)
+                                                    @Html.ValidationMessageFor(model => model.firstName, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-6">
                                                 <div class="form-group">
                                                     @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control", id = "id_register_last_name", placeholder = "Last Name", tabindex = "2" } })
-                                                    @Html.ValidationMessageFor(model => model.lastName)
+                                                    @Html.ValidationMessageFor(model => model.lastName, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                                 </div>
                                             </div>
                                         </div>
@@ -104,7 +104,7 @@
                                             <div class="col-xs-12 col-sm-6 col-md-6">
                                                 <div class="form-group">
                                                     @Html.EditorFor(model => model.phoneNumber, new { htmlAttributes = new { @class = "form-control", id = "id_register_phone_number", placeholder = "Phone number", tabindex = "3" } })
-                                                    @Html.ValidationMessageFor(model => model.phoneNumber)
+                                                    @Html.ValidationMessageFor(model => model.phoneNumber, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -126,29 +126,29 @@
                                                     @Html.RadioButtonFor(model => model.gender, "other", new { id = "id_register_other_gender" }) Other
                                                 </label>
                                                 <br />
-                                                @Html.ValidationMessageFor(model => model.gender)
+                                                @Html.ValidationMessageFor(model => model.gender, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control", id = "id_register_address", placeholder = "Address", tabindex = "5" } })
-                                            @Html.ValidationMessageFor(model => model.address)
+                                            @Html.ValidationMessageFor(model => model.address, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                         </div>
                                         <div class="form-group">
                                             @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", id = "id_register_email", placeholder = "Email Address", tabindex = "7", type = "email" } })
-                                            @Html.ValidationMessageFor(model => model.email)
+                                            @Html.ValidationMessageFor(model => model.email, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-6 col-md-6">
                                                 <div class="form-group">
                                                     @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", id = "id_register_password", placeholder = "Password", tabindex = "8", type = "password" } })
-                                                    @Html.ValidationMessageFor(model => model.password)
+                                                    @Html.ValidationMessageFor(model => model.password, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-6">
                                                 <div class="form-group">
                                                     @Html.EditorFor(model => model.confirmPassword, new { htmlAttributes = new { @class = "form-control", id = "id_register_password_confirmation", placeholder = "Confirm Password", tabindex = "9", type = "password" } })
-                                                    @Html.ValidationMessageFor(model => model.confirmPassword)
+                                                    @Html.ValidationMessageFor(model => model.confirmPassword, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                                 </div>
                                             </div>
                                         </div>
@@ -173,6 +173,7 @@
 
 <script>
     $(function () {
+        //$("#")
         $("#register-submit").click(function () {
             $("#register-form-inner").submit();
         });
