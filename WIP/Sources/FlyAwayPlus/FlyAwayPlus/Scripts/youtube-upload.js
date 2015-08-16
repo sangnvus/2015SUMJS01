@@ -42,7 +42,7 @@ limitations under the License.
                 $("#channel-thumbnail").attr("src", response.items[0].snippet.thumbnails.default.url);
 
                 $(".pre-sign-in").hide();
-                $(".post-sign-in").show();
+                $(".post-sign-in").toggleClass("hidden");
             });
         }
     };

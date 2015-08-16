@@ -109,7 +109,7 @@
     <div id="id-main-page" class="container body-content">
         @*Html.Partial("_SearchPartial")*@
         @RenderBody()
-        <hr />
+        <br />
     </div>
     @Html.Partial("_TagFriendPartial")
     @Html.Action("LoginPartial", "Login")
@@ -123,6 +123,7 @@
     <script src="/signalr/hubs"></script>
     <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
     <script src="http://www.youtube.com/player_api"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
     <script>
         $(function () {
             $("#btn-notification").click(function () {

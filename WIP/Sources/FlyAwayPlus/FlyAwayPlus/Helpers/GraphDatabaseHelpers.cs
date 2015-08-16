@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using FlyAwayPlus.Models;
 using FlyAwayPlus.Models.Relationships;
@@ -775,9 +776,12 @@ namespace FlyAwayPlus.Helpers
                          .WithParam("newPlace", place)
                          .ExecuteWithoutResults();
 
-            _client.Cypher.Create("(v:video {newVideo})")
+            if (video != null)
+            {
+                _client.Cypher.Create("(v:video {newVideo})")
                          .WithParam("newVideo", video)
                          .ExecuteWithoutResults();
+            }
 
             Node<User> userNode = GetNodeUser(user.userID);
             if (userNode != null)
@@ -797,9 +801,12 @@ namespace FlyAwayPlus.Helpers
                                  .ExecuteWithoutResults();
                 }
 
-                _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (vi:video {videoID: " + video.videoID + "})")
+                if (video != null)
+                {
+                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (vi:video {videoID: " + video.videoID + "})")
                              .Create("(po)-[r:HAS]->(vi)")
                              .ExecuteWithoutResults();
+                }
 
                 foreach (var photo in photos)
                 {
@@ -858,7 +865,10 @@ namespace FlyAwayPlus.Helpers
             }
 
             place.placeID = GetGlobalIncrementId();
-            video.videoID = GetGlobalIncrementId();
+            if (video != null)
+            {
+                video.videoID = GetGlobalIncrementId();
+            }
         }
 
         public User SearchUser(int postId)
@@ -957,7 +967,7 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             var user = _client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
                 .Return<User>("u")
-                .Results.Single();
+                .Results.FirstOrDefault();
             return user;
         }
 
@@ -1416,13 +1426,13 @@ namespace FlyAwayPlus.Helpers
             }
             return message;
         }
-        public List<Message> GetListMessageInRoom(int roomID)
+        public List<Message> GetListMessageInRoom(int roomId)
         {
             _client.Connect();
             List<Message> listMessage = new List<Message>();
             try
             {
-                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
+                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
                                         .Return<Message>("m1")
                                         .Results.ToList();
                 listMessage.RemoveAll(item => item == null);
@@ -1475,14 +1485,14 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public Message CreateMessageInRoom(int roomID, int userID, string content)
+        public Message CreateMessageInRoom(int roomId, int userId, string content)
         {
             _client.Connect();
-            var conversation = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})-[:HAS]->(c:conversation)")
+            var conversation = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[:HAS]->(c:conversation)")
                     .Return<Conversation>("c")
                     .Results.FirstOrDefault();
 
-            return CreateMessage(conversation.conversationID, content, userID, 0);
+            return CreateMessage(conversation.conversationID, content, userId, 0);
         }
         public Message CreateMessage(string conversationId, string content, int userId, int otherId)
         {
@@ -1880,7 +1890,83 @@ namespace FlyAwayPlus.Helpers
             return numberOfPost;
         }
 
-        public List<Post> FindPostInRoom(int roomID, int postID, int limit = 5)
+
+        public bool CreateNewPlanEvent(Plan newPlan, int roomId, int userId)
+        {
+            newPlan.PlanId = GetActivityIncrementId();
+            _client.Connect();
+
+            _client.Cypher
+                   .Create("(plan:plan {newPlan})")
+                   .WithParam("newPlan", newPlan)
+                   .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(r:room {roomID:" + roomId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
+                         .Create("(r)-[r:HAS]->(p)")
+                         .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(u:user {userID: " + userId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
+                         .Create("(u)-[r:CREATE]->(p)")
+                         .ExecuteWithoutResults();
+
+            return true;
+        }
+
+        public List<Plan> LoadAllPlansInDateRange(DateTime fromDate, DateTime toDate)
+        {
+            //DateTime fromDate = DateHelpers.Instance.ConvertFromUnixTimestamp(start) ?? DateTime.MinValue;
+
+            List<Plan> listPlan;
+            _client.Connect();
+            try
+            {
+                listPlan = _client.Cypher
+                       .Match("(p:plan)")
+                       .ReturnDistinct<Plan>("p")
+                       .Results.ToList()
+                       .Where(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture) >= fromDate
+                                   && DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture).AddMinutes(p.LengthInMinute) <= toDate)
+                       .ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPlan = new List<Plan>();
+            }
+
+            return listPlan;
+        }
+
+        /*
+        public IEnumerable<object> LoadPlansSummaryInDateRange(double start, double end)
+        {
+            DateTime fromDate = DateTime.MinValue;
+            DateTime toDate = DateTime.MaxValue;
+
+            IEnumerable<object> listPlan;
+            _client.Connect();
+            try
+            {
+                listPlan = _client.Cypher
+                       .Match("(p:plan)")
+                       .ReturnDistinct<Plan>("p")
+                       .Results.ToList()
+                       .Where(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture) >= fromDate
+                                   && DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture).AddMinutes(p.LengthInMinute) <= toDate)
+                       .GroupBy(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture).Date)
+                       .Select(x => new { DateTimeScheduled = x.Key, Count = x.Count() });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listPlan = new List<Plan>();
+            }
+
+            return listPlan;
+        }
+         */
+
+        public List<Post> FindPostInRoom(int roomId, int postId, int limit = 5)
         {
             /*
                  * Query:
@@ -1892,7 +1978,7 @@ namespace FlyAwayPlus.Helpers
             List<Post> listPost = new List<Post>();
             try
             {
-                listPost = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
+                listPost = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
                     //.Where("p2.id < " + postID)
                     .ReturnDistinct<Post>("p2")
                     .Limit(limit)
@@ -1908,7 +1994,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public List<User> FindUserInRoom(int roomID)
+        public List<User> FindUserInRoom(int roomId)
         {
             /*
                  * Query:
@@ -1920,7 +2006,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})<-[j:JOIN {type:" + FapConstants.JOIN_MEMBER + "}]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_MEMBER + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
@@ -1934,7 +2020,7 @@ namespace FlyAwayPlus.Helpers
             return listUser;
         }
 
-        public User FindAdminInRoom(int roomID)
+        public User FindAdminInRoom(int roomId)
         {
             /*
                  * Query:
@@ -1946,7 +2032,7 @@ namespace FlyAwayPlus.Helpers
             User admin = new User();
             try
             {
-                admin = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})<-[j:JOIN {type:" + FapConstants.JOIN_ADMIN + "}]-(u:user)")
+                admin = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_ADMIN + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.FirstOrDefault();
             }
@@ -1958,7 +2044,7 @@ namespace FlyAwayPlus.Helpers
             return admin;
         }
 
-        public List<User> FindUserRequestJoinRoom(int roomID)
+        public List<User> FindUserRequestJoinRoom(int roomId)
         {
             /*
                  * Query:
@@ -1970,7 +2056,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomID + "})<-[j:JOIN {type:" + FapConstants.JOIN_REQUEST + "}]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_REQUEST + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
@@ -1984,16 +2070,16 @@ namespace FlyAwayPlus.Helpers
             return listUser;
         }
 
-        public List<Message> GetListMessageInRoom(int roomID, int messageID)
+        public List<Message> GetListMessageInRoom(int roomId, int messageId)
         {
             _client.Connect();
-            List<Message> listMessage = new List<Message>();
+            List<Message> listMessage;
             try
             {
-                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID: " + roomID + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
-                                        //.Where("p1.messageID < " + messageID)
+                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID: " + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
+                    //.Where("p1.messageID < " + messageID)
                                         .ReturnDistinct<Message>("m1")
-                                        .Results.Reverse<Message>().ToList();
+                                        .Results.Reverse().ToList();
                 listMessage.RemoveAll(item => item == null);
             }
             catch (Exception e)
@@ -2067,6 +2153,23 @@ namespace FlyAwayPlus.Helpers
                 place = null;
             }
             return place;
+        }
+        public bool UpdatePlanEvent(string id, DateTime newEventStart, DateTime newEventEnd)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(p:plan { PlanId: " + id + "})")
+                           .Set("p.DatePlanStart = '" + newEventStart.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture) + "'")
+                           .Set("p.LengthInMinute = '" + (newEventEnd - newEventStart).TotalMinutes + "'")
+                           .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
     }
 }

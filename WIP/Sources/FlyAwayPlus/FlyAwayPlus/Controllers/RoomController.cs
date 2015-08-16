@@ -1,9 +1,11 @@
 ﻿using FlyAwayPlus.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
 
 namespace FlyAwayPlus.Controllers
@@ -18,25 +20,25 @@ namespace FlyAwayPlus.Controllers
         }
 
 
-        public ActionResult RoomDetail(int roomID = 0)
+        public ActionResult RoomDetail(int roomId = 0)
         {
             User user = UserHelpers.GetCurrentUser(Session);
             if (user == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            List<Post> listPost = GraphDatabaseHelpers.Instance.FindPostInRoom(roomID, 0);
-            User admin = GraphDatabaseHelpers.Instance.FindAdminInRoom(roomID);
-            List<User> listUserInRoom = GraphDatabaseHelpers.Instance.FindUserInRoom(roomID);
-            List<User> listUserRequestJoinRoom = GraphDatabaseHelpers.Instance.FindUserRequestJoinRoom(roomID);
-            List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomID,0);
+            List<Post> listPost = GraphDatabaseHelpers.Instance.FindPostInRoom(roomId, 0);
+            User admin = GraphDatabaseHelpers.Instance.FindAdminInRoom(roomId);
+            List<User> listUserInRoom = GraphDatabaseHelpers.Instance.FindUserInRoom(roomId);
+            List<User> listUserRequestJoinRoom = GraphDatabaseHelpers.Instance.FindUserRequestJoinRoom(roomId);
+            List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomId, 0);
             List<User> listUserOwnMessage = new List<User>();
 
             foreach (Message message in listMessage)
             {
                 listUserOwnMessage.Add(GraphDatabaseHelpers.Instance.FindUser(message));
             }
-            
+
 
             FindRelatedInformationPost(listPost);
             ViewData["admin"] = admin;
@@ -44,12 +46,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listUserRequestJoinRoom"] = listUserRequestJoinRoom;
             ViewData["listMessage"] = listMessage;
             ViewData["listUserOwnMessage"] = listUserOwnMessage;
-            ViewData["roomID"] = roomID;
-            return View();
-        }
-
-        public ActionResult RoomList()
-        {
+            ViewData["roomID"] = roomId;
             return View();
         }
 
@@ -119,5 +116,52 @@ namespace FlyAwayPlus.Controllers
                 ViewData["isLoadMore"] = "true";
             }
         }
-	}
+
+        ////////////////
+        // AJAX CALLS //
+        ///////////////
+
+        public void UpdatePlanEvent(string id, string newEventStart, string newEventEnd)
+        {
+            GraphDatabaseHelpers.Instance
+                .UpdatePlanEvent(id, DateTime.Parse(newEventStart, null, DateTimeStyles.RoundtripKind),
+                                     DateTime.Parse(newEventEnd, null, DateTimeStyles.RoundtripKind));
+        }
+
+        public bool SaveEvent(string title, string newEventDate, string newEventTime, string newEventDuration)
+        {
+            var userId = ((User)Session["user"]).userID;
+
+            var newPlan = new Plan
+            {
+                DatePlanStart = newEventDate + " " + newEventTime,
+                LengthInMinute = int.Parse(newEventDuration) * 60,
+                WorkItem = title
+            };
+
+            return GraphDatabaseHelpers.Instance.CreateNewPlanEvent(newPlan, (int)ViewData["roomID"], userId);
+        }
+
+        public JsonResult GetPlanEvents(DateTime start, DateTime end)
+        {
+            var apptListForDate = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(start, end);
+
+            if (!apptListForDate.Any())
+            {
+                return null;
+            }
+
+            var eventList = apptListForDate.Select(e => new
+            {
+                id = e.PlanId,
+                title = e.WorkItem,
+                start = e.DatePlanStart,
+                end = DateTime.ParseExact(e.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture).AddMinutes(e.LengthInMinute).ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture),
+                allday = false
+            });
+
+            var rows = eventList.ToArray();
+            return Json(rows, JsonRequestBehavior.AllowGet);
+        }
+    }
 }

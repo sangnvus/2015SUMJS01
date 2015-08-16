@@ -12,14 +12,15 @@
         margin: 5px 10px 0 10px;
         overflow: hidden;
         background-color: #ffffff;
+        width: auto;
     }
 
     #room-detail-wrapper .dark-divider {
         height: 1px;
-        margin: 5px 10px 0 10px;
+        margin: 5px -10px 5px -10px;
         overflow: hidden;
-        background-color: #95A5A5;
-        width: 100%;
+        background-color: #d7d7d7;
+        width: auto;
     }
 
     #room-detail-wrapper .room-detail-infor {
@@ -138,8 +139,7 @@
                 text-align: center;
             }
 
-    #room-detail-wrapper .room-detail-request-join,
-    #room-detail-wrapper .room-detail-btn-copy-roomid {
+    #room-detail-wrapper .room-detail-request-join {
         width: 100%;
         cursor: pointer;
     }
@@ -240,90 +240,9 @@
         padding: 20px 0 20px 0;
     }
 
-
-.tabs-cat {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 0;
-    margin-top: 5px;
-}
-
-    .tabs-cat .cate-item {
-        position: relative;
-        padding-bottom: 20px;
-        overflow: hidden;
-    }
-
-        .tabs-cat .cate-item .fa {
-            font-size: 35px;
-            color: #4fc1e9;
-            margin-top: 0;
-            max-width: 100%;
-        }
-
-        .tabs-cat .cate-item:last-child:after {
-            display: none;
-        }
-
-        .tabs-cat .cate-item.active:before, .tabs-cat .cate-item:hover:before {
-            bottom: 0;
-        }
-
-        .tabs-cat .cate-item:before {
-            position: absolute;
-            bottom: -17px;
-            left: 50%;
-            content: '';
-            border: 17px solid transparent;
-            border-bottom-color: #4fc1e9;
-            -webkit-transform: translate(-50%,0);
-            -moz-transform: translate(-50%,0);
-            -ms-transform: translate(-50%,0);
-            -o-transform: translate(-50%,0);
-            -webkit-transition: all .2s linear;
-            -moz-transition: all .2s linear;
-            -ms-transition: all .2s linear;
-            -o-transition: all .2s linear;
-        }
-
-        .tabs-cat .cate-item:after {
-            width: 0;
-            top: 0;
-            bottom: 35px;
-            border-left: 1px solid #fff;
-            right: 0;
-            position: absolute;
-            content: '';
-            display: block;
-        }
-
-        .tabs-cat .cate-item a {
-            text-decoration: none;
-            display: block;
-        }
-
-        .tabs-cat .cate-item span {
-            color: #4fc1e9;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tabs-cat .cate-item img {
-            margin-top: 15px;
-        }
-
 .room-detail-plan-area .tab-content {
     padding-top: 0;
 }
-
-.form-cn {
-    background-color: #ffffff;
-    background-color: rgba(255,255,255,.85);
-    padding: 20px 30px 30px;
-    border-top: 5px solid #4fc1e9;
-}
-
 
 .discussion {
     list-style: none;
@@ -416,6 +335,83 @@
         color: #ccc;
     }
 
+.room-detail-plan-tab-general .add-plan-wrapper input[type="text"] {
+    width: 100%;
+    border-bottom: 0;
+    -ms-border-radius: 4px 0 0 0;
+    border-radius: 4px 0 0 0;
+}
+
+.room-detail-plan-tab-general .add-plan-wrapper #general-plan-detail {
+    -moz-min-width: 100%;
+    -ms-min-width: 100%;
+    -o-min-width: 100%;
+    -webkit-min-width: 100%;
+    min-width: 100%;
+    -ms-border-radius: 0 0 0 4px;
+    border-radius: 0 0 0 4px;
+    margin-top: 0;
+    height: 60px;
+}
+
+.room-detail-plan-tab-general span {
+    background-color: #3bafda;
+    padding: 20px;
+    -ms-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+    text-align: center;
+}
+
+    .room-detail-plan-tab-general span:hover {
+        background-color: #4fc1e9;
+    }
+
+    .room-detail-plan-tab-general span a,
+    .room-detail-plan-tab-general span a:hover,
+    .room-detail-plan-tab-general span a:focus,
+    .room-detail-plan-tab-general span a:active,
+    .room-detail-plan-tab-general span a:active:hover,
+    .room-detail-plan-tab-general span a:active:focus {
+        background-color: transparent;
+        border: 0;
+        border-color: transparent;
+        -webkit-box-shadow: none;
+        -ms-box-shadow: none;
+        box-shadow: none;
+        font-size: 30px;
+    }
+
+.room-detail-plan-tab-general .general-plan-list-container {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border: 1px solid #d7d7d7;
+    border-bottom: 2px solid #d7d7d7;
+    margin: 0 0 10px 0;
+    padding: 10px;
+    /*Transitions*/
+    -webkit-transition: top 1s ease, left 1s ease;
+    -moz-transition: top 1s ease, left 1s ease;
+    -o-transition: top 1s ease, left 1s ease;
+    -ms-transition: top 1s ease, left 1s ease;
+}
+
+    .room-detail-plan-tab-general .general-plan-list-container .general-plan-label {
+        color: #fff;
+        font-family: 'Seogoe UI Light', 'Calibri', 'Arial';
+        font-size: 17px;
+        text-transform: uppercase;
+        background-color: #53A3CD;
+        margin: -10px -10px 5px -10px;
+        padding: 10px 10px 1px 10px;
+    }
+
+    .room-detail-plan-tab-general .general-plan-list-container .user-info {
+        margin-bottom: -10px
+    }
 
 /* SHITTY OLD DESIGN */
 /*.full-width {

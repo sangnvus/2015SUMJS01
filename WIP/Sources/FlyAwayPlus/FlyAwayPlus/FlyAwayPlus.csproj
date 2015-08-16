@@ -267,6 +267,7 @@
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Place.cs" />
+    <Compile Include="Models\Plan.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\Relationships\CommonRelationships.cs" />
     <Compile Include="Models\ReportPost.cs" />
@@ -286,6 +287,7 @@
     <Content Include="Content\common.css" />
     <Content Include="Content\friendSuggest.css" />
     <Content Include="Content\bootstrap.dropdowns-enhancement.min.css" />
+    <Content Include="Content\fullcalendar.css" />
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\Fancy\jquery.fancybox.css" />
@@ -300,6 +302,7 @@
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Images\image.gif" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
+    <Content Include="Images\UIHelper\icon-calendar.png" />
     <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Images\UIHelper\youtube.png" />
@@ -309,8 +312,10 @@
     <Content Include="Scripts\client-plusone.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\Fancy\jquery.fancybox.pack.js" />
+    <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\youtube-upload.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />

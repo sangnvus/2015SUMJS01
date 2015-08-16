@@ -1,4 +1,9 @@
 ﻿@using FlyAwayPlus.Models
+
+<link href="~/Content/fullcalendar.css" rel="stylesheet" />
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/fullcalendar.js"></script>
+
 @{
     ViewBag.Title = "Room Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,6 +12,136 @@
 <link href="~/Content/RoomPage/room-detail.css" rel="stylesheet" />
 <link href="~/Content/Room/room-list.css" rel="stylesheet" />
 
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var sourceFullView = { url: '/Room/GetPlanEvents/' };
+            var calLoading = true;
+
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'agendaWeek,agendaDay'
+                },
+                defaultView: 'agendaWeek',
+                height: 500,
+                editable: true,
+                allDaySlot: false,
+                selectable: true,
+                slotMinutes: 15,
+                events: '/Room/GetPlanEvents/',
+                eventClick: function (calEvent, jsEvent, view) {
+                    alert('You clicked on event id: ' + calEvent.id
+                        + "\nSpecial ID: " + calEvent.someKey
+                        + "\nAnd the title is: " + calEvent.title);
+                },
+
+                eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
+                    if (confirm("Confirm move?")) {
+                        UpdateEvent(event.id, event.start);
+                    }
+                    else {
+                        revertFunc();
+                    }
+                },
+
+                eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+
+                    if (confirm("Confirm change appointment length?")) {
+                        UpdateEvent(event.id, event.start, event.end);
+                    }
+                    else {
+                        revertFunc();
+                    }
+                },
+
+                dayClick: function (date, allDay, jsEvent, view) {
+                    $('#eventTitle').val("");
+                    $('#eventDate').val(moment(date).format('YYYY-MM-DD'));
+                    $('#eventTime').val(moment(date).format('HH:mm:ss'));
+                    ShowEventPopup(date);
+                },
+
+                viewRender: function (view, element) {
+                    if (!calLoading) {
+                        $('#calendar').fullCalendar('removeEventSource', sourceFullView);
+                        $('#calendar').fullCalendar('removeEvents');
+                        $('#calendar').fullCalendar('addEventSource', sourceFullView);
+                    }
+                }
+
+            });
+
+            calLoading = false;
+        });
+
+        $('#btnPopupCancel').click(function () {
+            ClearPopupFormValues();
+            $('#popupEventForm').modal(false);
+        });
+
+        $('#btnPopupSave').click(function () {
+
+            $('#popupEventForm').modal(false);
+
+            var dataRow = {
+                'Title': $('#eventTitle').val(),
+                'NewEventDate': $('#eventDate').val(),
+                'NewEventTime': $('#eventTime').val(),
+                'NewEventDuration': $('#eventDuration').val()
+            }
+
+            ClearPopupFormValues();
+
+            $.ajax({
+                type: 'POST',
+                url: "/Room/SaveEvent",
+                data: dataRow,
+                success: function (response) {
+                    if (response == 'True') {
+                        $('#calendar').fullCalendar('refetchEvents');
+                        alert('New event saved!');
+                    }
+                    else {
+                        alert('Error, could not save event!');
+                    }
+                }
+            });
+        });
+
+        function ShowEventPopup(date) {
+            ClearPopupFormValues();
+            $('#popupEventForm').modal();
+            $('#eventTitle').focus();
+        }
+
+        function ClearPopupFormValues() {
+            $('#eventID').val("");
+            $('#eventTitle').val("");
+            $('#eventDateTime').val("");
+            $('#eventDuration').val("");
+        }
+
+        function UpdateEvent(eventId, eventStart, eventEnd) {
+
+            var dataRow = {
+                'id': eventId,
+                'newEventStart': eventStart,
+                'newEventEnd': eventEnd
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/Room/UpdatePlanEvent/",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(dataRow)
+            });
+        }
+    </script>
+}
+
 @{
     var admin = ViewData["admin"] as User;
     var listUserInRoom = ViewData["listUserInRoom"] as List<User>;
@@ -14,7 +149,7 @@
     var listMessage = ViewData["listMessage"] as List<Message>;
     var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
     int userID = Int16.Parse(@Session["userID"].ToString());
-    
+
     var listPost = ViewData["listPost"] as List<Post>;
     var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
     var listVideoDict = ViewData["listVideoDict"] as Dictionary<int, Video>;
@@ -26,7 +161,7 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
-    int roomID = Int16.Parse(ViewData["roomID"].ToString());
+    int roomId = int.Parse(ViewData["roomID"].ToString());
 }
 <div id="room-detail-wrapper">
     <div>
@@ -64,8 +199,11 @@
             <div>
                 <a href="#" class="btn btn-primary room-detail-request-join">Request join</a>
             </div>
-            <div>
-                <a href="#" class="btn btn-primary room-detail-btn-copy-roomid" type="button">Copy room ID</a>
+            <div class="input-group">
+                <input type="text" class="form-control" value="@roomId">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i></button>
+                </span>
             </div>
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="&#64;friend">
@@ -82,13 +220,13 @@
             <!-- Nav tabs -->
             <div>
                 <ul class="tabs-cat text-center row">
-                    <li class="cate-item col-xs-4 active">
+                    <li class="cate-item col-xs-4">
                         <a data-toggle="tab" href="#room-detail-plan-tab-general" title="" aria-expanded="true">
                             <span>General</span>
                             <i class="fa fa-bars"></i>
                         </a>
                     </li>
-                    <li class="cate-item col-xs-4">
+                    <li class="cate-item col-xs-4 active">
                         <a data-toggle="tab" href="#room-detail-plan-tab-timeline" title="" aria-expanded="false">
                             <span>Timeline</span>
                             <i class="fa fa-calendar"></i>
@@ -106,29 +244,53 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- general -->
-                <div class="form-cn room-detail-plan-tab-general tab-pane active" id="room-detail-plan-tab-general">
-                    <form class="form-inline">
-                        <div class="form-group">
-                            <label class="sr-only input-group-addon" for="general-plan-label">Label</label>
-                            <label class="sr-only" for="general-plan-detail">Detail</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">Label</div>
-                                <input type="text" class="form-control" id="general-plan-label">
-                                <div class="input-group-addon">Detail</div>
-                                <input type="text" class="form-control" id="general-plan-detail">
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-primary">Add</button>
-                                </span>
+                <div class="form-cn room-detail-plan-tab-general tab-pane" id="room-detail-plan-tab-general">
+                    <div class="blog-landing">
+                        <form class="form-inline col-md-8" style="padding-left: 0">
+                            <div class="form-group" style="width: 100%">
+                                <div class="input-group" style="width: 100%">
+                                    <div class="add-plan-wrapper">
+                                        <input type="text" class="form-control" id="general-plan-label" placeholder="Label">
+                                        <textarea class="form-control" id="general-plan-detail" placeholder="Content"></textarea>
+                                    </div>
+                                    <span class="input-group-btn">
+                                        <a href="javascript:;" class="btn">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
 
-
+                        @for (int i = 0; i < 10; i++)
+                        {
+                            <div class="col-md-4">
+                                <div class="general-plan-list-container">
+                                    <div class="general-plan-label border-radius-top-left border-radius-top-right">
+                                        <p>Chúng ta đã có nhiều thiết bị thực tế ảo</p>
+                                    </div>
+                                    <div class="general-plan-content">
+                                        Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... nhưng phần lớn vẫn còn mắc phải nhược điểm là khiến cho người dùng cảm thấy mệt mỏi, chóng mặt khi sử dụng.
+                                    </div>
+                                    <div class="dark-divider"><!--DIVIDER--></div>
+                                    <div class="user-info">
+                                        <img src="/Images/UserUpload/UserAvatar/item_0_Background.jpg" alt="Duc Filan" class="avatar" />
+                                        <div style="width: 100%">
+                                            <a href="/User/Index/1">
+                                                <div class="name-user">Duc Filan</div>
+                                            </a>
+                                            <div class="post-time">16 Sep 2013 21:36</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
                 <!-- End general -->
                 <!-- timeline -->
-                <div class="form-cn room-detail-plan-tab-timeline tab-pane" id="room-detail-plan-tab-timeline">
-                    2
+                <div class="form-cn room-detail-plan-tab-timeline tab-pane active" id="room-detail-plan-tab-timeline">
+                    <div id="calendar"></div>
                 </div>
                 <!-- End timeline -->
                 <!-- estimation -->
@@ -148,7 +310,7 @@
             </div>
 
             <div class="friend-list-avatar">
-                @foreach(User user in listUserInRoom)
+                @foreach (User user in listUserInRoom)
                 {
                     <div class="padding-5 col-md-2">
                         <img class="circle-image" height="50" src="@user.avatar" alt="Avatar" />
@@ -289,7 +451,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="post-content" style="display:flex;">
                                     @foreach (var photo in listPhotoDict[listPost[index].postID])
                                     {
@@ -364,13 +526,37 @@
     </div>
 </div>
 
+
+<div id="popupEventForm" class="modal fade bs-example-modal-sm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Add new Plan item</h4>
+            </div>
+            <div class="modal-body">
+                <form id="EventForm">
+                    <input type="hidden" id="eventID">
+                    <input type="text" id="eventTitle" class="form-control" placeholder="Title"><br />
+                    <input type="text" id="eventDate" class="form-control" placeholder="Start date"><br />
+                    <input type="text" id="eventTime" class="form-control" placeholder="Start time"><br />
+                    <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)"><br />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
+                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         if (typeof (chatHubProxy) === "undefined") {
             chatHubProxy = $.connection.chatHub;
         }
         $.connection.hub.start().done(function () {
-            chatHubProxy.server.getListMessageInRoom(@roomID);
+            chatHubProxy.server.getListMessageInRoom(@roomId);
         });
 
         chatHubProxy.client.getMessageInRoom = function (content) {
@@ -390,7 +576,7 @@
             var controller = "/User/CreateMessageInRoom/";
 
             var data = {
-                roomID: @roomID,
+                roomID: @roomId,
                 content: content
             };
 
@@ -418,7 +604,7 @@
                     $(selector).append(tmp);
 
                     $.connection.hub.start().done(function () {
-                        chatHubProxy.server.sendChatMessageInRoom(tmp.replace("self", "other"), @roomID);
+                        chatHubProxy.server.sendChatMessageInRoom(tmp.replace("self", "other"), @roomId);
                     });
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
