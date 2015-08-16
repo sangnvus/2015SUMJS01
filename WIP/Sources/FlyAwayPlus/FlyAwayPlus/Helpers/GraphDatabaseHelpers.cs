@@ -2115,8 +2115,8 @@ namespace FlyAwayPlus.Helpers
                                         .With("p, (COUNT(DISTINCT ul)) - (COUNT(DISTINCT udl)) + (COUNT(DISTINCT c1)) as mark")
                                         .OrderByDescending("mark")
                                         .Return<Post>("p")
-                                        //.Where("p2.id < " + postID)
-                                        //.Limit(limit)
+                    //.Where("p2.id < " + postID)
+                    //.Limit(limit)
                                         .Results.ToList();
 
                 listPost.RemoveAll(item => item == null);
@@ -2170,6 +2170,22 @@ namespace FlyAwayPlus.Helpers
                 return false;
             }
             return true;
+        }
+
+        public void InsertRoom(Room newRoom, int currentUserId)
+        {
+            // Auto increment Id.
+            newRoom.RoomId = GetGlobalIncrementId();
+            _client.Connect();
+
+            _client.Cypher
+                   .Create("(r:room {newRoom})")
+                   .WithParam("newRoom", newRoom)
+                   .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(u:user {userID:" + currentUserId + "}), (r:room {RoomId: " + newRoom.RoomId + "})")
+                     .Create("(u)--[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
+                     .ExecuteWithoutResults();
         }
     }
 }

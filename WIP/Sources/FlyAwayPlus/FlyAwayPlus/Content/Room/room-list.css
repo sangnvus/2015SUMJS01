@@ -256,7 +256,7 @@
 .filer-wrapper {
     margin: 20px 0 20px 0;
     display: block;
-    overflow: hidden;
+    float: left;
     position: relative;
     -ms-border-radius: 8px;
     border-radius: 8px;

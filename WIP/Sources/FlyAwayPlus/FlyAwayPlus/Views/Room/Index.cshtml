@@ -30,10 +30,10 @@
                     <input type="text" name="targetplace" id="flight-to" class="field-input" placeholder="Target place">
                 </div>
                 <div class="form-field field-date">
-                    <input type="text" name="startdate" class="field-input calendar-input" placeholder="Start date">
+                    <input type="text" name="startdate" class="field-input cal-select-start" readonly placeholder="Start date">
                 </div>
                 <div class="form-field field-date">
-                    <input type="text" name="returndate" class="field-input calendar-input" placeholder="Return date">
+                    <input type="text" name="returndate" class="field-input cal-select-end" readonly placeholder="Return date">
                 </div>
                 <div class="form-field field-select field-adult">
                     <div class="select">
@@ -53,18 +53,67 @@
         </div>
         <!-- End Fitering -->
         <!-- Creating -->
-        <div class="form-cn room-list-filter-tab tab-pane active" id="room-list-plan-create-room-tab">
-            <div class="col-md-6">
-                <div class="form-field">
-                    <input type="text" name="roomname" class="field-input" placeholder="Room name">
-                </div>
-                <div class="form-field">
-                    <textarea name="roomdesc" class="field-input" placeholder="Room description"></textarea>
-                </div>
-            </div>
-            <div class="col-md-6">
+        <div class="form-cn room-list-filter-tab tab-pane" id="room-list-plan-create-room-tab">
+            @using (Html.BeginForm("Add", "Room", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <div class="room-create-wrapper col-md-12 clearfix">
+                    <div class="col-md-6">
+                        <div class="form-field width-100-pcnt">
+                            <input type="text" name="roomname" class="field-input" placeholder="Room name">
+                        </div>
+                        <div class="form-field width-100-pcnt">
+                            <textarea name="roomdesc" class="field-input" placeholder="Room description"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding-right: 0">
+                        <div class="form-field width-100-pcnt field-date">
+                            <input type="text" name="startdate" class="field-input cal-select-start" readonly placeholder="Start date">
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding-right: 0">
+                        <div class="form-field width-100-pcnt field-date">
+                            <input type="text" name="enddate" class="field-input cal-select-end" readonly placeholder="End date">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-right: 0">
+                        <div class="form-field width-100-pcnt">
+                            <input type="text" name="startplace" class="field-input start-geocomplete" placeholder="Start place">
+                        </div>
+                        <div class="form-field width-100-pcnt">
+                            <input type="text" name="targetplace" class="field-input end-geocomplete" placeholder="Target place">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="post-privacy" class="privacy-label-create-room">Privacy: </label>
+                        <div class="btn-group" role="group" id="post-privacy">
+                            <a class="btn btn-default" data-label-placement=""><i class="fa fa-globe data-label"></i></a>
+                            <a data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span> </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <input type="radio" id="post-privacy-public" name="privacy" value="public" checked="">
+                                    <label for="post-privacy-public"><i class="fa fa-globe data-label"></i> Public</label>
+                                </li>
+                                <li>
+                                    <input type="radio" id="post-privacy-private" name="privacy" value="private">
+                                    <label for="post-privacy-private"><i class="fa fa-lock data-label"></i> Private</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="javascript:;" class="btn btn-primary pull-right">Create</a>
+                    </div>
+                    <div id="start-geo-detail-add">
+                        <input type="hidden" data-start="lat" name="start_lat" value="" />
+                        <input type="hidden" data-start="lng" name="start_lng" value="" />
+                        <input type="hidden" data-start="formatted_address" name="start_formatted_address" value="" />
+                    </div>
 
-            </div>
+                    <div id="end-geo-detail-add">
+                        <input type="hidden" data-end="lat" name="end_lat" value="" />
+                        <input type="hidden" data-end="lng" name="end_lng" value="" />
+                        <input type="hidden" data-end="formatted_address" name="end_formatted_address" value="" />
+                    </div>
+                </div>
+            }
         </div>
         <!-- End Creating -->
     </div>
@@ -74,8 +123,44 @@
     @Html.Partial("_ListRoomPartial")
 </div>
 
-<script>
-    $(".form-field").on('input', function (e) {
+@Scripts.Render("~/bundles/datepicker")
+<script src="~/Scripts/jquery.geocomplete.js"></script>
 
+<script>
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+    var checkin = $('.cal-select-start').datepicker({
+        format: "yyyy-mm-dd",
+        onRender: function (date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+        }
+        checkin.hide();
+        $('.cal-select-end')[0].focus();
+    }).data('datepicker');
+    var checkout = $('.cal-select-end').datepicker({
+        format: "yyyy-mm-dd",
+        onRender: function (date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        checkout.hide();
+    }).data('datepicker');
+
+    $(".start-geocomplete").geocomplete({
+        details: "#start-geo-detail-add",
+        detailsAttribute: "data-start",
+        types: ["geocode"]
+    });
+    $(".end-geocomplete").geocomplete({
+        details: "#end-geo-detail-add",
+        detailsAttribute: "data-end",
+        types: ["geocode"]
     });
 </script>

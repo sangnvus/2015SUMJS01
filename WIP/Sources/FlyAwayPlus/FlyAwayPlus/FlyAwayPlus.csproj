@@ -285,6 +285,7 @@
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\chatConversation.css" />
     <Content Include="Content\common.css" />
+    <Content Include="Content\datepicker.css" />
     <Content Include="Content\friendSuggest.css" />
     <Content Include="Content\bootstrap.dropdowns-enhancement.min.css" />
     <Content Include="Content\fullcalendar.css" />
@@ -306,6 +307,7 @@
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Images\UIHelper\youtube.png" />
     <Content Include="Scripts\blocksit.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\bootstrap.dropdowns-enhancement.js" />
     <Content Include="Scripts\common.js" />

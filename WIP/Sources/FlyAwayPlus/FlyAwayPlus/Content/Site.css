@@ -1361,40 +1361,49 @@ textarea {
     font-family: 'Seogoe UI', 'Calibri', 'Arial';
 }
 
-    .form-cn .form-search {
+    .form-cn .form-search, .form-cn .room-create-wrapper {
         background-color: #fff;
-        margin-top: 20px;
     }
 
-        .form-cn .form-search .form-field {
-            float: left;
-            padding: 20px 15px;
+    .form-cn .room-create-wrapper {
+        margin-bottom: 10px;
+    }
+
+    .form-cn .form-field {
+        float: left;
+        padding: 10px 15px;
+        font-size: 18px;
+    }
+
+    .form-cn .form-search .form-field {
+        float: left;
+        font-size: 18px;
+        padding: 20px 15px;
+    }
+
+    .form-cn .form-field label {
+        font-size: 18px;
+        padding-right: 30px;
+    }
+
+        .form-cn .form-field label span {
             font-size: 18px;
         }
 
-            .form-cn .form-search .form-field label {
-                font-size: 18px;
-                padding-right: 30px;
-            }
+    .form-cn .form-field.field-date:after {
+        right: 20px;
+    }
 
-                .form-cn .form-search .form-field label span {
-                    font-size: 18px;
-                }
+    .form-cn .form-submit {
+        float: left;
+        padding: 12px 15px;
+    }
 
-            .form-cn .form-search .form-field.field-date:after {
-                right: 20px;
-            }
-
-        .form-cn .form-search .form-submit {
-            float: left;
-            padding: 12px 15px;
+        .form-cn .form-submit .awe-btn {
+            line-height: 42px;
+            width: 100%;
+            background-position: right 10px center;
         }
-
-            .form-cn .form-search .form-submit .awe-btn {
-                line-height: 42px;
-                width: 100%;
-                background-position: right 10px center;
-            }
 
 .room-list-filter-tab .field-from {
     width: 263px;
@@ -1453,14 +1462,14 @@ textarea {
         opacity: 0;
     }
 
-.form-search .form-field {
+.form-field {
     position: relative;
     font-size: 14px;
     color: #4fc1e9;
     line-height: 29px;
 }
 
-    .form-search .form-field label {
+    .form-field label {
         position: absolute;
         display: block;
         z-index: 0;
@@ -1480,17 +1489,17 @@ textarea {
         -o-transform: translate(0,-50%);
     }
 
-        .form-search .form-field label.focus {
+        .form-field label.focus {
             display: none;
         }
 
-        .form-search .form-field label span {
+        .form-field label span {
             color: #4fc1e9;
             font-size: 25px;
             font-weight: normal;
         }
 
-    .form-search .form-field .field-input {
+    .form-field .field-input {
         position: relative;
         z-index: 2;
         width: 100%;
@@ -1501,42 +1510,58 @@ textarea {
         border-bottom: 1px solid #bcbcbc;
     }
 
-    .form-search .form-field .field-input:focus {
-        border-bottom: 2px solid #4fc1e9;
-    }
+        .form-field .field-input:focus {
+            border-bottom: 2px solid #4fc1e9;
+        }
 
-        .form-search .form-field .field-input:-moz-placeholder {
+        .form-field .field-input:-moz-placeholder {
             color: #4fc1e9;
         }
 
-        .form-search .form-field .field-input:-ms-input-placeholder {
+        .form-field .field-input:-ms-input-placeholder {
             color: #4fc1e9;
         }
 
-        .form-search .form-field .field-input::-webkit-input-placeholder {
+        .form-field .field-input::-webkit-input-placeholder {
             color: #4fc1e9;
         }
 
-    .form-search .form-field.field-date .field-input {
+    .form-field.field-date .field-input {
         background: url(/Images/UIHelper/icon-calendar.png) right center no-repeat;
         padding-right: 20px;
     }
 
-    .form-search .form-field.field-select .select span {
+    .form-field.field-select .select span {
         color: #4fc1e9;
         border-bottom: 1px solid #bcbcbc;
         line-height: 31px;
     }
 
-    .form-search .form-field.field-select .select span:focus {
-        border-bottom: 2px solid #4fc1e9;
-    }
+        .form-field.field-select .select span:focus {
+            border-bottom: 2px solid #4fc1e9;
+        }
 
-        .form-search .form-field.field-select .select span:after {
+        .form-field.field-select .select span:after {
             font-size: 24px;
             color: #b9b9b9;
         }
 
-    .form-search .form-field.field-select .select select {
+    .form-field.field-select .select select {
         color: #4fc1e9;
     }
+
+.width-100-pcnt {
+    width: 100% !important;
+}
+
+.privacy-label-create-room {
+    margin-left: 15px;
+    font-family: 'Seogoe UI', Calibri, Arial;
+    font-weight: normal;
+    font-size: 18px;
+    color: #4fc1e9;
+}
+
+#room-list-filter-tab, #room-list-plan-create-room-tab {
+    padding: 0
+}
