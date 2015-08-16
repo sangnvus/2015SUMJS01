@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
+using Microsoft.Ajax.Utilities;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -17,17 +18,17 @@ namespace FlyAwayPlus.Controllers
             User user = UserHelpers.GetCurrentUser(Session);
             User userPost;
             List<Comment> listComment;
-            List<User> listSuggestFriend = new List<User>();
-            List<User> listFriend = new List<User>();
+            List<User> listSuggestFriend;
+            List<User> listFriend;
             List<string> listFriendType = new List<string>();
             List<int> listMutualFriends = new List<int>();
 
-            List<Place> listSuggestPlace = new List<Place>();
+            List<Place> listSuggestPlace;
             List<bool> listIsVisitedPlace = new List<bool>();
             List<int> listNumberOfPost = new List<int>();
             List<bool> checkWishlist = new List<bool>();
 
-            Photo photo = new Photo();
+            Photo photo;
             Dictionary<int, User> dict = new Dictionary<int, User>();
             int likeCount = 0;
             int dislikeCount = 0;
@@ -107,7 +108,7 @@ namespace FlyAwayPlus.Controllers
             string message = Request.Form["message"];
             Decimal latitude = Decimal.Parse(Request.Form["lat"]);
             Decimal longitude = Decimal.Parse(Request.Form["lng"]);
-            string location = Request.Form["location"];
+            string location = Request.Form["formatted_address"];
             List<string> images = Request.Form["uploadedimages"].Split('#').ToList();
             images.RemoveAt(0);
             string privacy = Request.Form["privacy"];
@@ -126,15 +127,18 @@ namespace FlyAwayPlus.Controllers
                 latitude = latitude,
                 longitude = longitude
             };
-
-            Video newVideo = new Video
+            Video newVideo = null;
+            if (!uploadedVideoYoutubeId.IsNullOrWhiteSpace())
             {
-                path = uploadedVideoYoutubeId,
-                dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
-            };
+                newVideo = new Video
+                {
+                    path = uploadedVideoYoutubeId,
+                    dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
+                };
+            }
 
-            List<Photo> newPhotos = images.Select(img => new Photo { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), url = img}).ToList();
-            
+            List<Photo> newPhotos = images.Select(img => new Photo { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), url = img }).ToList();
+
             var user = (User)Session["user"];
 
             GraphDatabaseHelpers.Instance.InsertPost(user, newPost, newPhotos, newPlace, newVideo);

@@ -29,7 +29,7 @@
 
                         <!-- LOCATION -->
                         <div id="id-location-wrapper" class="hidden">
-                            <input class="form-control" id="id-location-textbox" name="location" placeholder="Enter a location" type="text" />
+                            <input class="form-control" id="id-location-textbox" name="formatted_address" placeholder="Enter a location" type="text" />
                             <div class="map-canvas"></div>
                             <input type="hidden" name="lat" />
                             <input type="hidden" name="lng" />
@@ -56,7 +56,7 @@
 
                         <!-- VIDEOS -->
                         <div id="post-add-videos-wrapper" class="hidden">
-                            <span id="signinButton" class="pre-sign-in">
+                            <span id="signinButton" class="pre-sign-in" style="text-align: center;display: block;">
                                 <span class="g-signin"
                                       data-callback="oauth2Callback"
                                       data-clientid="802653758880-3ufqkq2gkpo7hqrimk0pr07isen9r8qu.apps.googleusercontent.com"
@@ -65,18 +65,10 @@
                                 </span>
                             </span>
 
-                            <div class="post-sign-in">
+                            <div class="post-sign-in hidden">
                                 <p id="post-video-file-name" style="text-align: center"></p>
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="upload-media-preview">
-                                            <div class="crop">
-                                                <img src="/Images/UIHelper/youtube.png" alt="Youtube preview"/>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-7" style="margin: 0 20px 0 -20px">
+                                    <div class="col-md-10" style="margin: 0 20px 0 -20px;padding-left: 45px;">
                                         <input class="form-control" id="video-upload-title" type="text" placeholder="Title for video">
                                         <textarea class="form-control" id="video-upload-description" placeholder="Description for video"></textarea>
                                     </div>
@@ -96,7 +88,7 @@
                                     <input id="post-video-upload" type="file" class="hidden" accept="video/*">
                                 </div>
 
-                                <input type="hidden" name="uploadedvideo"/>
+                                <input type="hidden" name="uploadedvideo" />
                             </div>
 
                             @*<input type="text" class="form-control" placeholder="Video title"/>
@@ -162,20 +154,19 @@
     }
 </div>
 
-<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
 <script src="~/Scripts/jquery.geocomplete.js"></script>
 
 <script src="~/Scripts/youtube-upload.js"></script>
 
 <script>
-    $(function() {
-        $("#id-location-button").click(function() {
+    $(function () {
+        $("#id-location-button").click(function () {
             $("#id-location-wrapper").toggleClass("hidden");
             $("#post-add-images-wrapper").removeClass("hidden").addClass("hidden");
             $("#post-add-videos-wrapper").removeClass("hidden").addClass("hidden");
         });
 
-        $("#id-picture-button").click(function() {
+        $("#id-picture-button").click(function () {
             $("#post-add-images-wrapper").toggleClass("hidden");
             $("#id-location-wrapper").removeClass("hidden").addClass("hidden");
             $("#post-add-videos-wrapper").removeClass("hidden").addClass("hidden");
@@ -190,10 +181,13 @@
         $("#id-location-textbox").geocomplete({
             map: ".map-canvas",
             details: "#id-location-wrapper",
-            location: [21.027764, 105.83416]
+            location: [21.027764, 105.83416],
+            mapOptions: {
+                zoom: 10
+            }
         });
 
-        $("#post-images-upload").change(function(e) {
+        $("#post-images-upload").change(function (e) {
             previewImages(this.files);
 
             uploadImages(this.files);
@@ -203,7 +197,7 @@
             $("#post-video-file-name").text(e.target.files[0].name);
         });
 
-        $("#post-modal img").each(function() {
+        $("#post-modal img").each(function () {
             var aspectRatio = $(this).width() / $(this).height();
             $(this).data("aspect-ratio", aspectRatio);
 
@@ -244,7 +238,7 @@
             imagesWrapper.append(previewWrapper);
 
             var reader = new FileReader();
-            reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+            reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
             reader.readAsDataURL(file);
         }
     }
@@ -263,10 +257,10 @@
                     contentType: false,
                     processData: false,
                     data: data,
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $("#post-upload-images-progress").removeClass("hidden");
                     },
-                    success: function(result) {
+                    success: function (result) {
                         $("#post-upload-images-progress").addClass("hidden");
 
                         for (var i = 0; i < result.length; i++) {
@@ -274,7 +268,7 @@
                             imageNameInput.val(imageNameInput.val() + "#" + result[i]);
                         }
                     },
-                    error: function(xhr, status, p3, p4) {
+                    error: function (xhr, status, p3, p4) {
                         var err = "Error " + " " + status + " " + p3 + " " + p4;
                         if (xhr.responseText && xhr.responseText[0] === "{")
                             err = JSON.parse(xhr.responseText).Message;

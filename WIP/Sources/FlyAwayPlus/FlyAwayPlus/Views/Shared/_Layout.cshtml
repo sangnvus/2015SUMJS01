@@ -9,7 +9,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/Scripts/jquery.validate.js")
     @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
-    
+
     <script src="~/Scripts/common.js"></script>
 
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -129,7 +129,7 @@
     <div class="container body-content">
         @*Html.Partial("_SearchPartial")*@
         @RenderBody()
-        <hr />
+        <br />
     </div>
     @Html.Partial("_TagFriendPartial")
     @Html.Action("LoginPartial", "Login")
@@ -152,6 +152,7 @@
     <script src="/signalr/hubs"></script>
     <script src="http://www.youtube.com/player_api"></script>
 
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&sensor=false"></script>
     <script>
         $(function () {
             $("#btn-notification").click(function () {

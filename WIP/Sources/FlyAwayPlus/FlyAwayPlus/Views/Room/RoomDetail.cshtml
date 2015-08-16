@@ -126,20 +126,20 @@
         function UpdateEvent(eventId, eventStart, eventEnd) {
 
             var dataRow = {
-                'ID': eventId,
-                'NewEventStart': eventStart,
-                'NewEventEnd': eventEnd
+                'id': eventId,
+                'newEventStart': eventStart,
+                'newEventEnd': eventEnd
             }
 
             $.ajax({
                 type: 'POST',
-                url: "/Room/UpdatePlanEvent",
+                url: "/Room/UpdatePlanEvent/",
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(dataRow)
             });
         }
-</script>
+    </script>
 }
 
 @{
@@ -149,7 +149,7 @@
     var listMessage = ViewData["listMessage"] as List<Message>;
     var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
     int userID = Int16.Parse(@Session["userID"].ToString());
-    
+
     var listPost = ViewData["listPost"] as List<Post>;
     var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
     var listVideoDict = ViewData["listVideoDict"] as Dictionary<int, Video>;
@@ -161,7 +161,7 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
-    int roomID = Int16.Parse(ViewData["roomID"].ToString());
+    int roomId = int.Parse(ViewData["roomID"].ToString());
 }
 <div id="room-detail-wrapper">
     <div>
@@ -199,8 +199,11 @@
             <div>
                 <a href="#" class="btn btn-primary room-detail-request-join">Request join</a>
             </div>
-            <div>
-                <a href="#" class="btn btn-primary room-detail-btn-copy-roomid" type="button">Copy room ID</a>
+            <div class="input-group">
+                <input type="text" class="form-control" value="@roomId">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i></button>
+                </span>
             </div>
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="&#64;friend">
@@ -307,7 +310,7 @@
             </div>
 
             <div class="friend-list-avatar">
-                @foreach(User user in listUserInRoom)
+                @foreach (User user in listUserInRoom)
                 {
                     <div class="padding-5 col-md-2">
                         <img class="circle-image" height="50" src="@user.avatar" alt="Avatar" />
@@ -448,7 +451,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="post-content" style="display:flex;">
                                     @foreach (var photo in listPhotoDict[listPost[index].postID])
                                     {
@@ -524,24 +527,27 @@
 </div>
 
 
-<div id="popupEventForm" class="modal fade">
-    <div class="modal-header"><h3>Add new event</h3></div>
-    <div class="modal-body">
-        <form id="EventForm" class="well">
-            <input type="hidden" id="eventID">
-            <label>Event title</label>
-            <input type="text" id="eventTitle" placeholder="Title here"><br />
-            <label>Scheduled date</label>
-            <input type="text" id="eventDate"><br />
-            <label>Scheduled time</label>
-            <input type="text" id="eventTime"><br />
-            <label>Appointment length (minutes)</label>
-            <input type="text" id="eventDuration" placeholder="15"><br />
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-        <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save event</button>
+<div id="popupEventForm" class="modal fade bs-example-modal-sm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Add new Plan item</h4>
+            </div>
+            <div class="modal-body">
+                <form id="EventForm">
+                    <input type="hidden" id="eventID">
+                    <input type="text" id="eventTitle" class="form-control" placeholder="Title"><br />
+                    <input type="text" id="eventDate" class="form-control" placeholder="Start date"><br />
+                    <input type="text" id="eventTime" class="form-control" placeholder="Start time"><br />
+                    <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)"><br />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
+                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -550,7 +556,7 @@
             chatHubProxy = $.connection.chatHub;
         }
         $.connection.hub.start().done(function () {
-            chatHubProxy.server.getListMessageInRoom(@roomID);
+            chatHubProxy.server.getListMessageInRoom(@roomId);
         });
 
         chatHubProxy.client.getMessageInRoom = function (content) {
@@ -570,7 +576,7 @@
             var controller = "/User/CreateMessageInRoom/";
 
             var data = {
-                roomID: @roomID,
+                roomID: @roomId,
                 content: content
             };
 
@@ -598,7 +604,7 @@
                     $(selector).append(tmp);
 
                     $.connection.hub.start().done(function () {
-                        chatHubProxy.server.sendChatMessageInRoom(tmp.replace("self", "other"), @roomID);
+                        chatHubProxy.server.sendChatMessageInRoom(tmp.replace("self", "other"), @roomId);
                     });
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
