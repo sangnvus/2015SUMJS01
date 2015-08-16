@@ -1138,7 +1138,6 @@ namespace FlyAwayPlus.Helpers
 
         public List<Post> SearchLimitPost(int skip, int limit)
         {
-
             /*
                  * Query:
                  * Find:
@@ -1492,7 +1491,7 @@ namespace FlyAwayPlus.Helpers
                     .Return<Conversation>("c")
                     .Results.FirstOrDefault();
 
-            return CreateMessage(conversation.conversationID, content, userId, 0);
+            return CreateMessage(conversation.ConversationId, content, userId, 0);
         }
         public Message CreateMessage(string conversationId, string content, int userId, int otherId)
         {
@@ -1537,8 +1536,8 @@ namespace FlyAwayPlus.Helpers
                 {
                     conversation = new Conversation
                     {
-                        dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                        conversationID = conversationId
+                        DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                        ConversationId = conversationId
                     };
 
                     _client.Cypher.Create("(c:conversation {newConversation})")
@@ -2115,8 +2114,8 @@ namespace FlyAwayPlus.Helpers
                                         .With("p, (COUNT(DISTINCT ul)) - (COUNT(DISTINCT udl)) + (COUNT(DISTINCT c1)) as mark")
                                         .OrderByDescending("mark")
                                         .Return<Post>("p")
-                                        //.Where("p2.id < " + postID)
-                                        //.Limit(limit)
+                    //.Where("p2.id < " + postID)
+                    //.Limit(limit)
                                         .Results.ToList();
 
                 listPost.RemoveAll(item => item == null);
@@ -2170,6 +2169,37 @@ namespace FlyAwayPlus.Helpers
                 return false;
             }
             return true;
+        }
+
+        public void InsertRoom(Room newRoom, int currentUserId)
+        {
+            // Auto increment Id.
+            newRoom.RoomId = GetGlobalIncrementId();
+            _client.Connect();
+
+            _client.Cypher
+                   .Create("(r:room {newRoom})")
+                   .WithParam("newRoom", newRoom)
+                   .ExecuteWithoutResults();
+
+            var newConversation = new Conversation
+            {
+                ConversationId = GetGlobalIncrementId(),
+                DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture)
+            };
+
+            _client.Cypher
+                   .Create("(c:conversation {newConversation})")
+                   .WithParam("newConversation", newConversation)
+                   .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(u:user {userID:" + currentUserId + "}), (r:room {RoomId: " + newRoom.RoomId + "})")
+                     .Create("(u)-[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
+                     .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {ConversationId: " + newConversation.ConversationId + "})")
+                     .Create("(r)-[:HAS]->(c)")
+                     .ExecuteWithoutResults();
         }
     }
 }

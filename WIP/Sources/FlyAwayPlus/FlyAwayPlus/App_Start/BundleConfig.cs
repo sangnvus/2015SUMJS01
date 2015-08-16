@@ -35,16 +35,19 @@ namespace FlyAwayPlus
                       "~/Scripts/jquery.elastic.source.js",
                       "~/Scripts/jquery.signalR-2.2.0.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datepicker").Include("~/Scripts/bootstrap-datepicker.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootflat.css",
                       "~/Content/bootstrap.min.css",
-                      "~/Content/Site.css",
                       "~/Content/common.css",
                       "~/Content/Fancy/jquery.fancybox.css",
                       "~/Content/bootstrap.dropdowns-enhancement.min.css",
                       "~/Content/sweetalert.css",
                       "~/Content/font-awesome.min.css",
                       "~/Content/bootstrap-social.css",
-                      "~/Content/bootflat.css"));
+                      "~/Content/datepicker.css",
+                      "~/Content/Site.css"));
         }
     }
 }
