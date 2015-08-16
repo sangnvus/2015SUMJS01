@@ -21,7 +21,7 @@ namespace FlyAwayPlus
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.min.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                       "~/Scripts/sweetalert.min.js",
