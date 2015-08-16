@@ -13,13 +13,14 @@
 
 <div id="id-place-detail">
     <div class="right-content">
-        <h3><span class="label label-primary center-block">Ha Noi</span></h3>
+        <h3><span id="id-name-place" class="label label-primary center-block">@currentPlace.name</span></h3>
         <div id="id-list-post-in-place" class="blog-landing">
             @Html.Partial("_ListPost")
         </div>
     </div>
 </div>
-<div id="id-place-map" class="right-map"></div>
+<div id="id-place-map" class="right-map">
+</div>
 
 <script>
     $(window).load(function () {
@@ -30,65 +31,78 @@
     $(window).resize(function () {
         commonModule.setBlocksit($("#id-list-post-in-place"), 212);
     });
-
+    
     $(document).ready(function() {
-        google.maps.event.addDomListener(window, 'load', initialize);
+        
     });
+    
+    var searchDetailModule = (function () {
+        var _data = {};
+        var _name = {};
+
+        loadPostInPlace = function(index, placeID, placeName) {
+            if(typeof (_data[index]) === 'undefined') {
+                // call Ajax
+                $.ajax({
+                    url: "/Search/LoadPostInPlace/",
+                    type: 'POST',
+                    dataType: 'html',
+                    data: {
+                        placeID: placeID
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (typeof (data) === 'undefined' || data == null || data == "null") {
+                            console.log(data);
+                        }
+                        else {
+                            $("#id-list-post-in-place").html("");
+                            $("#id-name-place").html("");
+                            _data[index] = data;
+                            _name[index] = placeName;
+                            $("#id-list-post-in-place").append(_data[index]);
+                            $("#id-name-place").html(placeName);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+                });
+            }
+            else {
+                $("#id-list-post-in-place").html("");
+                $("#id-name-place").html("");
+                $("#id-list-post-in-place").append(_data[index]);
+                $("#id-name-place").html(_name[index]);
+                commonModule.setBlocksit($("#id-list-post-in-place"), 212);
+            }
+        };
+
+        setData = function(index, data) {
+            _data[index] = data;
+        };
+
+        setname = function(index, name) {
+            _name[index] = name;
+        }
+        return {
+            loadPostInPlace: loadPostInPlace,
+            setData: setData,
+            setname: setname
+        }
+    })();
 
     function initialize() {
         var myCenter = new google.maps.LatLng(@currentPlace.latitude, @currentPlace.longitude);
         var mapOptions = {
-            zoom: 15,
+            zoom: 12,
             center: myCenter,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        var markers = [];
         var map = new window.google.maps.Map(document.getElementById('id-place-map'), mapOptions);
-        // [START region_getplaces]
-        // Listen for the event fired when the user selects an item from the
-        // pick list. Retrieve the matching places for that item.
-        /*
-        window.google.maps.event.addListener(searchBox, 'places_changed', function () {
-            var places = searchBox.getPlaces();
-
-            if (places.length == 0) {
-                return;
-            }
-            var i;
-            var marker;
-            for (i = 0, marker; marker = markers[i]; i++) {
-                marker.setMap(null);
-            }
-
-            // For each place, get the icon, place name, and location.
-            markers = [];
-            var bounds = new window.google.maps.LatLngBounds();
-            var place;
-            for (i = 0, place; place = places[i]; i++) {
-                var image = {
-                    url: place.icon,
-                    size: new window.google.maps.Size(71, 71),
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(17, 34),
-                    scaledSize: new window.google.maps.Size(25, 25)
-                };
-
-                // Create a marker for each place.
-                marker = new window.google.maps.Marker({
-                    map: map,
-                    icon: image,
-                    title: place.name,
-                    position: place.geometry.location
-                });
-                markers.push(marker);
-
-                bounds.extend(place.geometry.location);
-            }
-
-            map.fitBounds(bounds);
-        });*/
-        // [END region_getplaces]
 
         // Marker Current
         var currentMaker = new google.maps.Marker({
@@ -112,31 +126,41 @@
         google.maps.event.addListener(currentMaker, 'mouseout', function () {
             infoCurrent.close();
         });
+        google.maps.event.addListener(currentMaker, 'click', function () {
+            searchDetailModule.loadPostInPlace(0, @currentPlace.placeID, '@currentPlace.name');
+        });
 
         // Marker Other
         var listPlace = JSON.parse('@ViewData["listPlace"]'.split("&quot;").join("\""));
         for(var index = 0; index < listPlace.length; index++) {
-            var otherMaker = new google.maps.Marker({
-                position: new google.maps.LatLng(listPlace[index]["latitude"], listPlace[index]["longitude"]),
-                icon: {
-                    url: 'http://maps.google.com/mapfiles/ms/micons/red-dot.png'
-                },
-                map: map
-            });
-
-            var infoOther = new google.maps.InfoWindow({
-                content: '<div id="iw_container_0">' +
-                 '<div class="iw_title">' + listPlace[index]["name"] + '</div>' +
-                 '</div>',
-                maxWidth: 200
-            });
-
-            google.maps.event.addListener(otherMaker, 'mouseover', function () {
-                infoOther.open(map, otherMaker);
-            });
-            google.maps.event.addListener(otherMaker, 'mouseout', function () {
-                infoOther.close();
-            });
+            (function(index){
+                var otherMaker = new google.maps.Marker({
+                    position: new google.maps.LatLng(listPlace[index]["latitude"], listPlace[index]["longitude"]),
+                    icon: {
+                        url: 'http://maps.google.com/mapfiles/ms/micons/blue-dot.png'
+                    },
+                    map: map
+                });
+                var infoOther = new google.maps.InfoWindow({
+                    content: '<div id="iw_container_' + index + '">' +
+                     '<div class="iw_title">' + listPlace[index]["name"] + '</div>' +
+                     '</div>',
+                    maxWidth: 200
+                });
+                google.maps.event.addListener(otherMaker, 'mouseover', function () {
+                    infoOther.open(map, otherMaker);
+                });
+                google.maps.event.addListener(otherMaker, 'mouseout', function () {
+                    infoOther.close();
+                });
+                google.maps.event.addListener(otherMaker, 'click', function () {
+                    searchDetailModule.loadPostInPlace(index + 1, parseInt(listPlace[index]["placeID"]), listPlace[index]["name"]);
+                });
+            })(index);
         }
+
+        searchDetailModule.setData(0, $("#id-list-post-in-place").html());
+        searchDetailModule.setname(0, $("#id-name-place").html());
     }
+    google.maps.event.addDomListener(window, 'load', initialize);
 </script>

@@ -2042,5 +2042,31 @@ namespace FlyAwayPlus.Helpers
             }
             return listPost;
         }
+
+        public Place FindPlaceByID(int placeID)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - Find Place by id
+                 */
+
+            _client.Connect();
+            Place place = null;
+            try
+            {
+                place = _client.Cypher.OptionalMatch("(pl:place {placeID:" + placeID + "})")
+                    .Return<Place>("pl")
+                    .Results
+                    .FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                place = null;
+            }
+            return place;
+        }
     }
 }
