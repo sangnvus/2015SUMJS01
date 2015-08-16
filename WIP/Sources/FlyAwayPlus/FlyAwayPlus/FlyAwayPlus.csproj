@@ -375,8 +375,7 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
-    <Content Include="fonts\Lato.woff2" />
-    <Content Include="fonts\Quicksand.woff2" />
+    <None Include="Properties\PublishProfiles\FlyAwayPlus.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
