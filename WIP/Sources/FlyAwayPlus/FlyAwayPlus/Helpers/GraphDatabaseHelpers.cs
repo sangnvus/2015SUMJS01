@@ -967,7 +967,7 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             var user = _client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
                 .Return<User>("u")
-                .Results.Single();
+                .Results.FirstOrDefault();
             return user;
         }
 

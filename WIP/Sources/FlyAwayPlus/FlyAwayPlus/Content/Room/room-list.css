@@ -261,6 +261,7 @@
     -ms-border-radius: 8px;
     border-radius: 8px;
     background-color: #ffffff;
+    background-color: rgba(255,255,255,0.6);
     color: #213140;
     padding: 0;
 }

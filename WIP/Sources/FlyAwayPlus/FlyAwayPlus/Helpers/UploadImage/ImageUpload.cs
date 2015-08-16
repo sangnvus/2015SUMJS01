@@ -55,7 +55,7 @@ namespace FlyAwayPlus.Helpers.UploadImage
                 //pass in whatever value you want 
                 Image imgActual = Scale(imgOriginal);
                 imgOriginal.Dispose();
-                imgActual.Save(path);
+                imgActual.Save(path, ImageFormat.Jpeg);
                 imgActual.Dispose();
 
                 imageResult.ImageName = fileName;

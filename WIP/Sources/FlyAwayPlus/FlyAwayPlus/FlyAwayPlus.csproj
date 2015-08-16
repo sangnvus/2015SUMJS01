@@ -301,9 +301,7 @@
     <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
-    <Content Include="Images\UIHelper\icon-car.png" />
-    <Content Include="Images\UIHelper\icon-flight.png" />
-    <Content Include="Images\UIHelper\icon-hotel.png" />
+    <Content Include="Images\UIHelper\icon-calendar.png" />
     <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Images\UIHelper\youtube.png" />

@@ -20,6 +20,7 @@ namespace FlyAwayPlus.Models
         public string DestinationLocation { get; set; }
         public string DestinationLongitude { get; set; }
         public string DestinationLatitude { get; set; }
+        public string Privacy { get; set; }
         public string ToRealtime()
         {
             return DateHelpers.Instance.DisplayRealtime(DateCreated);

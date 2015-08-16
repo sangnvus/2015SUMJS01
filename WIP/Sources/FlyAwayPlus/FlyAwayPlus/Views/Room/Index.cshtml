@@ -4,14 +4,14 @@
 
 <div class="filer-wrapper">
     <ul class="tabs-cat text-center row">
-        <li class="cate-item col-xs-6">
-            <a data-toggle="tab" href="#room-list-tab-search-room" title="" aria-expanded="true">
+        <li class="cate-item col-xs-6 active">
+            <a data-toggle="tab" href="#room-list-filter-tab" title="" aria-expanded="true">
                 <span>Search for rooms</span>
                 <i class="fa fa-search"></i>
             </a>
         </li>
-        <li class="cate-item col-xs-6 active">
-            <a data-toggle="tab" href="#room-list-plan-tab-create-room" title="" aria-expanded="false">
+        <li class="cate-item col-xs-6">
+            <a data-toggle="tab" href="#room-list-plan-create-room-tab" title="" aria-expanded="false">
                 <span>Create a room</span>
                 <i class="fa fa-thumb-tack"></i>
             </a>
@@ -19,24 +19,21 @@
     </ul>
     <!-- End Tabs Cat -->
     <!-- Tabs Content -->
-    <div class="tab-content" style="padding-top: 0">
-        <!-- Search Hotel -->
-        <div class="form-cn tab-pane active in" id="room-list-tab-search-room">
-            <h2>Where would you like to go?</h2>
+    <div class="tab-content" style="padding-top: 0;">
+        <!-- Fitering -->
+        <div class="form-cn room-list-filter-tab tab-pane active" id="room-list-filter-tab">
             <div class="form-search clearfix">
                 <div class="form-field field-from">
-                    <label for="flight-from"><span>From:</span> Start place</label>
-                    <input type="text" name="flightfrom" id="flight-from" class="field-input">
+                    <input type="text" name="startplace" id="flight-from" class="field-input" placeholder="Start place">
                 </div>
                 <div class="form-field field-to">
-                    <label for="flight-to"><span>To:</span> Destination</label>
-                    <input type="text" id="flight-to" class="field-input">
+                    <input type="text" name="targetplace" id="flight-to" class="field-input" placeholder="Target place">
                 </div>
                 <div class="form-field field-date">
-                    <input type="text" class="field-input calendar-input" placeholder="Start date">
+                    <input type="text" name="startdate" class="field-input calendar-input" placeholder="Start date">
                 </div>
                 <div class="form-field field-date">
-                    <input type="text" class="field-input calendar-input" placeholder="Return date">
+                    <input type="text" name="returndate" class="field-input calendar-input" placeholder="Return date">
                 </div>
                 <div class="form-field field-select field-adult">
                     <div class="select">
@@ -49,94 +46,36 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-field field-select field-children">
-                    <div class="select">
-                        <span>Children</span>
-                        <select>
-                            <option>Children</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="form-submit">
-                    <button type="submit" class="awe-btn awe-btn-medium awe-search">Search</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;height: 50px; -ms-border-radius: 4px; border-radius: 4px;">Search</button>
                 </div>
             </div>
         </div>
-        <!-- End Search Hotel -->
-    </div>
+        <!-- End Fitering -->
+        <!-- Creating -->
+        <div class="form-cn room-list-filter-tab tab-pane active" id="room-list-plan-create-room-tab">
+            <div class="col-md-6">
+                <div class="form-field">
+                    <input type="text" name="roomname" class="field-input" placeholder="Room name">
+                </div>
+                <div class="form-field">
+                    <textarea name="roomdesc" class="field-input" placeholder="Room description"></textarea>
+                </div>
+            </div>
+            <div class="col-md-6">
 
-    <a href="javascript:;" class="btn btn-primary btn-add-room" data-toggle="modal" data-target="#add-room-modal">Add room</a>
+            </div>
+        </div>
+        <!-- End Creating -->
+    </div>
 </div>
 
 <div class="room-list-wrapper">
     @Html.Partial("_ListRoomPartial")
 </div>
-<button class="btn btn-primary hidden" data-toggle="modal" data-target="#add-room-modal">Add Room</button>
 
-<!-- Modal -->
-<div class="modal fade" id="add-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 50px">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Room Detail</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="roomname">Room Name:</label>
-                        <div class="col-md-9">
-                            <input class="form-control" id="roomname">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="maxslots">No. of slots:</label>
-                        <div class="col-md-9">
-                            <input class="form-control stepper-input" id="maxslots" min="1" max="20" step="1">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="place">Place:</label>
-                        <div class="col-md-9">
-                            <input class="form-control" id="place">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="starttime">Start time:</label>
-                        <div class="col-md-3">
-                            <input class="form-control" id="starttime">
-                        </div>
-                        <label class="control-label col-md-3" for="endtime">End time:</label>
-                        <div class="col-md-3">
-                            <input class="form-control" id="endtime">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="isprivate">Public:</label>
-                        <div class="col-md-6">
-                            <div class="checkbox">
-                                <label class="toggle">
-                                    <input type="checkbox" checked="" id="isprivate">
-                                    <span class="handle"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-default" style="width: 100%">Invite friends</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-lg pull-right">CREATE</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<script>
+    $(".form-field").on('input', function (e) {
 
-            <div class="modal-footer"></div>
-        </div>
-    </div>
-</div>
+    });
+</script>
