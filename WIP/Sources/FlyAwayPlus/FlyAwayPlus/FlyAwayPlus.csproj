@@ -299,9 +299,6 @@
     <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
-    <Content Include="Images\UIHelper\icon-car.png" />
-    <Content Include="Images\UIHelper\icon-flight.png" />
-    <Content Include="Images\UIHelper\icon-hotel.png" />
     <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Images\UIHelper\youtube.png" />
@@ -373,8 +370,7 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
-    <Content Include="fonts\Lato.woff2" />
-    <Content Include="fonts\Quicksand.woff2" />
+    <None Include="Properties\PublishProfiles\FlyAwayPlus.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
