@@ -298,6 +298,7 @@
     <Content Include="Content\sweetalert.css" />
     <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Content\Site.avatar.css" />
+    <Content Include="Images\image.gif" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\magnifier.svg" />
     <Content Include="Images\UIHelper\WOW slider\spin.gif" />
@@ -305,6 +306,7 @@
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\bootstrap.dropdowns-enhancement.js" />
+    <Content Include="Scripts\client-plusone.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\Fancy\jquery.fancybox.pack.js" />
     <Content Include="Scripts\Home\home.js" />
