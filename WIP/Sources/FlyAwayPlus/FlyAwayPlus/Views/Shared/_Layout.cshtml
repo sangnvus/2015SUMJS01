@@ -8,7 +8,15 @@
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/css")
 </head>
-<body>
+<body style="min-height: 768px;">
+    <div class="se-pre-con">
+    </div>
+    <script>
+        $(window).load(function () {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");;
+        });
+    </script>
     <div class="navbar navbar-custom" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -98,7 +106,8 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
+    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
+    <div id="id-main-page" class="container body-content">
         @*Html.Partial("_SearchPartial")*@
         @RenderBody()
         <br />
@@ -113,9 +122,7 @@
     @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/js")
     <script src="/signalr/hubs"></script>
-    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
     <script src="http://www.youtube.com/player_api"></script>
-    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
     <script>
         $(function () {
             $("#btn-notification").click(function () {
