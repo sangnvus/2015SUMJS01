@@ -51,6 +51,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Google.Apis.1.9.2\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis.Analytics.v3, Version=1.9.2.116, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Analytics.v3.1.9.2.1160\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Analytics.v3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis.Auth">
       <HintPath>..\packages\Google.Apis.Auth.1.9.2\lib\net40\Google.Apis.Auth.dll</HintPath>
       <Private>True</Private>
@@ -446,6 +450,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_ListRoomPartial.cshtml" />
     <Content Include="Views\Shared\_TagFriendPartial.cshtml" />
+    <Content Include="Views\Admin\Main.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -14,9 +14,6 @@ namespace FlyAwayPlus.Controllers
         // GET: /Admin/
         public ActionResult Index()
         {
-            List<User> listAllUsers = new List<User>();
-            listAllUsers = GraphDatabaseHelpers.Instance.ListAllUsers();
-            ViewData["listAllUsers"] = listAllUsers;
             return View();
         }
 
@@ -34,6 +31,14 @@ namespace FlyAwayPlus.Controllers
             GraphDatabaseHelpers.Instance.UnlockUser(userId);
 
             return Json(success);
+        }
+
+        public ActionResult Main()
+        {
+            List<User> listAllUsers = new List<User>();
+            listAllUsers = GraphDatabaseHelpers.Instance.ListAllUsers();
+            ViewData["listAllUsers"] = listAllUsers;
+            return View();
         }
     }
 }
