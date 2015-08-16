@@ -1138,7 +1138,6 @@ namespace FlyAwayPlus.Helpers
 
         public List<Post> SearchLimitPost(int skip, int limit)
         {
-
             /*
                  * Query:
                  * Find:
@@ -1492,7 +1491,7 @@ namespace FlyAwayPlus.Helpers
                     .Return<Conversation>("c")
                     .Results.FirstOrDefault();
 
-            return CreateMessage(conversation.conversationID, content, userId, 0);
+            return CreateMessage(conversation.ConversationId, content, userId, 0);
         }
         public Message CreateMessage(string conversationId, string content, int userId, int otherId)
         {
@@ -1537,8 +1536,8 @@ namespace FlyAwayPlus.Helpers
                 {
                     conversation = new Conversation
                     {
-                        dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                        conversationID = conversationId
+                        DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                        ConversationId = conversationId
                     };
 
                     _client.Cypher.Create("(c:conversation {newConversation})")
@@ -2183,8 +2182,23 @@ namespace FlyAwayPlus.Helpers
                    .WithParam("newRoom", newRoom)
                    .ExecuteWithoutResults();
 
+            var newConversation = new Conversation
+            {
+                ConversationId = GetGlobalIncrementId(),
+                DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture)
+            };
+
+            _client.Cypher
+                   .Create("(c:conversation {newConversation})")
+                   .WithParam("newConversation", newConversation)
+                   .ExecuteWithoutResults();
+
             _client.Cypher.Match("(u:user {userID:" + currentUserId + "}), (r:room {RoomId: " + newRoom.RoomId + "})")
-                     .Create("(u)--[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
+                     .Create("(u)-[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
+                     .ExecuteWithoutResults();
+
+            _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {ConversationId: " + newConversation.ConversationId + "})")
+                     .Create("(r)-[:HAS]->(c)")
                      .ExecuteWithoutResults();
         }
     }
