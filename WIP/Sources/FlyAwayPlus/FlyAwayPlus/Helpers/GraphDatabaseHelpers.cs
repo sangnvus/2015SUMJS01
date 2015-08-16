@@ -2090,6 +2090,70 @@ namespace FlyAwayPlus.Helpers
             return listMessage;
         }
 
+        public List<Post> FindPostInPlace(int placeID, int postID = 0, int limit = 5)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 *     optional match (pl:place {placeID:@placeID})<-[:AT]-(p:post)
+                        optional match (p)<-[:LIKE]-(ul:user)
+                        optional match (p)<-[:DISLIKE]-(udl:user)
+                        optional match (p)-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)
+                        with p, (COUNT(DISTINCT ul)) - (COUNT(DISTINCT udl)) + (COUNT(DISTINCT c1)) as mark
+                        return p
+                        ORDER BY mark
+                 * 
+                 */
+            _client.Connect();
+            List<Post> listPost = new List<Post>();
+            try
+            {
+                listPost = _client.Cypher.OptionalMatch("(pl:place {placeID:" + placeID + "})<-[:AT]-(p:post)")
+                                        .OptionalMatch("(p)<-[:LIKE]-(ul:user)")
+                                        .OptionalMatch("(p)<-[:DISLIKE]-(udl:user)")
+                                        .OptionalMatch("(p)-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)")
+                                        .With("p, (COUNT(DISTINCT ul)) - (COUNT(DISTINCT udl)) + (COUNT(DISTINCT c1)) as mark")
+                                        .OrderByDescending("mark")
+                                        .Return<Post>("p")
+                                        //.Where("p2.id < " + postID)
+                                        //.Limit(limit)
+                                        .Results.ToList();
+
+                listPost.RemoveAll(item => item == null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return listPost;
+            }
+            return listPost;
+        }
+
+        public Place FindPlaceByID(int placeID)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - Find Place by id
+                 */
+
+            _client.Connect();
+            Place place = null;
+            try
+            {
+                place = _client.Cypher.OptionalMatch("(pl:place {placeID:" + placeID + "})")
+                    .Return<Place>("pl")
+                    .Results
+                    .FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                place = null;
+            }
+            return place;
+        }
         public bool UpdatePlanEvent(string id, DateTime newEventStart, DateTime newEventEnd)
         {
             _client.Connect();

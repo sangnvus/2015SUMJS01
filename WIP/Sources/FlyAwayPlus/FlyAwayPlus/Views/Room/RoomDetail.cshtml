@@ -444,7 +444,7 @@
                                     </div>
                                     <div class="post-info-area">
                                         <div class="user-name">
-                                            <a href="/User/Index/1">@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)</a>
+                                            <a href="/User/Index/@listUserDict[listPost[index].postID].userID">@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)</a>
                                         </div>
                                         <span class="post-time">
                                             <span>@listPost[index].toRealtime()</span>
