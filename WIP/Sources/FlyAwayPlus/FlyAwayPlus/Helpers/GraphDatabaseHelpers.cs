@@ -339,6 +339,26 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
+        public int CountUser()
+        {
+            /*
+             * Match (p:post {postID:@postID})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
+                return COUNT (DISTINCT u)
+             */
+            try
+            {
+                _client.Connect();
+                return _client.Cypher.Match("(u:user")
+                                .Return<int>("COUNT(distinct u)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
         public int FindLike(int userId, int postId)
         {
             try
