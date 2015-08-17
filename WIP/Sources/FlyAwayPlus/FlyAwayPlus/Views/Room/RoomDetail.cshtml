@@ -143,6 +143,7 @@
 }
 
 @{
+    var roomInfo = ViewData["roomInfo"] as Room;
     var admin = ViewData["admin"] as User;
     var listUserInRoom = ViewData["listUserInRoom"] as List<User>;
     var listUserRequestJoinRoom = ViewData["listUserRequestJoinRoom"] as List<User>;
@@ -167,27 +168,27 @@
     <div>
         <!--INFO-->
         <div class="col-md-10 room-detail-infor">
-            <div class="room-detail-cover" style="background-image: url(/Images/background/nhatrang2.jpg)"><!--BG--></div>
+            <div class="room-detail-cover" style="background-image: url(@(!string.IsNullOrWhiteSpace(roomInfo.PhotoCoverUrl) ? roomInfo.PhotoCoverUrl : "/Images/background/nhatrang2.jpg"))"><!--BG--></div>
             <div class="room-detail-darkwrapper"></div>
             <div class="room-detail-infor-text">
-                <h3>Da Nang Beautiful Beach</h3>
+                <h3>@roomInfo.RoomName</h3>
                 <div class="light-divider"><!--DIVIDER--></div>
                 <div class="room-detail-infor-description">
-                    Local beaches are good for swimming all year round, but especially from May to August when the waves are gentle. On some of these beaches, lifeguard teams work from 5am to 8pm daily to ensure the safety of swimmers.
+                    @roomInfo.Description
                 </div>
 
                 <ul class="room-detail-infor-milestones">
                     <li>
                         <i class="fa fa-at"></i>
-                        <p>LOCATION:</p>&nbsp; <span>Hanoi Railway Station, Lê Duẩn, Khâm Thiên, Đống Đa, Hanoi, Vietnam</span>
+                        <p>LOCATION:</p>&nbsp; <span>@roomInfo.DestinationLocation</span>
                     </li>
                     <li>
                         <i class="fa fa-calendar-o"></i>
-                        <p>START DATE:</p>&nbsp; <span>Thursday, 22 Dec 2015</span>
+                        <p>START DATE:</p>&nbsp; <span>@roomInfo.StartDate</span>
                     </li>
                     <li>
                         <i class="fa fa-clock-o"></i>
-                        <p>DURING:</p>&nbsp; <span>22 days</span>
+                        <p>DURING:</p>&nbsp; <span>@roomInfo.LengthInDays days</span>
                     </li>
                 </ul>
             </div>

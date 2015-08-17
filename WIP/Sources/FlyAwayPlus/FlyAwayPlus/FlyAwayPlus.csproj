@@ -303,7 +303,6 @@
     <Content Include="Content\Room\room-list.css" />
     <Content Include="Content\SearchPage\search-detail.css" />
     <Content Include="Content\sweetalert.css" />
-    <Content Include="Images\avatar\avatar-default.jpg" />
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Images\image.gif" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
@@ -321,6 +320,7 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\md5.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\youtube-upload.js" />
@@ -331,12 +331,6 @@
     <Content Include="Content\RoomPage\room-detail.css" />
     <Content Include="Content\speech-buble.css" />
     <Content Include="Content\SearchPage\search.css" />
-    <Content Include="Images\avatar\avatar-1.jpg" />
-    <Content Include="Images\avatar\avatar-2.jpg" />
-    <Content Include="Images\avatar\avatar-3.jpg" />
-    <Content Include="Images\avatar\avatar-4.jpg" />
-    <Content Include="Images\avatar\avatar-5.jpg" />
-    <Content Include="Images\avatar\avatar-6.jpg" />
     <Content Include="Content\bootstrap-social.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -349,7 +343,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\avatar\avatar-7.jpg" />
     <Content Include="Images\FAP logo.png" />
     <Content Include="Images\UIHelper\WOW slider\arrows.png" />
     <Content Include="Images\UIHelper\WOW slider\bullet.png" />

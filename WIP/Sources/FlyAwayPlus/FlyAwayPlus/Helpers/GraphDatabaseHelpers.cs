@@ -1555,7 +1555,7 @@ namespace FlyAwayPlus.Helpers
             List<Message> listMessage = new List<Message>();
             try
             {
-                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
+                listMessage = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
                                         .Return<Message>("m1")
                                         .Results.ToList();
                 listMessage.RemoveAll(item => item == null);
@@ -1615,7 +1615,7 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             
             // Have to make sure conversation is created while creating room.
-            var conversation = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[:HAS]->(c:conversation)")
+            var conversation = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[:HAS]->(c:conversation)")
                     .Return<Conversation>("c")
                     .Results.First();
 
@@ -2039,7 +2039,7 @@ namespace FlyAwayPlus.Helpers
                    .WithParam("newPlan", newPlan)
                    .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(r:room {roomID:" + roomId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
+            _client.Cypher.Match("(r:room {RoomId:" + roomId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
                          .Create("(r)-[r:HAS]->(p)")
                          .ExecuteWithoutResults();
 
@@ -2116,7 +2116,7 @@ namespace FlyAwayPlus.Helpers
             List<Post> listPost = new List<Post>();
             try
             {
-                listPost = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
+                listPost = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
                     //.Where("p2.id < " + postID)
                     .ReturnDistinct<Post>("p2")
                     .Limit(limit)
@@ -2144,7 +2144,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_MEMBER + "}]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_MEMBER + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
@@ -2170,7 +2170,7 @@ namespace FlyAwayPlus.Helpers
             User admin = new User();
             try
             {
-                admin = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_ADMIN + "}]-(u:user)")
+                admin = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_ADMIN + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.FirstOrDefault();
             }
@@ -2194,7 +2194,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_REQUEST + "}]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_REQUEST + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
@@ -2214,7 +2214,7 @@ namespace FlyAwayPlus.Helpers
             List<Message> listMessage;
             try
             {
-                listMessage = _client.Cypher.OptionalMatch("(r:room {roomID: " + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
+                listMessage = _client.Cypher.OptionalMatch("(r:room {RoomId: " + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
                     //.Where("p1.messageID < " + messageID)
                                         .ReturnDistinct<Message>("m1")
                                         .Results.Reverse().ToList();
@@ -2339,6 +2339,15 @@ namespace FlyAwayPlus.Helpers
             _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {conversationID: " + newConversation.conversationID + "})")
                      .Create("(r)-[:HAS]->(c)")
                      .ExecuteWithoutResults();
+        }
+
+        public Room GetRoomInformation(int roomId)
+        {
+            _client.Connect();
+            return _client.Cypher.Match("(r:room{RoomId: " + roomId + "})")
+                .Return<Room>("r")
+                .Results
+                .FirstOrDefault();
         }
     }
 }

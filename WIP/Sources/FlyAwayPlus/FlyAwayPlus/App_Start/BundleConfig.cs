@@ -9,7 +9,9 @@ namespace FlyAwayPlus
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-1.10.2.min.js"));
+                        "~/Scripts/jquery-1.10.2.min.js",
+                        "~/Scripts/jquery.validate.min.js",
+                        "~/Scripts/jquery.validate.unobtrusive.min.js"));
 
             //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*.min.js"));
 
@@ -35,9 +37,11 @@ namespace FlyAwayPlus
 
             bundles.Add(new ScriptBundle("~/bundles/datepicker").Include("~/Scripts/bootstrap-datepicker.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/md5").Include("~/Scripts/md5.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootflat.css",
                       "~/Content/bootstrap.min.css",
+                      "~/Content/bootflat.css",
                       "~/Content/common.css",
                       "~/Content/Fancy/jquery.fancybox.css",
                       "~/Content/bootstrap.dropdowns-enhancement.min.css",

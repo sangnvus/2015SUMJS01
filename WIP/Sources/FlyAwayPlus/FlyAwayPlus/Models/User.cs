@@ -14,9 +14,11 @@ namespace FlyAwayPlus.Models
         [Required(ErrorMessage="email is required")]
         public string email { get; set; }
         [Required(ErrorMessage = "First Name is required")]
+        [StringLength(50, ErrorMessage = "Must not greater than 50 characters", MinimumLength = 1)]
         [DisplayName("First Name")]
         public string firstName { get; set; }
         [Required(ErrorMessage = "Last Name is required")]
+        [StringLength(50, ErrorMessage = "Must not greater than 50 characters", MinimumLength = 1)]
         public string lastName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [StringLength(50, ErrorMessage = "Must be between 5 and 50 characters", MinimumLength = 5)]

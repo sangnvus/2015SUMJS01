@@ -38,15 +38,7 @@ namespace FlyAwayPlus.Controllers
             List<Post> listPost = new List<Post>();
             User user = UserHelpers.GetCurrentUser(Session);
 
-            if (user == null)
-            {
-                /*
-                 * Search limit public post
-                 */
-                listPost = GraphDatabaseHelpers.Instance.SearchLimitPost(skip, RecordsPerPage);
-                FindRelatedInformationPost(listPost);
-            }
-            else
+            if (user != null)
             {
                 /**
                  * Search limit following post

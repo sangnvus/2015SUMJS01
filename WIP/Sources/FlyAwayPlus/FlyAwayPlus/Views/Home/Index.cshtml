@@ -1,106 +1,110 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+@if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
+{
+    <link href="~/Content/HomePage/home.css" rel="stylesheet" />
+    <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
+    <script src="~/Scripts/Home/home.js"></script>
 
-<link href="~/Content/HomePage/home.css" rel="stylesheet" />
-<link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
-<link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
-<script src="~/Scripts/Home/home.js"></script>
+    <div class="blog-landing">
+        @* Left panel *@
+        <div class="white-panel">
+            <div class="sidebar-header">
+                <div id="weather-sidebar"></div>
+            </div>
 
-<div class="blog-landing">
-    @* Left panel *@
-    <div class="white-panel">
-        <div class="sidebar-header">
-            <div id="weather-sidebar"></div>
+            <div class="sidebar-list">
+                <a href="/Home/Index?type=wishlist"><i class="fa fa-fw fa-star-o"></i><span>Wishlist</span></a>
+                <a href="/Room"><i class="fa fa-fw fa-building-o"></i><span>Discover rooms</span></a>
+                <a href="#"><i class="fa fa-fw fa-book"></i><span>My rooms</span></a>
+                <a href="#"><i class="fa fa-fw fa-street-view"></i><span>Look around</span></a>
+                <a href="#"><i class="fa fa-fw fa-rocket"></i><span>Hot trend</span></a>
+            </div>
         </div>
 
-        <div class="sidebar-list">
-            <a href="/Home/Index?type=wishlist"><i class="fa fa-fw fa-star-o"></i><span>Wishlist</span></a>
-            <a href="#"><i class="fa fa-fw fa-building-o"></i><span>Discover rooms</span></a>
-            <a href="#"><i class="fa fa-fw fa-book"></i><span>My rooms</span></a>
-            <a href="#"><i class="fa fa-fw fa-street-view"></i><span>Look around</span></a>
-            <a href="#"><i class="fa fa-fw fa-rocket"></i><span>Hot trend</span></a>
+        @Html.Partial("_ListPost")
+    </div>
+
+
+    <!--Html.Partial("_ListChatFriend")-->
+    @Html.Partial("_Loading")
+
+    <div class="modal fade" id="edit-post-modal" tabindex="-1" role="dialog" aria-labelledby="edit-post-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="edit-post-modal-label">Edit post</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="edit-post-message-text" class="control-label">Post content:</label>
+                            <textarea class="form-control" id="edit-post-message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="edit-post-modal-save-button" value="">Save</button>
+                </div>
+            </div>
         </div>
     </div>
-    @Html.Partial("_ListPost")
-</div>
-<!--Html.Partial("_ListChatFriend")-->
-@Html.Partial("_Loading")
 
-<div class="modal fade" id="edit-post-modal" tabindex="-1" role="dialog" aria-labelledby="edit-post-modal-label">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="edit-post-modal-label">Edit post</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="edit-post-message-text" class="control-label">Post content:</label>
-                        <textarea class="form-control" id="edit-post-message-text"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="edit-post-modal-save-button" value="">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
+    <script>
+        $(function () {
+            // Sidebar - load weather.
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var loadWeather = function (location, woeid) {
+                    $.simpleWeather({
+                        location: location,
+                        woeid: woeid,
+                        unit: 'c',
+                        success: function (weather) {
+                            html = '<h2><div style="position: absolute; top: -10px"><i class="icon-' + weather.code + '"></i></div> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
+                            html += weather.city;
 
-<script>
-    $(function () {
-        // Sidebar - load weather.
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var loadWeather = function (location, woeid) {
-                $.simpleWeather({
-                    location: location,
-                    woeid: woeid,
-                    unit: 'c',
-                    success: function (weather) {
-                        html = '<h2><div style="position: absolute; top: -10px"><i class="icon-' + weather.code + '"></i></div> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
-                        html += weather.city;
+                            $("#weather-sidebar").html(html);
+                        },
+                        error: function (error) {
+                            $("#weather-sidebar").html('<p>' + error + '</p>');
+                        }
+                    });
+                };
 
-                        $("#weather-sidebar").html(html);
+                // Load weather using lat/lng.
+                loadWeather(position.coords.latitude + ',' + position.coords.longitude);
+            });
+
+            var editPostContentWrapper;
+            $("#edit-post-modal").on("show.bs.modal", function (event) {
+                var editButton = $(event.relatedTarget);
+
+                var postId = editButton.attr("value");
+                editPostContentWrapper = editButton.parentsUntil(".panel-content-wrapper").parent().find(".board-post-content");
+                var oldMessage = editPostContentWrapper.text();
+
+                var modal = $(this);
+                modal.find(".modal-body textarea").val(oldMessage);
+                modal.find("#edit-post-modal-save-button").attr("value", postId);
+            });
+
+            $("#edit-post-modal-save-button").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Post/EditPost",
+                    data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
+                    error: function () {
+                        sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
                     },
-                    error: function (error) {
-                        $("#weather-sidebar").html('<p>' + error + '</p>');
+                    success: function () {
+                        editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
+                        $("#edit-post-modal").modal('hide');
                     }
                 });
-            };
-
-            // Load weather using lat/lng.
-            loadWeather(position.coords.latitude + ',' + position.coords.longitude);
-        });
-
-        var editPostContentWrapper;
-        $("#edit-post-modal").on("show.bs.modal", function (event) {
-            var editButton = $(event.relatedTarget);
-
-            var postId = editButton.attr("value");
-            editPostContentWrapper = editButton.parentsUntil(".panel-content-wrapper").parent().find(".board-post-content");
-            var oldMessage = editPostContentWrapper.text();
-
-            var modal = $(this);
-            modal.find(".modal-body textarea").val(oldMessage);
-            modal.find("#edit-post-modal-save-button").attr("value", postId);
-        });
-
-        $("#edit-post-modal-save-button").click(function () {
-            $.ajax({
-                type: "POST",
-                url: "/Post/EditPost",
-                data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
-                error: function () {
-                    sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
-                },
-                success: function () {
-                    editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
-                    $("#edit-post-modal").modal('hide');
-                }
             });
         });
-    });
-</script>
+    </script>
+}

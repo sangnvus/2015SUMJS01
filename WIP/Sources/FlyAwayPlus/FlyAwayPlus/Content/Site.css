@@ -227,7 +227,7 @@ img {
 
         .panel-login > .panel-heading hr {
             margin-top: 10px;
-            margin-bottom: 0px;
+            margin-bottom: 0;
             clear: both;
             border: 0;
             height: 1px;
@@ -911,7 +911,7 @@ img {
         }
 
         .notification-li .notification-container .notifications-body {
-            padding: 33px 0px 0px 0px !important;
+            padding: 33px 0 0 0 !important;
             min-height: 300px;
         }
 
@@ -988,7 +988,7 @@ img {
         }
 
         .friend-request-li .friend-request-container .friend-request-body {
-            padding: 33px 0px 0px 0px !important;
+            padding: 33px 0 0 0 !important;
             min-height: 300px;
         }
 
@@ -1023,8 +1023,11 @@ img {
 
 /* USER PROFILE */
 header {
+    -webkit-box-shadow: 1px 1px 4px #000000;
     -webkit-box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    -ms-box-shadow: 1px 1px 4px #000000;
     -ms-box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 4px #000000;
     box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
     margin: 25px auto 50px;
     height: 300px;
@@ -1038,6 +1041,19 @@ figure.profile-banner {
     top: 0;
     z-index: 1;
     max-width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 992px) {
+    .profile-banner .img-responsive {
+        height: 100% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .profile-banner .img-responsive {
+        height: auto !important;
+    }
 }
 
 figure.profile-picture {
@@ -1051,7 +1067,7 @@ figure.profile-picture {
     -ms-box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0,0,0,0.3);
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0,0,0,0.3);
     height: 148px;
-    left: 150px;
+    left: 100px;
     position: absolute;
     width: 148px;
     z-index: 3;
@@ -1060,7 +1076,7 @@ figure.profile-picture {
 div.profile-stats {
     bottom: 0;
     left: 0;
-    padding: 15px 15px 15px 350px;
+    padding: 15px 15px 15px 250px;
     position: absolute;
     right: 0;
     z-index: 2;
@@ -1080,19 +1096,22 @@ div.profile-stats {
             float: left;
             font-size: 24px;
             font-weight: bold;
-            margin-right: 50px;
+            margin-right: 25px;
+            -ms-text-shadow: 1px 1px 2px #000000;
             -ms-text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            text-shadow: 1px 1px 2px #000000;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
         }
 
             div.profile-stats ul li a:hover {
                 color: #D91E17;
                 cursor: pointer;
-                font-size: 26px;
-                margin-bottom: -5px;
+                /*font-size: 26px;
+            margin-bottom: -5px;*/
             }
 
     div.profile-stats li span {
+        margin-top: 10px;
         display: block;
         font-size: 16px;
         font-weight: normal;
@@ -1204,35 +1223,99 @@ textarea {
 /* USER PROFILE ENDS */
 
 /* SEARCH BAR START*/
-.cls-select-label {
-    color: #424242;
-    font-size: 100%;
-    line-height: 35px;
-    padding-left: 10px;
-    position: absolute;
-    z-index: 20;
+.nav-search-wrapper {
+    text-align: center;
+    position: relative;
+    width: 600px;
 }
 
-.cls-search-input {
-    color: #afb4b6;
-    font-weight: 300;
-    padding-left: 72px;
-    border-radius: 3px;
-    padding-right: 24px;
-    height: 35px;
-    width: 100%;
+@media (max-width: 1024px) {
+    .nav-search-wrapper {
+        text-align: center;
+        position: relative;
+        width: 450px;
+    }
 }
 
-.cls-search-i {
-    font-size: 18px;
-    right: 8px;
-    top: 8px;
-    color: #afb4b6;
-    cursor: pointer;
-    margin-left: -20px;
-    position: absolute;
-    z-index: 20;
+.search-bar {
+    margin: 0 auto;
+    padding: 0.5em 0 0.5em 0;
 }
+
+    .search-bar input[type="text"] {
+        font-size: 1em;
+        color: #2D3E50;
+        padding: 0.7em 1em 0.7em 0.7em;
+        width: 80%;
+        -ms-border-radius: 5px 0 0 5px;
+        border-radius: 5px 0 0 5px;
+        background: #fff;
+        border: none;
+        outline: none;
+        -webkit-appearance: none;
+        border-left: 1px dashed #D2D7D3;
+        border-top: 1px dashed #D2D7D3;
+        border-bottom: 1px dashed #D2D7D3;
+    }
+
+    .search-bar input[type="submit"] {
+        font-size: 1em;
+        font-weight: 600;
+        color: #fff;
+        padding: 0.7em 0.5em;
+        width: 20%;
+        text-align: center;
+        -ms-border-radius: 0 5px 5px 0;
+        border-radius: 0 5px 5px 0;
+        margin: 0 0 0 -4px;
+        cursor: pointer;
+        border: 1px solid #3bafda;
+        outline: none;
+        -webkit-appearance: none;
+        background: #3bafda;
+        background: -moz-linear-gradient(top, #3bafda 0, #3bafda 37%, #3bafda 66%, #3bafda 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3bafda), color-stop(37%,#3bafda), color-stop(66%,#3bafda), color-stop(100%,#3bafda));
+        background: -webkit-linear-gradient(top, #3bafda 0,#3bafda 37%,#3bafda 66%,#3bafda 100%);
+        background: -o-linear-gradient(top, #3bafda 0,#3bafda 37%,#3bafda 66%,#3bafda 100%);
+        background: -ms-linear-gradient(top, #3bafda 0,#3bafda 37%,#3bafda 66%,#3bafda 100%);
+        background: linear-gradient(to bottom, #3bafda 0,#3bafda 37%,#3bafda 66%,#3bafda 100%);
+        -webkit-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bafda', endColorstr='#3bafda',GradientType=0 );
+        -moz-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bafda', endColorstr='#3bafda',GradientType=0 );
+        -o-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bafda', endColorstr='#3bafda',GradientType=0 );
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bafda', endColorstr='#3bafda',GradientType=0 );
+    }
+
+        .search-bar input[type="submit"]:hover, .btn-create-post:hover {
+            -ms-opacity: 0.8;
+            opacity: 0.8;
+            -webkit-filter: alpha(opacity=100);
+            -moz-filter: alpha(opacity=100);
+            -o-filter: alpha(opacity=100);
+            filter: alpha(opacity=100);
+            -ms-transition: all 0.3s ease;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+.nav-search-wrapper p {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: #fff;
+    margin: 1em 0 0 0;
+}
+
+    .nav-search-wrapper p a {
+        font-size: 0.9em;
+        font-weight: 400;
+        color: #fff;
+        text-decoration: underline;
+    }
+
+        .nav-search-wrapper p a:hover {
+            text-decoration: none;
+        }
 /* SEARCH BAR ENDS*/
 
 /* CUSTOMIZE SCROLL BAR*/
@@ -1254,9 +1337,11 @@ textarea {
     -webkit-border-radius: 10px;
     -ms-border-radius: 10px;
     border-radius: 10px;
-    background: #2DCC70;
+    background: #3bafda;
+    -webkit-box-shadow: inset 0 0 6px #000000;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
+
 /* CUSTOMIZE SCROLL BAR ENDS*/
 
 .boder-radius {
@@ -1459,6 +1544,7 @@ textarea {
         border: none;
         outline: 0;
         top: 0;
+        -ms-opacity: 0;
         opacity: 0;
     }
 
@@ -1563,5 +1649,22 @@ textarea {
 }
 
 #room-list-filter-tab, #room-list-plan-create-room-tab {
-    padding: 0
+    padding: 0;
+}
+
+.btn-create-post {
+    width: 120px;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+    margin: 9px;
+    background-color: #2DCC70;
+    font-size: 1em;
+    font-weight: 600;
+    color: #fff;
+    padding: 0.7em 0.5em;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
 }

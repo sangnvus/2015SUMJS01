@@ -1,7 +1,7 @@
 ﻿@if (Session["authenicated"] != null && Session["authenicated"].ToString().Equals("True"))
 {
-    <ul class="nav navbar-nav navbar-left">
-        <li><a class="" data-toggle="modal" data-target="#post-modal">Post</a></li>
+    <ul class="nav navbar-nav navbar-right">
+        <li><p class="btn-create-post" data-toggle="modal" data-target="#post-modal">Post</p></li>
     </ul>
 }
 <div class="modal fade" id="post-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

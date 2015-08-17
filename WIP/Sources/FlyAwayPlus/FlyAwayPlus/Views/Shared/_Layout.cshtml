@@ -14,7 +14,12 @@
     <script>
         $(window).load(function () {
             // Animate loader off screen
-            $(".se-pre-con").fadeOut("slow");;
+            $(".se-pre-con").fadeOut("slow");
+
+            var login = '@Session["authenicated"]';
+            if (login == 'null' || login.length == 0) {
+                $("#login-modal").modal("show");
+            }
         });
     </script>
     <div class="navbar navbar-custom" role="navigation">
@@ -28,7 +33,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
                     {
-                        <li><a class="navbar-right interact-item remove-background" data-toggle="modal" data-target="#login-modal">Login/Sign Up</a></li>
+                        <li><a style="display:none" class="navbar-right interact-item remove-background" data-toggle="modal" data-target="#login-modal">Login/Sign Up</a></li>
                     }
                     else
                     {
@@ -73,240 +78,250 @@
                         </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
-                                <img id="id-avatar-current-user" src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/avatar/avatar-default.jpg" : @Session["userAva"])"
+                                <img id="id-avatar-current-user" src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"])"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/User/Index/@Session["userID"]">View profile</a></li>
+                            <ul class="dropdown-menu bullet pull-center" style="left: -40px;">
+                                <li><a href="/User/Index/@Session["userID"]">@Session["username"]</a></li>
                                 <li><a href="/Login/Logout">Log out</a></li>
                             </ul>
                         </li>
                     }
-
                 </ul>
-                @Html.Partial("_PostPartial")
 
-                <form action="/Search/Search">
-                    <ul class="nav nav-bar navbar-left" style="margin-top: 7px; border:none">
-                        <li style="border:none">
-                            <div class="" style="width:480px; border:none">
-                                <div class="select auto-complete" style="display:inline-block; width:100%; border:none">
-                                    <div>
-                                        <span class="cls-select-label">Search</span>
-                                        <input id="id-search-input" name="keyword" class="cls-search-input" type="text" placeholder="..." value="">
-                                        <i id="id-search-input-i" class="cls-search-i glyphicon glyphicon-search"></i>
-                                    </div>
-                                </div>
+                @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
+                {
+                    using (Html.BeginForm("Search", "Search", FormMethod.Get, new { @class = "nav nav-bar navbar-left" }))
+                    {
+                        <div class="nav-search-wrapper">
+                            <div class="search-bar">
+                                <input type="text"
+                                       name="keyword"
+                                       id="id-search-input"
+                                       value="Search for places, tour rooms, people..." onfocus="this.value = '';" onblur="    if (this.value === '') { this.value = 'Search for places, tour rooms, people...'; }">
+                                <input type="submit" value="Search" />
                             </div>
-                        </li>
-                    </ul>
-                </form>
+                        </div>
+                    }
+
+                    @Html.Partial("_PostPartial")
+                }
             </div>
         </div>
     </div>
-    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
+    {
+        <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
+    }
+    else
+    {
+        @Html.Action("LoginPartial", "Login")
+    }
     <div id="id-main-page" class="container body-content">
-        @*Html.Partial("_SearchPartial")*@
         @RenderBody()
         <br />
     </div>
-    @Html.Partial("_TagFriendPartial")
-    @Html.Action("LoginPartial", "Login")
-    @if (@Session["authenicated"] != null && !@Session["authenicated"].ToString().IsEmpty())
+    @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
     {
-        @Html.Partial("_ChatConversation")
-    }
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-    @Scripts.Render("~/bundles/js")
-    <script src="/signalr/hubs"></script>
-    <script src="http://www.youtube.com/player_api"></script>
-    <script>
-        $(function () {
-            $("#btn-notification").click(function () {
-                $(".notification-container").fadeToggle(300);
-                $(".notification-count").fadeOut("slow");
-                return false;
-            });
+        @Html.Partial("_TagFriendPartial")
+        if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
+        {
+            @Html.Partial("_ChatConversation")
+        }
+        @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/js")
+        <script src="/signalr/hubs"></script>
+        <script src="http://www.youtube.com/player_api"></script>
+        <script>
+            $(function () {
+                $("#btn-notification").click(function () {
+                    $(".notification-container").fadeToggle(300);
+                    $(".notification-count").fadeOut("slow");
+                    return false;
+                });
 
-            $("#id-search-input").keydown(function (evt) {
-                if (evt.keyCode == 13) {
-                    if ($(this).val().trim().length != 0) {
-                        $(this).val($(this).val().trim());
-                        $(this).closest("form").submit();
+                $("#id-search-input").keydown(function (evt) {
+                    if (evt.keyCode == 13) {
+                        if ($(this).val().trim().length != 0) {
+                            //alert("y");
+                            $(this).val($(this).val().trim());
+                            $(this).closest("form").submit();
+                        }
                         evt.preventDefault();
                     }
-                }
-            });
-            /*
-            $("#id-search-input-i").click(function (evt) {
-                alert("x");
-                $(this).closest("form").submit();
-                evt.preventDefault();
-            });
-            */
-            $("#id-btn-friend-request").click(function () {
-                $(".friend-request-container").fadeToggle(300);
-                $(".friend-request-count").fadeOut("slow");
-                return false;
-            });
+                });
 
-            $(document).click(function (e) {
-                $(".notification-container").hide();
-                $(".friend-request-container").hide();
-            });
+                $("#id-search-input-i").click(function (evt) {
+                    if ($("#id-search-input").val().trim().length != 0) {
+                        $(this).closest("form").submit();
+                    }
+                    evt.preventDefault();
+                });
 
-            var lastActivityId = 0;
-            var notificationHubProxy = $.connection.notificationHub;
-            var friendHubProxy = $.connection.friendHub;
+                $("#id-btn-friend-request").click(function () {
+                    $(".friend-request-container").fadeToggle(300);
+                    $(".friend-request-count").fadeOut("slow");
+                    return false;
+                });
 
-            friendHubProxy.client.receiveListFriendRequest = function (content) {
-                /*
-                <div style="width:100%; height: 65px;">
-                    <div href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
-                        <div style="float:left">
-                            <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
-                        </div>
-                        <div style="">Duc FiLan sent request friend to you</div>
-                        <div class="">
-                            <button type="button" class="btn btn-success">Accept</button>
-                            <button type="button" class="btn btn-danger">Declare</button>
+                $(document).click(function (e) {
+                    $(".notification-container").hide();
+                    $(".friend-request-container").hide();
+                });
+
+                var lastActivityId = 0;
+                var notificationHubProxy = $.connection.notificationHub;
+                var friendHubProxy = $.connection.friendHub;
+
+                friendHubProxy.client.receiveListFriendRequest = function (content) {
+                    /*
+                    <div style="width:100%; height: 65px;">
+                        <div href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                            <div style="float:left">
+                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                            </div>
+                            <div style="">Duc FiLan sent request friend to you</div>
+                            <div class="">
+                                <button type="button" class="btn btn-success">Accept</button>
+                                <button type="button" class="btn btn-danger">Declare</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <hr />
-                */
-                content = JSON.parse(content);
-                var count = 0;
-                for (var index = 0; index < content.length; index++) {
-                    var friend = content[index];
-                    if (friend == null) {
-                        break;
+                    <hr />
+                    */
+                    content = JSON.parse(content);
+                    var count = 0;
+                    for (var index = 0; index < content.length; index++) {
+                        var friend = content[index];
+                        if (friend == null) {
+                            break;
+                        }
+                        count++;
+                        var tmp = "";
+                        tmp += "<div class='cls-friend-request' style='width:100%; height: 65px;'>";
+                        tmp += "<div href='#' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                        tmp += "<div style='float:left'>";
+                        tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + friend["avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                        tmp += "</div>";
+                        tmp += "<div style=''>" + friend["firstName"] + " " + friend["lastName"] + " sent request friend to you</div>";
+                        tmp += "<div class=''>";
+                        tmp += "<button type='button' id='id-btn-friend-accept" + friend["userID"] + "' class='btn btn-success'>Accept</button>";
+                        tmp += "<button type='button' id='id-btn-friend-decline" + friend["userID"] + "' class='btn btn-danger' style='margin-left:5px;'>Decline</button>";
+                        tmp += "</div>";
+                        tmp += "</div>";
+                        tmp += "</div>";
+                        tmp += "<hr />";
+                        $("#idFriendRequest").append(tmp);
+
+                        $("#id-btn-friend-accept" + friend["userID"]).click(function (evt) {
+                            var controller = "/User/AddFriend";
+                            var data = {
+                                userID: parseInt('@Session["userID"]'),
+                                otherUserID: friend["userID"]
+                            };
+
+                            commonModule.callAjax(controller, data, null);
+
+                            $(this).closest(".cls-friend-request").remove();
+                            evt.preventDefault();
+                        });
+
+                        $("#id-btn-friend-decline" + friend["userID"]).click(function (evt) {
+                            var controller = "/User/DeclineRequestFriend";
+                            var data = {
+                                userID: friend["userID"],
+                                otherUserID: parseInt('@Session["userID"]')
+                            };
+
+                            commonModule.callAjax(controller, data, null);
+                            $(this).closest(".cls-friend-request").remove();
+                            evt.preventDefault();
+                        });
                     }
-                    count++;
-                    var tmp = "";
-                    tmp += "<div class='cls-friend-request' style='width:100%; height: 65px;'>";
-                    tmp += "<div href='#' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
-                    tmp += "<div style='float:left'>";
-                    tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + friend["avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
-                    tmp += "</div>";
-                    tmp += "<div style=''>" + friend["firstName"] + " " + friend["lastName"] + " sent request friend to you</div>";
-                    tmp += "<div class=''>";
-                    tmp += "<button type='button' id='id-btn-friend-accept" + friend["userID"] + "' class='btn btn-success'>Accept</button>";
-                    tmp += "<button type='button' id='id-btn-friend-decline" + friend["userID"] + "' class='btn btn-danger' style='margin-left:5px;'>Decline</button>";
-                    tmp += "</div>";
-                    tmp += "</div>";
-                    tmp += "</div>";
-                    tmp += "<hr />";
-                    $("#idFriendRequest").append(tmp);
+                    if (count > 0) {
+                        $("#id-btn-friend-request").find("span").text(count);
+                        $("#id-btn-friend-request").find("span").show();
+                    }
+                    else {
+                        $("#id-btn-friend-request").find("span").hide();
+                    }
+                }
 
-                    $("#id-btn-friend-accept" + friend["userID"]).click(function (evt) {
-                        var controller = "/User/AddFriend";
-                        var data = {
-                            userID: parseInt('@Session["userID"]'),
-                            otherUserID: friend["userID"]
-                        };
+                notificationHubProxy.client.receiveNotification = function (content) {
+                    /*
+                    <div style="width:100%; height: 65px;">
+                        <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                            <div style="float:left">
+                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                            </div>
+                            <div style="">Duc FiLan liked your post</div>
+                        </a>
+                    </div>
+                    <hr />
+                    */
+                    content = JSON.parse(content);
+                    for (var index = 0; index < content.length; index++) {
+                        var notification = content[index];
+                        if (notification == null || notification["post"] == null || notification["user"] == null) {
+                            break;
+                        }
+                        var tmp = "";
+                        tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
+                        tmp += "<a href='/Post/Index/" + notification["post"]["postID"] + "' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                        tmp += "<div style='float:left'>";
+                        tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["user"]["avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                        tmp += "</div>";
 
-                        commonModule.callAjax(controller, data, null);
 
-                        $(this).closest(".cls-friend-request").remove();
+                        if (notification["activity"] == "COMMENTED") {
+                            tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " commented to your post</div>";
+                        }
+                        else if (notification["activity"] == "LIKE") {
+                            tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " liked to your post</div>";
+                        }
+                        else if (notification["activity"] == "DISLIKE") {
+                            tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " disliked to your post</div>";
+                        }
+
+                        tmp += "</a>";
+                        tmp += "</div>";
+                        tmp += "<hr />";
+                        $("#idNotification").append(tmp);
+                        lastActivityId = notification["lastActivityID"];
+                    }
+                }
+
+                $.connection.hub.start().done(function () {
+                    var login = '@Session["authenicated"]';
+                    if (login != null && login != "") {
+                        if (lastActivityId == 0) {
+                            notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityId);
+                        }
+                        friendHubProxy.server.getListFriendRequest(parseInt('@Session["userID"]'));
+                    }
+                });
+
+                $('#idNotification').bind('scroll', function (evt) {
+                    var scrollPosition = $(this).scrollTop() + $(this).outerHeight();
+                    var divTotalHeight = $(this)[0].scrollHeight
+                        + parseInt($(this).css('padding-top'), 10)
+                        + parseInt($(this).css('padding-bottom'), 10)
+                        + parseInt($(this).css('border-top-width'), 10)
+                        + parseInt($(this).css('border-bottom-width'), 10);
+                    //console.log("scrollPosition : " + scrollPosition + ", divTotalHeight: " + divTotalHeight)
+                    if (scrollPosition + 5 == divTotalHeight) {
+                        $.connection.hub.start().done(function () {
+                            //alert(lastActivityID);
+                            notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityId);
+                        });
                         evt.preventDefault();
-                    });
-
-                    $("#id-btn-friend-decline" + friend["userID"]).click(function (evt) {
-                        var controller = "/User/DeclineRequestFriend";
-                        var data = {
-                            userID: friend["userID"],
-                            otherUserID: parseInt('@Session["userID"]')
-                        };
-
-                        commonModule.callAjax(controller, data, null);
-                        $(this).closest(".cls-friend-request").remove();
-                        evt.preventDefault();
-                    });
-                }
-                if (count > 0) {
-                    $("#id-btn-friend-request").find("span").text(count);
-                    $("#id-btn-friend-request").find("span").show();
-                }
-                else {
-                    $("#id-btn-friend-request").find("span").hide();
-                }
-            }
-
-            notificationHubProxy.client.receiveNotification = function (content) {
-                /*
-                <div style="width:100%; height: 65px;">
-                    <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
-                        <div style="float:left">
-                            <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
-                        </div>
-                        <div style="">Duc FiLan liked your post</div>
-                    </a>
-                </div>
-                <hr />
-                */
-                content = JSON.parse(content);
-                for (var index = 0; index < content.length; index++) {
-                    var notification = content[index];
-                    if (notification == null || notification["post"] == null || notification["user"] == null) {
-                        break;
                     }
-                    var tmp = "";
-                    tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
-                    tmp += "<a href='/Post/Index/" + notification["post"]["postID"] + "' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
-                    tmp += "<div style='float:left'>";
-                    tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["user"]["avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
-                    tmp += "</div>";
-
-
-                    if (notification["activity"] == "COMMENTED") {
-                        tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " commented to your post</div>";
-                    }
-                    else if (notification["activity"] == "LIKE") {
-                        tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " liked to your post</div>";
-                    }
-                    else if (notification["activity"] == "DISLIKE") {
-                        tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " disliked to your post</div>";
-                    }
-
-                    tmp += "</a>";
-                    tmp += "</div>";
-                    tmp += "<hr />";
-                    $("#idNotification").append(tmp);
-                    lastActivityId = notification["lastActivityID"];
-                }
-            }
-
-            $.connection.hub.start().done(function () {
-                var login = '@Session["authenicated"]';
-                if (login != null && login != "") {
-                    if (lastActivityId == 0) {
-                        notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityId);
-                    }
-                    friendHubProxy.server.getListFriendRequest(parseInt('@Session["userID"]'));
-                }
+                });
             });
-
-            $('#idNotification').bind('scroll', function (evt) {
-                var scrollPosition = $(this).scrollTop() + $(this).outerHeight();
-                var divTotalHeight = $(this)[0].scrollHeight
-                    + parseInt($(this).css('padding-top'), 10)
-                    + parseInt($(this).css('padding-bottom'), 10)
-                    + parseInt($(this).css('border-top-width'), 10)
-                    + parseInt($(this).css('border-bottom-width'), 10);
-                //console.log("scrollPosition : " + scrollPosition + ", divTotalHeight: " + divTotalHeight)
-                if (scrollPosition + 5 == divTotalHeight) {
-                    $.connection.hub.start().done(function () {
-                        //alert(lastActivityID);
-                        notificationHubProxy.server.loadNotification(parseInt('@Session["userID"]'), lastActivityId);
-                    });
-                    evt.preventDefault();
-                }
-            });
-        });
-    </script>
+        </script>
+    }
 </body>
 </html>
