@@ -11,6 +11,10 @@
 <body style="min-height: 768px;">
     <div class="se-pre-con">
     </div>
+    @if (Session["authenicated"] == null || Session["authenicated"].ToString().IsEmpty())
+    {
+        <img src="/Images/background.jpg" style="width:100%; height:100%" />
+    }
     <script>
         $(window).load(function () {
             // Animate loader off screen
@@ -278,7 +282,7 @@
                         }
                         else if (notification["activity"] == "DISLIKE") {
                             tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " disliked to your post</div>";
-                        } 
+                        }
                         tmp += "<div style='margin-top:5px;'> " + notification["dateCreated"] + "</div>";
                         tmp += "</a>";
                         tmp += "</div>";
