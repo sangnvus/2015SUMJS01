@@ -19,7 +19,6 @@ namespace FlyAwayPlus.Controllers
             User userSession = UserHelpers.GetCurrentUser(Session);
             User user;
             List<Post> listPost;
-            List<Photo> listPhoto = new List<Photo>();
             List<User> friend;
             
             if (userSession == null)
@@ -68,6 +67,8 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, bool> isLikeDict = new Dictionary<int, bool>();
             Dictionary<int, bool> isDislikeDict = new Dictionary<int, bool>();
             Dictionary<int, bool> isWishDict = new Dictionary<int, bool>();
+            List<Photo> listPhoto = new List<Photo>();
+            List<Place> listPlace = new List<Place>();
 
             foreach (Post po in listPost)
             {
