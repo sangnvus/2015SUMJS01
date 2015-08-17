@@ -168,7 +168,7 @@
     <div>
         <!--INFO-->
         <div class="col-md-10 room-detail-infor">
-            <div class="room-detail-cover" style="background-image: url(@(roomInfo.PhotoCoverUrl ?? "/Images/background/nhatrang2.jpg"))"><!--BG--></div>
+            <div class="room-detail-cover" style="background-image: url(@(!string.IsNullOrWhiteSpace(roomInfo.PhotoCoverUrl) ? roomInfo.PhotoCoverUrl : "/Images/background/nhatrang2.jpg"))"><!--BG--></div>
             <div class="room-detail-darkwrapper"></div>
             <div class="room-detail-infor-text">
                 <h3>@roomInfo.RoomName</h3>
@@ -188,7 +188,7 @@
                     </li>
                     <li>
                         <i class="fa fa-clock-o"></i>
-                        <p>DURING:</p>&nbsp; <span>@roomInfo.LengthInDays</span>
+                        <p>DURING:</p>&nbsp; <span>@roomInfo.LengthInDays days</span>
                     </li>
                 </ul>
             </div>
