@@ -66,7 +66,7 @@ namespace FlyAwayPlus.Helpers
                            .ExecuteWithoutResults();
         }
 
-        public void InsertUser(User user)
+        public void InsertUser(ref User user)
         {
             // Auto increment Id.
             user.userID = GetGlobalIncrementId();

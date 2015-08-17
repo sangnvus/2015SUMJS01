@@ -1,14 +1,14 @@
 ﻿<div class="row">
     <div>
         <section id="avatar-upload-box">
-            @using (Ajax.BeginForm("UploadAvatar", "Login", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "avatar-upload-form" }))
+            @using (Ajax.BeginForm("UploadAvatar", "Login", null, new AjaxOptions() {HttpMethod = "POST"}, new {enctype = "multipart/form-data", id = "avatar-upload-form"}))
             {
                 @Html.AntiForgeryToken()
                 <div class="col-xs-4 col-sm-4 col-md-4 col-xs-offset-4  col-sm-offset-4 col-md-offset-4 ">
                     <label for="file-upload" class="custom-file-upload">
-                        <img src="~/Images/UIHelper/default-avatar.jpg" class="avatar" id="upload-avatar-preview" alt="Avatar" />
+                        <img src="~/Images/UIHelper/default-avatar.jpg" class="avatar" id="upload-avatar-preview" alt="Avatar"/>
                     </label>
-                    <input id="file-upload" type="file" name="files" />
+                    <input id="file-upload" type="file" name="files"/>
                 </div>
             }
 
@@ -19,17 +19,20 @@
 
         <section id="avatar-crop-box" class="hidden">
             <p>
-                <img src="" id="crop-avatar-target" alt="Uploaded image" />
+                <img src="" id="crop-avatar-target" alt="Uploaded image"/>
                 <div id="preview-pane" class="hidden">
                     <div class="preview-container">
-                        <img src="" class="jcrop-preview hidden" alt="Preview" />
+                        <img src="" class="jcrop-preview hidden" alt="Preview"/>
                     </div>
                 </div>
             </p>
-            <p><button class="btn btn-default center-block" onclick="saveAvatar()">Save Avatar</button></p>
+            <p><button class="btn btn-default center-block" onclick="saveAvatar()">Save Avatar</button>
+            </p>
         </section>
         <div id="avatar-result" class="hidden">
-            <img src="" alt="Final Image" />
+            <img src="" alt="Final Image"/>
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/imageloaded")

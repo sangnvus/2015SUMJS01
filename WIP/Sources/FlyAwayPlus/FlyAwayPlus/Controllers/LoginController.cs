@@ -50,7 +50,7 @@ namespace FlyAwayPlus.Controllers
                     }
 
                     // insert user to Database
-                    GraphDatabaseHelpers.Instance.InsertUser(user);
+                    GraphDatabaseHelpers.Instance.InsertUser(ref user);
                 }
                 else
                 {
@@ -252,7 +252,7 @@ namespace FlyAwayPlus.Controllers
                 // Facebook account
 
                 // insert user to Database
-                GraphDatabaseHelpers.Instance.InsertUser(newUser);
+                GraphDatabaseHelpers.Instance.InsertUser(ref newUser);
             }
 
             // Set the auth cookie
@@ -428,7 +428,7 @@ namespace FlyAwayPlus.Controllers
                     // Google account
 
                     // insert user to Database
-                    GraphDatabaseHelpers.Instance.InsertUser(newUser);
+                    GraphDatabaseHelpers.Instance.InsertUser(ref newUser);
                 }
 
                 // Set the auth cookie

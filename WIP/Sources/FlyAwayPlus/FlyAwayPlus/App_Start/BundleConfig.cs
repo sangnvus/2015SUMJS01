@@ -30,10 +30,11 @@ namespace FlyAwayPlus
                       "~/Scripts/blocksit.min.js",
                       "~/Scripts/bootstrap.dropdowns-enhancement.js",
                       "~/Scripts/jquery.simpleWeather.min.js",
-                      "~/Scripts/images-loaded.min.js",
                       "~/Scripts/Fancy/jquery.fancybox.pack.js",
                       "~/Scripts/jquery.elastic.source.js",
                       "~/Scripts/jquery.signalR-2.2.0.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/imageloaded").Include("~/Scripts/images-loaded.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datepicker").Include("~/Scripts/bootstrap-datepicker.js"));
 
