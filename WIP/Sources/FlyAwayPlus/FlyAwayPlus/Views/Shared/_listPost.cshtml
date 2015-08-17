@@ -79,17 +79,20 @@
                     <div class="post-time">@post.toRealtime()</div>
                 </div>
 
-                <div class="dropdown">
-                    <span class="glyphicon glyphicon-option-vertical post-list-post-option" data-toggle="dropdown" aria-hidden="true"></span>
-                    <ul class="dropdown-menu bullet pull-center post-list-post-option-actions" role="menu" style="margin-top: -20px">
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.postID" href="#" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
-                        </li>
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.postID" href="#">Delete</a>
-                        </li>
-                    </ul>
-                </div>
+                @if (((User)Session["user"]).userID == @user[post.postID].userID)
+                {
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-vertical post-list-post-option" data-toggle="dropdown" aria-hidden="true"></span>
+                        <ul class="dropdown-menu bullet pull-center post-list-post-option-actions" role="menu" style="margin-top: -20px">
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.postID" href="#" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.postID" href="#">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
             </div>
         </div>
     </div>

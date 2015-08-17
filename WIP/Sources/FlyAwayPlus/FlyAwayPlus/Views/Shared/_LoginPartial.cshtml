@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <input type="text" value="@Model.dateOfBirth" name="dateOfBirth" id="id_register_dob" class="form-control" placeholder="DOB" tabindex="4">
+                                                    <input type="text" value="@Model.dateOfBirth" name="dateOfBirth" id="id_register_dob" class="form-control" placeholder="DOB" tabindex="4" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -172,9 +172,15 @@
 </div>
 
 @Scripts.Render("~/bundles/md5")
+@Scripts.Render("~/bundles/datepicker")
 
 <script>
     $(function () {
+        // Datetime picker.
+        $('#id_register_dob').datepicker({
+            format: "yyyy-mm-dd"
+        });
+
         //$("#")
         $("#register-submit").click(function () {
             GeneratePwd();

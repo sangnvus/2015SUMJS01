@@ -1668,3 +1668,14 @@ textarea {
     outline: none;
     -webkit-appearance: none;
 }
+
+.modal-header {
+    border-bottom: none;
+    background-color: #3bafda;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.datepicker {
+    z-index: 1151 !important;
+}

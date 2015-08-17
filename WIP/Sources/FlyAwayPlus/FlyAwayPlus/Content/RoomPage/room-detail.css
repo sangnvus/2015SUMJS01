@@ -271,6 +271,7 @@
         .discussion .avatar img {
             display: block;
             width: 100%;
+            background-color: #fff
         }
 
 .other .avatar:after {

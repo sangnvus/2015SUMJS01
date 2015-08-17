@@ -201,7 +201,7 @@
                 <a href="#" class="btn btn-primary room-detail-request-join">Request join</a>
             </div>
             <div class="input-group">
-                <input type="text" class="form-control" value="@roomId">
+                <input type="text" class="form-control" value="@roomId" readonly>
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i></button>
                 </span>
@@ -504,14 +504,14 @@
                     </div>
                     <div class="messages" style="border-bottom: #19B5FF 3px solid">
                         <p><b>This is the very beginning of the room, which created by @String.Format("{0} {1}", @admin.firstName, @admin.lastName) on time</b></p>
-                        <time datetime=""><a href="/Home/Index/">Fly Away Plus System</a></time>
+                        <time datetime=""><a href="javascript:;">Fly Away Plus System</a></time>
                     </div>
                 </li>
                 @for (int index = 0; index < listMessage.Count; index++)
                 {
                     <li class="@String.Format("{0}", userID == listUserOwnMessage[index].userID ? "self" : "other")">
                         <div class="avatar">
-                            <img src="@listUserOwnMessage[index].avatar" class="img-circle" />
+                            <img src="@listUserOwnMessage[index].avatar" />
                         </div>
                         <div class="messages" style="border-bottom: #19B5FF 3px solid">
                             <p>@listMessage[index].content</p>
@@ -538,10 +538,10 @@
             <div class="modal-body">
                 <form id="EventForm">
                     <input type="hidden" id="eventID">
-                    <input type="text" id="eventTitle" class="form-control" placeholder="Title"><br />
-                    <input type="text" id="eventDate" class="form-control" placeholder="Start date"><br />
-                    <input type="text" id="eventTime" class="form-control" placeholder="Start time"><br />
-                    <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)"><br />
+                    <input type="text" id="eventTitle" class="form-control" placeholder="Title"><br/>
+                    <input type="text" id="eventDate" class="form-control" placeholder="Start date" readonly><br/>
+                    <input type="text" id="eventTime" class="form-control" placeholder="Start time" readonly><br/>
+                    <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)"><br/>
                 </form>
             </div>
             <div class="modal-footer">
@@ -551,6 +551,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         if (typeof (chatHubProxy) === "undefined") {
@@ -613,5 +614,4 @@
             });
         };
     });
-
 </script>

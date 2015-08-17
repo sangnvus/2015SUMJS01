@@ -102,6 +102,7 @@
                     success: function () {
                         editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
                         $("#edit-post-modal").modal('hide');
+                        commonModule.setBlocksit($(".blog-landing"), 212);
                     }
                 });
             });
