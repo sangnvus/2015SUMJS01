@@ -1,0 +1,217 @@
+﻿@using FlyAwayPlus.Helpers
+@using FlyAwayPlus.Models
+
+@{
+    var listAllUsers = ViewData["listAllUsers"] as List<User>;
+}
+<html lang="en">
+<head>
+    <title>
+        Admin Page
+    </title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <p></p>
+
+
+    <div class="container">
+        <h2>Admin Page</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#user">User</a></li>
+            <li><a data-toggle="tab" href="#reportedPost">Reported post</a></li>
+            <li><a data-toggle="tab" href="#statistics">Statistics</a></li>
+            <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="user" class="tab-pane fade in active">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (User user in listAllUsers)
+                                {
+                                    <tr>
+                                        <td>@user.firstName</td>
+                                        <td>@user.lastName</td>
+                                        <td>@user.email</td>
+                                        @if (user.status.Equals("active"))
+                                        {
+                                            <td>
+                                                <div class="onoffswitch">
+                                                    <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <div class="onoffswitch">
+                                                    <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div id="reportedPost" class="tab-pane fade">
+                <h3>Menu 1</h3>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div id="statistics" class="tab-pane fade">
+                <h4>Number of user:
+                <script>document.write(@GraphDatabaseHelpers.Instance.CountUser())</script></h4>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                <h3>Menu 3</h3>
+                <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+<script>
+
+    function lock(id) {
+        alert(@GraphDatabaseHelpers.Instance.CountLike(1004));
+        if ($('#myonoffswitch_' + id).is(':checked')) {
+            var controller = "/Admin/UnlockUser/";
+            var data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+            //$('#myonoffswitch_' + id).prop('checked', false);
+        } else {
+            var controller = "/Admin/LockUser/";
+            var data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+        }
+    }
+
+    function unLock(id) {
+        if ($('#myonoffswitch_' + id).is(':checked')) {
+            var controller = "/Admin/UnlockUser/";
+            var data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+            //$('#myonoffswitch_' + id).prop('checked', true);
+        } else {
+            var controller = "/Admin/LockUser/";
+            var data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+        }
+    }
+</script>
+<style>
+    .onoffswitch {
+        position: relative;
+        width: 90px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .onoffswitch-checkbox {
+        display: none;
+    }
+
+    .onoffswitch-label {
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid #999999;
+        border-radius: 20px;
+    }
+
+    .onoffswitch-inner {
+        display: block;
+        width: 200%;
+        margin-left: -100%;
+        transition: margin 0.3s ease-in 0s;
+    }
+
+        .onoffswitch-inner:before, .onoffswitch-inner:after {
+            display: block;
+            float: left;
+            width: 50%;
+            height: 30px;
+            padding: 0;
+            line-height: 30px;
+            font-size: 14px;
+            color: white;
+            font-family: Trebuchet, Arial, sans-serif;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .onoffswitch-inner:before {
+            content: "ACTIVE";
+            padding-left: 10px;
+            background-color: #34A7C1;
+            color: #FFFFFF;
+        }
+
+        .onoffswitch-inner:after {
+            content: "LOCK";
+            padding-right: 10px;
+            background-color: #EEEEEE;
+            color: #999999;
+            text-align: right;
+        }
+
+    .onoffswitch-switch {
+        display: block;
+        width: 18px;
+        margin: 6px;
+        background: #FFFFFF;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 56px;
+        border: 2px solid #999999;
+        border-radius: 20px;
+        transition: all 0.3s ease-in 0s;
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0;
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+        right: 0px;
+    }
+</style>
