@@ -55,6 +55,7 @@ namespace FlyAwayPlus.Controllers
         {
             List<Post> listPost = new List<Post>();
             List<Place> listPlace = new List<Place>();
+            List<Double> distance = new List<double>();
             Place currentPlace = null;
             User user = UserHelpers.GetCurrentUser(Session);
 
@@ -75,24 +76,36 @@ namespace FlyAwayPlus.Controllers
                 currentPlace = listPlace.Find(item => item.placeID == id);
                 listPlace.Remove(currentPlace);
                 listPlace.RemoveAll(item => (calculateDistance(currentPlace, item) - 50.0) > 1E-6);
+
+                foreach (var p in listPlace)
+                {
+                    distance.Add(calculateDistance(currentPlace, p));
+                }
                 FindRelatedInformationPost(listPost, currentPlace);
             }
 
-            ViewData["typePost"] = "index";
             ViewData["currentPlace"] = currentPlace;
             ViewData["listPlace"] = JsonConvert.SerializeObject(listPlace);
-
-            if (listPost.Count < FapConstants.RecordsPerPage)
-            {
-                ViewData["isLoadMore"] = "false";
-            }
-            else
-            {
-                ViewData["isLoadMore"] = "true";
-            }
             return View();
         }
 
+        public ActionResult LoadPostInPlace(int placeID = 0)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                User user = UserHelpers.GetCurrentUser(Session);
+                Place currentPlace = GraphDatabaseHelpers.Instance.FindPlaceByID(placeID);
+                if (user == null || currentPlace == null)
+                {
+                    return null;
+                }
+                List<Post> listPost = new List<Post>();
+                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(placeID);
+                FindRelatedInformationPost(listPost, currentPlace);
+                return PartialView("_ListPost");
+            }
+            return null;
+        }
         private void FindRelatedInformationPost(List<Post> listPost, Place currentPlace)
         {
             User user = UserHelpers.GetCurrentUser(Session);
@@ -145,6 +158,16 @@ namespace FlyAwayPlus.Controllers
             ViewData["isLikeDict"] = isLikeDict;
             ViewData["isDislikeDict"] = isDislikeDict;
             ViewData["isWishDict"] = isWishDict;
+
+            ViewData["typePost"] = "index";
+            if (listPost.Count < FapConstants.RecordsPerPage)
+            {
+                ViewData["isLoadMore"] = "false";
+            }
+            else
+            {
+                ViewData["isLoadMore"] = "true";
+            }
         }
 
         private double calculateDistance(Place p1, Place p2)
@@ -154,7 +177,7 @@ namespace FlyAwayPlus.Controllers
             double dLatitude = Radians(p1.latitude - p2.latitude);      // different in Rad of latitude
             double dLongitude = Radians(p1.longitude - p2.longitude);   // different in Rad of longitude
 
-            double a = Math.Sin(dLatitude / 2) * Math.Sin(dLongitude / 2) + Math.Cos(Radians(p1.latitude)) * Math.Cos(Radians(p2.latitude))
+            double a = Math.Sin(dLatitude / 2) * Math.Sin(dLatitude / 2) + Math.Cos(Radians(p1.latitude)) * Math.Cos(Radians(p2.latitude))
                         * Math.Sin(dLongitude / 2) * Math.Sin(dLongitude / 2);
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1.0 - a));
             return R * c;

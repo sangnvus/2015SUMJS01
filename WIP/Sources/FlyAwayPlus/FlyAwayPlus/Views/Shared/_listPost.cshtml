@@ -100,6 +100,7 @@
     var typePost = '@ViewData["typePost"].ToString()';
 
     $(function () {
+        commonModule.setBlocksit($(".blog-landing"), 212);
         $(".post-post-list-post-option-delete").click(function () {
             $(this).parentsUntil(".white-panel").parent().remove();
             commonModule.setBlocksit($(".blog-landing"), 212);

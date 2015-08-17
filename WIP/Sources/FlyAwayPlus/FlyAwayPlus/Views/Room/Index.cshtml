@@ -1,95 +1,167 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="blog-landing">
-    @Html.Partial("_ListRoomPartial")
-</div>
-<button class="btn btn-primary hidden" data-toggle="modal" data-target="#add-room-modal">Add Room</button>
 
-<!-- Modal -->
-<div class="modal fade" id="add-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 50px">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Room Detail</h4>
+<div class="filer-wrapper">
+    <ul class="tabs-cat text-center row">
+        <li class="cate-item col-xs-6 active">
+            <a data-toggle="tab" href="#room-list-filter-tab" title="" aria-expanded="true">
+                <span>Search for rooms</span>
+                <i class="fa fa-search"></i>
+            </a>
+        </li>
+        <li class="cate-item col-xs-6">
+            <a data-toggle="tab" href="#room-list-plan-create-room-tab" title="" aria-expanded="false">
+                <span>Create a room</span>
+                <i class="fa fa-thumb-tack"></i>
+            </a>
+        </li>
+    </ul>
+    <!-- End Tabs Cat -->
+    <!-- Tabs Content -->
+    <div class="tab-content" style="padding-top: 0;">
+        <!-- Fitering -->
+        <div class="form-cn room-list-filter-tab tab-pane active" id="room-list-filter-tab">
+            <div class="form-search clearfix">
+                <div class="form-field field-from">
+                    <input type="text" name="startplace" id="flight-from" class="field-input" placeholder="Start place">
+                </div>
+                <div class="form-field field-to">
+                    <input type="text" name="targetplace" id="flight-to" class="field-input" placeholder="Target place">
+                </div>
+                <div class="form-field field-date">
+                    <input type="text" name="startdate" class="field-input cal-select-start" readonly placeholder="Start date">
+                </div>
+                <div class="form-field field-date">
+                    <input type="text" name="returndate" class="field-input cal-select-end" readonly placeholder="Return date">
+                </div>
+                <div class="form-field field-select field-adult">
+                    <div class="select">
+                        <span>Slots</span>
+                        <select>
+                            <option>Slots</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-submit">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;height: 50px; -ms-border-radius: 4px; border-radius: 4px;">Search</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="roomname">Room Name:</label>
-                        <div class="col-md-9">
-                            <input class="form-control" id="roomname">
+        </div>
+        <!-- End Fitering -->
+        <!-- Creating -->
+        <div class="form-cn room-list-filter-tab tab-pane" id="room-list-plan-create-room-tab">
+            @using (Html.BeginForm("Add", "Room", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <div class="room-create-wrapper col-md-12 clearfix">
+                    <div class="col-md-6">
+                        <div class="form-field width-100-pcnt">
+                            <input type="text" name="roomname" class="field-input" placeholder="Room name">
+                        </div>
+                        <div class="form-field width-100-pcnt">
+                            <textarea name="roomdesc" class="field-input" placeholder="Room description"></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="maxslots">No. of slots:</label>
-                        <div class="col-md-9">
-                            <input class="form-control stepper-input" id="maxslots" min="1" max="20" step="1">
+                    <div class="col-md-3" style="padding-right: 0">
+                        <div class="form-field width-100-pcnt field-date">
+                            <input type="text" name="startdate" class="field-input cal-select-start" readonly placeholder="Start date">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="place">Place:</label>
-                        <div class="col-md-9">
-                            <input class="form-control" id="place">
+                    <div class="col-md-3" style="padding-right: 0">
+                        <div class="form-field width-100-pcnt field-date">
+                            <input type="text" name="enddate" class="field-input cal-select-end" readonly placeholder="End date">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="starttime">Start time:</label>
-                        <div class="col-md-3">
-                            <input class="form-control" id="starttime">
-                        </div>
-                        <label class="control-label col-md-3" for="endtime">End time:</label>
-                        <div class="col-md-3">
-                            <input class="form-control" id="endtime">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="isprivate">Public:</label>
-                        <div class="col-md-6">
-                            <div class="checkbox">
-                                <label class="toggle">
-                                    <input type="checkbox" checked="" id="isprivate">
-                                    <span class="handle"></span>
-                                </label>
+                    <div class="col-md-6" style="padding-right: 0">
+                        <div class="form-field width-100-pcnt">
+                            <input type="text" name="startplace" class="field-input start-geocomplete" placeholder="Start place">
+                            <div id="start-geo-detail-add">
+                                <input type="hidden" data-start="lat" name="start_lat" />
+                                <input type="hidden" data-start="lng" name="start_lng" />
+                                <input type="hidden" data-start="formatted_address" name="start_formatted_address" />
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-default" style="width: 100%">Invite friends</button>
+                        <div class="form-field width-100-pcnt">
+                            <input type="text" name="targetplace" class="field-input end-geocomplete" placeholder="Target place">
+                            <div id="end-geo-detail-add">
+                                <input type="hidden" data-end="lat" name="end_lat" />
+                                <input type="hidden" data-end="lng" name="end_lng" />
+                                <input type="hidden" data-end="formatted_address" name="end_formatted_address" />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-lg pull-right">CREATE</button>
+                    <div class="col-md-6">
+                        <label for="post-privacy" class="privacy-label-create-room">Privacy: </label>
+                        <div class="btn-group" role="group" id="post-privacy">
+                            <a class="btn btn-default" data-label-placement=""><i class="fa fa-globe data-label"></i></a>
+                            <a data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span> </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <input type="radio" id="post-privacy-public" name="privacy" value="public" checked="">
+                                    <label for="post-privacy-public"><i class="fa fa-globe data-label"></i> Public</label>
+                                </li>
+                                <li>
+                                    <input type="radio" id="post-privacy-private" name="privacy" value="private">
+                                    <label for="post-privacy-private"><i class="fa fa-lock data-label"></i> Private</label>
+                                </li>
+                            </ul>
                         </div>
+                        <input type="submit" class="btn btn-primary pull-right" value="Create">
                     </div>
-                </form>
-            </div>
-
-            <div class="modal-footer"></div>
+                </div>
+            }
         </div>
+        <!-- End Creating -->
     </div>
 </div>
 
-<script src="~/Scripts/jquery.fakecrop.js"></script>
-<script>
-    /*
-    var setBlocksit = function () {
-        var conWidth = $(".blog-landing").width();
-        var gridwidth = 320;
-        //alert(conWidth);
-        var col = conWidth / gridwidth;
-        //alert(col);
-        $(".blog-landing").BlocksIt({
-            numOfCol: Math.floor(col),
-            offsetX: 8,
-            offsetY: 8
-        });
-    };
-    */
+<div class="map-canvas2"></div>
 
-    $(function () {
-        commonModule.setBlocksit($(".blog-landing"), 320);
-        $(".room-list-bio img").fakecrop();
+<div class="room-list-wrapper">
+    @Html.Partial("_ListRoomPartial")
+</div>
+
+@Scripts.Render("~/bundles/datepicker")
+<script src="~/Scripts/jquery.geocomplete.js"></script>
+
+<script>
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+    var checkin = $('.cal-select-start').datepicker({
+        format: "yyyy-mm-dd",
+        onRender: function (date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+        }
+        checkin.hide();
+        $('.cal-select-end')[0].focus();
+    }).data('datepicker');
+    var checkout = $('.cal-select-end').datepicker({
+        format: "yyyy-mm-dd",
+        onRender: function (date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        checkout.hide();
+    }).data('datepicker');
+
+    $(".start-geocomplete").geocomplete({
+        map: ".map-canvas2",
+        details: "#start-geo-detail-add",
+        detailsAttribute: "data-start"
+    });
+    $(".end-geocomplete").geocomplete({
+        map: ".map-canvas2",
+        details: "#end-geo-detail-add",
+        detailsAttribute: "data-end"
     });
 </script>

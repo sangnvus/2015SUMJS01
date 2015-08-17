@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 (function () {
-    var GOOGLE_PLUS_SCRIPT_URL = "https://apis.google.com/js/client:plusone.js";
+    var GOOGLE_PLUS_SCRIPT_URL = "/Scripts/client-plusone.js";
     var CHANNELS_SERVICE_URL = "https://www.googleapis.com/youtube/v3/channels";
     var VIDEOS_UPLOAD_SERVICE_URL = "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet";
     var VIDEOS_SERVICE_URL = "https://www.googleapis.com/youtube/v3/videos";
@@ -42,7 +42,7 @@ limitations under the License.
                 $("#channel-thumbnail").attr("src", response.items[0].snippet.thumbnails.default.url);
 
                 $(".pre-sign-in").hide();
-                $(".post-sign-in").show();
+                $(".post-sign-in").toggleClass("hidden");
             });
         }
     };

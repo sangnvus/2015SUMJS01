@@ -4,38 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Fly Away Plus</title>
-
-    @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/Scripts/jquery.validate.js")
-    @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
-    
-    <script src="~/Scripts/common.js"></script>
-
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/bootflat.css" rel="stylesheet" />
-    <link href="~/Content/Site.css" rel="stylesheet" />
-
-    @Styles.Render("~/Content/font-awesome.css")
-    @Styles.Render("~/Content/bootstrap-social.css")
-
-    <link href="fonts.googleapis.com/css?family=Raleway:100,700,800" rel="stylesheet" type="text/css">
-    <link href="~/Content/common.css" rel="stylesheet" />
-    <link href="~/Content/Fancy/jquery.fancybox.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap.dropdowns-enhancement.min.css" rel="stylesheet" />
-    <link href="~/Content/sweetalert.css" rel="stylesheet" />
-
-    <script>
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.4";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/css")
 </head>
-<body>
+<body style="min-height: 768px;">
+    <div class="se-pre-con">
+    </div>
+    <script>
+        $(window).load(function () {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");;
+        });
+    </script>
     <div class="navbar navbar-custom" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -125,10 +106,11 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
+    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
+    <div id="id-main-page" class="container body-content">
         @*Html.Partial("_SearchPartial")*@
         @RenderBody()
-        <hr />
+        <br />
     </div>
     @Html.Partial("_TagFriendPartial")
     @Html.Action("LoginPartial", "Login")
@@ -138,19 +120,9 @@
     }
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-
-    <script src="~/Scripts/sweetalert.min.js"></script>
-    <script src="~/Scripts/blocksit.min.js"></script>
-    <script src="~/Scripts/bootstrap.dropdowns-enhancement.js"></script>
-    <script src="~/Scripts/jquery.simpleWeather.min.js"></script>
-    <script src="~/Scripts/images-loaded.min.js"></script>
-    <script src="~/Scripts/Fancy/jquery.fancybox.pack.js"></script>
-    <script src="~/Scripts/jquery.elastic.source.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
-    <script src="~/Scripts/common.js"></script>
+    @Scripts.Render("~/bundles/js")
     <script src="/signalr/hubs"></script>
     <script src="http://www.youtube.com/player_api"></script>
-
     <script>
         $(function () {
             $("#btn-notification").click(function () {

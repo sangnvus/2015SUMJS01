@@ -9,23 +9,43 @@ namespace FlyAwayPlus
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-1.10.2.min.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+            //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*.min.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                        "~/Scripts/modernizr-*",
+                        "~/Scripts/common.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/bootstrap.min.js",
+                      "~/Scripts/respond.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                      "~/Scripts/sweetalert.min.js",
+                      "~/Scripts/blocksit.min.js",
+                      "~/Scripts/bootstrap.dropdowns-enhancement.js",
+                      "~/Scripts/jquery.simpleWeather.min.js",
+                      "~/Scripts/images-loaded.min.js",
+                      "~/Scripts/Fancy/jquery.fancybox.pack.js",
+                      "~/Scripts/jquery.elastic.source.js",
+                      "~/Scripts/jquery.signalR-2.2.0.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datepicker").Include("~/Scripts/bootstrap-datepicker.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/bootflat.css",
+                      "~/Content/bootstrap.min.css",
+                      "~/Content/common.css",
+                      "~/Content/Fancy/jquery.fancybox.css",
+                      "~/Content/bootstrap.dropdowns-enhancement.min.css",
+                      "~/Content/sweetalert.css",
+                      "~/Content/font-awesome.min.css",
+                      "~/Content/bootstrap-social.css",
+                      "~/Content/datepicker.css",
+                      "~/Content/Site.css"));
         }
     }
 }

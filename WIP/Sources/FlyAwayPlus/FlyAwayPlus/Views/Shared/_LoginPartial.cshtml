@@ -8,7 +8,7 @@
 
 @model FlyAwayPlus.Models.User
 
-<div id="login-modal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="login-modal" data-backdrop="static" data-keyboard="false" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog login-modal-wrap">
         <div class="modal-content">
             <div class="modal-body login-modal-body">
@@ -176,7 +176,6 @@
         $("#register-submit").click(function () {
             $("#register-form-inner").submit();
         });
-
         $('#login-form-link').click(function (e) {
             $("#login-form").delay(100).fadeIn(100);
             $("#register-form").fadeOut(100);

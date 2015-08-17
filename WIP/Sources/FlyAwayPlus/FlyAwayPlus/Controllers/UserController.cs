@@ -291,16 +291,7 @@ namespace FlyAwayPlus.Controllers
             List<User> listUser = new List<User>();
             if (user != null)
             {
-                string conversationID = "";
-                if (user.userID < friendID)
-                {
-                    conversationID = user.userID + "_" + friendID;
-                }
-                else
-                {
-                    conversationID = friendID + "_" + user.userID;
-                }
-                listMessage = GraphDatabaseHelpers.Instance.GetListMessage(conversationID, 10);
+                listMessage = GraphDatabaseHelpers.Instance.GetListMessage(user.userID, friendID, 10);
                 for (int i = 0; i < listMessage.Count; i++)
                 {
                     listUser.Add(GraphDatabaseHelpers.Instance.FindUser(listMessage[i]));
@@ -316,16 +307,7 @@ namespace FlyAwayPlus.Controllers
             Message message = null;
             if (user != null)
             {
-                string conversationID = "";
-                if (user.userID < friendID)
-                {
-                    conversationID = user.userID + "_" + friendID;
-                }
-                else
-                {
-                    conversationID = friendID + "_" + user.userID;
-                }
-                message = GraphDatabaseHelpers.Instance.CreateMessage(conversationID, content, user.userID, friendID);
+                message = GraphDatabaseHelpers.Instance.CreateMessage(content, user.userID, friendID);
 
             }
             return Json(message);

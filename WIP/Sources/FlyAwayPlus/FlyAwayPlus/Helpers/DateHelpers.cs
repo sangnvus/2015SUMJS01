@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using FlyAwayPlus.Models;
 
 namespace FlyAwayPlus.Helpers
 {
-    public class DateHelpers
+    public class DateHelpers : SingletonBase<DateHelpers>
     {
-        private static String[] LIST_MONTH = {   "Jan", "Feb", "March", "April", 
+        private DateHelpers()
+        { }
+
+        private readonly String[] LIST_MONTH = {   "Jan", "Feb", "March", "April", 
                                             "May", "June", "July", "Aug", 
                                             "Sep", "Oct", "Nov", "Dec"
                                         };
 
-        public static List<String> toTimeLineDate(List<Post> listPost, Dictionary<String,List<Post>> listPostDict)
+        public List<String> ToTimeLineDate(List<Post> listPost, Dictionary<String, List<Post>> listPostDict)
         {
             List<String> listDate = new List<string>();
             DateTime date = new DateTime();
@@ -50,7 +52,7 @@ namespace FlyAwayPlus.Helpers
             return listDate.ToList();
         }
 
-        public static string displayRealtime(string time)
+        public string DisplayRealtime(string time)
         {
             string result = "";
             DateTime date = DateTime.Parse(time);
@@ -85,6 +87,17 @@ namespace FlyAwayPlus.Helpers
                 result = date.ToString("dd MMM yyyy HH:mm");
             }
             return result;
+        }
+
+        public DateTime? ConvertFromUnixTimestamp(double timestamp)
+        {
+            if (double.IsNaN(timestamp))
+            {
+                return null;
+            }
+
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
         }
     }
 }
