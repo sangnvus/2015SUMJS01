@@ -171,9 +171,12 @@
     </div>
 </div>
 
+@Scripts.Render("~/bundles/md5")
+
 <script>
     $(function () {
         $("#register-submit").click(function () {
+            GeneratePwd();
             $("#register-form-inner").submit();
         });
         $('#login-form-link').click(function (e) {
@@ -191,6 +194,13 @@
             e.preventDefault();
         });
     });
+
+    function GeneratePwd() {
+        if ($("#id_register_password").val() !== "" && $("#id_register_password_confirmation").val() !== "") {
+            $("#id_register_password").val(hex_md5($("#id_register_password").val()));
+            $("#id_register_password_confirmation").val(hex_md5($("#id_register_password_confirmation").val()));
+        }
+    }
 </script>
 
 

@@ -2216,5 +2216,14 @@ namespace FlyAwayPlus.Helpers
                      .Create("(r)-[:HAS]->(c)")
                      .ExecuteWithoutResults();
         }
+
+        public Room GetRoomInformation(int roomId)
+        {
+            _client.Connect();
+            return _client.Cypher.Match("(r:room{RoomId: " + roomId + "})")
+                .Return<Room>("r")
+                .Results
+                .FirstOrDefault();
+        }
     }
 }

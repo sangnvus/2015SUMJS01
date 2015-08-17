@@ -35,6 +35,8 @@ namespace FlyAwayPlus
 
             bundles.Add(new ScriptBundle("~/bundles/datepicker").Include("~/Scripts/bootstrap-datepicker.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/md5").Include("~/Scripts/md5.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootflat.css",
                       "~/Content/bootstrap.min.css",

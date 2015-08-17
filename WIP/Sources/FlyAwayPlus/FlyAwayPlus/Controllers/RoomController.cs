@@ -16,31 +16,39 @@ namespace FlyAwayPlus.Controllers
         // GET: /Room/
         public ActionResult Index()
         {
+            if ((User)Session["user"] == null)
+            {
+                RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
 
-        public ActionResult RoomDetail(int roomId = 0)
+        public ActionResult RoomDetail(string id)
         {
+            int roomId;
+            if (id == null || !int.TryParse(id, out roomId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             User user = UserHelpers.GetCurrentUser(Session);
             if (user == null)
             {
                 return RedirectToAction("Index", "Home");
             }
+
+            Room roomInfo = GraphDatabaseHelpers.Instance.GetRoomInformation(roomId);
             List<Post> listPost = GraphDatabaseHelpers.Instance.FindPostInRoom(roomId, 0);
             User admin = GraphDatabaseHelpers.Instance.FindAdminInRoom(roomId);
             List<User> listUserInRoom = GraphDatabaseHelpers.Instance.FindUserInRoom(roomId);
             List<User> listUserRequestJoinRoom = GraphDatabaseHelpers.Instance.FindUserRequestJoinRoom(roomId);
             List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomId, 0);
-            List<User> listUserOwnMessage = new List<User>();
-
-            foreach (Message message in listMessage)
-            {
-                listUserOwnMessage.Add(GraphDatabaseHelpers.Instance.FindUser(message));
-            }
-
+            List<User> listUserOwnMessage = listMessage.Select(message => GraphDatabaseHelpers.Instance.FindUser(message)).ToList();
 
             FindRelatedInformationPost(listPost);
+            ViewData["roomInfo"] = roomInfo;
             ViewData["admin"] = admin;
             ViewData["listUserInRoom"] = listUserInRoom;
             ViewData["listUserRequestJoinRoom"] = listUserRequestJoinRoom;
@@ -166,17 +174,17 @@ namespace FlyAwayPlus.Controllers
 
         public RedirectToRouteResult Add(FormCollection form)
         {
-            var roomName    = Request.Form["roomname"];
-            var roomDesc    = Request.Form["roomdesc"];
-            var startdate   = DateTime.ParseExact(Request.Form["startdate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
-            var enddate     = DateTime.ParseExact(Request.Form["enddate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
-            var startPlace  = Request.Form["start_formatted_address"];
-            var startLng    = Request.Form["start_lng"];
-            var startLat    = Request.Form["start_lat"];
+            var roomName = Request.Form["roomname"];
+            var roomDesc = Request.Form["roomdesc"];
+            var startdate = DateTime.ParseExact(Request.Form["startdate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
+            var enddate = DateTime.ParseExact(Request.Form["enddate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
+            var startPlace = Request.Form["start_formatted_address"];
+            var startLng = Request.Form["start_lng"];
+            var startLat = Request.Form["start_lat"];
             var targetPlace = Request.Form["end_formatted_address"];
-            var endLng      = Request.Form["end_lng"];
-            var endLat      = Request.Form["end_lat"];
-            var privacy     = Request.Form["privacy"];
+            var endLng = Request.Form["end_lng"];
+            var endLat = Request.Form["end_lat"];
+            var privacy = Request.Form["privacy"];
 
             var currentUserId = ((User)Session["user"]).userID;
 
@@ -184,7 +192,7 @@ namespace FlyAwayPlus.Controllers
             {
                 RoomName = roomName,
                 Description = roomDesc,
-                StartDate = startdate.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture),
+                StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,
                 StartLocation = startPlace,
                 StartLatitude = startLat,
