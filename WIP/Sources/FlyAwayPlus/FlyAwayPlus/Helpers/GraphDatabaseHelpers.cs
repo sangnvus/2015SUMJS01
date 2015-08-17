@@ -1444,12 +1444,14 @@ namespace FlyAwayPlus.Helpers
             return listMessage;
         }
 
-        public List<Message> GetListMessage(string conversationId, int limit = 10)
+        public List<Message> GetListMessage(int userId, int friendId, int limit = 10)
         {
             _client.Connect();
             List<Message> listMessage;
             try
             {
+                int conversationId = GetConversationId(userId, friendId);
+
                 listMessage = _client.Cypher.OptionalMatch("(c:conversation { conversationID: '" + conversationId + "' })-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
                                         .ReturnDistinct<Message>("m1")
                                         .Results.ToList();
@@ -1487,13 +1489,15 @@ namespace FlyAwayPlus.Helpers
         public Message CreateMessageInRoom(int roomId, int userId, string content)
         {
             _client.Connect();
+            
+            // Have to make sure conversation is created while creating room.
             var conversation = _client.Cypher.OptionalMatch("(r:room {roomID:" + roomId + "})-[:HAS]->(c:conversation)")
                     .Return<Conversation>("c")
-                    .Results.FirstOrDefault();
+                    .Results.First();
 
-            return CreateMessage(conversation.ConversationId, content, userId, 0);
+            return CreateMessage(content, userId, 0, conversation.conversationID);
         }
-        public Message CreateMessage(string conversationId, string content, int userId, int otherId)
+        public Message CreateMessage(string content, int userId, int otherId, int conversationId = -1)
         {
             /*
                  * Query:
@@ -1516,11 +1520,10 @@ namespace FlyAwayPlus.Helpers
             Message message;
             _client.Connect();
 
+            conversationId = conversationId == -1 ? GetConversationId(userId, otherId) : conversationId;
+
             try
             {
-                var conversation = _client.Cypher.OptionalMatch("(c:conversation {conversationID:'" + conversationId + "'})")
-                    .Return<Conversation>("c")
-                    .Results.FirstOrDefault();
                 message = new Message
                 {
                     content = content,
@@ -1532,12 +1535,12 @@ namespace FlyAwayPlus.Helpers
                                     .WithParam("newMessage", message)
                                     .ExecuteWithoutResults();
 
-                if (conversation == null)
+                if (conversationId == -1)
                 {
-                    conversation = new Conversation
+                    var conversation = new Conversation
                     {
                         DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                        ConversationId = conversationId
+                        conversationID = GetGlobalIncrementId()
                     };
 
                     _client.Cypher.Create("(c:conversation {newConversation})")
@@ -1550,7 +1553,6 @@ namespace FlyAwayPlus.Helpers
                                         .Create("c-[:LATEST_MESSAGE]->m")
                                         .Create("u-[:CREATE]->m")
                                         .ExecuteWithoutResults();
-
                 }
                 else
                 {
@@ -1569,6 +1571,19 @@ namespace FlyAwayPlus.Helpers
                 return null;
             }
             return message;
+        }
+
+        private int GetConversationId(int userId, int otherId)
+        {
+            _client.Connect();
+
+            var conversationIdList = _client.Cypher.Match("(u1:user{userID: " + userId +
+                                 "})-[:BELONG_TO]->(c:conversation)<-[:BELONG_TO]-(u2:user{userID: " + otherId + "})")
+                .ReturnDistinct<int>("c.conversationID")
+                .Results
+                .ToList();
+
+            return conversationIdList.Any() ? conversationIdList.First() : -1;
         }
 
         public bool SendRequestFriend(int userId, int otherUserId)
@@ -2184,7 +2199,7 @@ namespace FlyAwayPlus.Helpers
 
             var newConversation = new Conversation
             {
-                ConversationId = GetGlobalIncrementId(),
+                conversationID = GetGlobalIncrementId(),
                 DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture)
             };
 
@@ -2197,7 +2212,7 @@ namespace FlyAwayPlus.Helpers
                      .Create("(u)-[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
                      .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {ConversationId: " + newConversation.ConversationId + "})")
+            _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {conversationID: " + newConversation.conversationID + "})")
                      .Create("(r)-[:HAS]->(c)")
                      .ExecuteWithoutResults();
         }
