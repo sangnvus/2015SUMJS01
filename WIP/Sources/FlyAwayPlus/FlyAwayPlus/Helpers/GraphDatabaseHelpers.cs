@@ -2067,7 +2067,7 @@ namespace FlyAwayPlus.Helpers
                    .ExecuteWithoutResults();
 
             _client.Cypher.Match("(r:room {RoomId:" + roomId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
-                         .Create("(r)-[r:HAS]->(p)")
+                         .Create("(r)-[:HAS]->(p)")
                          .ExecuteWithoutResults();
 
             _client.Cypher.Match("(u:user {userID: " + userId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")

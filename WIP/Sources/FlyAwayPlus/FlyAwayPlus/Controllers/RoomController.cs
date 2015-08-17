@@ -54,7 +54,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listUserRequestJoinRoom"] = listUserRequestJoinRoom;
             ViewData["listMessage"] = listMessage;
             ViewData["listUserOwnMessage"] = listUserOwnMessage;
-            ViewData["roomID"] = roomId;
+            Session["roomID"] = ViewData["roomID"] = roomId;
             return View();
         }
 
@@ -147,7 +147,7 @@ namespace FlyAwayPlus.Controllers
                 WorkItem = title
             };
 
-            return GraphDatabaseHelpers.Instance.CreateNewPlanEvent(newPlan, (int)ViewData["roomID"], userId);
+            return GraphDatabaseHelpers.Instance.CreateNewPlanEvent(newPlan, (int)Session["roomID"], userId);
         }
 
         public JsonResult GetPlanEvents(DateTime start, DateTime end)
