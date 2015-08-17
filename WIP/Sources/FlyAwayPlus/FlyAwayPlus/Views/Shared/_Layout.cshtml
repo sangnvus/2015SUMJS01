@@ -78,13 +78,13 @@
                         </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
-                                <img id="id-avatar-current-user" src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/avatar/avatar-default.jpg" : @Session["userAva"])"
+                                <img id="id-avatar-current-user" src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"])"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/User/Index/@Session["userID"]">View profile</a></li>
+                            <ul class="dropdown-menu bullet pull-center" style="left: -40px;">
+                                <li><a href="/User/Index/@Session["userID"]">@Session["username"]</a></li>
                                 <li><a href="/Login/Logout">Log out</a></li>
                             </ul>
                         </li>
@@ -93,22 +93,20 @@
 
                 @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
                 {
+                    using (Html.BeginForm("Search", "Search", FormMethod.Get, new { @class = "nav nav-bar navbar-left" }))
+                    {
+                        <div class="nav-search-wrapper">
+                            <div class="search-bar">
+                                <input type="text"
+                                       name="keyword"
+                                       id="id-search-input"
+                                       value="Search for places, tour rooms, people..." onfocus="this.value = '';" onblur="    if (this.value === '') { this.value = 'Search for places, tour rooms, people...'; }">
+                                <input type="submit" value="Search" />
+                            </div>
+                        </div>
+                    }
+
                     @Html.Partial("_PostPartial")
-                    <form action="/Search/Search">
-                        <ul class="nav nav-bar navbar-left" style="margin-top: 7px; border:none">
-                            <li style="border:none">
-                                <div class="" style="width:480px; border:none">
-                                    <div class="select auto-complete" style="display:inline-block; width:100%; border:none">
-                                        <div>
-                                            <span class="cls-select-label">Search</span>
-                                            <input id="id-search-input" name="keyword" class="cls-search-input" type="text" placeholder="..." value="">
-                                            <i id="id-search-input-i" class="cls-search-i glyphicon glyphicon-search"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </form>
                 }
             </div>
         </div>
@@ -148,21 +146,21 @@
                 $("#id-search-input").keydown(function (evt) {
                     if (evt.keyCode == 13) {
                         if ($(this).val().trim().length != 0) {
-                            alert("y");
+                            //alert("y");
                             $(this).val($(this).val().trim());
                             $(this).closest("form").submit();
                         }
                         evt.preventDefault();
                     }
                 });
-                
+
                 $("#id-search-input-i").click(function (evt) {
                     if ($("#id-search-input").val().trim().length != 0) {
                         $(this).closest("form").submit();
                     }
                     evt.preventDefault();
                 });
-                
+
                 $("#id-btn-friend-request").click(function () {
                     $(".friend-request-container").fadeToggle(300);
                     $(".friend-request-count").fadeOut("slow");
@@ -183,7 +181,7 @@
                     <div style="width:100%; height: 65px;">
                         <div href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
                             <div style="float:left">
-                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                             </div>
                             <div style="">Duc FiLan sent request friend to you</div>
                             <div class="">
@@ -257,7 +255,7 @@
                     <div style="width:100%; height: 65px;">
                         <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
                             <div style="float:left">
-                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/avatar/avatar-default.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
+                                <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                             </div>
                             <div style="">Duc FiLan liked your post</div>
                         </a>

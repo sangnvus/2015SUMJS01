@@ -40,8 +40,8 @@ namespace FlyAwayPlus
             bundles.Add(new ScriptBundle("~/bundles/md5").Include("~/Scripts/md5.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootflat.css",
                       "~/Content/bootstrap.min.css",
+                      "~/Content/bootflat.css",
                       "~/Content/common.css",
                       "~/Content/Fancy/jquery.fancybox.css",
                       "~/Content/bootstrap.dropdowns-enhancement.min.css",

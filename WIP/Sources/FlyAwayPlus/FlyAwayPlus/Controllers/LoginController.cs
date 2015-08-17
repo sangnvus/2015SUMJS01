@@ -46,7 +46,7 @@ namespace FlyAwayPlus.Controllers
                     user.status = "active";
                     if (string.IsNullOrWhiteSpace(user.avatar))
                     {
-                        user.avatar = "/Images/avatar/avatar-default.jpg";
+                        user.avatar = "/Images/UIHelper/default-avatar.jpg";
                     }
 
                     // insert user to Database
