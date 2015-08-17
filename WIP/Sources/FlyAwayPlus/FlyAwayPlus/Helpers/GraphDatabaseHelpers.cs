@@ -40,6 +40,19 @@ namespace FlyAwayPlus.Helpers
                            .ExecuteWithoutResults();
         }
 
+        public void LockPost(int postId)
+        {
+            /*
+             * MATCH (n:post { postID: postId })
+                SET n.status = 'lock'
+                RETURN n
+             */
+            _client.Connect();
+            _client.Cypher.Match("(n:post { postID: " + postId + " })")
+                           .Set("n.privacy = 'lock' RETURN n")
+                           .ExecuteWithoutResults();
+        }
+
         public void UnlockUser(int userId)
         {
             /*
@@ -433,6 +446,48 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
+        public bool DeleteReportPost(int reportID)
+        {
+            /**
+             * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
+                delete r
+             */
+            try
+            {
+                _client.Connect();
+                _client.Cypher.Match("(u:reportPost {reportID:" + reportID + "})-[r]-()")
+                                .Delete("n,r")
+                                .ExecuteWithoutResults();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+        public bool DeleteReportUser(int reportID)
+        {
+            /**
+             * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
+                delete r
+             */
+            try
+            {
+                _client.Connect();
+                _client.Cypher.Match("(u:reportUser {reportID:" + reportID + "})-[r]-()")
+                                .Delete("n,r")
+                                .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
         public bool InsertDislike(int userId, int postId)
         {
             Node<User> userNode = GetNodeUser(userId);
@@ -597,6 +652,42 @@ namespace FlyAwayPlus.Helpers
                 .ReturnDistinct<User>("u1")
                 .Results.ToList();
             return listAllUsers;
+        }
+
+        public List<ReportPost> ListAllReportPosts()
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all current report post
+                 * 
+                 * match(u1:repost)
+                    return u1;
+                 */
+            _client.Connect();
+            var listAllReportPosts = _client.Cypher.OptionalMatch("(u1:reportPost)")
+                .ReturnDistinct<ReportPost>("u1")
+                .Results.ToList();
+            return listAllReportPosts;
+        }
+
+        public List<ReportUser> ListAllReportUsers()
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 *     - all current report user
+                 * 
+                 * match(u1:reportUser)
+                    return u1;
+                 */
+            _client.Connect();
+            var listAllReportPosts = _client.Cypher.OptionalMatch("(u1:reportUser)")
+                .ReturnDistinct<ReportUser>("u1")
+                .Results.ToList();
+            return listAllReportPosts;
         }
 
         public List<User> FindFriend(User user)
@@ -940,6 +1031,19 @@ namespace FlyAwayPlus.Helpers
                 .Results.ToList();
             listPost.RemoveAll(item => item == null);
             return listPost;
+        }
+
+        public Post FindPostByID(int postID)
+        {
+            /*
+                 * Query:
+                 * Find:
+                 */
+            _client.Connect();
+            var post = _client.Cypher.Match("(p:post {postID:" + postID + "})")
+                .ReturnDistinct<Post>("p")
+                .Results.SingleOrDefault();
+            return post;
         }
 
         public List<Photo> FindPhoto(int postId)
