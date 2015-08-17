@@ -46,7 +46,7 @@ namespace FlyAwayPlus.Hubs
             List<Message> listMessage = new List<Message>();
             User currentUser = GraphDatabaseHelpers.Instance.FindUser(userID);
             Message message = null;
-            string conversationID = "";
+            int conversationID = 0;
             for (int i = 0; i < listFriend.Count; i++)
             {
                 if (listFriend[i] == null)
@@ -55,14 +55,7 @@ namespace FlyAwayPlus.Hubs
                 }
                 else
                 {
-                    if (userID < listFriend[i].userID)
-                    {
-                        conversationID = userID + "_" + listFriend[i].userID;
-                    }
-                    else
-                    {
-                        conversationID = listFriend[i].userID + "_" + userID;
-                    }
+                    conversationID = GraphDatabaseHelpers.Instance.GetConversationId(userID, listFriend[i].userID);
                     message = GraphDatabaseHelpers.Instance.GetLatestMessage(conversationID);
                 }
                 listMessage.Add(message);

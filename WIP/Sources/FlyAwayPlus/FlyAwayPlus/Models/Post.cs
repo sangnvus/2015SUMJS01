@@ -1,4 +1,5 @@
 ﻿using FlyAwayPlus.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace FlyAwayPlus.Models
 {

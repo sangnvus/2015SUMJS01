@@ -1,15 +1,18 @@
-﻿@{
+﻿@using FlyAwayPlus.Models
+
+@{
     ViewBag.Title = "Search";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
     string keyword = ViewData["keyword"].ToString();
-    var listUser = ViewData["listUser"] as List<FlyAwayPlus.Models.User>;
-    var listPlace = ViewData["listPlace"] as List<FlyAwayPlus.Models.Place>;
-    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<FlyAwayPlus.Models.Photo>>;
+    var listUser = ViewData["listUser"] as List<User>;
+    var listPlace = ViewData["listPlace"] as List<Place>;
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
     var numberOfPostDict = ViewData["numberOfPostDict"] as Dictionary<int, int>;
     var wishlist = ViewData["wishlist"] as Dictionary<int, bool>;
+    var listRoom = ViewData["listRoom"] as List<Room>;
 }
 <link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
 <link href="~/Content/HomePage/gridLayout.css" rel="stylesheet" />
@@ -26,7 +29,7 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a id="idBtnSearchPlace" href="#idSearchPlace" aria-controls="idSearchPlace" role="tab" data-toggle="tab">Place (@listPlace.Count)</a></li>
             <li role="presentation"><a id="idBtnSearchPeople" href="#idSearchPeople" aria-controls="idSearchPeople" role="tab" data-toggle="tab">People (@listUser.Count)</a></li>
-            <li role="presentation"><a id="idBtnSearchRoom" href="#idSearchRoom" aria-controls="idSearchRoom" role="tab" data-toggle="tab">Room (100)</a></li>
+            <li role="presentation"><a id="idBtnSearchRoom" href="#idSearchRoom" aria-controls="idSearchRoom" role="tab" data-toggle="tab">Room (@listRoom.Count)</a></li>
         </ul>
 
         <!-- Tab panes -->

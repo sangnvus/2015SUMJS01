@@ -20,12 +20,26 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Search(string keyword = "")
         {
+            User user = UserHelpers.GetCurrentUser(Session);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             List<User> listUser = GraphDatabaseHelpers.Instance.SearchUserByKeyword(keyword.ToUpper());
             List<Place> listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword(keyword.ToUpper());
+            List<Room> listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword(keyword.ToUpper());
+            List<User> listAdminRoom = new List<User>();
+
             Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
             Dictionary<int, int> numberOfPostDict = new Dictionary<int, int>();
             Dictionary<int, bool> wishlist = new Dictionary<int, bool>();
-            User user = UserHelpers.GetCurrentUser(Session);
+
+            
+            foreach (var room in listRoom)
+            {
+                listAdminRoom.Add(GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId));
+            }
 
             foreach (var place in listPlace)
             {
@@ -41,7 +55,8 @@ namespace FlyAwayPlus.Controllers
                 }
             }
 
-
+            ViewData["listRoom"] = listRoom;
+            ViewData["listAdminRoom"] = listAdminRoom;
             ViewData["listUser"] = listUser;
             ViewData["listPlace"] = listPlace;
             ViewData["keyword"] = keyword;

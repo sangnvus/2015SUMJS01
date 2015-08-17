@@ -154,13 +154,6 @@
                     }
                 });
 
-                $("#id-search-input-i").click(function (evt) {
-                    if ($("#id-search-input").val().trim().length != 0) {
-                        $(this).closest("form").submit();
-                    }
-                    evt.preventDefault();
-                });
-
                 $("#id-btn-friend-request").click(function () {
                     $(".friend-request-container").fadeToggle(300);
                     $(".friend-request-count").fadeOut("slow");
