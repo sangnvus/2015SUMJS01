@@ -3,6 +3,8 @@
 
 @{
     var listAllUsers = ViewData["listAllUsers"] as List<User>;
+    var listAllReportPost = ViewData["listAllReportPost"] as List<ReportPost>;
+    var listAllReportUser = ViewData["listAllReportUser"] as List<ReportUser>;
 }
 <html lang="en">
 <head>
@@ -18,14 +20,14 @@
     <div class="container">
         <h2>Admin Page</h2>
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#user">User</a></li>
-            <li><a data-toggle="tab" href="#reportedPost">Reported post</a></li>
-            <li><a data-toggle="tab" href="#statistics">Statistics</a></li>
+            <li><a data-toggle="tab" href="#user">User</a></li>
+            <li class="active"><a data-toggle="tab" href="#reportedPost">Reported post</a></li>
+            <li><a data-toggle="tab" href="#reportedUser">Reported user</a></li>
             <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
         </ul>
 
         <div class="tab-content">
-            <div id="user" class="tab-pane fade in active">
+            <div id="user" class="tab-pane fade">
                 <form>
                     <table class="table table-striped">
                         <thead>
@@ -80,20 +82,116 @@
                     </table>
                 </form>
             </div>
-            <div id="reportedPost" class="tab-pane fade">
-                <h3>Menu 1</h3>
-                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <div id="reportedPost" class="tab-pane fade in active">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Post ID</th>
+                                <th>Type report</th>
+                                <th>User Report ID</th>
+                                <th>User Reported ID</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (ReportPost reportPost in listAllReportPost)
+                                {
+                                    <tr id="post_@reportPost.postID">
+                                        <td>@reportPost.reportID</td>
+                                        <td>@reportPost.postID</td>
+                                        @if (reportPost.typeRepost == 1)
+                                        {
+                                            <td>This post annoying or unpleasant</td>
+                                        }
+                                        else if (reportPost.typeRepost == 2)
+                                        {
+                                            <td>I think this post should not appear on FlyAwayPlus</td>
+                                        }
+                                        else if (reportPost.typeRepost == 3)
+                                        {
+                                            <td>This post is spam</td>
+                                        }
+                                        <td>@reportPost.userReportID</td>
+                                        <td>@reportPost.userReportedID</td>
+                                        <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
+                                        <td>
+                                            <a onclick="lockPost(@reportPost.postID,@reportPost.reportID)" type="button" class="btn btn-primary">Lock post</a>
+                                            <a onclick="cancelReportPost(@reportPost.postID,@reportPost.reportID)" type="button" class="btn btn-primary">Cancel</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        </tbody>
+                    </table>
+                </form>
             </div>
-            <div id="statistics" class="tab-pane fade">
-                <h4>Number of user:
-                <script>document.write(@GraphDatabaseHelpers.Instance.CountUser())</script></h4>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            <div id="reportedUser" class="tab-pane fade">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Type report</th>
+                                <th>User Report ID</th>
+                                <th>User Reported ID</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (ReportUser reportUser in listAllReportUser)
+                                {
+                                    <tr id="user_@reportUser.reportID">
+                                        <td>@reportUser.reportID</td>
+                                        @if (reportUser.typeReport == 1)
+                                        {
+                                            <td>This post annoying or unpleasant</td>
+                                        }
+                                        else if (reportUser.typeReport == 2)
+                                        {
+                                            <td>I think this post should not appear on FlyAwayPlus</td>
+                                        }
+                                        else if (reportUser.typeReport == 3)
+                                        {
+                                            <td>This post is spam</td>
+                                        }
+                                        <td>@reportUser.userReportID</td>
+                                        <td>@reportUser.userReportedID</td>
+                                        <td>
+                                            <a onclick="lockUser(@reportUser.userReportedID,@reportUser.reportID)" type="button" class="btn btn-primary">Lock post</a>
+                                            <a onclick="cancelReportUser(@reportUser.userReportedID,@reportUser.reportID)" type="button" class="btn btn-primary">Cancel</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        </tbody>
+                    </table>
+                </form>
             </div>
             <div id="menu3" class="tab-pane fade">
                 <h3>Menu 3</h3>
                 <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
             </div>
         </div>
+        
+        
+        
+
     </div>
 
 
@@ -102,7 +200,6 @@
 <script>
 
     function lock(id) {
-        alert(@GraphDatabaseHelpers.Instance.CountLike(1004));
         if ($('#myonoffswitch_' + id).is(':checked')) {
             var controller = "/Admin/UnlockUser/";
             var data = {
@@ -134,6 +231,92 @@
             };
             commonModule.callAjax(controller, data, null);
         }
+    }
+
+    function lockPost(id, reportID) {
+        $.ajax({
+            url: "/Admin/LockPost/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                postId: id,
+                reportID: reportID
+            },
+            success: function (data) {
+                if (data == true) {
+                        alert("This post is locked!");
+                        $('#post_' + id).remove();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    function cancelReportPost(id, reportID) {
+        $.ajax({
+            url: "/Admin/CancelReportPost/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                reportID: reportID
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("This report has been canceled");
+                    $('#post_' + id).remove();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    function lockUser(id, reportID) {
+        $.ajax({
+            url: "/Admin/LockUser/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                userId: id,
+                reportID: reportID
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("This user is locked!");
+                    $('#user_' + reportID).remove();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    function cancelReportUser(id, reportID) {
+        $.ajax({
+            url: "/Admin/CancelReportUser/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                reportID: reportID
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("Thiis report has been canceled");
+                    $('#user_' + reportID).remove();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
     }
 </script>
 <style>

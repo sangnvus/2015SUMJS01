@@ -1,0 +1,33 @@
+﻿@using FlyAwayPlus.Models
+
+@{
+    Layout = null;
+    var post = ViewData["post"] as Post;
+    var user = ViewData["user"] as User;
+    var photo = ViewData["photo"] as Photo;
+    var listComment = ViewData["listComment"] as List<Comment>;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewPost</title>
+</head>
+    <body>
+        <h3>Post</h3>
+        <div class="container">
+            <div class="user-info">
+                <img src="@user.avatar" alt="@String.Format("{0} {1}", user.firstName, user.lastName)"/>
+                <p>@user.firstName @user.lastName</p>
+            </div>
+            <div class="post-area">
+                <div class="post-content">
+                    <b>Date created:</b> @post.dateCreated<br/>
+                    <b>Content:</b> @post.content
+                </div>
+            </div>
+        </div>
+            
+</body>
+</html>
