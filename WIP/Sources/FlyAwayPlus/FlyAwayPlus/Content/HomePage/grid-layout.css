@@ -148,67 +148,6 @@
     transition: all 0.3s ease-in-out;*/
     }
 
-.user-info {
-    height: auto;
-    position: relative;
-    width: 100%;
-    display: flex;
-}
-/*#user-info*/
-
-.avatar {
-    -ms-background-size: cover;
-    background-size: cover;
-    display: block;
-    -ms-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    float: left;
-    position: relative;
-    margin: 3px 5px;
-}
-
-.user-info .avatar {
-    width: 35px;
-    height: 35px;
-    max-width: 100%;
-    -ms-background-size: cover;
-    background-size: cover;
-    display: block;
-    -ms-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    float: left;
-    position: relative;
-    margin: 2px 5px 5px;
-}
-/*#avatar*/
-
-.user-info .name-user {
-    -moz-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    font-weight: bold;
-}
-/*#name-user*/
-
-.user-info .post-time {
-    color: rgb(113, 113, 113);
-    -moz-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 11px;
-}
-/*#post-time*/
-
-.user-info .post-list-post-option:hover {
-    margin-top: -20px;
-    color: #A92733;
-}
-
 .btn-circle.btn-lg {
     position: relative;
     float: left;

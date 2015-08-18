@@ -185,6 +185,8 @@ namespace FlyAwayPlus.Controllers
             var endLng = Request.Form["end_lng"];
             var endLat = Request.Form["end_lat"];
             var privacy = Request.Form["privacy"];
+            int maxNoOfSlots;
+            int.TryParse(Request.Form["maxnoslots"], out maxNoOfSlots);
 
             var currentUserId = ((User)Session["user"]).userID;
 
@@ -192,6 +194,7 @@ namespace FlyAwayPlus.Controllers
             {
                 RoomName = roomName,
                 Description = roomDesc,
+                MaxNoSlots = maxNoOfSlots,
                 StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,
                 StartLocation = startPlace,

@@ -14,6 +14,7 @@ namespace FlyAwayPlus.Models
         public string DateCreated { get; set; }
         public string StartDate { get; set; }
         public int LengthInDays { get; set; }
+        public int MaxNoSlots { get; set; }
         public string StartLocation { get; set; }
         public string StartLongitude { get; set; }
         public string StartLatitude { get; set; }
