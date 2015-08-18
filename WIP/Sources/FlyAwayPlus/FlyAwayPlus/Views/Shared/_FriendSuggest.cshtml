@@ -62,7 +62,7 @@
         $(".cls-friend-request").click(function (evt) {
             var otherID = parseInt($(this).attr("role"));
 
-            var controller = "/User/SendRequestFriend";
+            var controller = "/User/SendRequestFriend/";
             var data = {
                 userID: @Model.userID,
                 otherUserID: otherID

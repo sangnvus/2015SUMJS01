@@ -1,12 +1,21 @@
-﻿<link href="~/Content/Room/room-list.css" rel="stylesheet" />
-
-@for (int i = 0; i < 10; i++)
+﻿@using FlyAwayPlus.Models
+@{
+    var listRoom = ViewData["listRoom"] as List<Room>;
+    var listAdminRoom = ViewData["listAdminRoom"] as List<User>;
+}
+<link href="~/Content/Room/room-list.css" rel="stylesheet" />
+@for (int index = 0; index < listRoom.Count; index++)
 {
+    var cover = listRoom[index].PhotoCoverUrl;
+    if (cover == null || listRoom[index].PhotoCoverUrl.IsEmpty())
+    {
+        cover = "/Images/background/nhatrang2.jpg";
+    }
     <div class="room-list-container">
         <div class="room-list-header">
-            <div class="room-list-bio" style="background-image:url(/Images/background/nhatrang2.jpg)"><!--BG--></div>
+            <div class="room-list-bio" style="background-image:url(@cover)"><!--BG--></div>
             <div class="room-list-avatarcontainer">
-                <img src="/Images/UserUpload/UserAvatar/item_0_Brother kiss.jpg" alt="avatar" class="room-list-avatar">
+                <img src="@listAdminRoom[index].avatar" alt="avatar" class="room-list-avatar">
                 <div class="room-list-hover">
                     <i class="fa fa-heart"></i>
                 </div>
@@ -16,28 +25,28 @@
         <div class="room-list-content">
             <div class="room-list-place-name">
                 <h3>
-                    Da Nang Beautiful Beach
+                    @listRoom[index].RoomName
                 </h3>
             </div>
             <div class="divider"></div>
             <div class="room-list-description">
-                Local beaches are good for swimming all year round, but especially from May to August when the waves are gentle.  On some of these beaches, lifeguard teams work from 5am to 8pm daily to ensure the safety of swimmers.
+                @listRoom[index].Description
             </div>
 
             <div class="room-list-data">
-                <ul>
+                <ul style="padding-left: 0px;">
                     <li>
                         SLOTS<span><i class="room-list-no-current-member">25</i>|32</span>
                     </li>
                     <li>
-                        START<span>Dec 22 2015</span>
+                        START<span>@DateTime.Parse(@listRoom[index].StartDate).ToString("dd MMM yyyy")</span>
                     </li>
                     <li>
-                        DURING<span>18 days</span>
+                        DURING<span>@listRoom[index].LengthInDays days</span>
                     </li>
                 </ul>
             </div>
-            <div class="room-list-view-detail">View Detail</div>
+            <a href="/Room/RoomDetail/@listRoom[index].RoomId" style="margin-left: 90px;" class="room-list-view-detail">View Detail</a>
         </div>
     </div>
 }

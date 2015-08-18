@@ -14,13 +14,35 @@ namespace FlyAwayPlus.Controllers
     {
         //
         // GET: /Room/
-        public ActionResult Index()
+        public ActionResult Index(int id = -1)
         {
-            if ((User)Session["user"] == null)
+            User user = UserHelpers.GetCurrentUser(Session);
+            if (user == null)
             {
                 RedirectToAction("Index", "Home");
             }
+            List<Room> listRoom = new List<Room>();
+            List<User> listAdminRoom = new List<User>();
 
+            if (id == -1)
+            {
+                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword("");   // search All room
+                foreach (var room in listRoom)
+                {
+                    listAdminRoom.Add(GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId));
+                }
+            }
+            else
+            {
+                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByUserID(user.userID);   // search All room
+                for (int i = 0; i < listRoom.Count; i++ )
+                {
+                    listAdminRoom.Add(user);
+                }
+            }
+
+            ViewData["listRoom"] = listRoom;
+            ViewData["listAdminRoom"] = listAdminRoom;
             return View();
         }
 

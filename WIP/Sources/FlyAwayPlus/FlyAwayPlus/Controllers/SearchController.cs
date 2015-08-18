@@ -20,12 +20,26 @@ namespace FlyAwayPlus.Controllers
 
         public ActionResult Search(string keyword = "")
         {
+            User user = UserHelpers.GetCurrentUser(Session);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             List<User> listUser = GraphDatabaseHelpers.Instance.SearchUserByKeyword(keyword.ToUpper());
             List<Place> listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword(keyword.ToUpper());
+            List<Room> listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword(keyword.ToUpper());
+            List<User> listAdminRoom = new List<User>();
+
             Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
             Dictionary<int, int> numberOfPostDict = new Dictionary<int, int>();
             Dictionary<int, bool> wishlist = new Dictionary<int, bool>();
-            User user = UserHelpers.GetCurrentUser(Session);
+
+            
+            foreach (var room in listRoom)
+            {
+                listAdminRoom.Add(GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId));
+            }
 
             foreach (var place in listPlace)
             {
@@ -41,7 +55,8 @@ namespace FlyAwayPlus.Controllers
                 }
             }
 
-
+            ViewData["listRoom"] = listRoom;
+            ViewData["listAdminRoom"] = listAdminRoom;
             ViewData["listUser"] = listUser;
             ViewData["listPlace"] = listPlace;
             ViewData["keyword"] = keyword;
@@ -51,6 +66,51 @@ namespace FlyAwayPlus.Controllers
             return View();
         }
 
+        public ActionResult LookAround(double longitude, double latitude, string name)
+        {
+            List<Post> listPost = new List<Post>();
+            List<Place> listPlace = new List<Place>();
+            List<Double> distance = new List<double>();
+            Place currentPlace = null;
+            User user = UserHelpers.GetCurrentUser(Session);
+
+            if (user == null)
+            {
+                /*
+                 * User not login
+                 */
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                /**
+                 * Search limit following post
+                 */
+                currentPlace = GraphDatabaseHelpers.Instance.FindPlaceByCoordinate(longitude, latitude);
+                if (currentPlace == null)
+                {
+                    currentPlace = new Place();
+                    currentPlace.placeID = -1;
+                    currentPlace.name = name;
+                    currentPlace.longitude = longitude;
+                    currentPlace.latitude = latitude;
+                }
+                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(currentPlace.placeID);
+                listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword("");
+                listPlace.Remove(currentPlace);
+                listPlace.RemoveAll(item => (calculateDistance(currentPlace, item) - 50.0) > 1E-6);
+
+                foreach (var p in listPlace)
+                {
+                    distance.Add(calculateDistance(currentPlace, p));
+                }
+                FindRelatedInformationPost(listPost, currentPlace);
+            }
+
+            ViewData["currentPlace"] = currentPlace;
+            ViewData["listPlace"] = JsonConvert.SerializeObject(listPlace);
+            return View("SearchDetail");
+        }
         public ActionResult SearchDetail(int id = 0)
         {
             List<Post> listPost = new List<Post>();
@@ -106,6 +166,7 @@ namespace FlyAwayPlus.Controllers
             }
             return null;
         }
+
         private void FindRelatedInformationPost(List<Post> listPost, Place currentPlace)
         {
             User user = UserHelpers.GetCurrentUser(Session);

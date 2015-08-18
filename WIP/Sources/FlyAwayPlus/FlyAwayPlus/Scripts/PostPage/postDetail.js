@@ -133,10 +133,12 @@
                 var username = "";
                 var replaceUser = "";
 
-                for (var index = 0; index < tagFriend.length; index++) {
-                    username = tagFriend[index].substring(1, tagFriend[index].length - 1);
-                    replaceUser = "<a href='/User/Index/" + findUserID(username) + "'>" + username + "</a>";
-                    value = value.split(tagFriend[index]).join(replaceUser);
+                if (tagFriend != null) {
+                    for (var index = 0; index < tagFriend.length; index++) {
+                        username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                        replaceUser = "<a href='/User/Index/" + findUserID(username) + "'>" + username + "</a>";
+                        value = value.split(tagFriend[index]).join(replaceUser);
+                    }
                 }
 
                 $(".comment-list").append(value);
