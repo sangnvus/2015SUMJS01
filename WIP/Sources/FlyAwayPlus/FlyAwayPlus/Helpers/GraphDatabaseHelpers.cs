@@ -1995,6 +1995,32 @@ namespace FlyAwayPlus.Helpers
             return listRoom;
         }
 
+        public List<Room> SearchRoomByUserID(int userID)
+        {
+            List<Room> listRoom;
+            /*
+             * match (p:room)
+                where upper(p.RoomName) =~ '.*@keyword.*'
+                return p
+             */
+            _client.Connect();
+            try
+            {
+                listRoom = _client.Cypher
+                   .OptionalMatch("(u:user {userID: " + userID + "})-[m:JOIN{type:" + FapConstants.JOIN_ADMIN + "}]->(r:room)")
+                   .ReturnDistinct<Room>("r")
+                   .Results.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                listRoom = new List<Room>();
+            }
+
+            listRoom.RemoveAll(item => item == null);
+            return listRoom;
+        }
+
         public List<Photo> SearchPhotoInPlace(int placeId)
         {
             /*
@@ -2319,6 +2345,33 @@ namespace FlyAwayPlus.Helpers
             }
             return place;
         }
+
+        public Place FindPlaceByCoordinate(double longitude, double latitude)
+        {
+
+            /*
+                 * Query:
+                 * Find:
+                 */
+
+            _client.Connect();
+            Place place = null;
+            try
+            {
+                place = _client.Cypher.OptionalMatch("(pl:place {longitude:" + longitude + ", latitude: " + latitude + "})")
+                    .Return<Place>("pl")
+                    .Results
+                    .FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                place = null;
+            }
+            return place;
+        }
+
+
         public bool UpdatePlanEvent(string id, DateTime newEventStart, DateTime newEventEnd)
         {
             _client.Connect();

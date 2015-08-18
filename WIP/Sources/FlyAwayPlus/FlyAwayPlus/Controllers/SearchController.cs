@@ -66,6 +66,51 @@ namespace FlyAwayPlus.Controllers
             return View();
         }
 
+        public ActionResult LookAround(double longitude, double latitude, string name)
+        {
+            List<Post> listPost = new List<Post>();
+            List<Place> listPlace = new List<Place>();
+            List<Double> distance = new List<double>();
+            Place currentPlace = null;
+            User user = UserHelpers.GetCurrentUser(Session);
+
+            if (user == null)
+            {
+                /*
+                 * User not login
+                 */
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                /**
+                 * Search limit following post
+                 */
+                currentPlace = GraphDatabaseHelpers.Instance.FindPlaceByCoordinate(longitude, latitude);
+                if (currentPlace == null)
+                {
+                    currentPlace = new Place();
+                    currentPlace.placeID = -1;
+                    currentPlace.name = name;
+                    currentPlace.longitude = longitude;
+                    currentPlace.latitude = latitude;
+                }
+                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(currentPlace.placeID);
+                listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword("");
+                listPlace.Remove(currentPlace);
+                listPlace.RemoveAll(item => (calculateDistance(currentPlace, item) - 50.0) > 1E-6);
+
+                foreach (var p in listPlace)
+                {
+                    distance.Add(calculateDistance(currentPlace, p));
+                }
+                FindRelatedInformationPost(listPost, currentPlace);
+            }
+
+            ViewData["currentPlace"] = currentPlace;
+            ViewData["listPlace"] = JsonConvert.SerializeObject(listPlace);
+            return View("SearchDetail");
+        }
         public ActionResult SearchDetail(int id = 0)
         {
             List<Post> listPost = new List<Post>();
@@ -121,6 +166,7 @@ namespace FlyAwayPlus.Controllers
             }
             return null;
         }
+
         private void FindRelatedInformationPost(List<Post> listPost, Place currentPlace)
         {
             User user = UserHelpers.GetCurrentUser(Session);

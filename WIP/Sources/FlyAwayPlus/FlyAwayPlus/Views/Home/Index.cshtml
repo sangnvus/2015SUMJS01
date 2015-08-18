@@ -16,9 +16,9 @@
 
             <div class="sidebar-list">
                 <a href="/Home/Index?type=wishlist"><i class="fa fa-fw fa-star-o"></i><span>Wishlist</span></a>
-                <a href="/Room"><i class="fa fa-fw fa-building-o"></i><span>Discover rooms</span></a>
-                <a href="#"><i class="fa fa-fw fa-book"></i><span>My rooms</span></a>
-                <a href="#"><i class="fa fa-fw fa-street-view"></i><span>Look around</span></a>
+                <a href="/Room/Index"><i class="fa fa-fw fa-building-o"></i><span>Discover rooms</span></a>
+                <a href="/Room/Index/0"><i class="fa fa-fw fa-book"></i><span>My rooms</span></a>
+                <a id="id-lookaround-btn" href="/Search/LookAround?"><i class="fa fa-fw fa-street-view"></i><span>Look around</span></a>
                 <a href="#"><i class="fa fa-fw fa-rocket"></i><span>Hot trend</span></a>
             </div>
         </div>
@@ -65,7 +65,7 @@
                         success: function (weather) {
                             html = '<h2><div style="position: absolute; top: -10px"><i class="icon-' + weather.code + '"></i></div> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
                             html += weather.city;
-
+                            $("#id-lookaround-btn").attr("href", $("#id-lookaround-btn").attr("href") + "?name=" + weather.city + "&");
                             $("#weather-sidebar").html(html);
                         },
                         error: function (error) {
@@ -76,6 +76,7 @@
 
                 // Load weather using lat/lng.
                 loadWeather(position.coords.latitude + ',' + position.coords.longitude);
+                $("#id-lookaround-btn").attr("href", $("#id-lookaround-btn").attr("href") + "longitude=" + position.coords.longitude + "&latitude=" + position.coords.latitude + "&");
             });
 
             var editPostContentWrapper;
