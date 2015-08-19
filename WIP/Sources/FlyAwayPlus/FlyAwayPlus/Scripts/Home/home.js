@@ -10,14 +10,14 @@
 
     var fadeImage = function () {
         $(".dark-wrapper").hover(function () {
-            $(this).find("img").fadeTo(500, 0.5);
+            $(this).find("img").stop().fadeTo(500, 0.5);
 
             var postActions = $(this).find(".post-actions");
 
             postActions.css("visibility", "visible");
             postActions.css("opacity", "1");
         }, function () {
-            $(this).find("img").fadeTo(500, 1);
+            $(this).find("img").stop().fadeTo(500, 1);
 
             var postActions = $(this).find(".post-actions");
 

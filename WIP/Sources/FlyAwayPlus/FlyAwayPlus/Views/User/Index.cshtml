@@ -697,11 +697,11 @@
 
             postActions.css("visibility", "visible");
             postActions.css("opacity", "1");
-            postActions.animate({ top: '20px' }, "slow");
+            postActions.stop().animate({ top: '20px' }, "slow");
         }, function () {
             var postActions = $(this).find(".post-actions");
 
-            postActions.animate({ top: '0px' }, "slow");
+            postActions.stop().animate({ top: '0px' }, "slow");
             postActions.css("visibility", "hidden");
             postActions.css("opacity", "0");
         });
@@ -728,19 +728,19 @@
 
     function fadeImage() {
         $(".dark-wrapper").hover(function () {
-            $(this).find("img").fadeTo(500, 0.5);
+            $(this).find("img").stop().fadeTo(500, 0.5);
 
             var postActions = $(this).find(".post-actions");
 
             postActions.css("visibility", "visible");
             postActions.css("opacity", "1");
-            postActions.animate({ top: '20px' }, "slow");
+            postActions.stop().animate({ top: '20px' }, "slow");
         }, function () {
-            $(this).find("img").fadeTo(500, 1);
+            $(this).find("img").stop().fadeTo(500, 1);
 
             var postActions = $(this).find(".post-actions");
 
-            postActions.animate({ top: '0px' }, "slow");
+            postActions.stop().animate({ top: '0px' }, "slow");
             postActions.css("visibility", "hidden");
             postActions.css("opacity", "0");
         });

@@ -35,10 +35,9 @@ namespace FlyAwayPlus
                       "~/Scripts/jquery.signalR-2.2.0.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/imageloaded").Include("~/Scripts/images-loaded.min.js"));
-
             bundles.Add(new ScriptBundle("~/bundles/datepicker").Include("~/Scripts/bootstrap-datepicker.js"));
-
             bundles.Add(new ScriptBundle("~/bundles/md5").Include("~/Scripts/md5.js"));
+            bundles.Add(new ScriptBundle("~/bundles/tooltipster").Include("~/Scripts/jquery.tooltipster.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
