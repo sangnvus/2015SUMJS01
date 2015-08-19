@@ -73,7 +73,7 @@
             <div class="user-info">
                 <img src="@user[post.postID].avatar" alt="@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)" class="avatar" />
                 <div style="width: 100%">
-                    <a href="/User/Index/@user[post.postID].userID">
+                    <a href="/User/Index/@user[post.postID].userID" class="hover-card-user">
                         <div class="name-user">@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)</div>
                     </a>
                     <div class="post-time">@post.toRealtime()</div>
@@ -105,16 +105,28 @@
     $(function () {
         commonModule.setBlocksit($(".blog-landing"), 212);
         $(".post-post-list-post-option-delete").click(function () {
-            $(this).parentsUntil(".white-panel").parent().remove();
-            commonModule.setBlocksit($(".blog-landing"), 212);
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this post!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $(this).parentsUntil(".white-panel").parent().remove();
+                commonModule.setBlocksit($(".blog-landing"), 212);
 
-            $.ajax({
-                type: "POST",
-                url: "/Post/DeletePost",
-                data: { postId: $(this).attr("value") },
-                error: function () {
-                    sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
-                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Post/DeletePost",
+                    data: { postId: $(this).attr("value") },
+                    error: function () {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+
+                swal("Deleted!", "Your imaginary file has been deleted.", "success");
             });
         });
     });

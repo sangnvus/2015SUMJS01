@@ -304,6 +304,7 @@
     <Content Include="Content\SearchPage\search-detail.css" />
     <Content Include="Content\sweetalert.css" />
     <Content Include="Content\Site.avatar.css" />
+    <Content Include="Content\tooltipster.css" />
     <Content Include="Images\image.gif" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\icon-calendar.png" />
@@ -320,6 +321,7 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\jquery.tooltipster.js" />
     <Content Include="Scripts\md5.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\sweetalert.min.js" />
@@ -361,11 +363,8 @@
     <Content Include="Scripts\prettymaps.js" />
     <Content Include="Scripts\searchKeyword.js" />
     <Content Include="Scripts\site.avatar.js" />
-    <Content Include="Scripts\WOW slider\script.js" />
     <Content Include="Content\UserPage\WOW slider\wow-style.css" />
     <Content Include="Content\UserPage\WOW slider\style.mod.css" />
-    <Content Include="Scripts\WOW slider\wowslider.js" />
-    <Content Include="Scripts\WOW slider\wowslider.mod.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\fontawesome-webfont.eot" />

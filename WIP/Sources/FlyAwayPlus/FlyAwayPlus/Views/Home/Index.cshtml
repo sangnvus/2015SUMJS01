@@ -98,7 +98,7 @@
                     url: "/Post/EditPost",
                     data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
                     error: function () {
-                        sweetAlert("Oops...", "Something went wrong! Try again later!", "error");
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
                     },
                     success: function () {
                         editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
