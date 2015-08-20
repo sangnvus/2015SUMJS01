@@ -20,7 +20,7 @@
                     </div>
                     <div class="post-info-area">
                         <div class="user-name">
-                            <a href="/User/Index/@userPost.userID">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
+                            <a href="/User/Index/@userPost.userID" class="hover-card-user">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
                         </div>
                         <span class="post-time">
                             <span>Shared with @Model.privacy</span>
@@ -38,10 +38,10 @@
             </div>
 
             <div class="interact-area">
-                <a href="#" role="@Model.postID" class="btn-like"><span>Like</span></a>
-                <a href="#" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
-                <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
-                <a href="#" role="@Model.postID" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
+                <a href="javascript:;" role="@Model.postID" class="btn-like"><span>Like</span></a>
+                <a href="javascript:;" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
+                <a href="javascript:;" id="share_button" class="btn-share"><span>Share</span></a>
+                <a href="javascript:;" role="@Model.postID" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
                 
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
@@ -56,15 +56,7 @@
                             <div class="modal-body">
                                 <div class="container">
                                     <div class="row">
-
-                                        <div class="col-md-1">
-                                            <div>
-                                                <img src="/Images/UserUpload/@photo.url" height="100" width="70">
-                                                <p>By @userPost.firstName @userPost.lastName</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-5">
+                                        <div class="col-md-12">
                                             <div class="row" style="margin-left: 20px">
                                                 <div class="radio">
                                                     <label><input type="radio" name="optradio" value="1">This post annoying or unpleasant</label>
@@ -98,9 +90,9 @@
             <div class="divide-area"></div>
             <div class="comment-area">
                 <div style="margin: 0 20px 12px">
-                    <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
-                    <a href="#" role="@Model.postID"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
-                    <a href="#" role="@Model.postID"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
+                    <a href="javascript:;" role="@Model.postID"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
+                    <a href="javascript:;" role="@Model.postID"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
+                    <a href="javascript:;" role="@Model.postID"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
                 </div>
                 <div class="comment-stats">
                     <span>@listComment.Count comments</span>

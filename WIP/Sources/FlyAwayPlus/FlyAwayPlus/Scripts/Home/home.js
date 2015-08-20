@@ -186,6 +186,7 @@
                 homeModule.likePost();
                 homeModule.dislikePost();
                 homeModule.plusPost();
+                initializeTooltip();
                 $("div#loading").hide();
                 isCallAjax = false;
             },

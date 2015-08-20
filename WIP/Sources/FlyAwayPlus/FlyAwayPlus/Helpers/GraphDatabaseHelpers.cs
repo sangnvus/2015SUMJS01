@@ -340,9 +340,27 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
+                return userId == otherUserId
+                    ? CountFriends(userId)
+                    : _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
                                 .With("count(DISTINCT mf) AS mutualFriends")
                                 .Return<int>("mutualFriends")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public int CountFriends(int userId)
+        {
+            try
+            {
+                _client.Connect();
+                return _client.Cypher.Match("(u:user {userID:" + userId + "})<-[:FRIEND]-(other:user)")
+                                .Return<int>("COUNT(DISTINCT other)")
                                 .Results.Single();
             }
             catch (Exception e)
@@ -361,8 +379,23 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(u:user")
+                return _client.Cypher.Match("(u:user)")
                                 .Return<int>("COUNT(distinct u)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+        public int CountPlaceOfUser(int userId)
+        {
+            try
+            {
+                _client.Connect();
+                return _client.Cypher.Match("(:user{userID: " + userId + "})-[:VISITED]->(p:place)")
+                                .Return<int>("COUNT(distinct p)")
                                 .Results.Single();
             }
             catch (Exception e)
@@ -538,6 +571,15 @@ namespace FlyAwayPlus.Helpers
         {
             _client.Connect();
             var user = _client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
+                .Return<User>("u")
+                .Results.FirstOrDefault();
+            return user;
+        }
+
+        public User GetUser(int userId)
+        {
+            _client.Connect();
+            var user = _client.Cypher.Match("(u:user {userID:" + userId + "})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -1613,7 +1655,7 @@ namespace FlyAwayPlus.Helpers
         public Message CreateMessageInRoom(int roomId, int userId, string content)
         {
             _client.Connect();
-            
+
             // Have to make sure conversation is created while creating room.
             var conversation = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[:HAS]->(c:conversation)")
                     .Return<Conversation>("c")

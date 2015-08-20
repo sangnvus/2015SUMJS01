@@ -7,22 +7,6 @@
         padding: 10px;
     }
 
-    #room-detail-wrapper .light-divider {
-        height: 1px;
-        margin: 5px 10px 0 10px;
-        overflow: hidden;
-        background-color: #ffffff;
-        width: auto;
-    }
-
-    #room-detail-wrapper .dark-divider {
-        height: 1px;
-        margin: 5px -10px 5px -10px;
-        overflow: hidden;
-        background-color: #d7d7d7;
-        width: auto;
-    }
-
     #room-detail-wrapper .room-detail-infor {
         height: 200px;
         display: block;

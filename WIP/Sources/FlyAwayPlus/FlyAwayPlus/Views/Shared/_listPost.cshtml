@@ -41,13 +41,13 @@
             }
             <ul class="post-actions" style="padding-left: 0px;">
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a href="javascript:;" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a href="javascript:;" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
                 <li>
-                    <a href="#" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                    <a href="javascript:;" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
@@ -73,9 +73,7 @@
             <div class="user-info">
                 <img src="@user[post.postID].avatar" alt="@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)" class="avatar" />
                 <div style="width: 100%">
-                    <a href="/User/Index/@user[post.postID].userID" class="hover-card-user">
-                        <div class="name-user">@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)</div>
-                    </a>
+                    <a href="/User/Index/@user[post.postID].userID" class="name-user hover-card-user">@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)</a>
                     <div class="post-time">@post.toRealtime()</div>
                 </div>
 
@@ -85,10 +83,10 @@
                         <span class="glyphicon glyphicon-option-vertical post-list-post-option" data-toggle="dropdown" aria-hidden="true"></span>
                         <ul class="dropdown-menu bullet pull-center post-list-post-option-actions" role="menu" style="margin-top: -20px">
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.postID" href="#" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
+                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.postID" href="javascript:;" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
                             </li>
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.postID" href="#">Delete</a>
+                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.postID" href="javascript:;">Delete</a>
                             </li>
                         </ul>
                     </div>
@@ -104,6 +102,8 @@
 
     $(function () {
         commonModule.setBlocksit($(".blog-landing"), 212);
+
+        // Delete post warning.
         $(".post-post-list-post-option-delete").click(function () {
             swal({
                 title: "Are you sure?",
@@ -126,7 +126,7 @@
                     }
                 });
 
-                swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                swal("Deleted!", "Your post has been deleted.", "success");
             });
         });
     });

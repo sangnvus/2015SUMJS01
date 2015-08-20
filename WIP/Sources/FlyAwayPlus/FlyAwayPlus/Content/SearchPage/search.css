@@ -234,7 +234,6 @@ a:hover, a:focus {
     margin-left: 40px;
 }
 .User.followFriendsItem .contactUsername {
-    color: #717171;
     font-weight: 700;
 }
 .User.followFriendsItem .UserFollowButton {
