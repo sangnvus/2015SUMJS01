@@ -1,323 +1,335 @@
-﻿@using FlyAwayPlus.Helpers
-@using FlyAwayPlus.Models
+﻿@using PagedList
+@using PagedList.Mvc
 
 @{
-    var listAllUsers = ViewData["listAllUsers"] as List<User>;
-    var listAllReportPost = ViewData["listAllReportPost"] as List<ReportPost>;
-    var listAllReportUser = ViewData["listAllReportUser"] as List<ReportUser>;
+    Layout = null;
 }
-<html lang="en">
-<head>
-    <title>
-        Admin Page
-    </title>
-    <meta charset="utf-8" />
-</head>
-<body>
-    <p></p>
+<!DOCTYPE html>
 
+    
 
-    <div class="container">
-        <h2>Admin Page</h2>
-        <ul class="nav nav-tabs">
-            <li><a data-toggle="tab" href="#user">User</a></li>
-            <li class="active"><a data-toggle="tab" href="#reportedPost">Reported post</a></li>
-            <li><a data-toggle="tab" href="#reportedUser">Reported user</a></li>
-            <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
-        </ul>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Main</title>
+        @Scripts.Render("~/bundles/jquery")
+        @Styles.Render("~/Content/css")
+    </head>
+    <body>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/common.js"></script>
+        <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+            <div class="container" id="mainTab">
+                <h2>Admin Page</h2>
+                @using (Ajax.BeginForm("LogOut", "Admin",
+                            new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
+                {
+                    <button>Log out</button>
+                }
+                <ul class="nav nav-tabs">
+                    <li><a data-toggle="tab" href="#user">User</a></li>
+                    <li><a data-toggle="tab" href="#reportPost">Reported post</a></li>
+                    <li><a data-toggle="tab" href="#reportUser">Reported user</a></li>
+                </ul>
 
-        <div class="tab-content">
-            <div id="user" class="tab-pane fade">
-                <form>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Firstname</th>
-                                <th>Lastname</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @try
-                            {
-                                foreach (User user in listAllUsers)
-                                {
+                <div class="tab-content">
+                    <div id="user" class="tab-pane fade">
+                        <form>
+                            <table class="table table-striped">
+                                <thead>
                                     <tr>
-                                        <td>@user.firstName</td>
-                                        <td>@user.lastName</td>
-                                        <td>@user.email</td>
-                                        @if (user.status.Equals("active"))
-                                        {
-                                            <td>
-                                                <div class="onoffswitch">
-                                                    <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
-                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
-                                                        <span class="onoffswitch-inner"></span>
-                                                        <span class="onoffswitch-switch"></span>
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <div class="onoffswitch">
-                                                    <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
-                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
-                                                        <span class="onoffswitch-inner"></span>
-                                                        <span class="onoffswitch-switch"></span>
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        }
+                                        <th>User ID</th>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
                                     </tr>
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e.ToString());
-                            }
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div id="reportedPost" class="tab-pane fade in active">
-                <form>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Report ID</th>
-                                <th>Post ID</th>
-                                <th>Type report</th>
-                                <th>User Report ID</th>
-                                <th>User Reported ID</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @try
-                            {
-                                foreach (ReportPost reportPost in listAllReportPost)
-                                {
-                                    <tr id="post_@reportPost.postID">
-                                        <td>@reportPost.reportID</td>
-                                        <td>@reportPost.postID</td>
-                                        @if (reportPost.typeRepost == 1)
+                                </thead>
+                                <tbody>
+                                    @try
+                                    {
+                                        foreach (var user in ViewBag.OnePageOfUsers)
                                         {
-                                            <td>This post annoying or unpleasant</td>
+                                            <tr>
+                                                <td>@user.userID</td>
+                                                <td>@user.firstName</td>
+                                                <td>@user.lastName</td>
+                                                <td>@user.email</td>
+                                                @if (user.status.Equals("active"))
+                                                {
+                                                    <td>
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
+                                                            <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                                <span class="onoffswitch-inner"></span>
+                                                                <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
+                                                            <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                                <span class="onoffswitch-inner"></span>
+                                                                <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                }
+                                            </tr>
                                         }
-                                        else if (reportPost.typeRepost == 2)
-                                        {
-                                            <td>I think this post should not appear on FlyAwayPlus</td>
-                                        }
-                                        else if (reportPost.typeRepost == 3)
-                                        {
-                                            <td>This post is spam</td>
-                                        }
-                                        <td>@reportPost.userReportID</td>
-                                        <td>@reportPost.userReportedID</td>
-                                        <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
-                                        <td>
-                                            <a onclick="lockPost(@reportPost.postID,@reportPost.reportID)" type="button" class="btn btn-primary">Lock post</a>
-                                            <a onclick="cancelReportPost(@reportPost.postID,@reportPost.reportID)" type="button" class="btn btn-primary">Cancel</a>
-                                        </td>
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e.ToString());
+                                    }
+                                </tbody>
+                            </table>
+                            @Html.PagedListPager((IPagedList)ViewBag.OnePageOfUsers, page => Url.Action("Main", new { page, tab = "user" }))
+                        </form>
+                    </div>
+
+                    <div id="reportPost" class="tab-pane fade">
+                        <form>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Report ID</th>
+                                        <th>Post ID</th>
+                                        <th>Type report</th>
+                                        <th>User Report ID</th>
+                                        <th>User Reported ID</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e.ToString());
-                            }
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div id="reportedUser" class="tab-pane fade">
-                <form>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Report ID</th>
-                                <th>Type report</th>
-                                <th>User Report ID</th>
-                                <th>User Reported ID</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @try
-                            {
-                                foreach (ReportUser reportUser in listAllReportUser)
-                                {
-                                    <tr id="user_@reportUser.reportID">
-                                        <td>@reportUser.reportID</td>
-                                        @if (reportUser.typeReport == 1)
+                                </thead>
+                                <tbody>
+                                    @try
+                                    {
+                                        foreach (var reportPost in ViewBag.OnePageOfReportPosts)
                                         {
-                                            <td>This post annoying or unpleasant</td>
+                                            <tr id="post_@reportPost.postID">
+                                                <td>@reportPost.reportID</td>
+                                                <td>@reportPost.postID</td>
+                                                @if (reportPost.typeRepost == 1)
+                                                {
+                                                    <td>This post annoying or unpleasant</td>
+                                                }
+                                                else if (reportPost.typeRepost == 2)
+                                                {
+                                                    <td>I think this post should not appear on FlyAwayPlus</td>
+                                                }
+                                                else if (reportPost.typeRepost == 3)
+                                                {
+                                                    <td>This post is spam</td>
+                                                }
+                                                <td>@reportPost.userReportID</td>
+                                                <td>@reportPost.userReportedID</td>
+                                                <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
+                                                <td>
+                                                    <a onclick="lockPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Lock post</a>
+                                                    <a onclick="cancelReportPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Cancel</a>
+                                                </td>
+                                            </tr>
                                         }
-                                        else if (reportUser.typeReport == 2)
-                                        {
-                                            <td>I think this post should not appear on FlyAwayPlus</td>
-                                        }
-                                        else if (reportUser.typeReport == 3)
-                                        {
-                                            <td>This post is spam</td>
-                                        }
-                                        <td>@reportUser.userReportID</td>
-                                        <td>@reportUser.userReportedID</td>
-                                        <td>
-                                            <a onclick="lockUser(@reportUser.userReportedID,@reportUser.reportID)" type="button" class="btn btn-primary">Lock post</a>
-                                            <a onclick="cancelReportUser(@reportUser.userReportedID,@reportUser.reportID)" type="button" class="btn btn-primary">Cancel</a>
-                                        </td>
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e.ToString());
+                                    }
+                                </tbody>
+                            </table>
+                            @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportPosts, page => Url.Action("Main", new { page, tab = "reportPost" }))
+                        </form>
+                    </div>
+
+                    <div id="reportUser" class="tab-pane fade">
+                        <form>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Report ID</th>
+                                        <th>Type report</th>
+                                        <th>User Report ID</th>
+                                        <th>User Reported ID</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e.ToString());
-                            }
-                        </tbody>
-                    </table>
-                </form>
+                                </thead>
+                                <tbody>
+                                    @try
+                                    {
+                                        foreach (var reportUser in ViewBag.OnePageOfReportUsers)
+                                        {
+                                            <tr id="user_@reportUser.reportID">
+                                                <td>@reportUser.reportID</td>
+                                                @if (reportUser.typeReport == 1)
+                                                {
+                                                    <td>This post annoying or unpleasant</td>
+                                                }
+                                                else if (reportUser.typeReport == 2)
+                                                {
+                                                    <td>I think this post should not appear on FlyAwayPlus</td>
+                                                }
+                                                else if (reportUser.typeReport == 3)
+                                                {
+                                                    <td>This post is spam</td>
+                                                }
+                                                <td>@reportUser.userReportID</td>
+                                                <td>@reportUser.userReportedID</td>
+                                                <td>
+                                                    <a onclick="lockReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Lock user</a>
+                                                    <a onclick="cancelReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Cancel</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e.ToString());
+                                    }
+                                </tbody>
+                            </table>
+                            @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportUsers, page => Url.Action("Main", new { page, tab = "reportUser" }))
+                        </form>
+                    </div>
+
+                </div>
             </div>
-            <div id="menu3" class="tab-pane fade">
-                <h3>Menu 3</h3>
-                <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-            </div>
-        </div>
-        
-        
-        
-
-    </div>
-
-
-</body>
+    </body>
 </html>
+
 <script>
+    $(document).ready(function () {
+        $('.nav-tabs a[href="#@ViewBag.Tab"]').tab('show');
+});
 
-    function lock(id) {
-        if ($('#myonoffswitch_' + id).is(':checked')) {
-            var controller = "/Admin/UnlockUser/";
-            var data = {
-                userId: id
-            };
-            commonModule.callAjax(controller, data, null);
-            //$('#myonoffswitch_' + id).prop('checked', false);
-        } else {
-            var controller = "/Admin/LockUser/";
-            var data = {
-                userId: id
-            };
-            commonModule.callAjax(controller, data, null);
+function lock(id) {
+    var controller, data;
+    if ($('#myonoffswitch_' + id).is(':checked')) {
+        controller = "/Admin/UnlockUser/";
+        data = {
+            userId: id
+        };
+        commonModule.callAjax(controller, data, null);
+        //$('#myonoffswitch_' + id).prop('checked', false);
+    } else {
+        controller = "/Admin/LockUser/";
+        data = {
+            userId: id
+        };
+        commonModule.callAjax(controller, data, null);
+    }
+}
+
+function unLock(id) {
+    var controller, data;
+    if ($('#myonoffswitch_' + id).is(':checked')) {
+        controller = "/Admin/UnlockUser/";
+        data = {
+            userId: id
+        };
+        commonModule.callAjax(controller, data, null);
+        //$('#myonoffswitch_' + id).prop('checked', true);
+    } else {
+        controller = "/Admin/LockUser/";
+        data = {
+            userId: id
+        };
+        commonModule.callAjax(controller, data, null);
+    }
+}
+
+function lockPost(id, reportID) {
+    $.ajax({
+        url: "/Admin/LockPost/",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            postId: id,
+            reportID: reportID
+        },
+        success: function (data) {
+            if (data == true) {
+                alert("This post is locked!");
+                $('#post_' + id).remove();
+            } else {
+                alert("Error!");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
         }
-    }
+    });
+}
 
-    function unLock(id) {
-        if ($('#myonoffswitch_' + id).is(':checked')) {
-            var controller = "/Admin/UnlockUser/";
-            var data = {
-                userId: id
-            };
-            commonModule.callAjax(controller, data, null);
-            //$('#myonoffswitch_' + id).prop('checked', true);
-        } else {
-            var controller = "/Admin/LockUser/";
-            var data = {
-                userId: id
-            };
-            commonModule.callAjax(controller, data, null);
+function cancelReportPost(id, reportID) {
+    $.ajax({
+        url: "/Admin/CancelReportPost/",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            reportID: reportID
+        },
+        success: function (data) {
+            if (data == true) {
+                alert("This report has been canceled");
+                $('#post_' + id).remove();
+            } else {
+                alert("Error!");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
         }
-    }
+    });
+}
 
-    function lockPost(id, reportID) {
-        $.ajax({
-            url: "/Admin/LockPost/",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                postId: id,
-                reportID: reportID
-            },
-            success: function (data) {
-                if (data == true) {
-                        alert("This post is locked!");
-                        $('#post_' + id).remove();
-                } else {
-                    alert("Error!");
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
+function lockReportUser(id, reportID) {
+    $.ajax({
+        url: "/Admin/LockReportUser/",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            userId: id,
+            reportID: reportID
+        },
+        success: function (data) {
+            if (data == true) {
+                alert("This user is locked!");
+                $('#user_' + reportID).remove();
+            } else {
+                alert("Error!");
             }
-        });
-    }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+}
 
-    function cancelReportPost(id, reportID) {
-        $.ajax({
-            url: "/Admin/CancelReportPost/",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                reportID: reportID
-            },
-            success: function (data) {
-                if (data == true) {
-                    alert("This report has been canceled");
-                    $('#post_' + id).remove();
-                } else {
-                    alert("Error!");
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
+function cancelReportUser(id, reportID) {
+    $.ajax({
+        url: "/Admin/CancelReportUser/",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            reportID: reportID
+        },
+        success: function (data) {
+            if (data == true) {
+                alert("Thiis report has been canceled");
+                $('#user_' + reportID).remove();
+            } else {
+                alert("Error!");
             }
-        });
-    }
-
-    function lockUser(id, reportID) {
-        $.ajax({
-            url: "/Admin/LockUser/",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                userId: id,
-                reportID: reportID
-            },
-            success: function (data) {
-                if (data == true) {
-                    alert("This user is locked!");
-                    $('#user_' + reportID).remove();
-                } else {
-                    alert("Error!");
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-            }
-        });
-    }
-
-    function cancelReportUser(id, reportID) {
-        $.ajax({
-            url: "/Admin/CancelReportUser/",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                reportID: reportID
-            },
-            success: function (data) {
-                if (data == true) {
-                    alert("Thiis report has been canceled");
-                    $('#user_' + reportID).remove();
-                } else {
-                    alert("Error!");
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-            }
-        });
-    }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+}
 </script>
 <style>
     .onoffswitch {

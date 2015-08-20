@@ -1,20 +1,50 @@
-﻿<h2 style="text-align: center">Login admin</h2>
-<div style="text-align: center">
-    <b>User name</b><br>
-    <input id="username" type="text" name="username">
-    <br>
-    <b>Password</b><br>
-    <input id="password" type="password" name="password">
-    <br>
-    <input id="submit" style="margin-top: 5px" type="submit" value="Submit">
-</div>
+﻿@{
+    if (IsPost)
+    {
+        
+        var username = Request.Form["username"];
+        var password = Request.Form["password"];
+    }
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Index</title>
+    </head>
+    <body>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/bootstrap.js"></script>
+        <script src="~/Scripts/common.js"></script>
+
+         <h2 style="text-align: center">Login admin</h2>
+        <fieldset>
+            @using (Ajax.BeginForm("Authenticate", "Admin",
+                            new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
+            {
+                <div id="divInterestDeatils"></div>
+                <ol>
+                    <li>
+                        @Html.Label("User name")
+                        @Html.TextBox("username")
+                    </li>
+                    <li>
+                        @Html.Label("Password")
+                        @Html.TextBox("password")
+                    </li>
+                </ol>
+                <button>Log in</button>
+            }
+        </fieldset>
+        </body>
+    </html>
 
 <script>
-    $('#submit').click(function (e) {
-        if ($("#username").val() == "admin" && $("#password").val() == "admin") {
-            location.href = "/Admin/Main/";
-        } else {
-            alert("User: admin\nPass: admin");
-        }
-    });
+
 </script>
