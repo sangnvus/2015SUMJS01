@@ -91,7 +91,7 @@
 
         commonModule.callAjax(controller, data, null);
     };
-    
+
     var editCommentAjax = function (comment) {
         var controller = "/User/EditComment";
         var commentID = parseInt($(comment).attr("role"));
@@ -212,7 +212,7 @@
             }
             evt.preventDefault();
         }
-        else if(evt.keyCode == 8) {
+        else if (evt.keyCode == 8) {
             var obj = selector ? selector : $("#idTextareaComment");
             if (_isTagging == true) {
                 if ($(obj).val().length > 0 && $(obj).val().slice(-1) == '@') {
@@ -291,14 +291,28 @@
 
     deleteCommentEvent = function () {
         $(".commenter-delete").click(function (evt) {
-            if (evt.handled !== true) { // This will prevent event triggering more then once
-                var commentID = $(this).attr("role");
-                $(this).closest(".comment-detail").remove();
-                postDetailModule.deleteComment(commentID);
-                
-                evt.handled = true;
-                evt.preventDefault();
-            }
+            var cmtDeleteSouce = $(this);
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this comment!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                if (evt.handled !== true) { // This will prevent event triggering more then once
+                    var commentId = cmtDeleteSouce.attr("role");
+                    cmtDeleteSouce.closest(".comment-detail").remove();
+                    postDetailModule.deleteComment(commentId);
+
+                    evt.handled = true;
+                    evt.preventDefault();
+                }
+
+                swal("Deleted!", "Your comment has been deleted.", "success");
+            });
         });
     };
 
@@ -339,7 +353,7 @@
                 <span class="username">thanhdancer</span>
             </li>
         */
-        for (var index = 0; index < Math.min(listFriend.length, 10); index++) {
+        for (var index = 0; index < Math.min(listFriend.length, 10) ; index++) {
             tmp = "<li data-index='" + index + "' class='tab_complete_ui_item'>";
             tmp += "<img class='lazy member_image thumb_24 member_preview_image' src='" + listFriend[index]["avatar"] + "'>";
             tmp += "<span class='username'>" + listFriend[index]["firstName"] + " " + listFriend[index]["lastName"]; + "</span>";
