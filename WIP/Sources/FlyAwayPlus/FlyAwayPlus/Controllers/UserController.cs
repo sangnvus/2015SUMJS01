@@ -20,7 +20,7 @@ namespace FlyAwayPlus.Controllers
             User user;
             List<Post> listPost;
             List<User> friend;
-            
+
             if (userSession == null)
             {
                 return RedirectToAction("Index", "Home");
@@ -124,12 +124,12 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, FlyAwayPlus.Models.User> dict = new Dictionary<int, Models.User>();
             Comment comment = new Comment();
             comment.content = content;
-            comment.content = comment.content.Replace("\n","\\n");
+            comment.content = comment.content.Replace("\n", "\\n");
             comment.dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
 
             bool success = GraphDatabaseHelpers.Instance.InsertComment(postId, comment, user.userID);
             dict.Add(comment.commentID, user);
-            
+
             ViewData["dict"] = dict;
             return PartialView("_PostDetailPartial", comment);
         }
@@ -241,6 +241,11 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
+        public bool IsFriend(int userId, int otherUserId)
+        {
+            return GraphDatabaseHelpers.Instance.IsFriend(userId, otherUserId);
+        }
+
         public JsonResult SendRequestFriend(int userID, int otherUserID)
         {
             User user = UserHelpers.GetCurrentUser(Session);
@@ -248,6 +253,17 @@ namespace FlyAwayPlus.Controllers
             if (user != null)
             {
                 success = GraphDatabaseHelpers.Instance.SendRequestFriend(userID, otherUserID);
+            }
+            return Json(success);
+        }
+
+        public JsonResult CancelRequestFriend(int userId, int otherUserId)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                success = GraphDatabaseHelpers.Instance.DeclineRequestFriend(userId, otherUserId);
             }
             return Json(success);
         }
@@ -298,7 +314,7 @@ namespace FlyAwayPlus.Controllers
                     listUser.Add(GraphDatabaseHelpers.Instance.FindUser(listMessage[i]));
                 }
             }
-            KeyValuePair<List<Message>, List<User>> returnObject = new KeyValuePair<List<Message>,List<User>>(listMessage, listUser);
+            KeyValuePair<List<Message>, List<User>> returnObject = new KeyValuePair<List<Message>, List<User>>(listMessage, listUser);
             return Json(returnObject);
         }
 
@@ -399,5 +415,32 @@ namespace FlyAwayPlus.Controllers
 
             return Json(success);
         }
-	}
+
+        public int CountMutualFriend(string thisUserId, string otherUserId)
+        {
+            int thisId, oId;
+
+            return !int.TryParse(thisUserId, out thisId) || !int.TryParse(otherUserId, out oId)
+                ? 0
+                : GraphDatabaseHelpers.Instance.CountMutualFriend(thisId, oId);
+        }
+
+        public int CountPlaces(string otherUserId)
+        {
+            int thisId;
+
+            return !int.TryParse(otherUserId, out thisId)
+                ? 0
+                : GraphDatabaseHelpers.Instance.CountPlaceOfUser(thisId);
+        }
+
+        public JsonResult GetUser(string otherUserId)
+        {
+            int thisId;
+
+            return !int.TryParse(otherUserId, out thisId)
+                ? null
+                : Json(GraphDatabaseHelpers.Instance.GetUser(thisId));
+        }
+    }
 }

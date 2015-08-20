@@ -239,14 +239,14 @@ namespace FlyAwayPlus.Controllers
                     typeID = 1,
                     email = email,
                     address = me.adress,
-                    dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                    dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
                     dateOfBirth = me.date_of_birth,
                     firstName = me.first_name,
                     lastName = me.last_name,
                     gender = me.gender,
                     phoneNumber = me.phone_number,
                     status = "active",
-                    avatar = "https://graph.facebook.com/" + facebookID + "/picture?type=normal",
+                    avatar = "https://graph.facebook.com/" + facebookID + "/picture?type=large",
                     password = ""
                 };
                 // Facebook account
@@ -415,7 +415,7 @@ namespace FlyAwayPlus.Controllers
                         typeID = 2,
                         email = email,
                         address = address,
-                        dateJoined = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                        dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
                         dateOfBirth = "",
                         firstName = google.name.familyName.Value,
                         lastName = google.name.givenName.Value,

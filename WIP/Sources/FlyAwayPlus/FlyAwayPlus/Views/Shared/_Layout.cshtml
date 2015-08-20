@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using FlyAwayPlus.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -42,7 +43,7 @@
                     else
                     {
                         <li class="friend-request-li">
-                            <a href="#" class="remove-background" id="id-btn-friend-request">
+                            <a href="javascript:;" class="remove-background" id="id-btn-friend-request">
                                 <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
                                 <span class="friend-request-count badge badge-danger" style="display: none;"></span>
                             </a>
@@ -58,7 +59,7 @@
                             </div>
                         </li>
                         <li class="notification-li">
-                            <a href="#" class="remove-background" id="btn-notification">
+                            <a href="javascript:;" class="remove-background" id="btn-notification">
                                 <i class="fa fa-fw fa-bell interact-item interact-button"></i>
                                 <span class="notification-count badge badge-danger"></span>
                             </a>
@@ -71,7 +72,7 @@
                                 <div id="idNotification" class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px!important;">
                                 </div>
                                 <div class="notification-footer">
-                                    <a href="#"></a>
+                                    <a href="javascript:;"></a>
                                 </div>
                             </div>
                         </li>
@@ -83,7 +84,7 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu bullet pull-center" style="left: -40px;">
-                                <li><a href="/User/Index/@Session["userID"]">@Session["username"]</a></li>
+                                <li><a href="/User/Index/@Session["userID"]" id="curent-user-id">@Session["username"]</a></li>
                                 <li><a href="/Login/Logout">Log out</a></li>
                             </ul>
                         </li>
@@ -122,6 +123,7 @@
     <div id="id-main-page" class="container body-content">
         @RenderBody()
         <br />
+
     </div>
     @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
     {
@@ -140,18 +142,37 @@
         <script>
             $(function () {
                 // Hover card on username.
-                $(".hover-card-user").tooltipster({
-                    interactive: true,
-                    content: 'Loading...',
-                    contentCloning: false,
-                    contentAsHTML: true,
-                    functionBefore: function (origin, continueTooltip) {
-                        // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data.
-                        continueTooltip();
-                        origin.tooltipster('content', '<div class="hover-card"><div class="profile"><img src="http://f.cl.ly/items/0z1w0L092q070Q180K3p/36a9325cb67f11e18bb812313804a181_7.jpeg"><div class="border"></div></div><div class="name"><p><a href="#">Cole Townsend</a></p></div><div class="numbers"><table id="stats"><tbody><tr><td>14</td><td>ARTICLES</td></tr><tr><td>171</td><td>FOLLOWERS</td></tr></tbody></table><div class="divider"></div></div><a href="#" class="btn btn-follow">Follow</a></div>');
+                initializeTooltip();
+
+                $(document).on('click', '.add-friend-btn', function () {
+                    var currentUserId = $('#curent-user-id').attr('href');
+                    currentUserId = currentUserId.substr(12, currentUserId.length - 12);
+
+                    var otherUserId = $(this).parent().parent().find('a').attr('href');
+                    otherUserId = otherUserId.substr(12, otherUserId.length - 12);
+
+                    var data = {
+                        userID: currentUserId,
+                        otherUserID: otherUserId
+                    };
+
+                    if ($(this).text() === 'Add friend') {
+                        $(this).css('background-color', '#2DCC70').text('Friend request sent');
+                        commonModule.callAjax("/User/CancelRequestFriend/", data, null);
+                    } else {
+                        if (currentUserId === otherUserId) {
+                            $(this).css('background-color', '#3bafda').text('This is you!');
+                        } else {
+                            $(this).css('background-color', '#3bafda').text('Add friend');
+                        }
+
+                        if ($(this).text() === 'Friend request sent') {
+                            commonModule.callAjax("/User/SendRequestFriend/", data, null);
+                        } else if ($(this).text() === 'Unfriend') {
+                            commonModule.callAjax("/User/Unfriend/", data, null);
+                        }
                     }
                 });
-
                 $("#btn-notification").click(function () {
                     $(".notification-container").fadeToggle(300);
                     $(".notification-count").fadeOut("slow");
@@ -187,7 +208,7 @@
                 friendHubProxy.client.receiveListFriendRequest = function (content) {
                     /*
                     <div style="width:100%; height: 65px;">
-                        <div href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                        <div href="javascript:;" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
                             <div style="float:left">
                                 <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                             </div>
@@ -261,7 +282,7 @@
                 notificationHubProxy.client.receiveNotification = function (content) {
                     /*
                     <div style="width:100%; height: 65px;">
-                        <a href="#" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                        <a href="javascript:;" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
                             <div style="float:left">
                                 <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                             </div>
@@ -336,6 +357,71 @@
                     }
                 });
             });
+
+            function initializeTooltip() {
+                $(".hover-card-user").tooltipster({
+                    interactive: true,
+                    content: 'Loading...',
+                    contentCloning: false,
+                    contentAsHTML: true,
+                    arrowColor: '#3bafda',
+                    functionBefore: function (origin, continueTooltip) {
+                        // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data.
+                        continueTooltip();
+                        // next, we want to check if our data has already been cached
+                        if (origin.data('ajax') !== 'cached') {
+                            var tooltipContent;
+
+                            var currentUserId = $('#curent-user-id').attr('href');
+                            currentUserId = currentUserId.substr(12, currentUserId.length - 12);
+
+                            var otherUserId = origin.attr('href');
+                            otherUserId = otherUserId.substr(12, otherUserId.length - 12);
+
+                            $.when($.ajax({
+                                type: 'POST',
+                                url: '/User/GetUser',
+                                data: { otherUserId: otherUserId }
+                            }), $.ajax({
+                                type: 'POST',
+                                url: '/User/CountMutualFriend',
+                                data: { thisUserId: currentUserId, otherUserId: otherUserId }
+                            }), $.ajax({
+                                type: 'POST',
+                                url: '/User/CountPlaces',
+                                data: { otherUserId: otherUserId }
+                            }), $.ajax({
+                                type: 'POST',
+                                url: '/User/IsFriend',
+                                data: {
+                                    userId: currentUserId,
+                                    otherUserId: otherUserId
+                                }
+                            })).done(function (otherUser, mutualFriendCount, placeCount, isFriend) {
+                                tooltipContent = '<div class="hover-card"><div class="profile"><div class="avatar"><img src="' + otherUser[0].avatar + '" alt="avatar"></div></div><div class="information"><a href="' + origin.attr('href') + '"><div class="name-user">' + otherUser[0].firstName + ' ' + otherUser[0].lastName + '</div></a><div class="dark-divider"></div><ul><li>';
+
+                                tooltipContent += mutualFriendCount[0];
+                                tooltipContent += ' mutual friends</li><li>' + placeCount[0] + ' places traveled</li></ul><div><div class="add-friend-btn">';
+                                if (isFriend[0].toString() === 'True') {
+                                    //alert('un');
+                                    tooltipContent += 'Unfriend';
+                                } else {
+                                    //alert('ad');
+                                    if (currentUserId === otherUserId) {
+                                        tooltipContent += 'This is you!';
+                                    } else {
+                                        tooltipContent += 'Add friend';
+                                    }
+                                }
+
+                                tooltipContent += '</div></div></div></div>';
+
+                                origin.tooltipster('content', tooltipContent).data('ajax', 'cached');
+                            });
+                        }
+                    }
+                });
+            }
         </script>
     }
 </body>

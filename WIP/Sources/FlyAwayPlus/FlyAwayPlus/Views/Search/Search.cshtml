@@ -70,13 +70,13 @@
                             </ul>
                             @if (wishlist[place.placeID])
                             {
-                                <a class="cls-add-wishlist-btn" style="display:none;" role="@place.placeID" href="#"><div class="place-result-view-detail">Add To Wishlist</div></a>
-                                <a class="cls-remove-wishlist-btn" role="@place.placeID" href="#"><div class="place-result-view-detail">Remove From Wishlist</div></a>
+                                <a class="cls-add-wishlist-btn" style="display:none;" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                                <a class="cls-remove-wishlist-btn" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Remove From Wishlist</div></a>
                             }
                             else
                             {
-                                <a class="cls-add-wishlist-btn" role="@place.placeID" href="#"><div class="place-result-view-detail">Add To Wishlist</div></a>
-                                <a class="cls-remove-wishlist-btn" style="display:none;" role="@place.placeID" href="#"><div class="place-result-view-detail">Remove From Wishlist</div></a>
+                                <a class="cls-add-wishlist-btn" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                                <a class="cls-remove-wishlist-btn" style="display:none;" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Remove From Wishlist</div></a>
                             }
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                                         </span>
                                     </a>
                                     <div class="contactUser">
-                                        <a class="contactUsername" href="/User/Index/@user.userID/">@string.Format("{0} {1}", user.firstName, user.lastName)</a>
+                                        <a class="contactUsername hover-card-user" href="/User/Index/@user.userID">@string.Format("{0} {1}", user.firstName, user.lastName)</a>
                                         <br />
                                         <p style="margin:0px;">mutuals friends</p>
 

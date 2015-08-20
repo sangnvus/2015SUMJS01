@@ -198,7 +198,7 @@
                 <img class="circle-image" height="50" src="@admin.avatar" alt="Admin" />
             </div>
             <div>
-                <a href="#" class="btn btn-primary room-detail-request-join">Request join</a>
+                <a href="javascript:;" class="btn btn-primary room-detail-request-join">Request join</a>
             </div>
             <div class="input-group">
                 <input type="text" class="form-control" value="@roomId" readonly>
@@ -376,7 +376,7 @@
                                                 <textarea class="form-control" id="video-upload-description" placeholder="Description for video"></textarea>
                                             </div>
 
-                                            <a href="#" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button">UPLOAD</a>
+                                            <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button">UPLOAD</a>
                                         </div>
 
                                         <div class="progress progress-striped active hidden" id="post-upload-video-progress">
@@ -432,7 +432,7 @@
                                     </div>
                                     <div class="post-info-area">
                                         <div class="user-name">
-                                            <a href="/User/Index/@listUserDict[listPost[index].postID].userID">@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)</a>
+                                            <a href="/User/Index/@listUserDict[listPost[index].postID].userID" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)</a>
                                         </div>
                                         <span class="post-time">
                                             <span>@listPost[index].toRealtime()</span>
@@ -452,10 +452,10 @@
                             </div>
 
                             <div class="interact-area">
-                                <a href="#" class="btn-like"><span>Like</span></a>
-                                <a href="#" class="btn-dislike"><span>Dislike</span></a>
-                                <a href="#" id="share_button" class="btn-share"><span>Share</span></a>
-                                <a href="#" id="report_button" class="btn-report"><span>Report</span></a>
+                                <a href="javascript:;" class="btn-like"><span>Like</span></a>
+                                <a href="javascript:;" class="btn-dislike"><span>Dislike</span></a>
+                                <a href="javascript:;" id="share_button" class="btn-share"><span>Share</span></a>
+                                <a href="javascript:;" id="report_button" class="btn-report"><span>Report</span></a>
                             </div>
                             <div class="divide-area"></div>
                             <div class="comment-area">
@@ -490,7 +490,7 @@
                         <img src="~/Images/FAP logo.png" class="img-circle" />
                     </div>
                     <div class="messages" style="border-bottom: #19B5FF 3px solid">
-                        <p><b>This is the very beginning of the room, which created by @String.Format("{0} {1}", @admin.firstName, @admin.lastName) on time</b></p>
+                        <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.userID" class="hover-card-user">@String.Format("{0} {1}", @admin.firstName, @admin.lastName)</a> on time</b></p>
                         <time datetime=""><a href="javascript:;">Fly Away Plus System</a></time>
                     </div>
                 </li>
@@ -502,7 +502,7 @@
                         </div>
                         <div class="messages" style="border-bottom: #19B5FF 3px solid">
                             <p>@listMessage[index].content</p>
-                            <time datetime="@listMessage[index].dateCreated"><a href="/User/Index/@listUserOwnMessage[index].userID">@String.Format("{0} {1}", @listUserOwnMessage[index].firstName, @listUserOwnMessage[index].lastName)</a> @listMessage[index].dateCreated</time>
+                            <time datetime="@listMessage[index].dateCreated"><a href="/User/Index/@listUserOwnMessage[index].userID" class="hover-card-user">@String.Format("{0} {1}", @listUserOwnMessage[index].firstName, @listUserOwnMessage[index].lastName)</a> @listMessage[index].dateCreated</time>
                         </div>
                     </li>
                 }

@@ -10,7 +10,7 @@
 <div id="placeToFollow" class="bottomItem">
     <div class="placeToFollow Module">
         <h2 class="memoTitle" style="margin:0px;">
-            <a href="#">Visit place<i class="glyphicon glyphicon-circle-arrow-right arrow"></i></a>
+            <a href="javascript:;">Visit place<i class="glyphicon glyphicon-circle-arrow-right arrow"></i></a>
         </h2>
 
         <ul class="List Module">
@@ -20,7 +20,7 @@
                 <li data-index="@index">
                     <div class="Module User followPlacesItem small">
                         <div class="content">
-                            <a href="/Place/@suggest.placeID/">
+                            <a href="/Place/@suggest.placeID">
                                 <span class="thumbImageWrapper">
                                     <div class="Image Module">
                                         <div class="heightContainer">
@@ -30,7 +30,7 @@
                                 </span>
                             </a>
                             <div class="contactUser">
-                                <a class="contactUsername" href="/Place/@suggest.placeID/">@String.Format("{0} - {1}", suggest.name, listIsVisitedPlace[index] ? "Visited" : "Not visited")</a>
+                                <a class="contactUsername" href="/Place/@suggest.placeID">@String.Format("{0} - {1}", suggest.name, listIsVisitedPlace[index] ? "Visited" : "Not visited")</a>
                                 <br />
                                 <p style="margin:0px;">@listNumberOfPost[index] numbers of Post</p>
                                 @if (checkWishlist[index])

@@ -11,7 +11,7 @@
         <img src="@u.avatar" alt="@String.Format("{0} {1}", u.firstName, u.lastName)" />
     </div>
     <div class="commenter-content">
-        <span class="commenter-name"><a href="/User/Index/@u.userID">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
+        <span class="commenter-name"><a href="/User/Index/@u.userID" class="hover-card-user">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
         <span class="commenter-post-time" title="@Model.toRealtime()">- @Model.toRealtime()</span>
         @if (userID.Equals(u.userID.ToString()))
         {

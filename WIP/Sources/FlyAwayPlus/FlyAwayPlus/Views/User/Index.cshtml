@@ -22,7 +22,7 @@
     </figure>
     <div class="profile-stats">
         <ul role="tablist">
-            <li role="presentation"><a href="#">@String.Format("{0} {1}", Model.firstName, Model.lastName)</a></li>
+            <li role="presentation"><a href="javascript:;">@String.Format("{0} {1}", Model.firstName, Model.lastName)</a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Post</span></a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Places</span></a></li>
             <li role="presentation"><a href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">182 <span>Photos</span></a></li>
@@ -32,28 +32,28 @@
         <div class="interact-area">
             @if (Model.userID == userSession.userID)
             {
-                <a href="#" id="idEditProfile" data-toggle="modal" data-target="#id-profile-modal" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
+                <a href="javascript:;" id="idEditProfile" data-toggle="modal" data-target="#id-profile-modal" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
             }
             else if (friendType.Equals("friend"))
             {
-                <a href="#" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
-                <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
-                <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
-                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
+                <a href="javascript:;" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
+                <a href="javascript:;" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
+                <a href="javascript:;" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
+                <a href="javascript:;" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
             }
             else if (friendType.Equals("request"))
             {
-                <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
-                <a href="#" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
-                <a href="#" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
-                <a href="#" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
+                <a href="javascript:;" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
+                <a href="javascript:;" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
+                <a href="javascript:;" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
+                <a href="javascript:;" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
             }
             else
             {
-                <a href="#" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
-                <a href="#" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
-                <a href="#" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
-                <a href="#" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
+                <a href="javascript:;" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
+                <a href="javascript:;" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
+                <a href="javascript:;" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
+                <a href="javascript:;" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
             }
         </div>
     </div>
@@ -74,7 +74,9 @@
             for (int index = 0; index < 17; index++)
             {
                 <div class="padding-5 col-md-2">
-                    <img class="circle-image" height="50" src="@friend[index].avatar" alt="Avatar" />
+                    <a href="/User/Index/@friend[index].userID" class="hover-card-user">
+                        <img class="circle-image" height="50" src="@friend[index].avatar" alt="Avatar" />
+                    </a>
                 </div>
             }
         }
@@ -83,7 +85,11 @@
             foreach (var userFriend in friend)
             {
                 <div class="padding-5 col-md-2">
-                    <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
+                    <div class="padding-5 col-md-2">
+                        <a href="/User/Index/@userFriend.userID" class="hover-card-user">
+                            <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
+                        </a>
+                    </div>
                 </div>
             }
             if (friend.Count == 0)
@@ -117,9 +123,9 @@
                 <div class="image-element">
                     <img src="/Images/UserUpload/@image.Value.First().url" class="img-zoom" alt="" />
                     <div class="dark-wrapper">
-                        <ul class="post-actions" style="padding-left: 0px;">
+                        <ul class="post-actions" style="padding-left: 0;">
                             <li>
-                                <a href="/Images/UserUpload/@image.Value.First().url" rel="group"
+                                <a href="@(image.Value.FirstOrDefault() == null ? "/Image/UIHelper/default-avatar.jpg" : "/Images/UserUpload/" + image.Value.First().url)" rel="group"
                                    class="btn btn-primary fancybox"
                                    title="@listPlaceDict.First(p => p.Key == @image.Key).Value.name"
                                    style="width: 90px">Enlarge</a>
@@ -152,7 +158,7 @@
                     {
                         <div class="padding-5 col-md-2">
                             <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
-                            <a href="/User/Index/@userFriend.userID"><p class="small text-center">@String.Format("{0} {1}", userFriend.firstName, userFriend.lastName)</p></a>
+                            <a href="/User/Index/@userFriend.userID"><p class="small text-center hover-card-user">@String.Format("{0} {1}", userFriend.firstName, userFriend.lastName)</p></a>
                         </div>
                     }
                 </div>
@@ -171,7 +177,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <a href="#" class="active">Profile</a>
+                                    <a href="javascript:;" class="active">Profile</a>
                                 </div>
                             </div>
                             <hr>
@@ -191,12 +197,12 @@
                                                             <p style="color:red">First Name is required</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
-                                                        <span>First Name: </span><span><b>@Model.firstName</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span>First Name: </span><span><b>@Model.firstName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -211,12 +217,12 @@
                                                             <p style="color:red">Last Name is required</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
-                                                        <span>Last Name: </span><span><b>@Model.lastName</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span>Last Name: </span><span><b>@Model.lastName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,19 +238,19 @@
                                                             <p style="color:red">Phone Number must be a number</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>Phone number: </span>
                                                         @if (Model.phoneNumber.IsEmpty())
                                                         {
-                                                            <span><b>Please input your phonenumber</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>Please input your phonenumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.phoneNumber</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.phoneNumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                 </div>
@@ -257,19 +263,19 @@
                                                             <input name="dateOfBirth" style="width: 90%; float:left;" type="text" value="@Model.dateOfBirth" class="form-control edit-dob" placeholder="DOB" />
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>DOB: </span>
                                                         @if (Model.dateOfBirth.IsEmpty())
                                                         {
-                                                            <span><b>Please input your DOB</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>Please input your DOB</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.dateOfBirth</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.dateOfBirth</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                 </div>
@@ -329,11 +335,11 @@
                                                         <span>Address: </span>
                                                         @if (Model.address.IsEmpty())
                                                         {
-                                                            <span><b>Please input your address</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>Please input your address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.address</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                     <div class="cls-edit-info" style="width:100%; display:none">
@@ -341,8 +347,8 @@
                                                             <input name="address" style="width: 90%; float:left;" type="text" value="@Model.address" class="form-control text-box single-line" placeholder="address" />
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -363,7 +369,7 @@
                                                 <div class="form-group">
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>Password: </span>
-                                                        <span><b>******</b><a href="#" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span><b>******</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                     <div class="cls-edit-info" style="display:none; width:100%">
                                                         <div style="width:100%;">
@@ -376,8 +382,8 @@
                                                                 <p style="color:red"></p>
                                                             </div>
                                                             <div style="width:100%; margin-top: 5px; float:left;">
-                                                                <a href="#" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                                <a href="#" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                                <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                                <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
