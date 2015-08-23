@@ -5,16 +5,32 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
+using PagedList;
 
 namespace FlyAwayPlus.Controllers
 {
     public class AdminController : Controller
     {
-
+        [HttpPost]
         public RedirectToRouteResult Authenticate()
         {
+            string username = Request["username"];
+            string password = Request["password"];
+            if (username.Equals("admin") && password.Equals("admin"))
+            {
+                Session["administrator"] = "administrator";
+                return RedirectToAction("Main", "Admin", new
+                {
+                    tab = ""
+                });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Admin");
+            }
             // Defined admin username & password
             // Get Post data
             // Check data == admin username & password?
@@ -22,28 +38,63 @@ namespace FlyAwayPlus.Controllers
             //    Set cookie/session authen=true
             //    return Redirect to action main
             //
-            return RedirectToAction("Index", "Admin");
+
         }
 
         //
         // GET: /Admin/
         public ActionResult Index()
         {
+            Session.Abandon();
             return View();
         }
 
-        public ActionResult Main()
+        public ActionResult LogOut()
         {
-            List<User> listAllUsers = GraphDatabaseHelpers.Instance.ListAllUsers();
-            List<ReportPost> listAllReportPost = GraphDatabaseHelpers.Instance.ListAllReportPosts();
-            List<ReportUser> listAllReportUser = GraphDatabaseHelpers.Instance.ListAllReportUsers();
-            ViewData["listAllUsers"] = listAllUsers;
-            ViewData["listAllReportPost"] = listAllReportPost;
-            ViewData["listAllReportUser"] = listAllReportUser;
-            return View();
+            FormsAuthentication.SignOut();
+            Session.Abandon(); // it will clear the session at the end of request
+            return RedirectToAction("Index", "Admin");
         }
 
-        public JsonResult LockUser(int userId, int reportID)
+        public ActionResult Main(int? page, string tab)
+        {
+            if (Session["administrator"] == null || Session["administrator"].Equals(""))
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                List<User> listAllUsers = GraphDatabaseHelpers.Instance.ListAllUsers();
+                List<ReportPost> listAllReportPost = GraphDatabaseHelpers.Instance.ListAllReportPosts();
+                List<ReportUser> listAllReportUser = GraphDatabaseHelpers.Instance.ListAllReportUsers();
+                int numberOfUser = GraphDatabaseHelpers.Instance.NumberOfUser();
+                int numberOfReportPost = GraphDatabaseHelpers.Instance.NumberOfReportPost();
+                int numberOfReportUser = GraphDatabaseHelpers.Instance.NumberOfReportUser();
+
+
+                int pageSize = 3;
+                int pageNumber = (page ?? 1);
+                var onePageOfUsers = listAllUsers.ToPagedList(pageNumber, pageSize);
+                var onePageOfReportPosts = listAllReportPost.ToPagedList(pageNumber, pageSize);
+                var onePageOfReportUsers = listAllReportUser.ToPagedList(pageNumber, pageSize);
+                ViewBag.OnePageOfUsers = onePageOfUsers;
+                ViewBag.OnePageOfReportPosts = onePageOfReportPosts;
+                ViewBag.OnePageOfReportUsers = onePageOfReportUsers;
+                ViewBag.Tab = tab;
+                ViewBag.NumberOfUser = numberOfUser;
+                ViewBag.NumberOfReportPost = numberOfReportPost;
+                ViewBag.NumberOfReportUser = numberOfReportUser;
+                return View();
+            }
+        }
+
+        public JsonResult LockUser(int userId)
+        {
+            GraphDatabaseHelpers.Instance.LockUser(userId);
+            return Json(true);
+        }
+
+        public JsonResult LockReportUser(int userId, int reportID)
         {
             GraphDatabaseHelpers.Instance.LockUser(userId);
             GraphDatabaseHelpers.Instance.DeleteReportUser(reportID);
