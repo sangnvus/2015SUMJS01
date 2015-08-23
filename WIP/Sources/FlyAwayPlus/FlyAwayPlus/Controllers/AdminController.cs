@@ -38,13 +38,14 @@ namespace FlyAwayPlus.Controllers
             //    Set cookie/session authen=true
             //    return Redirect to action main
             //
-            
+
         }
 
         //
         // GET: /Admin/
         public ActionResult Index()
         {
+            Session.Abandon();
             return View();
         }
 
@@ -66,8 +67,9 @@ namespace FlyAwayPlus.Controllers
                 List<User> listAllUsers = GraphDatabaseHelpers.Instance.ListAllUsers();
                 List<ReportPost> listAllReportPost = GraphDatabaseHelpers.Instance.ListAllReportPosts();
                 List<ReportUser> listAllReportUser = GraphDatabaseHelpers.Instance.ListAllReportUsers();
-
-
+                int numberOfUser = GraphDatabaseHelpers.Instance.NumberOfUser();
+                int numberOfReportPost = GraphDatabaseHelpers.Instance.NumberOfReportPost();
+                int numberOfReportUser = GraphDatabaseHelpers.Instance.NumberOfReportUser();
 
 
                 int pageSize = 3;
@@ -79,6 +81,9 @@ namespace FlyAwayPlus.Controllers
                 ViewBag.OnePageOfReportPosts = onePageOfReportPosts;
                 ViewBag.OnePageOfReportUsers = onePageOfReportUsers;
                 ViewBag.Tab = tab;
+                ViewBag.NumberOfUser = numberOfUser;
+                ViewBag.NumberOfReportPost = numberOfReportPost;
+                ViewBag.NumberOfReportUser = numberOfReportUser;
                 return View();
             }
         }

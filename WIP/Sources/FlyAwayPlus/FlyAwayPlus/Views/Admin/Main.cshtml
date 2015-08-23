@@ -1,4 +1,5 @@
-﻿@using PagedList
+﻿@using FlyAwayPlus.Helpers
+@using PagedList
 @using PagedList.Mvc
 
 @{
@@ -6,202 +7,205 @@
 }
 <!DOCTYPE html>
 
-    
 
-    <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Main</title>
-        @Scripts.Render("~/bundles/jquery")
-        @Styles.Render("~/Content/css")
-    </head>
-    <body>
-        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-        <script src="~/Scripts/bootstrap.min.js"></script>
-        <script src="~/Scripts/common.js"></script>
-        <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-            <div class="container" id="mainTab">
-                <h2>Admin Page</h2>
-                @using (Ajax.BeginForm("LogOut", "Admin",
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Main</title>
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <div class="container" id="mainTab">
+        <h2>Admin Page</h2>
+        @using (Ajax.BeginForm("LogOut", "Admin",
                             new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
-                {
-                    <button>Log out</button>
-                }
-                <ul class="nav nav-tabs">
-                    <li><a data-toggle="tab" href="#user">User</a></li>
-                    <li><a data-toggle="tab" href="#reportPost">Reported post</a></li>
-                    <li><a data-toggle="tab" href="#reportUser">Reported user</a></li>
-                </ul>
+        {
+            <button>Log out</button>
+            <p></p>
+        }
+        <ul class="nav nav-tabs">
+            <li><a data-toggle="tab" href="#user">User</a></li>
+            <li><a data-toggle="tab" href="#reportPost">Reported post</a></li>
+            <li><a data-toggle="tab" href="#reportUser">Reported user</a></li>
+        </ul>
 
-                <div class="tab-content">
-                    <div id="user" class="tab-pane fade">
-                        <form>
-                            <table class="table table-striped">
-                                <thead>
+        <div class="tab-content">
+            <div id="user" class="tab-pane fade">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (var user in ViewBag.OnePageOfUsers)
+                                {
                                     <tr>
-                                        <th>User ID</th>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @try
-                                    {
-                                        foreach (var user in ViewBag.OnePageOfUsers)
+                                        <td>@user.userID</td>
+                                        <td>@user.firstName</td>
+                                        <td>@user.lastName</td>
+                                        <td>@user.email</td>
+                                        @if (user.status.Equals("active"))
                                         {
-                                            <tr>
-                                                <td>@user.userID</td>
-                                                <td>@user.firstName</td>
-                                                <td>@user.lastName</td>
-                                                <td>@user.email</td>
-                                                @if (user.status.Equals("active"))
-                                                {
-                                                    <td>
-                                                        <div class="onoffswitch">
-                                                            <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
-                                                            <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
-                                                                <span class="onoffswitch-inner"></span>
-                                                                <span class="onoffswitch-switch"></span>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                }
-                                                else
-                                                {
-                                                    <td>
-                                                        <div class="onoffswitch">
-                                                            <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
-                                                            <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
-                                                                <span class="onoffswitch-inner"></span>
-                                                                <span class="onoffswitch-switch"></span>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                }
-                                            </tr>
+                                            <td>
+                                                <div class="onoffswitch">
+                                                    <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
                                         }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                </tbody>
-                            </table>
-                            @Html.PagedListPager((IPagedList)ViewBag.OnePageOfUsers, page => Url.Action("Main", new { page, tab = "user" }))
-                        </form>
-                    </div>
-
-                    <div id="reportPost" class="tab-pane fade">
-                        <form>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Report ID</th>
-                                        <th>Post ID</th>
-                                        <th>Type report</th>
-                                        <th>User Report ID</th>
-                                        <th>User Reported ID</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @try
-                                    {
-                                        foreach (var reportPost in ViewBag.OnePageOfReportPosts)
+                                        else
                                         {
-                                            <tr id="post_@reportPost.postID">
-                                                <td>@reportPost.reportID</td>
-                                                <td>@reportPost.postID</td>
-                                                @if (reportPost.typeRepost == 1)
-                                                {
-                                                    <td>This post annoying or unpleasant</td>
-                                                }
-                                                else if (reportPost.typeRepost == 2)
-                                                {
-                                                    <td>I think this post should not appear on FlyAwayPlus</td>
-                                                }
-                                                else if (reportPost.typeRepost == 3)
-                                                {
-                                                    <td>This post is spam</td>
-                                                }
-                                                <td>@reportPost.userReportID</td>
-                                                <td>@reportPost.userReportedID</td>
-                                                <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
-                                                <td>
-                                                    <a onclick="lockPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Lock post</a>
-                                                    <a onclick="cancelReportPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Cancel</a>
-                                                </td>
-                                            </tr>
+                                            <td>
+                                                <div class="onoffswitch">
+                                                    <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                        <span class="onoffswitch-inner"></span>
+                                                        <span class="onoffswitch-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
                                         }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                </tbody>
-                            </table>
-                            @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportPosts, page => Url.Action("Main", new { page, tab = "reportPost" }))
-                        </form>
-                    </div>
-
-                    <div id="reportUser" class="tab-pane fade">
-                        <form>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Report ID</th>
-                                        <th>Type report</th>
-                                        <th>User Report ID</th>
-                                        <th>User Reported ID</th>
-                                        <th></th>
-                                        <th></th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @try
-                                    {
-                                        foreach (var reportUser in ViewBag.OnePageOfReportUsers)
-                                        {
-                                            <tr id="user_@reportUser.reportID">
-                                                <td>@reportUser.reportID</td>
-                                                @if (reportUser.typeReport == 1)
-                                                {
-                                                    <td>This post annoying or unpleasant</td>
-                                                }
-                                                else if (reportUser.typeReport == 2)
-                                                {
-                                                    <td>I think this post should not appear on FlyAwayPlus</td>
-                                                }
-                                                else if (reportUser.typeReport == 3)
-                                                {
-                                                    <td>This post is spam</td>
-                                                }
-                                                <td>@reportUser.userReportID</td>
-                                                <td>@reportUser.userReportedID</td>
-                                                <td>
-                                                    <a onclick="lockReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Lock user</a>
-                                                    <a onclick="cancelReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Cancel</a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                </tbody>
-                            </table>
-                            @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportUsers, page => Url.Action("Main", new { page, tab = "reportUser" }))
-                        </form>
-                    </div>
-
-                </div>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        </tbody>
+                    </table>
+                    <p><b>Number of user:</b> @ViewBag.NumberOfUser</p>
+                    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfUsers, page => Url.Action("Main", new { page, tab = "user" }))
+                </form>
             </div>
-    </body>
+
+            <div id="reportPost" class="tab-pane fade">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Post ID</th>
+                                <th>Type report</th>
+                                <th>User Report ID</th>
+                                <th>User Reported ID</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (var reportPost in ViewBag.OnePageOfReportPosts)
+                                {
+                                    <tr id="post_@reportPost.postID">
+                                        <td>@reportPost.reportID</td>
+                                        <td>@reportPost.postID</td>
+                                        @if (reportPost.typeRepost == 1)
+                                        {
+                                            <td>This post annoying or unpleasant</td>
+                                        }
+                                        else if (reportPost.typeRepost == 2)
+                                        {
+                                            <td>I think this post should not appear on FlyAwayPlus</td>
+                                        }
+                                        else if (reportPost.typeRepost == 3)
+                                        {
+                                            <td>This post is spam</td>
+                                        }
+                                        <td>@reportPost.userReportID</td>
+                                        <td>@reportPost.userReportedID</td>
+                                        <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
+                                        <td>
+                                            <a onclick="lockPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Lock post</a>
+                                            <a onclick="cancelReportPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Cancel</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        </tbody>
+                    </table>
+                    <p><b>Number of report post:</b> @ViewBag.NumberOfReportPost</p>
+                    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportPosts, page => Url.Action("Main", new { page, tab = "reportPost" }))
+                </form>
+            </div>
+
+            <div id="reportUser" class="tab-pane fade">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Type report</th>
+                                <th>User Report ID</th>
+                                <th>User Reported ID</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (var reportUser in ViewBag.OnePageOfReportUsers)
+                                {
+                                    <tr id="user_@reportUser.reportID">
+                                        <td>@reportUser.reportID</td>
+                                        @if (reportUser.typeReport == 1)
+                                        {
+                                            <td>This post annoying or unpleasant</td>
+                                        }
+                                        else if (reportUser.typeReport == 2)
+                                        {
+                                            <td>I think this post should not appear on FlyAwayPlus</td>
+                                        }
+                                        else if (reportUser.typeReport == 3)
+                                        {
+                                            <td>This post is spam</td>
+                                        }
+                                        <td>@reportUser.userReportID</td>
+                                        <td>@reportUser.userReportedID</td>
+                                        <td>
+                                            <a onclick="lockReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Lock user</a>
+                                            <a onclick="cancelReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Cancel</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        </tbody>
+                    </table>
+                    <p id="numberOfReportUser"><b>Number of report user:</b> @ViewBag.NumberOfReportUser</p>
+                    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportUsers, page => Url.Action("Main", new { page, tab = "reportUser" }))
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
 </html>
 
 <script>

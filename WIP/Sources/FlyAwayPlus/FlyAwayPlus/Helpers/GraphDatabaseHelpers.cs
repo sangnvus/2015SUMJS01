@@ -36,7 +36,7 @@ namespace FlyAwayPlus.Helpers
              */
             _client.Connect();
             _client.Cypher.Match("(n:user { userID: " + userId + " })")
-                           .Set("n.status = 'lock' RETURN n")
+                           .Set("n.status = 'lock'")
                            .ExecuteWithoutResults();
         }
 
@@ -340,27 +340,9 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return userId == otherUserId
-                    ? CountFriends(userId)
-                    : _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
+                return _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
                                 .With("count(DISTINCT mf) AS mutualFriends")
                                 .Return<int>("mutualFriends")
-                                .Results.Single();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return 0;
-            }
-        }
-
-        public int CountFriends(int userId)
-        {
-            try
-            {
-                _client.Connect();
-                return _client.Cypher.Match("(u:user {userID:" + userId + "})<-[:FRIEND]-(other:user)")
-                                .Return<int>("COUNT(DISTINCT other)")
                                 .Results.Single();
             }
             catch (Exception e)
@@ -379,23 +361,8 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(u:user)")
+                return _client.Cypher.Match("(u:user")
                                 .Return<int>("COUNT(distinct u)")
-                                .Results.Single();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return 0;
-            }
-        }
-        public int CountPlaceOfUser(int userId)
-        {
-            try
-            {
-                _client.Connect();
-                return _client.Cypher.Match("(:user{userID: " + userId + "})-[:VISITED]->(p:place)")
-                                .Return<int>("COUNT(distinct p)")
                                 .Results.Single();
             }
             catch (Exception e)
@@ -489,7 +456,7 @@ namespace FlyAwayPlus.Helpers
             {
                 _client.Connect();
                 _client.Cypher.Match("(u:reportPost {reportID:" + reportID + "})-[r]-()")
-                                .Delete("n,r")
+                                .Delete("u,r")
                                 .ExecuteWithoutResults();
                 return true;
             }
@@ -510,7 +477,7 @@ namespace FlyAwayPlus.Helpers
             {
                 _client.Connect();
                 _client.Cypher.Match("(u:reportUser {reportID:" + reportID + "})-[r]-()")
-                                .Delete("n,r")
+                                .Delete("u,r")
                                 .ExecuteWithoutResults();
             }
             catch (Exception e)
@@ -571,15 +538,6 @@ namespace FlyAwayPlus.Helpers
         {
             _client.Connect();
             var user = _client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
-                .Return<User>("u")
-                .Results.FirstOrDefault();
-            return user;
-        }
-
-        public User GetUser(int userId)
-        {
-            _client.Connect();
-            var user = _client.Cypher.Match("(u:user {userID:" + userId + "})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -803,6 +761,42 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             int count = _client.Cypher.Match("(po:post)-[r:AT]->(pl:place {placeID:" + placeId + "})")
                                    .Return<int>("COUNT(Distinct po)")
+                                   .Results.Single();
+
+            return count;
+        }
+
+        public int NumberOfUser()
+        {
+            // Auto increment Id
+
+            _client.Connect();
+            int count = _client.Cypher.Match("(u:user)")
+                                   .Return<int>("COUNT(u)")
+                                   .Results.Single();
+
+            return count;
+        }
+
+        public int NumberOfReportPost()
+        {
+            // Auto increment Id
+
+            _client.Connect();
+            int count = _client.Cypher.Match("(u:reportPost)")
+                                   .Return<int>("COUNT(u)")
+                                   .Results.Single();
+
+            return count;
+        }
+
+        public int NumberOfReportUser()
+        {
+            // Auto increment Id
+
+            _client.Connect();
+            int count = _client.Cypher.Match("(u:reportUser)")
+                                   .Return<int>("COUNT(u)")
                                    .Results.Single();
 
             return count;
