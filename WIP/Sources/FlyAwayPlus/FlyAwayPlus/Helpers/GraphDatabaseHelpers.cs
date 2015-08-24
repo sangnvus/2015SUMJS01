@@ -11,6 +11,20 @@ namespace FlyAwayPlus.Helpers
 {
     public class GraphDatabaseHelpers : SingletonBase<GraphDatabaseHelpers>
     {
+        public class ReportPost
+        {
+            public string contentReport { get; set; }
+            public int postID { get; set; }
+            public int userReportID { get; set; }
+        }
+
+        public class ReportUser
+        {
+            public string contentReport { get; set; }
+            public int userReportedID { get; set; }
+            public int userReportID { get; set; }
+        }
+
         private readonly GraphClient _client;
 
         private GraphDatabaseHelpers()
@@ -78,42 +92,58 @@ namespace FlyAwayPlus.Helpers
                    .ExecuteWithoutResults();
         }
 
-        public void InsertReportPost(ReportPost reportPost)
+        public void InsertReportPost(int postID, int userReportID, int typeReport)
         {
-            // Auto increment Id.
-            reportPost.reportID = GetGlobalIncrementId();
-
-            _client.Connect();
-            _client.Cypher.Create("(p:reportPost {newReportPost})")
-                .WithParam("newReportPost", reportPost)
-                .ExecuteWithoutResults();
-
-            _client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportID + "})")
-                                 .Create("(p)-[r:REPORT_BY]->(u)")
+            string contentReport = null;
+            if (typeReport == 1)
+            {
+                contentReport = "This post annoying or unpleasant";
+            }
+            else if (typeReport == 2)
+            {
+                contentReport = "I think this post should not appear on FlyAwayPlus";
+            }
+            else if (typeReport == 3)
+            {
+                contentReport = "This post is spam";
+            }
+            int count = _client.Cypher.Match("(u:user{userID:" + userReportID + "})-[r:REPORT_POST]->(p:post{postID:" + postID + "})")
+                                   .Return<int>("COUNT(r)")
+                                   .Results.Single();
+            if (count == 0)
+            {
+                _client.Cypher.Match("(a:user), (b:post)")
+                                 .Where("a.userID = " + userReportID + " AND b.postID = " + postID)
+                                 .Create("(a)-[r:REPORT_POST {contentReport: '" + contentReport + "'}]->(b)")
                                  .ExecuteWithoutResults();
-
-            _client.Cypher.Match("(p:reportPost {reportID:" + reportPost.reportID + "}), (u:user {userID: " + reportPost.userReportedID + "})")
-                                 .Create("(p)-[r:REPORT_TO]->(u)")
-                                 .ExecuteWithoutResults();
+            }
         }
 
-        public void InsertReportUser(ReportUser reportUser)
+        public void InsertReportUser(int userReportID, int userReportedID, int typeReport)
         {
-            // Auto increment Id.
-            reportUser.reportID = GetGlobalIncrementId();
-
-            _client.Connect();
-            _client.Cypher.Create("(p:reportUser {newReportUser})")
-                .WithParam("newReportUser", reportUser)
+            string contentReport = null;
+            if (typeReport == 1)
+            {
+                contentReport = "This user annoying or unpleasant";
+            }
+            else if (typeReport == 2)
+            {
+                contentReport = "I think this user should not appear on FlyAwayPlus";
+            }
+            else if (typeReport == 3)
+            {
+                contentReport = "This user is spam";
+            }
+            int count = _client.Cypher.Match("(u1:user{userID:" + userReportID + "})-[r:REPORT_USER]->(u2:user{userID:" + userReportedID + "})")
+                                   .Return<int>("COUNT(r)")
+                                   .Results.Single();
+            if (count == 0)
+            {
+                _client.Cypher.Match("(a:user), (b:user)")
+                                 .Where("a.userID = " + userReportID + " AND b.userID = " + userReportedID)
+                                 .Create("(a)-[r:REPORT_USER {contentReport: '" + contentReport + "'}]->(b)")
                                  .ExecuteWithoutResults();
-
-            _client.Cypher.Match("(p:reportUser {reportID:" + reportUser.reportID + "}), (u:user {userID: " + reportUser.userReportID + "})")
-                                 .Create("(p)-[r:REPORT_BY]->(u)")
-                                 .ExecuteWithoutResults();
-
-            _client.Cypher.Match("(p:reportPost {reportID:" + reportUser.reportID + "}), (u:user {userID: " + reportUser.userReportedID + "})")
-                                 .Create("(p)-[r:REPORT_TO]->(u)")
-                                 .ExecuteWithoutResults();
+            }
         }
 
         public bool IsLike(int postId, int userId)
@@ -446,7 +476,7 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public bool DeleteReportPost(int reportID)
+        public bool DeleteReportPost(int postId, int userReportID)
         {
             /**
              * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
@@ -455,8 +485,8 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:reportPost {reportID:" + reportID + "})-[r]-()")
-                                .Delete("u,r")
+                _client.Cypher.Match("(u:user {userID:" + userReportID + "})-[r:REPORT_POST]-(p:post {postID:" + postId + "})")
+                                .Delete("r")
                                 .ExecuteWithoutResults();
                 return true;
             }
@@ -467,7 +497,7 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public bool DeleteReportUser(int reportID)
+        public bool DeleteReportUser(int userReportedID, int userReportID)
         {
             /**
              * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
@@ -476,16 +506,16 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:reportUser {reportID:" + reportID + "})-[r]-()")
-                                .Delete("u,r")
+                _client.Cypher.Match("(u1:user {userID:" + userReportID + "})-[r:REPORT_USER]-(u2:user {userID:" + userReportedID + "})")
+                                .Delete("r")
                                 .ExecuteWithoutResults();
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return false;
             }
-            return true;
         }
 
         public bool InsertDislike(int userId, int postId)
@@ -666,8 +696,14 @@ namespace FlyAwayPlus.Helpers
                     return u1;
                  */
             _client.Connect();
-            var listAllReportPosts = _client.Cypher.OptionalMatch("(u1:reportPost)")
-                .ReturnDistinct<ReportPost>("u1")
+            var listAllReportPosts = _client.Cypher.OptionalMatch("(u:user)-[r:REPORT_POST]->(p:post)")
+                .With("r.contentReport as contentReport, u.userID as userReportID, p.postID as postID")
+                .Return((contentReport, userReportID, postID) => new ReportPost
+                {
+                    contentReport = contentReport.As<String>(),
+                    userReportID = userReportID.As<Int16>(),
+                    postID = postID.As<Int16>()
+                })
                 .Results.ToList();
             return listAllReportPosts;
         }
@@ -684,10 +720,16 @@ namespace FlyAwayPlus.Helpers
                     return u1;
                  */
             _client.Connect();
-            var listAllReportPosts = _client.Cypher.OptionalMatch("(u1:reportUser)")
-                .ReturnDistinct<ReportUser>("u1")
+            var listAllReportUsers = _client.Cypher.OptionalMatch("(u1:user)-[r:REPORT_USER]->(u2:user)")
+                .With("r.contentReport as contentReport, u1.userID as userReportID, u2.userID as userReportedID")
+                .Return((contentReport, userReportID, userReportedID) => new ReportUser
+                {
+                    contentReport = contentReport.As<String>(),
+                    userReportID = userReportID.As<Int16>(),
+                    userReportedID = userReportedID.As<Int16>()
+                })
                 .Results.ToList();
-            return listAllReportPosts;
+            return listAllReportUsers;
         }
 
         public List<User> FindFriend(User user)
@@ -783,8 +825,8 @@ namespace FlyAwayPlus.Helpers
             // Auto increment Id
 
             _client.Connect();
-            int count = _client.Cypher.Match("(u:reportPost)")
-                                   .Return<int>("COUNT(u)")
+            int count = _client.Cypher.Match("(u:user)-[r:REPORT_POST]->(p:post)")
+                                   .Return<int>("COUNT(r)")
                                    .Results.Single();
 
             return count;
@@ -795,8 +837,8 @@ namespace FlyAwayPlus.Helpers
             // Auto increment Id
 
             _client.Connect();
-            int count = _client.Cypher.Match("(u:reportUser)")
-                                   .Return<int>("COUNT(u)")
+            int count = _client.Cypher.Match("(u1:user)-[r:REPORT_USER]->(u2:user)")
+                                   .Return<int>("COUNT(r)")
                                    .Results.Single();
 
             return count;

@@ -18,6 +18,7 @@
 </head>
 <body>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/common.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -62,7 +63,7 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
+                                                    <input type="checkbox" onclick=" lock(@user.userid) " name=" onoffswitch_@user.userid" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
                                                     <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
@@ -74,7 +75,7 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
+                                                    <input type="checkbox" onclick=" unLock(@user.userID) " name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
                                                     <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
@@ -101,11 +102,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Report ID</th>
                                 <th>Post ID</th>
-                                <th>Type report</th>
+                                <th>Content report</th>
                                 <th>User Report ID</th>
-                                <th>User Reported ID</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -113,31 +112,21 @@
                         <tbody>
                             @try
                             {
-                                foreach (var reportPost in ViewBag.OnePageOfReportPosts)
+                                if (ViewBag.OnePageOfReportPosts != null)
                                 {
-                                    <tr id="post_@reportPost.postID">
-                                        <td>@reportPost.reportID</td>
-                                        <td>@reportPost.postID</td>
-                                        @if (reportPost.typeRepost == 1)
-                                        {
-                                            <td>This post annoying or unpleasant</td>
-                                        }
-                                        else if (reportPost.typeRepost == 2)
-                                        {
-                                            <td>I think this post should not appear on FlyAwayPlus</td>
-                                        }
-                                        else if (reportPost.typeRepost == 3)
-                                        {
-                                            <td>This post is spam</td>
-                                        }
-                                        <td>@reportPost.userReportID</td>
-                                        <td>@reportPost.userReportedID</td>
-                                        <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
-                                        <td>
-                                            <a onclick="lockPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Lock post</a>
-                                            <a onclick="cancelReportPost(@reportPost.postID,@reportPost.reportID)" class="btn btn-primary">Cancel</a>
-                                        </td>
-                                    </tr>
+                                    foreach (var reportPost in ViewBag.OnePageOfReportPosts)
+                                    {
+                                        <tr>
+                                            <td>@reportPost.postID</td>
+                                            <td>@reportPost.contentReport</td>
+                                            <td>@reportPost.userReportID</td>
+                                            <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
+                                            <td>
+                                                <a onclick=" lockPost(@reportPost.postID, @reportPost.userReportID) " class="btn btn-primary">Lock post</a>
+                                                <a onclick=" cancelReportPost(@reportPost.postID, @reportPost.userReportID) " class="btn btn-primary">Cancel</a>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -156,10 +145,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Report ID</th>
-                                <th>Type report</th>
                                 <th>User Report ID</th>
                                 <th>User Reported ID</th>
+                                <th>Type report</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -169,25 +157,13 @@
                             {
                                 foreach (var reportUser in ViewBag.OnePageOfReportUsers)
                                 {
-                                    <tr id="user_@reportUser.reportID">
-                                        <td>@reportUser.reportID</td>
-                                        @if (reportUser.typeReport == 1)
-                                        {
-                                            <td>This post annoying or unpleasant</td>
-                                        }
-                                        else if (reportUser.typeReport == 2)
-                                        {
-                                            <td>I think this post should not appear on FlyAwayPlus</td>
-                                        }
-                                        else if (reportUser.typeReport == 3)
-                                        {
-                                            <td>This post is spam</td>
-                                        }
+                                    <tr>
                                         <td>@reportUser.userReportID</td>
                                         <td>@reportUser.userReportedID</td>
+                                        <td>@reportUser.contentReport</td>
                                         <td>
-                                            <a onclick="lockReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Lock user</a>
-                                            <a onclick="cancelReportUser(@reportUser.userReportedID,@reportUser.reportID)" class="btn btn-primary">Cancel</a>
+                                            <a onclick=" lockReportUser(@reportUser.userReportedID, @reportUser.userReportID) " class="btn btn-primary">Lock user</a>
+                                            <a onclick=" cancelReportUser(@reportUser.userReportedID, @reportUser.userReportID) " class="btn btn-primary">Cancel</a>
                                         </td>
                                     </tr>
                                 }
@@ -204,13 +180,22 @@
             </div>
 
         </div>
+
     </div>
 </body>
 </html>
 
 <script>
-    $(document).ready(function () {
-        $('.nav-tabs a[href="#@ViewBag.Tab"]').tab('show');
+    $(document).ready(function() {
+        var tab = '@ViewBag.Tab';
+        if (tab.length == 0 || tab == 'user')
+        {
+            $('.nav-tabs a[href="#user"]').tab('show');
+        }
+        else
+        {
+            $('.nav-tabs a[href="#@ViewBag.Tab"]').tab('show');
+        }
 });
 
 function lock(id) {
@@ -249,19 +234,22 @@ function unLock(id) {
     }
 }
 
-function lockPost(id, reportID) {
+function lockPost(postID,userReportID) {
     $.ajax({
-        url: "/Admin/LockPost/",
+        url: "/Admin/LockReportPost/",
         type: 'POST',
         dataType: 'json',
         data: {
-            postId: id,
-            reportID: reportID
+            postId: postID,
+            userReportID: userReportID
         },
         success: function (data) {
             if (data == true) {
                 alert("This post is locked!");
-                $('#post_' + id).remove();
+                @{
+                    ViewBag.Tab = "reportPost";
+                }
+                location.reload();
             } else {
                 alert("Error!");
             }
@@ -271,18 +259,22 @@ function lockPost(id, reportID) {
     });
 }
 
-function cancelReportPost(id, reportID) {
+function cancelReportPost(postID,userReportID) {
     $.ajax({
         url: "/Admin/CancelReportPost/",
         type: 'POST',
         dataType: 'json',
         data: {
-            reportID: reportID
+            postId: postID,
+            userReportID: userReportID
         },
         success: function (data) {
             if (data == true) {
                 alert("This report has been canceled");
-                $('#post_' + id).remove();
+                @{
+                    ViewBag.Tab = "reportPost";
+                }
+                location.reload();
             } else {
                 alert("Error!");
             }
@@ -292,19 +284,19 @@ function cancelReportPost(id, reportID) {
     });
 }
 
-function lockReportUser(id, reportID) {
+function lockReportUser(userReportedID, userReportID) {
     $.ajax({
         url: "/Admin/LockReportUser/",
         type: 'POST',
         dataType: 'json',
         data: {
-            userId: id,
-            reportID: reportID
+            userReportedID: userReportedID,
+            userReportID: userReportID
         },
         success: function (data) {
             if (data == true) {
                 alert("This user is locked!");
-                $('#user_' + reportID).remove();
+                location.reload();
             } else {
                 alert("Error!");
             }
@@ -314,18 +306,19 @@ function lockReportUser(id, reportID) {
     });
 }
 
-function cancelReportUser(id, reportID) {
+function cancelReportUser(userReportedID, userReportID) {
     $.ajax({
         url: "/Admin/CancelReportUser/",
         type: 'POST',
         dataType: 'json',
         data: {
-            reportID: reportID
+            userReportedID: userReportedID,
+            userReportID: userReportID
         },
         success: function (data) {
             if (data == true) {
                 alert("Thiis report has been canceled");
-                $('#user_' + reportID).remove();
+                location.reload();
             } else {
                 alert("Error!");
             }
