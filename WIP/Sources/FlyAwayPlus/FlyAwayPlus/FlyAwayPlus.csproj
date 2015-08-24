@@ -315,6 +315,7 @@
     <Content Include="Content\sweetalert.css" />
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Content\tooltipster.css" />
+    <Content Include="fonts\artill_clean_icons-webfont.svg" />
     <Content Include="Images\image.gif" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\icon-calendar.png" />
@@ -386,6 +387,10 @@
     <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
     <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
+    <Content Include="fonts\artill_clean_icons-webfont.eot" />
+    <Content Include="fonts\artill_clean_icons-webfont.ttf" />
+    <Content Include="fonts\artill_clean_icons-webfont.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\FlyAwayPlus.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -465,6 +470,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Images\background\" />
     <Folder Include="Images\UserUpload\UserAvatar\" />
+    <Folder Include="Temp\" />
     <Folder Include="Views\Upload\" />
   </ItemGroup>
   <ItemGroup>

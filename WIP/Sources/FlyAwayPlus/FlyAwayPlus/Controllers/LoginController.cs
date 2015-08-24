@@ -30,6 +30,7 @@ namespace FlyAwayPlus.Controllers
         {
             //if (!ModelState.IsValid)
             {
+                Session["loginMessageError"] = "";
                 user.typeID = 0; // Fap Account
 
                 // select from DB
@@ -48,13 +49,15 @@ namespace FlyAwayPlus.Controllers
                     {
                         user.avatar = "/Images/UIHelper/default-avatar.jpg";
                     }
-
+                    Session["registerMessageError"] = "";
                     // insert user to Database
                     GraphDatabaseHelpers.Instance.InsertUser(ref user);
                 }
                 else
                 {
                     // TODO
+                    Session["registerMessageError"] = "User with the email you provided is already exist.";
+                    return RedirectToAction("Index", "Home");
                 }
 
                 // Set the auth cookie
@@ -100,6 +103,7 @@ namespace FlyAwayPlus.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Session["registerMessageError"] = "";
                 user.typeID = 0;
 
                 var newUser = GraphDatabaseHelpers.Instance.GetUser(user.typeID, user.email);
@@ -107,6 +111,7 @@ namespace FlyAwayPlus.Controllers
                 if (newUser == null)
                 {
                     // TODO
+                    Session["loginMessageError"] = "Email or password is incorrect!";
                 }
                 else if (user.password.Equals(newUser.password))
                 {
@@ -115,6 +120,11 @@ namespace FlyAwayPlus.Controllers
                     Session["userAva"] = newUser.avatar;
                     Session["user"] = newUser;
                     Session["userID"] = newUser.userID;
+                    Session["loginMessageError"] = "";
+                }
+                else
+                {
+                    Session["loginMessageError"] = "Email or password is incorrect!";
                 }
             }
 

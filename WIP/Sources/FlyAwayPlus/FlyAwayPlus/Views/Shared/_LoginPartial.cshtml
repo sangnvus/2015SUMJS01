@@ -8,6 +8,12 @@
 
 @model FlyAwayPlus.Models.User
 
+@{
+    string registerBtnClass = string.IsNullOrEmpty(Session["registerMessageError"] + "") ? "" : "active";
+    string loginBtnClass = string.IsNullOrEmpty(Session["registerMessageError"] + "") ? "active" : "";
+    string registerFormClass = string.IsNullOrEmpty(Session["registerMessageError"] + "") ? "none" : "block";
+    string loginFormClass = string.IsNullOrEmpty(Session["registerMessageError"] + "") ? "block" : "none";
+}
 <div id="login-modal" style="margin-top: 30px;" data-backdrop="static" data-keyboard="false" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog login-modal-wrap">
         <div class="modal-content">
@@ -16,10 +22,10 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-6">
-                                <a href="javascript:;" class="active" id="login-form-link">Login</a>
+                                <a href="javascript:;" class="@loginBtnClass" id="login-form-link">Login</a>
                             </div>
                             <div class="col-xs-6">
-                                <a href="javascript:;" id="register-form-link">Register</a>
+                                <a href="javascript:;" class="@registerBtnClass" id="register-form-link">Register</a>
                             </div>
                         </div>
                         <hr>
@@ -27,8 +33,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { role = "form", id = "login-form", style = "display:block" }))
-                                {
+                                <form style="display: @loginFormClass;" role="form" method="post" id="login-form" action="/Login/Login" novalidate="novalidate">
                                     <div class="social-box">
                                         <div class="row mg-btm">
                                             <div class="col-md-12">
@@ -48,6 +53,10 @@
                                     </div>
 
                                     <div class="form-group">
+                                        @if (!string.IsNullOrEmpty(Session["loginMessageError"] + ""))
+                                        {
+                                            <span style="color: red; font-size: 15px; margin-left: 10px;">@Session["loginMessageError"]</span>
+                                        }
                                         @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", id = "id_login_email", placeholder = "Email Address", tabindex = "1", type = "email" } })
                                         @Html.ValidationMessageFor(model => model.email, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                     </div>
@@ -75,16 +84,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                }
+                                </form>
 
-                                <div id="register-form" style="display: none; margin-top: -15px">
+                                <div id="register-form" style="display: @registerFormClass;  margin-top: -15px">
                                     <div>
                                         @{ Html.RenderPartial("~/Views/Login/UploadAvatar.cshtml"); }
                                     </div>
 
-                                    @using (Html.BeginForm("Register", "Login", FormMethod.Post, new { role = "form", id = "register-form-inner" }))
-                                    {
-                                        <!--<form id="register-form" action="/Login/Register" method="post" role="form" style="display: none;">-->
+                                    <form role="form" method="post" id="register-form-inner" action="/Login/Register" novalidate="novalidate">
                                         @Html.ValidationSummary(true)
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -153,7 +160,12 @@
                                             </div>
                                         </div>
                                         @Html.EditorFor(model => model.avatar, new { htmlAttributes = new { @class = "hidden", id = "id-register-avatar-path", type = "text" } })
-                                    }
+
+                                        @if (!string.IsNullOrEmpty(Session["registerMessageError"] + ""))
+                                        {
+                                            <span style="color: red; font-size: 15px; margin-left: 10px;">@Session["registerMessageError"]</span>
+                                        }
+                                    </form>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-6 col-sm-offset-3">
