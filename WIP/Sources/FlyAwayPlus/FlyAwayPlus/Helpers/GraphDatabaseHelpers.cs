@@ -2188,6 +2188,7 @@ namespace FlyAwayPlus.Helpers
                                  .ExecuteWithoutResults();
                 }
             }
+
             return true;
         }
 
