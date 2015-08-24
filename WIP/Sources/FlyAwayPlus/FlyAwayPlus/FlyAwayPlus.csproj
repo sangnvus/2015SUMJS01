@@ -334,6 +334,7 @@
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
     <Content Include="Scripts\jquery.tooltipster.js" />
+    <Content Include="Scripts\markerWithLabel.js" />
     <Content Include="Scripts\md5.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\sweetalert.min.js" />
@@ -465,6 +466,7 @@
     <Content Include="Views\Shared\_ListRoomPartial.cshtml" />
     <Content Include="Views\Shared\_TagFriendPartial.cshtml" />
     <Content Include="Views\Admin\Main.cshtml" />
+    <Content Include="Views\Admin\ViewPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

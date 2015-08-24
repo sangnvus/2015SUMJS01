@@ -365,13 +365,7 @@ namespace FlyAwayPlus.Controllers
         {
             bool success = false;
 
-            ReportPost reportPost = new ReportPost();
-            reportPost.postID = postID;
-            reportPost.typeRepost = typeReport;
-            reportPost.userReportID = userReportID;
-            reportPost.userReportedID = userReportedID;
-
-            GraphDatabaseHelpers.Instance.InsertReportPost(reportPost);
+            GraphDatabaseHelpers.Instance.InsertReportPost(postID, userReportID, typeReport);
 
             //Send warning email to reported user
             var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedID);
@@ -406,12 +400,32 @@ namespace FlyAwayPlus.Controllers
         {
             bool success = false;
 
-            ReportUser reportUser = new ReportUser();
-            reportUser.typeReport = typeReport;
-            reportUser.userReportID = userReportID;
-            reportUser.userReportedID = userReportedID;
+            GraphDatabaseHelpers.Instance.InsertReportUser(userReportID, userReportedID, typeReport);
+            //Send warning email to reported user
+            var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedID);
+            string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+            const string senderPassword = "doan2015"; // sender password here…
+            try
+            {
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com", // smtp server address here…
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(senderID, senderPassword),
+                    Timeout = 30000,
+                };
+                var message = new MailMessage(senderID, email, "Report account",
+                    "Your account is reported");
+                smtp.Send(message);
 
-            GraphDatabaseHelpers.Instance.InsertReportUser(reportUser);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
 
             return Json(success);
         }

@@ -44,6 +44,7 @@
                             <textarea class="form-control" id="edit-post-message-text"></textarea>
                         </div>
                     </form>
+                    <span id="id-err-msg-edit-post" style="color: red; display: none;">Post's content must not be empty</span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -52,7 +53,6 @@
             </div>
         </div>
     </div>
-
     <script>
         $(function () {
             // Sidebar - load weather.
@@ -65,7 +65,7 @@
                         success: function (weather) {
                             html = '<h2><div style="position: absolute; top: -10px"><i class="icon-' + weather.code + '"></i></div> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
                             html += weather.city;
-                            $("#id-lookaround-btn").attr("href", $("#id-lookaround-btn").attr("href") + "?name=" + weather.city + "&");
+                            $("#id-lookaround-btn").attr("href", $("#id-lookaround-btn").attr("href") + "&name=" + weather.city + "&");
                             $("#weather-sidebar").html(html);
                         },
                         error: function (error) {
@@ -81,6 +81,7 @@
 
             var editPostContentWrapper;
             $("#edit-post-modal").on("show.bs.modal", function (event) {
+                $("#id-err-msg-edit-post").hide();
                 var editButton = $(event.relatedTarget);
 
                 var postId = editButton.attr("value");
@@ -92,20 +93,33 @@
                 modal.find("#edit-post-modal-save-button").attr("value", postId);
             });
 
-            $("#edit-post-modal-save-button").click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/Post/EditPost",
-                    data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
-                    error: function () {
-                        swal("Oops...", "Something went wrong! Try again later!", "error");
-                    },
-                    success: function () {
-                        editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
-                        $("#edit-post-modal").modal('hide');
-                        commonModule.setBlocksit($(".blog-landing"), 212);
+            $("#edit-post-modal").find(".modal-body textarea").bind("input propertychange", function (evt) {
+                if ($(this).val().trim().length > 0) {
+                    $("#id-err-msg-edit-post").hide();
+                }
+            });
+            $("#edit-post-modal-save-button").click(function (evt) {
+                if (evt.handled !== true) { // This will prevent event triggering more then once
+                    evt.handled = true;
+                    if ($("#edit-post-modal").find(".modal-body textarea").val().trim().length == 0) {
+                        $("#id-err-msg-edit-post").show();
                     }
-                });
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Post/EditPost",
+                            data: { postId: $(this).attr("value"), newContent: $("#edit-post-modal").find(".modal-body textarea").val() },
+                            error: function () {
+                                swal("Oops...", "Something went wrong! Try again later!", "error");
+                            },
+                            success: function () {
+                                editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
+                                $("#edit-post-modal").modal('hide');
+                                commonModule.setBlocksit($(".blog-landing"), 212);
+                            }
+                        });
+                    }
+                }
             });
         });
     </script>
