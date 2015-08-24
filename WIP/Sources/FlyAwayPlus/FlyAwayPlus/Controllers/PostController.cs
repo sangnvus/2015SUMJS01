@@ -47,16 +47,16 @@ namespace FlyAwayPlus.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                userPost = GraphDatabaseHelpers.Instance.SearchUser(id);
+                userPost = GraphDatabaseHelpers.Instance.SearchUser(post.postID);
                 listFriend = GraphDatabaseHelpers.Instance.GetListFriend(user.userID);
-                listComment = GraphDatabaseHelpers.Instance.FindComment(id);
+                listComment = GraphDatabaseHelpers.Instance.FindComment(post);
 
-                likeCount = GraphDatabaseHelpers.Instance.CountLike(id);
-                dislikeCount = GraphDatabaseHelpers.Instance.CountDislike(id);
-                userComment = GraphDatabaseHelpers.Instance.CountUserComment(id);
+                likeCount = GraphDatabaseHelpers.Instance.CountLike(post.postID);
+                dislikeCount = GraphDatabaseHelpers.Instance.CountDislike(post.postID);
+                userComment = GraphDatabaseHelpers.Instance.CountUserComment(post.postID);
 
                 // TODO: Change to list of photos.
-                photo = GraphDatabaseHelpers.Instance.FindPhoto(id).FirstOrDefault();
+                photo = GraphDatabaseHelpers.Instance.FindPhoto(post.postID).FirstOrDefault();
                 foreach (var comment in listComment)
                 {
                     dict.Add(comment.commentID, GraphDatabaseHelpers.Instance.FindUser(comment));

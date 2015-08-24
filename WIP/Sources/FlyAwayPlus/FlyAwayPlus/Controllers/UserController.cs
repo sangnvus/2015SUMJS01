@@ -241,11 +241,6 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
-        public bool IsFriend(int userId, int otherUserId)
-        {
-            return GraphDatabaseHelpers.Instance.IsFriend(userId, otherUserId);
-        }
-
         public JsonResult SendRequestFriend(int userID, int otherUserID)
         {
             User user = UserHelpers.GetCurrentUser(Session);
@@ -253,17 +248,6 @@ namespace FlyAwayPlus.Controllers
             if (user != null)
             {
                 success = GraphDatabaseHelpers.Instance.SendRequestFriend(userID, otherUserID);
-            }
-            return Json(success);
-        }
-
-        public JsonResult CancelRequestFriend(int userId, int otherUserId)
-        {
-            User user = UserHelpers.GetCurrentUser(Session);
-            bool success = false;
-            if (user != null)
-            {
-                success = GraphDatabaseHelpers.Instance.DeclineRequestFriend(userId, otherUserId);
             }
             return Json(success);
         }
@@ -365,13 +349,7 @@ namespace FlyAwayPlus.Controllers
         {
             bool success = false;
 
-            ReportPost reportPost = new ReportPost();
-            reportPost.postID = postID;
-            reportPost.typeRepost = typeReport;
-            reportPost.userReportID = userReportID;
-            reportPost.userReportedID = userReportedID;
-
-            GraphDatabaseHelpers.Instance.InsertReportPost(reportPost);
+            GraphDatabaseHelpers.Instance.InsertReportPost(postID, userReportID, typeReport);
 
             //Send warning email to reported user
             var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedID);
@@ -406,41 +384,35 @@ namespace FlyAwayPlus.Controllers
         {
             bool success = false;
 
-            ReportUser reportUser = new ReportUser();
-            reportUser.typeReport = typeReport;
-            reportUser.userReportID = userReportID;
-            reportUser.userReportedID = userReportedID;
+            GraphDatabaseHelpers.Instance.InsertReportUser(userReportID, userReportedID, typeReport);
 
-            GraphDatabaseHelpers.Instance.InsertReportUser(reportUser);
+            //Send warning email to reported user
+            var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedID);
+            string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+            const string senderPassword = "doan2015"; // sender password here…
+            try
+            {
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com", // smtp server address here…
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(senderID, senderPassword),
+                    Timeout = 30000,
+                };
+                var message = new MailMessage(senderID, email, "Report account",
+                    "Your account is reported");
+                smtp.Send(message);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
 
             return Json(success);
-        }
-
-        public int CountMutualFriend(string thisUserId, string otherUserId)
-        {
-            int thisId, oId;
-
-            return !int.TryParse(thisUserId, out thisId) || !int.TryParse(otherUserId, out oId)
-                ? 0
-                : GraphDatabaseHelpers.Instance.CountMutualFriend(thisId, oId);
-        }
-
-        public int CountPlaces(string otherUserId)
-        {
-            int thisId;
-
-            return !int.TryParse(otherUserId, out thisId)
-                ? 0
-                : GraphDatabaseHelpers.Instance.CountPlaceOfUser(thisId);
-        }
-
-        public JsonResult GetUser(string otherUserId)
-        {
-            int thisId;
-
-            return !int.TryParse(otherUserId, out thisId)
-                ? null
-                : Json(GraphDatabaseHelpers.Instance.GetUser(thisId));
         }
     }
 }

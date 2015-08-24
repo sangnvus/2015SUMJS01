@@ -65,8 +65,8 @@ namespace FlyAwayPlus.Controllers
             else
             {
                 List<User> listAllUsers = GraphDatabaseHelpers.Instance.ListAllUsers();
-                List<ReportPost> listAllReportPost = GraphDatabaseHelpers.Instance.ListAllReportPosts();
-                List<ReportUser> listAllReportUser = GraphDatabaseHelpers.Instance.ListAllReportUsers();
+                List<GraphDatabaseHelpers.ReportPost> listAllReportPost = GraphDatabaseHelpers.Instance.ListAllReportPosts();
+                List<GraphDatabaseHelpers.ReportUser> listAllReportUser = GraphDatabaseHelpers.Instance.ListAllReportUsers();
                 int numberOfUser = GraphDatabaseHelpers.Instance.NumberOfUser();
                 int numberOfReportPost = GraphDatabaseHelpers.Instance.NumberOfReportPost();
                 int numberOfReportUser = GraphDatabaseHelpers.Instance.NumberOfReportUser();
@@ -94,10 +94,10 @@ namespace FlyAwayPlus.Controllers
             return Json(true);
         }
 
-        public JsonResult LockReportUser(int userId, int reportID)
+        public JsonResult LockReportUser(int userReportedID, int userReportID)
         {
-            GraphDatabaseHelpers.Instance.LockUser(userId);
-            GraphDatabaseHelpers.Instance.DeleteReportUser(reportID);
+            GraphDatabaseHelpers.Instance.LockUser(userReportedID);
+            GraphDatabaseHelpers.Instance.DeleteReportUser(userReportedID, userReportID);
             return Json(true);
         }
 
@@ -109,12 +109,12 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
-        public JsonResult LockPost(int postId, int reportID)
+        public JsonResult LockReportPost(int postId, int userReportID)
         {
             try
             {
                 GraphDatabaseHelpers.Instance.LockPost(postId);
-                GraphDatabaseHelpers.Instance.DeleteReportPost(reportID);
+                GraphDatabaseHelpers.Instance.DeleteReportPost(postId, userReportID);
                 return Json(true);
             }
             catch (Exception exception)
@@ -123,11 +123,11 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
-        public JsonResult CancelReportPost(int reportID)
+        public JsonResult CancelReportPost(int postId, int userReportID)
         {
             try
             {
-                GraphDatabaseHelpers.Instance.DeleteReportPost(reportID);
+                GraphDatabaseHelpers.Instance.DeleteReportPost(postId, userReportID);
                 return Json(true);
             }
             catch (Exception exception)
@@ -136,11 +136,11 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
-        public JsonResult CancelReportUser(int reportID)
+        public JsonResult CancelReportUser(int userReportedID, int userReportID)
         {
             try
             {
-                GraphDatabaseHelpers.Instance.DeleteReportUser(reportID);
+                GraphDatabaseHelpers.Instance.DeleteReportUser(userReportedID, userReportID);
                 return Json(true);
             }
             catch (Exception exception)
@@ -157,7 +157,7 @@ namespace FlyAwayPlus.Controllers
                 User userReported = GraphDatabaseHelpers.Instance.FindUser(post);
 
                 List<Photo> photo = GraphDatabaseHelpers.Instance.FindPhoto(id);
-                List<Comment> listComment = GraphDatabaseHelpers.Instance.FindComment(id);
+                List<Comment> listComment = GraphDatabaseHelpers.Instance.FindComment(post);
                 ViewData["post"] = post;
                 ViewData["user"] = userReported;
                 ViewData["photo"] = photo;
