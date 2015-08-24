@@ -241,6 +241,11 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
+        public bool IsFriend(int userId, int otherUserId)
+        {
+            return GraphDatabaseHelpers.Instance.IsFriend(userId, otherUserId);
+        }
+
         public JsonResult SendRequestFriend(int userID, int otherUserID)
         {
             User user = UserHelpers.GetCurrentUser(Session);
@@ -248,6 +253,17 @@ namespace FlyAwayPlus.Controllers
             if (user != null)
             {
                 success = GraphDatabaseHelpers.Instance.SendRequestFriend(userID, otherUserID);
+            }
+            return Json(success);
+        }
+
+        public JsonResult CancelRequestFriend(int userId, int otherUserId)
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            bool success = false;
+            if (user != null)
+            {
+                success = GraphDatabaseHelpers.Instance.DeclineRequestFriend(userId, otherUserId);
             }
             return Json(success);
         }
@@ -385,7 +401,6 @@ namespace FlyAwayPlus.Controllers
             bool success = false;
 
             GraphDatabaseHelpers.Instance.InsertReportUser(userReportID, userReportedID, typeReport);
-
             //Send warning email to reported user
             var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedID);
             string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
@@ -413,6 +428,33 @@ namespace FlyAwayPlus.Controllers
             }
 
             return Json(success);
+        }
+
+        public int CountMutualFriend(string thisUserId, string otherUserId)
+        {
+            int thisId, oId;
+
+            return !int.TryParse(thisUserId, out thisId) || !int.TryParse(otherUserId, out oId)
+                ? 0
+                : GraphDatabaseHelpers.Instance.CountMutualFriend(thisId, oId);
+        }
+
+        public int CountPlaces(string otherUserId)
+        {
+            int thisId;
+
+            return !int.TryParse(otherUserId, out thisId)
+                ? 0
+                : GraphDatabaseHelpers.Instance.CountPlaceOfUser(thisId);
+        }
+
+        public JsonResult GetUser(string otherUserId)
+        {
+            int thisId;
+
+            return !int.TryParse(otherUserId, out thisId)
+                ? null
+                : Json(GraphDatabaseHelpers.Instance.GetUser(thisId));
         }
     }
 }
