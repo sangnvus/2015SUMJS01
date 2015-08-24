@@ -18,6 +18,7 @@
 </head>
 <body>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/common.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -215,6 +216,7 @@
 
 function lock(id) {
     var controller, data;
+    
     if ($('#myonoffswitch_' + id).is(':checked')) {
         controller = "/Admin/UnlockUser/";
         data = {
