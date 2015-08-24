@@ -10,6 +10,17 @@
 }
 <link href="~/Content/SearchPage/search-detail.css" rel="stylesheet" />
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
+<!--<script src="~/Scripts/markerWithLabel.js"></script>-->
+<style>
+    .label-img {
+        box-sizing: border-box;
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        background-image: url("https:/graph.facebook.com/1112804152067307/picture?type=small");
+        background-repeat: no-repeat;
+    }
+</style>
 
 <div id="id-place-detail">
     <div class="right-content">
@@ -31,11 +42,11 @@
     $(window).resize(function () {
         commonModule.setBlocksit($("#id-list-post-in-place"), 212);
     });
-    
+
     $(document).ready(function() {
-        
+
     });
-    
+
     var searchDetailModule = (function () {
         var _data = {};
         var _name = {};
@@ -96,11 +107,165 @@
 
     function initialize() {
         var myCenter = new google.maps.LatLng(@currentPlace.latitude, @currentPlace.longitude);
+        var myStyles = [
+            {
+                "featureType": "administrative.country",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+			{
+			    "featureType": "administrative",
+			    "elementType": "labels.text.fill",
+			    "stylers": [
+					{
+					    "color": "#444444"
+					}
+			    ]
+			},
+            {
+                "featureType": "administrative.province",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.locality",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.neighborhood",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.land_parcel",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "landscape.natural",
+                "elementType": "geometry.fill",
+                "stylers": [
+                    {
+                        "visibility": " on"
+                    },
+                    {
+                        "color": "rgb(231, 231, 231)"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "geometry.fill",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    },
+                    {
+                        "hue": "#1900ff"
+                    },
+                    {
+                        "color": "#c0e8e8"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "lightness": 100
+                    },
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit.line",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    },
+                    {
+                        "lightness": 700
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "color": "#46bcec"
+                    },
+					{ invert_lightness: true }
+                ]
+            }
+        ];
         var mapOptions = {
             zoom: 12,
             center: myCenter,
             disableDefaultUI: true,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: myStyles
         };
         var map = new window.google.maps.Map(document.getElementById('id-place-map'), mapOptions);
 
@@ -108,8 +273,10 @@
         var currentMaker = new google.maps.Marker({
             position: new google.maps.LatLng(@currentPlace.latitude, @currentPlace.longitude),
             icon: {
-                url: 'http://maps.google.com/mapfiles/ms/micons/red-dot.png'
+                url: '/Images/current-marker.png',
+                className: "avatar"
             },
+            //labelClass: "label-img avatar", // the CSS class for the label
             map: map
         });
 
@@ -137,7 +304,7 @@
                 var otherMaker = new google.maps.Marker({
                     position: new google.maps.LatLng(listPlace[index]["latitude"], listPlace[index]["longitude"]),
                     icon: {
-                        url: 'http://maps.google.com/mapfiles/ms/micons/blue-dot.png'
+                        url: '/Images/other-marker.png'
                     },
                     map: map
                 });

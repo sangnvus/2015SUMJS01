@@ -60,11 +60,14 @@
                                 </a>
                             </div>
                             <ul class="boardThumbs">
-                                @for (int index = 1; index < listPhotoDict[place.placeID].Count; index++)
+                                @for (int index = 1; index < 4; index++)
                                 {
                                     <li>
                                         <span class="hoverMask"></span>
-                                        <img style="" class="thumb" src="/Images/UserUpload/@listPhotoDict[place.placeID][index].url">
+                                        @if (index < listPhotoDict[place.placeID].Count)
+                                        {
+                                            <img style="" class="thumb" src="/Images/UserUpload/@listPhotoDict[place.placeID][index].url">
+                                        }
                                     </li>
                                 }
                             </ul>

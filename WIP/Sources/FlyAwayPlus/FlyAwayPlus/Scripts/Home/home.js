@@ -217,10 +217,10 @@ $(window).scroll(function () {
 
 $(window).load(function () {
     homeModule.setBlocksit();
-    homeModule.fadeImage();
-    homeModule.likePost();
-    homeModule.dislikePost();
-    homeModule.plusPost();
+    //homeModule.fadeImage();
+    //homeModule.likePost();
+    //homeModule.dislikePost();
+    //homeModule.plusPost();
     $("div#loading").hide();
 });
 
