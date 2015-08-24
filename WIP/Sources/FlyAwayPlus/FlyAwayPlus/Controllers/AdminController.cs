@@ -157,7 +157,7 @@ namespace FlyAwayPlus.Controllers
                 User userReported = GraphDatabaseHelpers.Instance.FindUser(post);
 
                 List<Photo> photo = GraphDatabaseHelpers.Instance.FindPhoto(id);
-                List<Comment> listComment = GraphDatabaseHelpers.Instance.FindComment(post);
+                List<Comment> listComment = GraphDatabaseHelpers.Instance.FindComment(id);
                 ViewData["post"] = post;
                 ViewData["user"] = userReported;
                 ViewData["photo"] = photo;

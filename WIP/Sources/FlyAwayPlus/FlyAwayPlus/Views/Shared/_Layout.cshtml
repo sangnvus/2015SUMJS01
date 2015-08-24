@@ -78,12 +78,13 @@
                         </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
-                                <img id="id-avatar-current-user" src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"].ToString().Replace("//","/"))"
+                                <img id="id-avatar-current-user" 
+                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"].ToString().Replace("//","/"))"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu bullet pull-center" style="left: -40px;">
+                            <ul class="dropdown-menu bullet pull-center" style="left: -45px;">
                                 <li><a href="/User/Index/@Session["userID"]" id="curent-user-id">@Session["username"]</a></li>
                                 <li><a href="/Login/Logout">Log out</a></li>
                             </ul>

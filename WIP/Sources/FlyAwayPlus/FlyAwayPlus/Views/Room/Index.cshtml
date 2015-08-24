@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Room List";
 }
 
 <div class="filer-wrapper">
@@ -54,7 +55,7 @@
         <!-- End Fitering -->
         <!-- Creating -->
         <div class="form-cn room-list-filter-tab tab-pane" id="room-list-plan-create-room-tab">
-            @using (Html.BeginForm("Add", "Room", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("AddTimelinePlan", "Room", FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
                 <div class="room-create-wrapper col-md-12 clearfix">
                     <div class="col-md-6">

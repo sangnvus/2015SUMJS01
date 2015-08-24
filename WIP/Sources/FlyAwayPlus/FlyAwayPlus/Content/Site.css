@@ -1776,17 +1776,21 @@ textarea {
         margin: 5px 8px 0 8px;
     }
 
-        .hover-card .information ul, .hover-card .information li {
+        .hover-card .information ul,
+        .hover-card .information li,
+        .general-plan-list-container ul,
+        .general-plan-list-container li {
             list-style: none;
             margin: 10px 5px 10px 5px;
             padding: 0;
         }
 
-            .hover-card .information li:before {
+            .hover-card .information li:before,
+            .general-plan-list-container li:before {
                 content: "\f105";
                 font-family: 'FontAwesome';
                 float: left;
-                margin: 0 5px
+                margin: 0 5px;
             }
 
         .hover-card .information .add-friend-btn {
@@ -1838,5 +1842,5 @@ textarea {
 
 .tooltipster-base .tooltipster-content {
     height: 130px;
-    width: 348px
+    width: 348px;
 }

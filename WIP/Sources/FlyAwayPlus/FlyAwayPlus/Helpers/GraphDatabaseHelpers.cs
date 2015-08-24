@@ -340,9 +340,27 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
+                return userId == otherUserId
+                    ? CountFriends(userId)
+                    : _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
                                 .With("count(DISTINCT mf) AS mutualFriends")
                                 .Return<int>("mutualFriends")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public int CountFriends(int userId)
+        {
+            try
+            {
+                _client.Connect();
+                return _client.Cypher.Match("(u:user {userID:" + userId + "})<-[:FRIEND]-(other:user)")
+                                .Return<int>("COUNT(DISTINCT other)")
                                 .Results.Single();
             }
             catch (Exception e)
@@ -363,6 +381,22 @@ namespace FlyAwayPlus.Helpers
                 _client.Connect();
                 return _client.Cypher.Match("(u:user")
                                 .Return<int>("COUNT(distinct u)")
+                                .Results.Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public int CountPlaceOfUser(int userId)
+        {
+            try
+            {
+                _client.Connect();
+                return _client.Cypher.Match("(:user{userID: " + userId + "})-[:VISITED]->(p:place)")
+                                .Return<int>("COUNT(distinct p)")
                                 .Results.Single();
             }
             catch (Exception e)
@@ -538,6 +572,15 @@ namespace FlyAwayPlus.Helpers
         {
             _client.Connect();
             var user = _client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
+                .Return<User>("u")
+                .Results.FirstOrDefault();
+            return user;
+        }
+
+        public User GetUser(int userId)
+        {
+            _client.Connect();
+            var user = _client.Cypher.Match("(u:user {userID:" + userId + "})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -1031,7 +1074,7 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public List<Comment> FindComment(Post post)
+        public List<Comment> FindComment(int postId)
         {
             /*
                  * Query:
@@ -1042,7 +1085,7 @@ namespace FlyAwayPlus.Helpers
                     return c1
                  */
             _client.Connect();
-            var list = _client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+            var list = _client.Cypher.Match("(p:post{postID:" + postId + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
                 .Return<Comment>("c1")
                 .OrderBy("c1.dateCreated")
                 .Results.ToList();
@@ -1131,7 +1174,7 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
-        public User FindUserByPostInRoom(Post post)
+        public User FindUserByPostInRoom(int postId)
         {
             /*
                  * Query:
@@ -1142,7 +1185,7 @@ namespace FlyAwayPlus.Helpers
                     return u
                  */
             _client.Connect();
-            var user = _client.Cypher.Match("(p:post{postID:" + post.postID + "})<-[:CREATE]-(u:user)")
+            var user = _client.Cypher.Match("(p:post{postID:" + postId + "})<-[:CREATE]-(u:user)")
                 .Return<User>("u")
                 .Results.Single();
             return user;
@@ -1263,7 +1306,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public Post FindPost(int id, User user)
+        public Post FindPost(int postId, User user)
         {
             /*
                  * Query:
@@ -1276,12 +1319,12 @@ namespace FlyAwayPlus.Helpers
                     RETURN COUNT(c)
                  */
             _client.Connect();
-            var p = _client.Cypher.Match("(p:post {postID:" + id + "})")
+            var p = _client.Cypher.Match("(p:post {postID:" + postId + "})")
                 .ReturnDistinct<Post>("p")
                 .Results.SingleOrDefault();
             if (p == null || !p.privacy.Equals("public"))
             {
-                int path = _client.Cypher.Match("(u:user {userID:" + user.userID + "}),(p:post { postID: " + id + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
+                int path = _client.Cypher.Match("(u:user {userID:" + user.userID + "}),(p:post { postID: " + postId + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
                             .ReturnDistinct<int>("COUNT(c)")
                             .Results.Single();
                 if (path != 0)
@@ -2118,7 +2161,7 @@ namespace FlyAwayPlus.Helpers
         }
 
 
-        public bool CreateNewPlanEvent(Plan newPlan, int roomId, int userId)
+        public bool InsertPlan(Plan newPlan, int roomId, int userId, List<int> assigneesId = null)
         {
             newPlan.PlanId = GetActivityIncrementId();
             _client.Connect();
@@ -2136,10 +2179,19 @@ namespace FlyAwayPlus.Helpers
                          .Create("(u)-[r:CREATE]->(p)")
                          .ExecuteWithoutResults();
 
+            if (assigneesId != null)
+            {
+                foreach (int assigneeId in assigneesId)
+                {
+                    _client.Cypher.Match("(u:user {userID: " + assigneeId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
+                                 .Create("(u)-[:IN_CHARGE]->(p)")
+                                 .ExecuteWithoutResults();
+                }
+            }
             return true;
         }
 
-        public List<Plan> LoadAllPlansInDateRange(DateTime fromDate, DateTime toDate)
+        public List<Plan> LoadAllPlansInDateRange(DateTime fromDate, DateTime toDate, int planType, int roomid)
         {
             //DateTime fromDate = DateHelpers.Instance.ConvertFromUnixTimestamp(start) ?? DateTime.MinValue;
 
@@ -2148,8 +2200,9 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listPlan = _client.Cypher
-                       .Match("(p:plan)")
+                       .Match("(:room{RoomId: " + roomid + "})-[:HAS]->(p:plan {PlanType: " + planType + "})")
                        .ReturnDistinct<Plan>("p")
+                       .OrderBy("p.DatePlanStart DESC")
                        .Results.ToList()
                        .Where(p => DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture) >= fromDate
                                    && DateTime.ParseExact(p.DatePlanStart, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture).AddMinutes(p.LengthInMinute) <= toDate)
@@ -2433,8 +2486,8 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
 
             _client.Cypher
-                   .Create("(r:room {newRoom})")
-                   .WithParam("newRoom", newRoom)
+                   .Create("(r:room {newPlan})")
+                   .WithParam("newPlan", newRoom)
                    .ExecuteWithoutResults();
 
             var newConversation = new Conversation
@@ -2447,7 +2500,6 @@ namespace FlyAwayPlus.Helpers
                      .Create("(u)-[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
                      .ExecuteWithoutResults();
 
-            /*
             _client.Cypher
                    .Create("(c:conversation {newConversation})")
                    .WithParam("newConversation", newConversation)
@@ -2456,7 +2508,6 @@ namespace FlyAwayPlus.Helpers
             _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {conversationID: " + newConversation.conversationID + "})")
                      .Create("(r)-[:HAS]->(c)")
                      .ExecuteWithoutResults();
-             */
         }
 
         public Room GetRoomInformation(int roomId)
@@ -2464,6 +2515,22 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             return _client.Cypher.Match("(r:room{RoomId: " + roomId + "})")
                 .Return<Room>("r")
+                .Results
+                .FirstOrDefault();
+        }
+
+        public IEnumerable<User> GetPersonInCharge(int planId)
+        {
+            _client.Connect();
+            return _client.Cypher.Match("(u:user)-[:IN_CHARGE]->(:plan{PlanId: " + planId + "})")
+                .Return<User>("u")
+                .Results;
+        }
+        public User GetPersonCreatesPlan(int planId)
+        {
+            _client.Connect();
+            return _client.Cypher.Match("(u:user)-[:CREATE]->(:plan{PlanId: " + planId + "})")
+                .Return<User>("u")
                 .Results
                 .FirstOrDefault();
         }
