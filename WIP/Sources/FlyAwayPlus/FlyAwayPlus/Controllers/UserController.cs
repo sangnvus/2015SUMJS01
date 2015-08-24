@@ -424,5 +424,23 @@ namespace FlyAwayPlus.Controllers
                 ? 0
                 : GraphDatabaseHelpers.Instance.CountMutualFriend(thisId, oId);
         }
+
+        public int CountPlaces(string otherUserId)
+        {
+            int thisId;
+
+            return !int.TryParse(otherUserId, out thisId)
+                ? 0
+                : GraphDatabaseHelpers.Instance.CountPlaceOfUser(thisId);
+        }
+
+        public JsonResult GetUser(string otherUserId)
+        {
+            int thisId;
+
+            return !int.TryParse(otherUserId, out thisId)
+                ? null
+                : Json(GraphDatabaseHelpers.Instance.GetUser(thisId));
+        }
     }
 }

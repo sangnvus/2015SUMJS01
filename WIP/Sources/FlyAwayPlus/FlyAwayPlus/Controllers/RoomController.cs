@@ -21,7 +21,7 @@ namespace FlyAwayPlus.Controllers
             {
                 RedirectToAction("Index", "Home");
             }
-            List<Room> listRoom = new List<Room>();
+            List<Room> listRoom;
             List<User> listAdminRoom = new List<User>();
 
             if (id == -1)
@@ -35,7 +35,7 @@ namespace FlyAwayPlus.Controllers
             else
             {
                 listRoom = GraphDatabaseHelpers.Instance.SearchRoomByUserID(user.userID);   // search All room
-                for (int i = 0; i < listRoom.Count; i++ )
+                for (int i = 0; i < listRoom.Count; i++)
                 {
                     listAdminRoom.Add(user);
                 }
@@ -69,6 +69,18 @@ namespace FlyAwayPlus.Controllers
             List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomId, 0);
             List<User> listUserOwnMessage = listMessage.Select(message => GraphDatabaseHelpers.Instance.FindUser(message)).ToList();
 
+            var roomStartDate = DateTime.ParseExact(roomInfo.StartDate, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture);
+            var roomEndDate = roomStartDate.AddDays(roomInfo.LengthInDays);
+
+            List<Plan> listGeneralPlan = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(roomStartDate, roomEndDate, FapConstants.PlanGeneral, roomId);
+            ViewData["dictPlanIdPICs"] = listGeneralPlan
+                                        .Select(p => p.PlanId)
+                                        .ToDictionary(pid => pid, pid => GraphDatabaseHelpers.Instance.GetPersonInCharge(pid));
+
+            ViewData["dictPlanIdCreator"] = listGeneralPlan
+                                        .Select(p => p.PlanId)
+                                        .ToDictionary(pid => pid, pid => GraphDatabaseHelpers.Instance.GetPersonCreatesPlan(pid));
+
             FindRelatedInformationPost(listPost);
             ViewData["roomInfo"] = roomInfo;
             ViewData["admin"] = admin;
@@ -76,6 +88,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listUserRequestJoinRoom"] = listUserRequestJoinRoom;
             ViewData["listMessage"] = listMessage;
             ViewData["listUserOwnMessage"] = listUserOwnMessage;
+            ViewData["listGeneralPlan"] = listGeneralPlan;
             Session["roomID"] = ViewData["roomID"] = roomId;
             return View();
         }
@@ -93,19 +106,18 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, bool> isLikeDict = new Dictionary<int, bool>();
             Dictionary<int, bool> isDislikeDict = new Dictionary<int, bool>();
             Dictionary<int, List<Comment>> dictListComment = new Dictionary<int, List<Comment>>();
-            List<Comment> listComment = new List<Comment>();
             Dictionary<int, User> dict = new Dictionary<int, User>();
-            foreach (Post po in listPost)
+            foreach (int postId in listPost.Select(p => p.postID))
             {
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
-                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
-                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUserByPostInRoom(po));
-                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
-                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
-                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
-                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
-                listComment = GraphDatabaseHelpers.Instance.FindComment(po);
-                dictListComment.Add(po.postID, listComment);
+                listPhotoDict.Add(postId, GraphDatabaseHelpers.Instance.FindPhoto(postId));
+                listVideoDict.Add(postId, GraphDatabaseHelpers.Instance.FindVideo(postId));
+                listUserDict.Add(postId, GraphDatabaseHelpers.Instance.FindUserByPostInRoom(postId));
+                dictLikeCount.Add(postId, GraphDatabaseHelpers.Instance.CountLike(postId));
+                dictDislikeCount.Add(postId, GraphDatabaseHelpers.Instance.CountDislike(postId));
+                dictCommentCount.Add(postId, GraphDatabaseHelpers.Instance.CountComment(postId));
+                dictUserCommentCount.Add(postId, GraphDatabaseHelpers.Instance.CountUserComment(postId));
+                var listComment = GraphDatabaseHelpers.Instance.FindComment(postId);
+                dictListComment.Add(postId, listComment);
 
                 foreach (var comment in listComment)
                 {
@@ -114,13 +126,13 @@ namespace FlyAwayPlus.Controllers
 
                 if (user != null)
                 {
-                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsLike(po.postID, user.userID));
-                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsDislike(po.postID, user.userID));
+                    isLikeDict.Add(postId, GraphDatabaseHelpers.Instance.IsLike(postId, user.userID));
+                    isDislikeDict.Add(postId, GraphDatabaseHelpers.Instance.IsDislike(postId, user.userID));
                 }
                 else
                 {
-                    isLikeDict.Add(po.postID, false);
-                    isDislikeDict.Add(po.postID, false);
+                    isLikeDict.Add(postId, false);
+                    isDislikeDict.Add(postId, false);
                 }
             }
 
@@ -166,15 +178,19 @@ namespace FlyAwayPlus.Controllers
             {
                 DatePlanStart = newEventDate + " " + newEventTime,
                 LengthInMinute = int.Parse(newEventDuration) * 60,
-                WorkItem = title
+                WorkItem = title,
+                PlanType = FapConstants.PlanTimeline,
+                DatePlanCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture)
             };
 
-            return GraphDatabaseHelpers.Instance.CreateNewPlanEvent(newPlan, (int)Session["roomID"], userId);
+            return GraphDatabaseHelpers.Instance.InsertPlan(newPlan, (int)Session["roomID"], userId);
         }
 
         public JsonResult GetPlanEvents(DateTime start, DateTime end)
         {
-            var apptListForDate = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(start, end);
+            int roomid = (int)Session["roomID"];
+
+            var apptListForDate = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(start, end, FapConstants.PlanTimeline, roomid);
 
             if (!apptListForDate.Any())
             {
@@ -194,7 +210,7 @@ namespace FlyAwayPlus.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
-        public RedirectToRouteResult Add(FormCollection form)
+        public RedirectToRouteResult AddTimelinePlan(FormCollection form)
         {
             var roomName = Request.Form["roomname"];
             var roomDesc = Request.Form["roomdesc"];
@@ -232,6 +248,29 @@ namespace FlyAwayPlus.Controllers
 
             GraphDatabaseHelpers.Instance.InsertRoom(newRoom, currentUserId);
             return RedirectToAction("Index", "Room");
+        }
+
+        public JsonResult AddGeneralPlan(string workportion, string note, string assignee, string startdate)
+        {
+            // TODO: Get list of assignees.
+            assignee = "10000;10001";
+
+            var assignerId = ((User)Session["user"]).userID;
+            int roomid = (int)Session["roomID"];
+            List<int> assigneesInt = assignee.Split(';').Select(int.Parse).ToList();
+
+            var newPlan = new Plan
+            {
+                WorkItem = workportion,
+                WorkItemDetail = note,
+                DatePlanStart = startdate + " 00:00:00",
+                PlanType = FapConstants.PlanGeneral,
+                DatePlanCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture)
+            };
+
+            GraphDatabaseHelpers.Instance.InsertPlan(newPlan, roomid, assignerId, assigneesInt);
+
+            return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
         }
     }
 }

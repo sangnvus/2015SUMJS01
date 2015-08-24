@@ -250,6 +250,7 @@
     .discussion .avatar {
         width: 40px;
         position: relative;
+        margin: 0
     }
 
         .discussion .avatar img {
@@ -436,7 +437,7 @@ h1.center-heading span {
     z-index: 5;
 }
 
-#idPlan > div {
+#idTimelinePlan > div {
     margin-top: 20px;
 }
 

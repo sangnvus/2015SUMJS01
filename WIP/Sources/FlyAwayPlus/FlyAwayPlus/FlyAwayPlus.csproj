@@ -295,6 +295,7 @@
     <Content Include="common.js" />
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
+    <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\chatConversation.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\datepicker.css" />
@@ -322,6 +323,7 @@
     <Content Include="Images\UIHelper\youtube.png" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-table.min.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\bootstrap.dropdowns-enhancement.js" />
     <Content Include="Scripts\client-plusone.js" />
@@ -398,6 +400,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\SearchPage\search.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Room\bootstrap-table.min.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

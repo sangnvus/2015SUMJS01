@@ -4,6 +4,9 @@
 <script src="~/Scripts/moment.js"></script>
 <script src="~/Scripts/fullcalendar.js"></script>
 
+<link href="~/Content/bootstrap-table.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-table.min.js"></script>
+
 @{
     ViewBag.Title = "Room Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -152,6 +155,7 @@
     int userID = Int16.Parse(@Session["userID"].ToString());
 
     var listPost = ViewData["listPost"] as List<Post>;
+    var listGeneralPlan = ViewData["listGeneralPlan"] as List<Plan>;
     var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
     var listVideoDict = ViewData["listVideoDict"] as Dictionary<int, Video>;
     var listUserDict = ViewData["listUserDict"] as Dictionary<int, User>;
@@ -162,6 +166,8 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
+    var dictPlanIdPICs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
+    var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
 }
 <div id="room-detail-wrapper">
@@ -246,28 +252,43 @@
             <div class="tab-content">
                 <!-- general -->
                 <div class="form-cn room-detail-plan-tab-general tab-pane" id="room-detail-plan-tab-general">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#create-general-plan-modal" style="margin: 0 15px 15px 15px">
-                            Add a room <i class="fa fa-plus"></i>
-                    </button>
+                    <div style="text-align: center; margin-bottom: 10px">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#create-general-plan-modal" style="background-color: #2DCC70">
+                            Add a work portion
+                        </button>
+                    </div>
                     <div class="blog-landing">
-                        @for (int i = 0; i < 10; i++)
+                        @foreach (var gp in listGeneralPlan)
                         {
-                            <div class="col-md-4">
+                            <div>
                                 <div class="general-plan-list-container">
                                     <div class="general-plan-label border-radius-top-left border-radius-top-right">
-                                        <p>Chúng ta đã có nhiều thiết bị thực tế ảo</p>
+                                        <p>@gp.WorkItem</p>
                                     </div>
                                     <div class="general-plan-content">
-                                        Chúng ta đã có nhiều thiết bị thực tế ảo như kính Oculus Rift, Morpheus, HTC Vive... nhưng phần lớn vẫn còn mắc phải nhược điểm là khiến cho người dùng cảm thấy mệt mỏi, chóng mặt khi sử dụng.
+                                        @gp.WorkItemDetail
+                                    </div>
+
+                                    <div>
+                                        <ul>
+                                            <li><b>Complete on:</b> @gp.DatePlanStart.Remove(10)</li>
+                                            <li>
+                                                <b>Person in charge:</b>
+                                                @foreach (var pic in dictPlanIdPICs[gp.PlanId])
+                                                {
+                                                    <a href="/User/Index/@pic.userID" class="hover-card-user">@(pic.firstName + " " + pic.lastName + "; ")</a>
+                                                }
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div class="dark-divider"><!--DIVIDER--></div>
                                     <div class="user-info">
-                                        <img src="/Images/UserUpload/UserAvatar/item_0_Background.jpg" alt="Duc Filan" class="avatar" />
+                                        <img src="@dictPlanIdCreator[gp.PlanId].avatar" alt="Avatar" class="avatar" />
                                         <div style="width: 100%">
-                                            <a href="/User/Index/1">
-                                                <div class="name-user">Duc Filan</div>
+                                            <a href="/User/Index/@dictPlanIdCreator[gp.PlanId].userID" class="hover-card-user">
+                                                <div class="name-user">@(dictPlanIdCreator[gp.PlanId].firstName + " " + dictPlanIdCreator[gp.PlanId].lastName)</div>
                                             </a>
-                                            <div class="post-time">16 Sep 2013 21:36</div>
+                                            <div class="post-time">@gp.DatePlanCreated</div>
                                         </div>
                                     </div>
                                 </div>
@@ -283,7 +304,15 @@
                 <!-- End timeline -->
                 <!-- estimation -->
                 <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
-                    3
+                    <table data-toggle="table" data-striped="true" data-sort-name="name" data-url="data1.json">
+                        <thead>
+                            <tr>
+                                <th data-field="id">Item ID</th>
+                                <th data-field="name">Item Name</th>
+                                <th data-field="price">Item Price</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
                 <!-- End estimation -->
             </div>
@@ -301,7 +330,9 @@
                 @foreach (User user in listUserInRoom)
                 {
                     <div class="padding-5 col-md-2">
-                        <img class="circle-image" height="50" src="@user.avatar" alt="Avatar" />
+                        <a href="/User/Index/@user.userID" class="hover-card-user tooltipstered">
+                            <img class="circle-image" height="50" src="@user.avatar" alt="Avatar" />
+                        </a>
                     </div>
                 }
             </div>
@@ -421,33 +452,33 @@
             <!--POSTING ENDS-->
             <!--POST LIST-->
             <div class="room-detail-post-list">
-                @for (int index = 0; index < listPost.Count; index++)
+                @foreach (Post p in listPost)
                 {
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="post-area">
                                 <div class="post-info">
                                     <div class="user-avatar">
-                                        <img src="@listUserDict[listPost[index].postID].avatar" alt="@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)'s avatar" class="img-circle" />
+                                        <img src="@listUserDict[p.postID].avatar" alt="@String.Format("{0} {1}", @listUserDict[p.postID].firstName, @listUserDict[p.postID].lastName)'s avatar" class="img-circle" />
                                     </div>
                                     <div class="post-info-area">
                                         <div class="user-name">
-                                            <a href="/User/Index/@listUserDict[listPost[index].postID].userID" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[listPost[index].postID].firstName, @listUserDict[listPost[index].postID].lastName)</a>
+                                            <a href="/User/Index/@listUserDict[p.postID].userID" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[p.postID].firstName, @listUserDict[p.postID].lastName)</a>
                                         </div>
                                         <span class="post-time">
-                                            <span>@listPost[index].toRealtime()</span>
+                                            <span>@p.toRealtime()</span>
                                         </span>
                                     </div>
                                 </div>
 
                                 <div class="post-content" style="display:flex;">
-                                    @foreach (var photo in listPhotoDict[listPost[index].postID])
+                                    @foreach (var photo in listPhotoDict[p.postID])
                                     {
                                         <img src="/Images/UserUpload/@photo.url" style="max-height: 100%; margin:auto;" />
                                     }
                                 </div>
                                 <div class="post-content">
-                                    @listPost[index].content
+                                    @p.content
                                 </div>
                             </div>
 
@@ -460,15 +491,15 @@
                             <div class="divide-area"></div>
                             <div class="comment-area">
                                 <div style="margin: 0 20px 12px">
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[listPost[index].postID]</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[listPost[index].postID]</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[listPost[index].postID]</b>
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[p.postID]</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[p.postID]</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[p.postID]</b>
                                 </div>
                                 <div class="comment-stats">
-                                    <span>@dictCommentCount[listPost[index].postID] comments</span>
+                                    <span>@dictCommentCount[p.postID] comments</span>
                                 </div>
                                 <div class="comment-list">
-                                    @foreach (var comment in dictListComment[listPost[index].postID])
+                                    @foreach (var comment in dictListComment[p.postID])
                                     {
                                         @Html.Partial("_PostDetailPartial", comment)
                                     }
@@ -487,7 +518,7 @@
             <ol id="id-chat-list" class="discussion">
                 <li class="other">
                     <div class="avatar">
-                        <img src="~/Images/FAP logo.png" class="img-circle" />
+                        <img src="~/Images/FAP logo.png" />
                     </div>
                     <div class="messages" style="border-bottom: #19B5FF 3px solid">
                         <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.userID" class="hover-card-user">@String.Format("{0} {1}", @admin.firstName, @admin.lastName)</a> on time</b></p>
@@ -515,7 +546,7 @@
 </div>
 
 
-<div id="popupEventForm" class="modal fade bs-example-modal-sm">
+<div id="popupEventForm" class="modal fade">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -539,7 +570,7 @@
     </div>
 </div>
 
-<div id="create-general-plan-modal" class="modal fade bs-example-modal-sm">
+<div id="create-general-plan-modal" class="modal fade">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -547,14 +578,12 @@
                 <h4>Add new General Plan item</h4>
             </div>
             <div class="modal-body">
-                <form id="general-plan-event-form">
-                    <input type="hidden" id="g-plan-eventId">
+                <div id="general-plan-event-form">
                     <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion"><br />
-                    <textarea id="g-plan-note" class="form-control" placeholder="Note"></textarea><br />
+                    <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea><br />
                     <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name"><br />
                     <input type="text" id="g-plan-start" class="form-control" placeholder="Start time"><br />
-                    <input type="text" id="g-plan-length" class="form-control" placeholder="Plan length (in hours)"><br />
-                </form>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="g-plan-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
@@ -565,7 +594,73 @@
 </div>
 
 <script>
+    //window resize
+    $(window).resize(function () {
+        commonModule.setBlocksit($(".blog-landing"), 250);
+    });
+
     $(document).ready(function () {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            commonModule.setBlocksit($(".blog-landing"), 250);
+        });
+
+        // Save general plan.
+        $('#g-plan-btnPopupSave').click(function() {
+            var dataPass = {
+                workportion: $('#g-plan-work-portion').val(),
+                note: $('#g-plan-note').val(),
+                assignee: $('#g-plan-assignee').val(),
+                startdate: $('#g-plan-start').val()
+            };
+
+            $.ajax({
+                url: '/Room/AddGeneralPlan',
+                type: 'POST',
+                dataType: 'json',
+                data: dataPass,
+                success: function (data) {
+                    var planContent = '<div>';
+                    planContent += '<div class="general-plan-list-container">';
+                    planContent += '<div class="general-plan-label border-radius-top-left border-radius-top-right">';
+                    planContent += '<p>'+ dataPass.workportion + '</p>';
+                    planContent += '</div>';
+                    planContent += '<div class="general-plan-content">';
+                    planContent += dataPass.note;
+                    planContent += '</div>';
+                    planContent += '<div>';
+                    planContent += '<ul>';
+                    planContent += '<li><b>Complete on:</b> ' + dataPass.startdate + '</li>';
+                    planContent += '<li>';
+                    planContent += '<b>Person in charge:</b>';
+
+                    for (var i = 0; i < data.length; i++) {
+                        planContent += '<a href="/User/Index/' + data[i].userID + '" class="hover-card-user">' + data[i].firstName + ' ' + data[i].lastName + '</a>; ';
+                    }
+
+                    planContent += '</li>';
+                    planContent += '</ul>';
+                    planContent += '<div class="dark-divider"></div>';
+                    planContent += '<div class="user-info">';
+                    planContent += '<img src="@(((User)Session["user"]).avatar)" alt="Avatar" class="avatar"/>';
+                    planContent += '<div style="width: 100%">';
+                    planContent += '<a href="/User/Index/@(((User)Session["user"]).userID)" class="hover-card-user">';
+                    planContent += '<div class="name-user">@(((User)Session["user"]).firstName)' + ' ' + '@(((User)Session["user"]).lastName)' + '</div>';
+                    planContent += '</a>';
+                    planContent += '<div class="post-time">' + moment().format('YYYY-MM-DD hh:mm:ss') + '</div>';
+                    planContent += '</div>';
+                    planContent += '</div>';
+                    planContent += '</div>';
+                    planContent += '</div>';
+
+                    $(".blog-landing").prepend(planContent);
+                    commonModule.setBlocksit($(".blog-landing"), 250);
+                },
+                error: function () {
+                    swal("Oops...", "Something went wrong! Try again later!", "error");
+                }
+            });
+        });
+
         if (typeof (chatHubProxy) === "undefined") {
             chatHubProxy = $.connection.chatHub;
         }
@@ -608,7 +703,7 @@
                     var tmp = "";
                     tmp += "<li class='self'>";
                     tmp += "<div class='avatar'>";
-                    tmp += "<img src='" + $("#id-avatar-current-user").attr("src") + "' class='img-circle' />";
+                    tmp += "<img src='" + $("#id-avatar-current-user").attr("src") + "' />";
                     tmp += "</div>";
                     tmp += "<div class='messages' style='border-bottom: #19B5FF 3px solid'>";
                     tmp += "<p>" + message["content"] + "</p>";
