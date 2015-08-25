@@ -1,6 +1,6 @@
 ﻿@using System.Configuration
 @model FlyAwayPlus.Models.Post
-
+@using System.Configuration;
 @{
     var userPost = ViewData["userPost"] as FlyAwayPlus.Models.User;
     var user = ViewData["user"] as FlyAwayPlus.Models.User;
@@ -127,10 +127,11 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        console.log(document.location.origin + '/Post/Index/@Model.postID#');
+        console.log(document.location.origin + '/Images/UserUpload/'+'@photo.url');
         $('#share_button').click(function (e) {
-            
             FB.init({
-                appId: @ConfigurationManager.AppSettings["clientId"],
+                appId: '@ConfigurationManager.AppSettings["clientId"]',
                 status: true,
                 xfbml: true
             });
@@ -138,8 +139,8 @@
             {
                 method: 'feed',
                 name: '@userPost.firstName' + ' @userPost.lastName',
-                link: 'http://localhost:1644/Post/Index/10010#',
-                picture: 'http://localhost:1644/Images/UserUpload/'+'@photo.url',
+                link: document.location.origin + '/Post/Index/@Model.postID#',
+                picture: document.location.origin + '/Images/UserUpload/'+'@photo.url',
                 caption: 'FlyAwayPlus.com',
                 description: '@Model.content'
             });
@@ -149,11 +150,10 @@
         $('input:radio[name=optradio]').click(function() {
             var checkval = $(this).val();
             $('#closeBtn').prop('disabled', (checkval == null));
-
         });
 
         $('#closeBtn').click(function(e) {
-            if (parseInt('@Session["userID"]') == @userPost.userID) {
+            if (parseInt('@Session["userID"]') == parseInt('@userPost.userID')) {
                 alert("You can not report yourself!");
             } else {
                 var controller = "/User/ReportPost/";
@@ -170,7 +170,7 @@
             }
             e.preventDefault();
         });
-        
+
     });
 </script>
 
