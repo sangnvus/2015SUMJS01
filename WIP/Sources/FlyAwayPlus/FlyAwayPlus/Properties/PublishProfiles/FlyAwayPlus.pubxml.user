@@ -25,7 +25,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/13/2015 22:38:10</publishTime>
     </File>
     <File Include="bin/FlyAwayPlus.dll">
-      <publishTime>08/23/2015 22:21:53</publishTime>
+      <publishTime>08/25/2015 03:18:33</publishTime>
     </File>
     <File Include="bin/Google.Apis.Auth.dll">
       <publishTime>07/29/2015 10:29:47</publishTime>
@@ -165,6 +165,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/bootstrap-switch.min.css">
       <publishTime>07/29/2015 10:35:08</publishTime>
     </File>
+    <File Include="Content/bootstrap-table.css">
+      <publishTime>08/25/2015 01:11:29</publishTime>
+    </File>
     <File Include="Content/bootstrap.css">
       <publishTime>08/03/2015 09:20:12</publishTime>
     </File>
@@ -229,7 +232,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/18/2015 04:12:55</publishTime>
     </File>
     <File Include="Content/RoomPage/room-detail.css">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 01:11:29</publishTime>
     </File>
     <File Include="Content/SearchPage/search-detail.css">
       <publishTime>08/15/2015 22:42:55</publishTime>
@@ -241,7 +244,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/29/2015 10:35:09</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 01:11:29</publishTime>
     </File>
     <File Include="Content/speech-buble.css">
       <publishTime>07/29/2015 10:35:09</publishTime>
@@ -263,6 +266,18 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="favicon.ico">
       <publishTime>07/29/2015 10:35:10</publishTime>
+    </File>
+    <File Include="fonts/artill_clean_icons-webfont.eot">
+      <publishTime>08/16/2015 22:07:33</publishTime>
+    </File>
+    <File Include="fonts/artill_clean_icons-webfont.svg">
+      <publishTime>08/16/2015 22:11:34</publishTime>
+    </File>
+    <File Include="fonts/artill_clean_icons-webfont.ttf">
+      <publishTime>08/16/2015 22:10:06</publishTime>
+    </File>
+    <File Include="fonts/artill_clean_icons-webfont.woff">
+      <publishTime>08/16/2015 22:07:05</publishTime>
     </File>
     <File Include="fonts/fontawesome-webfont.eot">
       <publishTime>07/29/2015 10:35:10</publishTime>
@@ -292,6 +307,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/03/2015 09:20:12</publishTime>
     </File>
     <File Include="fonts/glyphicons-halflings-regular.woff">
+      <publishTime>08/03/2015 09:20:12</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.woff2">
       <publishTime>08/03/2015 09:20:12</publishTime>
     </File>
     <File Include="Global.asax">
@@ -381,6 +399,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Scripts/bootstrap-datepicker.js">
       <publishTime>08/17/2015 04:43:28</publishTime>
     </File>
+    <File Include="Scripts/bootstrap-table.min.js">
+      <publishTime>08/25/2015 01:11:29</publishTime>
+    </File>
     <File Include="Scripts/bootstrap.dropdowns-enhancement.js">
       <publishTime>07/29/2015 10:35:17</publishTime>
     </File>
@@ -406,7 +427,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2015 22:58:27</publishTime>
     </File>
     <File Include="Scripts/Home/home.js">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 00:23:51</publishTime>
     </File>
     <File Include="Scripts/images-loaded.min.js">
       <publishTime>07/29/2015 10:35:17</publishTime>
@@ -462,6 +483,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Scripts/LookAround/logger.js">
       <publishTime>07/29/2015 10:35:18</publishTime>
     </File>
+    <File Include="Scripts/markerWithLabel.js">
+      <publishTime>08/24/2015 22:33:17</publishTime>
+    </File>
     <File Include="Scripts/md5.js">
       <publishTime>08/18/2015 03:02:55</publishTime>
     </File>
@@ -508,7 +532,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2015 22:58:27</publishTime>
     </File>
     <File Include="Scripts/_references.js">
-      <publishTime>08/19/2015 13:09:16</publishTime>
+      <publishTime>08/25/2015 01:14:14</publishTime>
     </File>
     <File Include="Views/Account/ConfirmEmail.cshtml">
       <publishTime>07/29/2015 10:35:19</publishTime>
@@ -553,7 +577,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/23/2015 09:56:13</publishTime>
     </File>
     <File Include="Views/Admin/Main.cshtml">
-      <publishTime>08/23/2015 09:56:22</publishTime>
+      <publishTime>08/25/2015 01:11:29</publishTime>
+    </File>
+    <File Include="Views/Admin/ViewPost.cshtml">
+      <publishTime>08/18/2015 03:02:56</publishTime>
     </File>
     <File Include="Views/HelpCenter/Index.cshtml">
       <publishTime>08/20/2015 15:51:18</publishTime>
@@ -565,7 +592,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/29/2015 10:35:20</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 00:40:35</publishTime>
     </File>
     <File Include="Views/Login/ForgotPassword.cshtml">
       <publishTime>08/15/2015 18:03:42</publishTime>
@@ -597,20 +624,23 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Post/Index.cshtml">
       <publishTime>08/20/2015 15:51:18</publishTime>
     </File>
+    <File Include="Views/Room/bootstrap-table.min.css">
+      <publishTime>08/25/2015 01:11:29</publishTime>
+    </File>
     <File Include="Views/Room/Index.cshtml">
-      <publishTime>08/19/2015 13:09:16</publishTime>
+      <publishTime>08/25/2015 01:11:29</publishTime>
     </File>
     <File Include="Views/Room/RoomDetail.cshtml">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 01:11:29</publishTime>
     </File>
     <File Include="Views/Room/RoomList.cshtml">
       <publishTime>08/20/2015 15:51:18</publishTime>
     </File>
     <File Include="Views/Search/Search.cshtml">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 01:09:01</publishTime>
     </File>
     <File Include="Views/Search/SearchDetail.cshtml">
-      <publishTime>08/16/2015 13:58:29</publishTime>
+      <publishTime>08/25/2015 00:39:03</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>07/29/2015 10:35:21</publishTime>
@@ -622,10 +652,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/20/2015 15:51:18</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 01:11:29</publishTime>
     </File>
     <File Include="Views/Shared/_ListPost.cshtml">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/25/2015 01:02:41</publishTime>
     </File>
     <File Include="Views/Shared/_ListRoomPartial.cshtml">
       <publishTime>08/18/2015 06:52:02</publishTime>
@@ -634,7 +664,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/29/2015 10:35:21</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
-      <publishTime>08/20/2015 15:51:18</publishTime>
+      <publishTime>08/24/2015 02:01:40</publishTime>
     </File>
     <File Include="Views/Shared/_PlaceSuggest.cshtml">
       <publishTime>08/20/2015 15:51:18</publishTime>
