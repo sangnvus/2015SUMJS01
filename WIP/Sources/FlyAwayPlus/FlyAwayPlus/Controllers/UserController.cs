@@ -99,6 +99,10 @@ namespace FlyAwayPlus.Controllers
                 }
             }
 
+            listPhoto.RemoveAll(item => item == null);
+            listVideo.RemoveAll(item => item == null);
+            listPlace.RemoveAll(item => item == null);
+
             ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listVideoDict"] = listVideoDict;
