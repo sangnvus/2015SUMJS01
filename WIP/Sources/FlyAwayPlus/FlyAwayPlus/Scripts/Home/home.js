@@ -9,7 +9,7 @@
     };
 
     var fadeImage = function () {
-        $(".dark-wrapper").hover(function () {
+        $(".dark-wrapper").unbind("hover").bind("hover", function () {
             $(this).find("img").stop().fadeTo(500, 0.5);
 
             var postActions = $(this).find(".post-actions");
@@ -27,7 +27,7 @@
     };
 
     var likePost = function () {
-        $(".btn-like").click(function (evt) {
+        $(".btn-like").unbind("click").bind("click", function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
             var likeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
@@ -90,7 +90,7 @@
         }
     };
     var dislikePost = function () {
-        $(".btn-dislike").click(function (evt) {
+        $(".btn-dislike").unbind("click").bind("click", function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
             var dislikeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
