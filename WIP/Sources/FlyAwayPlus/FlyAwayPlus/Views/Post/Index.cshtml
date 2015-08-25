@@ -1,4 +1,5 @@
-﻿@model FlyAwayPlus.Models.Post
+﻿@using System.Configuration
+@model FlyAwayPlus.Models.Post
 @using System.Configuration;
 @{
     var userPost = ViewData["userPost"] as FlyAwayPlus.Models.User;
@@ -129,7 +130,6 @@
         console.log(document.location.origin + '/Post/Index/@Model.postID#');
         console.log(document.location.origin + '/Images/UserUpload/'+'@photo.url');
         $('#share_button').click(function (e) {
-            e.preventDefault();
             FB.init({
                 appId: '@ConfigurationManager.AppSettings["clientId"]',
                 status: true,
@@ -144,6 +144,7 @@
                 caption: 'FlyAwayPlus.com',
                 description: '@Model.content'
             });
+            e.preventDefault();
         });
 
         $('input:radio[name=optradio]').click(function() {
