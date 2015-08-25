@@ -69,12 +69,16 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, bool> isWishDict = new Dictionary<int, bool>();
             List<Photo> listPhoto = new List<Photo>();
             List<Place> listPlace = new List<Place>();
+            List<Video> listVideo = new List<Video>();
 
             foreach (Post po in listPost)
             {
                 listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
+                listPhoto.AddRange(listPhotoDict[po.postID]);
                 listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
+                listVideo.Add(listVideoDict[po.postID]);
                 listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
+                listPlace.Add(listPlaceDict[po.postID]);
                 listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
                 dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
                 dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
@@ -108,6 +112,9 @@ namespace FlyAwayPlus.Controllers
             ViewData["isDislikeDict"] = isDislikeDict;
             ViewData["isWishDict"] = isWishDict;
             ViewData["typePost"] = "index";
+            ViewData["listPhoto"] = listPhoto;
+            ViewData["listPlace"] = listPlace;
+            ViewData["listVideo"] = listVideo;
 
             if (listPost.Count < RecordsPerPage)
             {
