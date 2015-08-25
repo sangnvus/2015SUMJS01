@@ -104,7 +104,7 @@
                             <tr>
                                 <th>Post ID</th>
                                 <th>Content report</th>
-                                <th>User Report ID</th>
+                                <th>Number report</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -120,12 +120,12 @@
                                     {
                                         <tr>
                                             <td>@reportPost.postID</td>
-                                            <td>@reportPost.contentReport</td>
-                                            <td>@reportPost.userReportID</td>
+                                            <td>@reportPost.postContent</td>
+                                            <td>@reportPost.numberReport</td>
                                             <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
                                             <td>
-                                                <a onclick="lockPost(@reportPost.postID, @reportPost.userReportID)" class="btn btn-primary">Lock post</a>
-                                                <a onclick="cancelReportPost(@reportPost.postID, @reportPost.userReportID)" class="btn btn-primary">Cancel</a>
+                                                <a onclick="lockPost(@reportPost.postID)" class="btn btn-primary">Lock post</a>
+                                                <a onclick="cancelReportPost(@reportPost.postID)" class="btn btn-primary">Cancel</a>
                                             </td>
                                         </tr>
                                     }
@@ -147,9 +147,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>User Report ID</th>
                                 <th>User Reported ID</th>
-                                <th>Type report</th>
+                                <th>User Reported Name</th>
+                                <th>Numer report</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -162,12 +162,12 @@
                                     foreach (var reportUser in ViewBag.OnePageOfReportUsers)
                                     {
                                         <tr>
-                                            <td>@reportUser.userReportID</td>
                                             <td>@reportUser.userReportedID</td>
-                                            <td>@reportUser.contentReport</td>
+                                            <td>@reportUser.userReportedName</td>
+                                            <td>@reportUser.numberReport</td>
                                             <td>
-                                                <a onclick="lockReportUser(@reportUser.userReportedID, @reportUser.userReportID)" class="btn btn-primary">Lock user</a>
-                                                <a onclick="cancelReportUser(@reportUser.userReportedID, @reportUser.userReportID)" class="btn btn-primary">Cancel</a>
+                                                <a onclick="lockReportUser(@reportUser.userReportedID)" class="btn btn-primary">Lock user</a>
+                                                <a onclick="cancelReportUser(@reportUser.userReportedID)" class="btn btn-primary">Cancel</a>
                                             </td>
                                         </tr>
                                     }
@@ -212,9 +212,9 @@
 <script>
     $(document).ready(function() {
         var tab = '@ViewBag.Tab';
-        if (tab.length == 0 || tab == 'user')
+        if (tab.length == 0)
         {
-            $('.nav-tabs a[href="#user"]').tab('show');
+            $('.nav-tabs a[href="#reportPost"]').tab('show');
         }
         else
         {
@@ -258,14 +258,13 @@ function unLock(id) {
     }
 }
 
-function lockPost(postID,userReportID) {
+function lockPost(postID) {
     $.ajax({
         url: "/Admin/LockReportPost/",
         type: 'POST',
         dataType: 'json',
         data: {
-            postId: postID,
-            userReportID: userReportID
+            postId: postID
         },
         success: function (data) {
             if (data == true) {
@@ -283,14 +282,13 @@ function lockPost(postID,userReportID) {
     });
 }
 
-function cancelReportPost(postID,userReportID) {
+function cancelReportPost(postID) {
     $.ajax({
         url: "/Admin/CancelReportPost/",
         type: 'POST',
         dataType: 'json',
         data: {
-            postId: postID,
-            userReportID: userReportID
+            postId: postID
         },
         success: function (data) {
             if (data == true) {
@@ -308,14 +306,13 @@ function cancelReportPost(postID,userReportID) {
     });
 }
 
-function lockReportUser(userReportedID, userReportID) {
+function lockReportUser(userReportedID) {
     $.ajax({
         url: "/Admin/LockReportUser/",
         type: 'POST',
         dataType: 'json',
         data: {
-            userReportedID: userReportedID,
-            userReportID: userReportID
+            userReportedID: userReportedID
         },
         success: function (data) {
             if (data == true) {
@@ -330,14 +327,13 @@ function lockReportUser(userReportedID, userReportID) {
     });
 }
 
-function cancelReportUser(userReportedID, userReportID) {
+function cancelReportUser(userReportedID) {
     $.ajax({
         url: "/Admin/CancelReportUser/",
         type: 'POST',
         dataType: 'json',
         data: {
-            userReportedID: userReportedID,
-            userReportID: userReportID
+            userReportedID: userReportedID
         },
         success: function (data) {
             if (data == true) {
