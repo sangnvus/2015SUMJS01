@@ -94,10 +94,10 @@ namespace FlyAwayPlus.Controllers
             return Json(true);
         }
 
-        public JsonResult LockReportUser(int userReportedID, int userReportID)
+        public JsonResult LockReportUser(int userReportedID)
         {
             GraphDatabaseHelpers.Instance.LockUser(userReportedID);
-            GraphDatabaseHelpers.Instance.DeleteReportUser(userReportedID, userReportID);
+            GraphDatabaseHelpers.Instance.DeleteReportUser(userReportedID);
             return Json(true);
         }
 
@@ -109,12 +109,12 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
-        public JsonResult LockReportPost(int postId, int userReportID)
+        public JsonResult LockReportPost(int postId)
         {
             try
             {
                 GraphDatabaseHelpers.Instance.LockPost(postId);
-                GraphDatabaseHelpers.Instance.DeleteReportPost(postId, userReportID);
+                GraphDatabaseHelpers.Instance.DeleteReportPost(postId);
                 return Json(true);
             }
             catch (Exception exception)
@@ -123,11 +123,11 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
-        public JsonResult CancelReportPost(int postId, int userReportID)
+        public JsonResult CancelReportPost(int postId)
         {
             try
             {
-                GraphDatabaseHelpers.Instance.DeleteReportPost(postId, userReportID);
+                GraphDatabaseHelpers.Instance.DeleteReportPost(postId);
                 return Json(true);
             }
             catch (Exception exception)
@@ -136,11 +136,11 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
-        public JsonResult CancelReportUser(int userReportedID, int userReportID)
+        public JsonResult CancelReportUser(int userReportedID)
         {
             try
             {
-                GraphDatabaseHelpers.Instance.DeleteReportUser(userReportedID, userReportID);
+                GraphDatabaseHelpers.Instance.DeleteReportUser(userReportedID);
                 return Json(true);
             }
             catch (Exception exception)
