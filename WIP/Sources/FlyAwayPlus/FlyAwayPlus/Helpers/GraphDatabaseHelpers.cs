@@ -973,9 +973,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - wishlist
                  * 
-                 * match(u1:user {userID:@userID})-[:wish]->(p:post)
-                   return p
-                   orderby p.dateCreated
+                 * Optional Match (u1:user {userID:@userID})-[:WISH]->(pl:place)
+                    Optional Match (u2:user)-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)-[:AT]->(pl)
+                    Where p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2) or (p1.privacy <> 'lock' and u1.userID = u2.userID)
+                    Return Distinct p1
+                   orderby p1.dateCreated
                  */
             _client.Connect();
             var listPost = _client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:WISH]->(pl:place)")
