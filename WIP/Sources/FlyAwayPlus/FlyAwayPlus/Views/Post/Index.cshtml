@@ -56,7 +56,14 @@
                             <div class="modal-body">
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-1">
+                                            <div>
+                                                <img src="/Images/UserUpload/@photo.url" height="100" width="70">
+                                                <p>By @userPost.firstName @userPost.lastName</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-5">
                                             <div class="row" style="margin-left: 20px">
                                                 <div class="radio">
                                                     <label><input type="radio" name="optradio" value="1">This post annoying or unpleasant</label>
@@ -68,7 +75,7 @@
                                                     <label><input type="radio" name="optradio" value="2">I think this post should not appear on FlyAwayPlus</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row" style="margin-left: 20px">
                                                 <div class="radio">
                                                     <label><input type="radio" name="optradio" value="3">This post is spam</label>
@@ -137,25 +144,28 @@
             });
         });
 
-        $('input:radio[name=optradio]').click(function () {
+        $('input:radio[name=optradio]').click(function() {
             var checkval = $(this).val();
             $('#closeBtn').prop('disabled', (checkval == null));
-            
+
         });
 
-        $('#closeBtn').click(function (e) {
+        $('#closeBtn').click(function(e) {
+            if (parseInt('@Session["userID"]') == @userPost.userID) {
+                alert("You can not report yourself!");
+            } else {
+                var controller = "/User/ReportPost/";
+                var data = {
+                    postID: @Model.postID,
+                    userReportID: parseInt('@Session["userID"]'),
+                    userReportedID: @userPost.userID,
+                    typeReport: $('input[name="optradio"]:checked').val()
+                };
 
-            var controller = "/User/ReportPost/";
-            var data = {
-                postID: @Model.postID,
-                userReportID: parseInt('@Session["userID"]'),
-                userReportedID: @userPost.userID,
-                typeReport: $('input[name="optradio"]:checked').val()
-            };
+                commonModule.callAjax(controller, data, null);
 
-            commonModule.callAjax(controller, data, null);
-
-            alert("This user has been reported!");
+                alert("This user has been reported!");
+            }
             e.preventDefault();
         });
         

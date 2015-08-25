@@ -25,7 +25,7 @@
     <div class="container" id="mainTab">
         <h2>Admin Page</h2>
         @using (Ajax.BeginForm("LogOut", "Admin",
-                            new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
+                new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
         {
             <button>Log out</button>
             <p></p>
@@ -34,6 +34,7 @@
             <li><a data-toggle="tab" href="#user">User</a></li>
             <li><a data-toggle="tab" href="#reportPost">Reported post</a></li>
             <li><a data-toggle="tab" href="#reportUser">Reported user</a></li>
+            <li><a data-toggle="tab" href="#statistic">Statistic</a></li>
         </ul>
 
         <div class="tab-content">
@@ -63,7 +64,7 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick=" lock(@user.userid) " name=" onoffswitch_@user.userid" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
+                                                    <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
                                                     <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
@@ -75,7 +76,7 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick=" unLock(@user.userID) " name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
+                                                    <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
                                                     <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
@@ -92,7 +93,6 @@
                             }
                         </tbody>
                     </table>
-                    <p><b>Number of user:</b> @ViewBag.NumberOfUser</p>
                     @Html.PagedListPager((IPagedList)ViewBag.OnePageOfUsers, page => Url.Action("Main", new { page, tab = "user" }))
                 </form>
             </div>
@@ -110,7 +110,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @try
+                            @if (ViewBag.NumberOfReportPost != 0)
+                            {
+                                try
                             {
                                 if (ViewBag.OnePageOfReportPosts != null)
                                 {
@@ -122,8 +124,8 @@
                                             <td>@reportPost.userReportID</td>
                                             <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
                                             <td>
-                                                <a onclick=" lockPost(@reportPost.postID, @reportPost.userReportID) " class="btn btn-primary">Lock post</a>
-                                                <a onclick=" cancelReportPost(@reportPost.postID, @reportPost.userReportID) " class="btn btn-primary">Cancel</a>
+                                                <a onclick="lockPost(@reportPost.postID, @reportPost.userReportID)" class="btn btn-primary">Lock post</a>
+                                                <a onclick="cancelReportPost(@reportPost.postID, @reportPost.userReportID)" class="btn btn-primary">Cancel</a>
                                             </td>
                                         </tr>
                                     }
@@ -133,9 +135,9 @@
                             {
                                 Console.WriteLine(e.ToString());
                             }
+                            }
                         </tbody>
                     </table>
-                    <p><b>Number of report post:</b> @ViewBag.NumberOfReportPost</p>
                     @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportPosts, page => Url.Action("Main", new { page, tab = "reportPost" }))
                 </form>
             </div>
@@ -153,34 +155,56 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @try
+                            @if (ViewBag.NumberOfReportUser != 0)
                             {
-                                foreach (var reportUser in ViewBag.OnePageOfReportUsers)
+                                try
                                 {
-                                    <tr>
-                                        <td>@reportUser.userReportID</td>
-                                        <td>@reportUser.userReportedID</td>
-                                        <td>@reportUser.contentReport</td>
-                                        <td>
-                                            <a onclick=" lockReportUser(@reportUser.userReportedID, @reportUser.userReportID) " class="btn btn-primary">Lock user</a>
-                                            <a onclick=" cancelReportUser(@reportUser.userReportedID, @reportUser.userReportID) " class="btn btn-primary">Cancel</a>
-                                        </td>
-                                    </tr>
+                                    foreach (var reportUser in ViewBag.OnePageOfReportUsers)
+                                    {
+                                        <tr>
+                                            <td>@reportUser.userReportID</td>
+                                            <td>@reportUser.userReportedID</td>
+                                            <td>@reportUser.contentReport</td>
+                                            <td>
+                                                <a onclick="lockReportUser(@reportUser.userReportedID, @reportUser.userReportID)" class="btn btn-primary">Lock user</a>
+                                                <a onclick="cancelReportUser(@reportUser.userReportedID, @reportUser.userReportID)" class="btn btn-primary">Cancel</a>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e.ToString());
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.ToString());
+                                }
                             }
                         </tbody>
                     </table>
-                    <p id="numberOfReportUser"><b>Number of report user:</b> @ViewBag.NumberOfReportUser</p>
                     @Html.PagedListPager((IPagedList)ViewBag.OnePageOfReportUsers, page => Url.Action("Main", new { page, tab = "reportUser" }))
                 </form>
             </div>
 
-        </div>
+            <div id="statistic" class="tab-pane fade">
+                <form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Number of user</th>
+                                <th>Number of report post</th>
+                                <th>Number of report user</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>@ViewBag.NumberOfUser</th>
+                                <th>@ViewBag.NumberOfReportPost</th>
+                                <th>@ViewBag.NumberOfReportUser</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
 
+        </div>
     </div>
 </body>
 </html>
