@@ -20,16 +20,16 @@ namespace FlyAwayPlus.Helpers
 
         public class ReportPost
         {
-            public string contentReport { get; set; }
+            public string postContent { get; set; }
             public int postID { get; set; }
-            public int userReportID { get; set; }
+            public int numberReport { get; set; }
         }
 
         public class ReportUser
         {
-            public string contentReport { get; set; }
+            public string userReportedName { get; set; }
             public int userReportedID { get; set; }
-            public int userReportID { get; set; }
+            public int numberReport { get; set; }
         }
 
         public string GetEmailByUserId(int userId)
