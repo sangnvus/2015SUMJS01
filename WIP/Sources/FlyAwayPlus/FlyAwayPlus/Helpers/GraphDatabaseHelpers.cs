@@ -1010,10 +1010,6 @@ namespace FlyAwayPlus.Helpers
                              .ExecuteWithoutResults();
             }
 
-            _client.Cypher.Create("(p:place {newPlace})")
-                         .WithParam("newPlace", place)
-                         .ExecuteWithoutResults();
-
             if (video != null)
             {
                 _client.Cypher.Create("(v:video {newVideo})")
@@ -1028,6 +1024,10 @@ namespace FlyAwayPlus.Helpers
 
                 if (existingPlace == null)
                 {
+                    _client.Cypher.Create("(p:place {newPlace})")
+                            .WithParam("newPlace", place)
+                            .ExecuteWithoutResults();
+
                     _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + place.placeID + "})")
                              .Create("(po)-[r:AT]->(pl)")
                              .ExecuteWithoutResults();
@@ -1297,8 +1297,8 @@ namespace FlyAwayPlus.Helpers
         public Place FindExistingPlace(Place place)
         {
             _client.Connect();
-            return _client.Cypher.Match("(pl:place {longitude: '" + place.longitude + "', latitude: '" + place.latitude +
-                                       "', name: '" + place.name + "'})")
+            return _client.Cypher.Match("(pl:place {name: '" + place.name + "'})")
+                                .Where("abs(pl.longitude - " + place.longitude + ") < 0.000000001  and abs(pl.latitude - " + place.latitude + ") < 0.000000001")
                                 .Return<Place>("pl")
                                 .Results.FirstOrDefault();
         }
