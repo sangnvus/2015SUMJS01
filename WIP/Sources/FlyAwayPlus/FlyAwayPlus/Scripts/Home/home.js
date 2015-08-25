@@ -56,7 +56,7 @@
                                 .parent()
                                 .find(".fa-thumbs-o-up");
 
-        var likeCountElement = $(this).parentsUntil(".white-panel").parent()
+        var likeCountElement = $(post).parentsUntil(".white-panel").parent()
             .find(".like-count");
 
         if (likeIcon.hasClass("interacted")) {
@@ -75,7 +75,7 @@
             .parent()
             .find(".fa-thumbs-o-down");
 
-        var dislikeCountElement = $(this).parentsUntil(".white-panel").parent()
+        var dislikeCountElement = $(post).parentsUntil(".white-panel").parent()
             .find(".dislike-count");
 
         if (dislikeIcon.hasClass("interacted")) {
@@ -210,17 +210,13 @@
 $(window).scroll(function () {
     if ($(window).scrollTop() === $(document).height() - $(window).height()) {
         if (isLoadMore || isLoadMore === "true") {
-            homeModule.loadMoreData();
+            homeModule.loadMoreData(typePost);
         }
     }
 });
 
 $(window).load(function () {
     homeModule.setBlocksit();
-    //homeModule.fadeImage();
-    //homeModule.likePost();
-    //homeModule.dislikePost();
-    //homeModule.plusPost();
     $("div#loading").hide();
 });
 

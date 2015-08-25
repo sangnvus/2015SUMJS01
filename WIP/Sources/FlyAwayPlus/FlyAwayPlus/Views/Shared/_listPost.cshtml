@@ -40,14 +40,16 @@
                 </div>
             }
             <ul class="post-actions" style="padding-left: 0px;">
+                <!--
                 <li>
                     <a href="javascript:;" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
-                <li>
-                    <a href="javascript:;" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                -->
+                <li style="width:50%">
+                    <a href="javascript:;" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
-                <li>
-                    <a href="javascript:;" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                <li style="width:50%">
+                    <a href="javascript:;" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
@@ -252,31 +254,6 @@
             unLikePost(this);
             dislikeAjax(this);
             evt.preventDefault();
-        });
-    };
-
-    function plusPost() {
-        // Add to wish list
-        $(".btn-plus").click(function (evt) {
-            if (evt.handled !== true) { // This will prevent event triggering more then once
-                evt.handled = true;
-                var controller = "";
-                var data = {
-                    postID: parseInt($(this).attr("role"))
-                };
-                if ($(this).hasClass("btn-primary")) {
-                    controller = "/User/AddToWishlist";
-                }
-                else if ($(this).hasClass("btn-warning")) {
-                    controller = "/User/RemoveFromWishlist";
-                }
-                $(this).toggleClass("btn-primary").toggleClass("btn-warning");
-
-                if (controller != "") {
-                    commonModule.callAjax(controller, data, null);
-                }
-                evt.preventDefault();
-            }
         });
     };
 

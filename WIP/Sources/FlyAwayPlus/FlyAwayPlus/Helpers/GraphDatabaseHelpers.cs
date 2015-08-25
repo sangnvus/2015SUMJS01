@@ -976,9 +976,11 @@ namespace FlyAwayPlus.Helpers
                    orderby p.dateCreated
                  */
             _client.Connect();
-            var listPost = _client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:WISH]->(p:post)")
-                .ReturnDistinct<Post>("p")
-                .OrderByDescending("p.dateCreated")
+            var listPost = _client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:WISH]->(pl:place)")
+                .OptionalMatch("(u2:user)-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)-[:AT]->(pl)")
+                .Where("p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2) or (p1.privacy <> 'lock' and u1.userID = u2.userID)")
+                .ReturnDistinct<Post>("p1")
+                .OrderByDescending("p1.dateCreated")
                 .Skip(skip)
                 .Limit(limit)
                 .Results.ToList();
@@ -1146,7 +1148,8 @@ namespace FlyAwayPlus.Helpers
                     return p1
                  */
             _client.Connect();
-            var listPost = _client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
+            var listPost = _client.Cypher.OptionalMatch("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
+                .Where("p1.privacy <> 'lock'")
                 .ReturnDistinct<Post>("p1")
                 //.OrderByDescending("p.dateCreated")
                 .Results.ToList();
@@ -1353,7 +1356,7 @@ namespace FlyAwayPlus.Helpers
             /*
                  * Query:
                  * Find:
-                 *     - post of current user
+                 *     - post of current user not 'lock'
                  *     - post with privacy = 'public'
                  *     - post of friend with privacy = 'friend'
                  * 
@@ -2301,7 +2304,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listPost = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
-                    //.Where("p2.id < " + postID)
+                    .Where("p2.privacy <> 'lock'")
                     .ReturnDistinct<Post>("p2")
                     .Limit(limit)
                     .Results.ToList();
