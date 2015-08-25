@@ -510,7 +510,7 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public bool DeleteReportPost(int postId, int userReportID)
+        public bool DeleteReportPost(int postId)
         {
             /**
              * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
@@ -519,7 +519,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userReportID + "})-[r:REPORT_POST]-(p:post {postID:" + postId + "})")
+                _client.Cypher.Match("(u:user)-[r:REPORT_POST]-(p:post {postID:" + postId + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
                 return true;
@@ -531,7 +531,7 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public bool DeleteReportUser(int userReportedID, int userReportID)
+        public bool DeleteReportUser(int userReportedID)
         {
             /**
              * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
@@ -540,7 +540,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u1:user {userID:" + userReportID + "})-[r:REPORT_USER]-(u2:user {userID:" + userReportedID + "})")
+                _client.Cypher.Match("(u1:user)-[r:REPORT_USER]-(u2:user {userID:" + userReportedID + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
                 return true;
@@ -740,12 +740,13 @@ namespace FlyAwayPlus.Helpers
                  */
             _client.Connect();
             var listAllReportPosts = _client.Cypher.OptionalMatch("(u:user)-[r:REPORT_POST]->(p:post)")
-                .With("r.contentReport as contentReport, u.userID as userReportID, p.postID as postID")
-                .Return((contentReport, userReportID, postID) => new ReportPost
+                .With("p.postID as postID, p.content as postContent, COUNT(r) as numberReport")
+                .OrderByDescending("numberReport")
+                .Return((postID, postContent, numberReport) => new ReportPost
                 {
-                    contentReport = contentReport.As<String>(),
-                    userReportID = userReportID.As<Int16>(),
-                    postID = postID.As<Int16>()
+                    postContent = postContent.As<String>(),
+                    postID = postID.As<Int16>(),
+                    numberReport = numberReport.As<Int16>()
                 })
                 .Results.ToList();
             return listAllReportPosts;
@@ -764,12 +765,13 @@ namespace FlyAwayPlus.Helpers
                  */
             _client.Connect();
             var listAllReportUsers = _client.Cypher.OptionalMatch("(u1:user)-[r:REPORT_USER]->(u2:user)")
-                 .With("r.contentReport as contentReport, u1.userID as userReportID, u2.userID as userReportedID")
-                 .Return((contentReport, userReportID, userReportedID) => new ReportUser
+                 .With("u2.userID as userReportedID, u2.firstName + ' ' + u2.lastName as userReportedName, COUNT(r) as numberReport")
+                 .OrderByDescending("numberReport")
+                 .Return((userReportedID, userReportedName, numberReport) => new ReportUser
                  {
-                     contentReport = contentReport.As<String>(),
-                     userReportID = userReportID.As<Int16>(),
-                     userReportedID = userReportedID.As<Int16>()
+                     userReportedName = userReportedName.As<String>(),
+                     userReportedID = userReportedID.As<Int16>(),
+                     numberReport = numberReport.As<Int16>()
                  })
                  .Results.ToList();
             return listAllReportUsers;
