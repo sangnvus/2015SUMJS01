@@ -59,9 +59,10 @@ namespace FlyAwayPlus.Helpers
             DateTime now = DateTime.Now;
             int diffMinutes = now.Minute - date.Minute;
             int diffHours = now.Hour - date.Hour;
+            int diffSeconds = now.Second - date.Second;
             if (date.AddMinutes(1).CompareTo(now) > 0)
             {
-                result = String.Format("{0} seconds ago", now.Second - date.Second);
+                result = diffSeconds <= 0 ? "just now" : String.Format("{0} seconds ago", now.Second - date.Second);
             }
             else if (date.AddHours(1).CompareTo(now) > 0)
             {

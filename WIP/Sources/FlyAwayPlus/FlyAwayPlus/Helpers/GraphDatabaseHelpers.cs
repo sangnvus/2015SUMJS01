@@ -1185,13 +1185,17 @@ namespace FlyAwayPlus.Helpers
                  * match (po:post {PostId:@PostId})-[:has]->(ph:photo)
                     return ph
                  */
-
+            List<Photo> listPhoto = new List<Photo>();
             _client.Connect();
-            return _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
-                            .Return<Photo>("ph")
+            listPhoto = _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
+                            .ReturnDistinct<Photo>("ph")
                             .OrderBy("ph.PhotoId")
                             .Results
                             .ToList();
+
+            listPhoto.RemoveAll(item => item == null);
+
+            return listPhoto;
         }
 
         public Video FindVideo(int postId)
