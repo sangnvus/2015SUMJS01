@@ -16,25 +16,25 @@
 
 @foreach (var post in ViewData["listPost"] as List<Post>)
 {
-    string btnWishClass = isWishDict[post.postID] ? "btn-warning" : "btn-primary";
-    string btnLikeClass = isLikeDict[post.postID] ? "btn-warning" : "btn-primary";
-    string btnDislikeClass = isDislikeDict[post.postID] ? "btn-warning" : "btn-primary";
+    string btnWishClass = isWishDict[post.PostId] ? "btn-warning" : "btn-primary";
+    string btnLikeClass = isLikeDict[post.PostId] ? "btn-warning" : "btn-primary";
+    string btnDislikeClass = isDislikeDict[post.PostId] ? "btn-warning" : "btn-primary";
 
-    string btnLikeIconClass = isLikeDict[post.postID] ? "interacted fa-thumbs-up" : "";
-    string btnDislikeIconClass = isDislikeDict[post.postID] ? "interacted fa-thumbs-down" : "";
+    string btnLikeIconClass = isLikeDict[post.PostId] ? "interacted fa-thumbs-up" : "";
+    string btnDislikeIconClass = isDislikeDict[post.PostId] ? "interacted fa-thumbs-down" : "";
 
     <div class="white-panel">
         <div class="dark-wrapper">
-            @foreach (var p in photo[post.postID])
+            @foreach (var p in photo[post.PostId])
             {
-                <img src="@(p.url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.url" alt="@p.url">
+                <img src="@(p.Url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.Url" alt="@p.Url">
             }
 
-            @if (@video[post.postID] != null)
+            @if (@video[post.PostId] != null)
             {
                 <div class="video-overlay">
-                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.postID].path?enablejsapi=1&wmode=opaque">
-                        <img src="http://img.youtube.com/vi/@video[post.postID].path/0.jpg" alt="@video[post.postID]">
+                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.PostId].Path?enablejsapi=1&wmode=opaque">
+                        <img src="http://img.youtube.com/vi/@video[post.PostId].Path/0.jpg" alt="@video[post.PostId]">
                         <span class="video-thumbnail-button"></span>
                     </a>
                 </div>
@@ -42,53 +42,53 @@
             <ul class="post-actions" style="padding-left: 0px;">
                 <!--
                 <li>
-                    <a href="javascript:;" role="@post.postID" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
+                    <a href="javascript:;" role="@post.PostId" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 -->
                 <li style="width:50%">
-                    <a href="javascript:;" role="@post.postID" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+                    <a href="javascript:;" role="@post.PostId" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
                 <li style="width:50%">
-                    <a href="javascript:;" role="@post.postID" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                    <a href="javascript:;" role="@post.PostId" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                 </li>
             </ul>
         </div>
         <div class="panel-content-wrapper">
             <h1>
-                <a href="/Post/Index/@post.postID">
-                    <i class="fa fa-map-marker"></i>&nbsp; @place[post.postID].name
+                <a href="/Post/Index/@post.PostId">
+                    <i class="fa fa-map-marker"></i>&nbsp; @place[post.PostId].Name
                 </a>
             </h1>
-            @if (!string.IsNullOrEmpty(post.content))
+            @if (!string.IsNullOrEmpty(post.Content))
             {
                 <div class="divider"></div>
-                <p class="board-post-content">@post.content</p>
+                <p class="board-post-content">@post.Content</p>
             }
 
             <div class="user-interacted-area">
-                <i class="fa fa-thumbs-o-up @btnLikeIconClass"></i>&nbsp;<b class="like-count">@like[post.postID]</b>&nbsp;
-                <i class="fa fa-thumbs-o-down @btnDislikeIconClass"></i>&nbsp;<b class="dislike-count">@dislike[post.postID]</b>&nbsp;
-                <i class="fa fa-comment-o"></i>&nbsp;@comment[post.postID]&nbsp;
-                <i class="fa fa-group"></i>&nbsp;@userComment[post.postID]
+                <i class="fa fa-thumbs-o-up @btnLikeIconClass"></i>&nbsp;<b class="like-count">@like[post.PostId]</b>&nbsp;
+                <i class="fa fa-thumbs-o-down @btnDislikeIconClass"></i>&nbsp;<b class="dislike-count">@dislike[post.PostId]</b>&nbsp;
+                <i class="fa fa-comment-o"></i>&nbsp;@comment[post.PostId]&nbsp;
+                <i class="fa fa-group"></i>&nbsp;@userComment[post.PostId]
             </div>
             <div class="divider"></div>
             <div class="user-info">
-                <img src="@user[post.postID].avatar" alt="@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)" class="avatar" />
+                <img src="@user[post.PostId].Avatar" alt="@String.Format("{0} {1}", user[post.PostId].FirstName, user[post.PostId].LastName)" class="avatar" />
                 <div style="width: 100%">
-                    <a href="/User/Index/@user[post.postID].userID" class="name-user hover-card-user">@String.Format("{0} {1}", user[post.postID].firstName, user[post.postID].lastName)</a>
-                    <div class="post-time">@post.toRealtime()</div>
+                    <a href="/User/Index/@user[post.PostId].UserId" class="name-user hover-card-user">@String.Format("{0} {1}", user[post.PostId].FirstName, user[post.PostId].LastName)</a>
+                    <div class="post-time">@post.ToRealtime()</div>
                 </div>
 
-                @if (((User)Session["user"]).userID == @user[post.postID].userID)
+                @if (((User)Session["user"]).UserId == @user[post.PostId].UserId)
                 {
                     <div class="dropdown">
                         <span class="glyphicon glyphicon-option-vertical post-list-post-option" data-toggle="dropdown" aria-hidden="true"></span>
                         <ul class="dropdown-menu bullet pull-center post-list-post-option-actions" role="menu" style="margin-top: -20px">
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.postID" href="javascript:;" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
+                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-edit" value="@post.PostId" href="javascript:;" data-toggle="modal" data-target="#edit-post-modal">Edit</a>
                             </li>
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.postID" href="javascript:;">Delete</a>
+                                <a role="menuitem" tabindex="-1" class="post-post-list-post-option-delete" value="@post.PostId" href="javascript:;">Delete</a>
                             </li>
                         </ul>
                     </div>

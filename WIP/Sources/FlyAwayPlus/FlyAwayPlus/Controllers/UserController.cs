@@ -73,17 +73,17 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
-                listPhoto.AddRange(listPhotoDict[po.postID]);
-                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
-                listVideo.Add(listVideoDict[po.postID]);
-                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
-                listPlace.Add(listPlaceDict[po.postID]);
-                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
-                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
-                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
-                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
-                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
+                listPhotoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPhoto(po.PostId));
+                listPhoto.AddRange(listPhotoDict[po.PostId]);
+                listVideoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindVideo(po.PostId));
+                listVideo.Add(listVideoDict[po.PostId]);
+                listPlaceDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPlace(po));
+                listPlace.Add(listPlaceDict[po.PostId]);
+                listUserDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindUser(po));
+                dictLikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountLike(po.PostId));
+                dictDislikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountDislike(po.PostId));
+                dictCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountComment(po.PostId));
+                dictUserCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountUserComment(po.PostId));
 
                 if (user != null)
                 {

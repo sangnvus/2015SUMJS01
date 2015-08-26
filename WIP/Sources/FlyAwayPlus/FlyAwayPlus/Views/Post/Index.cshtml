@@ -137,7 +137,7 @@
             {
                 method: 'feed',
                 name: '@userPost.FirstName' + ' @userPost.LastName',
-                link: document.location.origin + '/Post/Index/@Model.PostID#',
+                link: document.location.origin + '/Post/Index/@Model.PostId#',
                 picture: document.location.origin + '/Images/UserUpload/'+'@photo.Url',
                 caption: 'FlyAwayPlus.com',
                 description: '@Model.Content'
@@ -151,14 +151,14 @@
         });
 
         $('#closeBtn').click(function(e) {
-            if (parseInt('@Session["userID"]') == parseInt('@userPost.userID')) {
+            if (parseInt('@Session["userID"]') == parseInt('@userPost.UserId')) {
                 alert("You can not report yourself!");
             } else {
                 var controller = "/User/ReportPost/";
                 var data = {
-                    postID: @Model.postID,
+                    postID: @Model.PostId,
                     userReportID: parseInt('@Session["userID"]'),
-                    userReportedID: @userPost.userID,
+                    userReportedID: @userPost.UserId,
                     typeReport: $('input[name="optradio"]:checked').val()
                 };
 

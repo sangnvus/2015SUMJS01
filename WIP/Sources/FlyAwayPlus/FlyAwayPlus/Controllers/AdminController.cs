@@ -153,7 +153,7 @@ namespace FlyAwayPlus.Controllers
         {
             try
             {
-                Post post = GraphDatabaseHelpers.Instance.FindPostByID(id);
+                Post post = GraphDatabaseHelpers.Instance.FindPostById(id);
                 User userReported = GraphDatabaseHelpers.Instance.FindUser(post);
 
                 List<Photo> photo = GraphDatabaseHelpers.Instance.FindPhoto(id);

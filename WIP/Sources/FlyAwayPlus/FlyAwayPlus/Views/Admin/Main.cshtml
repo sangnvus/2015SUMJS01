@@ -56,16 +56,16 @@
                                 foreach (var user in ViewBag.OnePageOfUsers)
                                 {
                                     <tr>
-                                        <td>@user.userID</td>
-                                        <td>@user.firstName</td>
-                                        <td>@user.lastName</td>
-                                        <td>@user.email</td>
-                                        @if (user.status.Equals("active"))
+                                        <td>@user.UserId</td>
+                                        <td>@user.FirstName</td>
+                                        <td>@user.LastName</td>
+                                        <td>@user.Email</td>
+                                        @if (user.Status.Equals("active"))
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick="lock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
-                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                    <input type="checkbox" onclick="lock(@user.UserId)" name="onoffswitch_@user.UserId" class="onoffswitch-checkbox" id="myonoffswitch_@user.UserId" checked>
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.UserId">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
                                                     </label>
@@ -76,8 +76,8 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick="unLock(@user.userID)" name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
-                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                    <input type="checkbox" onclick="unLock(@user.UserId)" name="onoffswitch_@user.UserId" class="onoffswitch-checkbox" id="myonoffswitch_@user.UserId">
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.UserId">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
                                                     </label>
@@ -113,28 +113,28 @@
                             @if (ViewBag.NumberOfReportPost != 0)
                             {
                                 try
-                            {
-                                if (ViewBag.OnePageOfReportPosts != null)
                                 {
-                                    foreach (var reportPost in ViewBag.OnePageOfReportPosts)
+                                    if (ViewBag.OnePageOfReportPosts != null)
                                     {
-                                        <tr>
-                                            <td>@reportPost.postID</td>
-                                            <td>@reportPost.postContent</td>
-                                            <td>@reportPost.numberReport</td>
-                                            <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
+                                        foreach (var reportPost in ViewBag.OnePageOfReportPosts)
+                                        {
+                                            <tr>
+                                                <td>@reportPost.PostId</td>
+                                            <td>@reportPost.PostContent</td>
+                                            <td>@reportPost.NumberReport</td>
+                                            <td><a href="/Admin/ViewPost/@reportPost.PostId" type="button" class="btn btn-primary">View post</a></td>
                                             <td>
-                                                <a onclick="lockPost(@reportPost.postID)" class="btn btn-primary">Lock post</a>
-                                                <a onclick="cancelReportPost(@reportPost.postID)" class="btn btn-primary">Cancel</a>
+                                                <a onclick="lockPost(@reportPost.PostId)" class="btn btn-primary">Lock post</a>
+                                                <a onclick="cancelReportPost(@reportPost.PostId)" class="btn btn-primary">Cancel</a>
                                             </td>
                                         </tr>
+                                        }
                                     }
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e.ToString());
-                            }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.ToString());
+                                }
                             }
                         </tbody>
                     </table>
@@ -162,12 +162,12 @@
                                     foreach (var reportUser in ViewBag.OnePageOfReportUsers)
                                     {
                                         <tr>
-                                            <td>@reportUser.userReportedID</td>
-                                            <td>@reportUser.userReportedName</td>
-                                            <td>@reportUser.numberReport</td>
+                                            <td>@reportUser.UserReportedId</td>
+                                            <td>@reportUser.UserReportedName</td>
+                                            <td>@reportUser.NumberReport</td>
                                             <td>
-                                                <a onclick="lockReportUser(@reportUser.userReportedID)" class="btn btn-primary">Lock user</a>
-                                                <a onclick="cancelReportUser(@reportUser.userReportedID)" class="btn btn-primary">Cancel</a>
+                                                <a onclick="lockReportUser(@reportUser.UserReportedId)" class="btn btn-primary">Lock user</a>
+                                                <a onclick="cancelReportUser(@reportUser.UserReportedId)" class="btn btn-primary">Cancel</a>
                                             </td>
                                         </tr>
                                     }
@@ -210,143 +210,141 @@
 </html>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         var tab = '@ViewBag.Tab';
-        if (tab.length == 0)
-        {
+        if (tab.length == 0) {
             $('.nav-tabs a[href="#reportPost"]').tab('show');
         }
-        else
-        {
+        else {
             $('.nav-tabs a[href="#@ViewBag.Tab"]').tab('show');
         }
-});
+    });
 
-function lock(id) {
-    var controller, data;
-    if ($('#myonoffswitch_' + id).is(':checked')) {
-        controller = "/Admin/UnlockUser/";
-        data = {
-            userId: id
-        };
-        commonModule.callAjax(controller, data, null);
-        //$('#myonoffswitch_' + id).prop('checked', false);
-    } else {
-        controller = "/Admin/LockUser/";
-        data = {
-            userId: id
-        };
-        commonModule.callAjax(controller, data, null);
+    function lock(id) {
+        var controller, data;
+        if ($('#myonoffswitch_' + id).is(':checked')) {
+            controller = "/Admin/UnlockUser/";
+            data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+            //$('#myonoffswitch_' + id).prop('checked', false);
+        } else {
+            controller = "/Admin/LockUser/";
+            data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+        }
     }
-}
 
-function unLock(id) {
-    var controller, data;
-    if ($('#myonoffswitch_' + id).is(':checked')) {
-        controller = "/Admin/UnlockUser/";
-        data = {
-            userId: id
-        };
-        commonModule.callAjax(controller, data, null);
-        //$('#myonoffswitch_' + id).prop('checked', true);
-    } else {
-        controller = "/Admin/LockUser/";
-        data = {
-            userId: id
-        };
-        commonModule.callAjax(controller, data, null);
+    function unLock(id) {
+        var controller, data;
+        if ($('#myonoffswitch_' + id).is(':checked')) {
+            controller = "/Admin/UnlockUser/";
+            data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+            //$('#myonoffswitch_' + id).prop('checked', true);
+        } else {
+            controller = "/Admin/LockUser/";
+            data = {
+                userId: id
+            };
+            commonModule.callAjax(controller, data, null);
+        }
     }
-}
 
-function lockPost(postID) {
-    $.ajax({
-        url: "/Admin/LockReportPost/",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            postId: postID
-        },
-        success: function (data) {
-            if (data == true) {
-                alert("This post is locked!");
-                @{
+    function lockPost(postId) {
+        $.ajax({
+            url: "/Admin/LockReportPost/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                postId: postId
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("This post is locked!");
+                    @{
                     ViewBag.Tab = "reportPost";
                 }
-                location.reload();
-            } else {
-                alert("Error!");
+                    location.reload();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-        }
-    });
-}
+        });
+    }
 
-function cancelReportPost(postID) {
-    $.ajax({
-        url: "/Admin/CancelReportPost/",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            postId: postID
-        },
-        success: function (data) {
-            if (data == true) {
-                alert("This report has been canceled");
-                @{
+    function cancelReportPost(postId) {
+        $.ajax({
+            url: "/Admin/CancelReportPost/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                postId: postId
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("This report has been canceled");
+                    @{
                     ViewBag.Tab = "reportPost";
                 }
-                location.reload();
-            } else {
-                alert("Error!");
+                    location.reload();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-        }
-    });
-}
+        });
+    }
 
-function lockReportUser(userReportedID) {
-    $.ajax({
-        url: "/Admin/LockReportUser/",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            userReportedID: userReportedID
-        },
-        success: function (data) {
-            if (data == true) {
-                alert("This user is locked!");
-                location.reload();
-            } else {
-                alert("Error!");
+    function lockReportUser(userReportedId) {
+        $.ajax({
+            url: "/Admin/LockReportUser/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                userReportedID: userReportedId
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("This user is locked!");
+                    location.reload();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-        }
-    });
-}
+        });
+    }
 
-function cancelReportUser(userReportedID) {
-    $.ajax({
-        url: "/Admin/CancelReportUser/",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            userReportedID: userReportedID
-        },
-        success: function (data) {
-            if (data == true) {
-                alert("Thiis report has been canceled");
-                location.reload();
-            } else {
-                alert("Error!");
+    function cancelReportUser(userReportedId) {
+        $.ajax({
+            url: "/Admin/CancelReportUser/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                userReportedID: userReportedId
+            },
+            success: function (data) {
+                if (data == true) {
+                    alert("Thiis report has been canceled");
+                    location.reload();
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-        }
-    });
-}
+        });
+    }
 </script>
 <style>
     .onoffswitch {

@@ -20,7 +20,7 @@
                 <li data-index="@index">
                     <div class="Module User followPlacesItem small">
                         <div class="content">
-                            <a href="/Place/@suggest.placeID">
+                            <a href="/Place/@suggest.PlaceId">
                                 <span class="thumbImageWrapper">
                                     <div class="Image Module">
                                         <div class="heightContainer">
@@ -30,24 +30,24 @@
                                 </span>
                             </a>
                             <div class="contactUser">
-                                <a class="contactUsername" href="/Search/SearchDetail/@suggest.placeID">@String.Format("{0} - {1}", suggest.name, listIsVisitedPlace[index] ? "Visited" : "Not visited")</a>
+                                <a class="contactUsername" href="/Search/SearchDetail/@suggest.PlaceId">@String.Format("{0} - {1}", suggest.Name, listIsVisitedPlace[index] ? "Visited" : "Not visited")</a>
                                 <br />
                                 <p style="margin:0px;">@listNumberOfPost[index] numbers of Post</p>
                                 @if (checkWishlist[index])
                                 {
-                                    <button role="@suggest.placeID" type="button" class="cls-remove-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                    <button role="@suggest.PlaceId" type="button" class="cls-remove-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Remove from wishlist</span>
                                     </button>
-                                    <button role="@suggest.placeID" style="display:none" type="button" class="cls-add-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                    <button role="@suggest.PlaceId" style="display:none" type="button" class="cls-add-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Add to wishlist</span>
                                     </button>
                                 }
                                 else
                                 {
-                                    <button role="@suggest.placeID" type="button" style="display:none" class="cls-remove-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                    <button role="@suggest.PlaceId" type="button" style="display:none" class="cls-remove-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Remove from wishlist</span>
                                     </button>
-                                    <button role="@suggest.placeID" type="button" class="cls-add-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
+                                    <button role="@suggest.PlaceId" type="button" class="cls-add-wish Button FollowButton Module PlaceFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Add to wishlist</span>
                                     </button>
                                 }
@@ -68,7 +68,7 @@
 
             var controller = "/User/AddWishPlace/";
             var data = {
-                userID: @Model.userID,
+                userID: @Model.UserId,
                 placeID: placeID
             };
 
@@ -84,7 +84,7 @@
 
             var controller = "/User/RemoveWishPlace/";
             var data = {
-                userID: @Model.userID,
+                userID: @Model.UserId,
                 placeID: placeID
             };
             commonModule.callAjax(controller, data, null);
