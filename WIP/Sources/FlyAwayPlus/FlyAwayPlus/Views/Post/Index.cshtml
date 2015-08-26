@@ -16,32 +16,32 @@
             <div class="post-area">
                 <div class="post-info">
                     <div class="user-avatar">
-                        <img src="@userPost.avatar" alt="@String.Format("{0} {1}", userPost.firstName, userPost.lastName)" class="img-circle" />
+                        <img src="@userPost.Avatar" alt="@String.Format("{0} {1}", userPost.FirstName, userPost.LastName)" class="img-circle" />
                     </div>
                     <div class="post-info-area">
                         <div class="user-name">
-                            <a href="/User/Index/@userPost.userID" class="hover-card-user">@String.Format("{0} {1}", userPost.firstName, userPost.lastName)</a>
+                            <a href="/User/Index/@userPost.UserId" class="hover-card-user">@String.Format("{0} {1}", userPost.FirstName, userPost.LastName)</a>
                         </div>
                         <span class="post-time">
-                            <span>Shared with @Model.privacy</span>
+                            <span>Shared with @Model.Privacy</span>
                             &nbsp;-&nbsp;
-                            <span>@Model.toRealtime()</span>
+                            <span>@Model.ToRealtime()</span>
                         </span>
                     </div>
                 </div>
                 <div class="post-content" style="display:flex;">
-                    <img src="/Images/UserUpload/@photo.url" style="max-height: 100%; margin:auto;" />
+                    <img src="/Images/UserUpload/@photo.Url" style="max-height: 100%; margin:auto;" />
                 </div>
                 <div class="post-content">
-                    @Model.content
+                    @Model.Content
                 </div>
             </div>
 
             <div class="interact-area">
-                <a href="javascript:;" role="@Model.postID" class="btn-like"><span>Like</span></a>
-                <a href="javascript:;" role="@Model.postID" class="btn-dislike"><span>Dislike</span></a>
+                <a href="javascript:;" role="@Model.PostId" class="btn-like"><span>Like</span></a>
+                <a href="javascript:;" role="@Model.PostId" class="btn-dislike"><span>Dislike</span></a>
                 <a href="javascript:;" id="share_button" class="btn-share"><span>Share</span></a>
-                <a href="javascript:;" role="@Model.postID" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
+                <a href="javascript:;" role="@Model.PostId" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
                 
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
@@ -90,9 +90,9 @@
             <div class="divide-area"></div>
             <div class="comment-area">
                 <div style="margin: 0 20px 12px">
-                    <a href="javascript:;" role="@Model.postID"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
-                    <a href="javascript:;" role="@Model.postID"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
-                    <a href="javascript:;" role="@Model.postID"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
+                    <a href="javascript:;" role="@Model.PostId"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@ViewData["likeCount"]</b>&nbsp;
+                    <a href="javascript:;" role="@Model.PostId"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@ViewData["dislikeCount"]</b>&nbsp;
+                    <a href="javascript:;" role="@Model.PostId"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@ViewData["userComment"]</b>
                 </div>
                 <div class="comment-stats">
                     <span>@listComment.Count comments</span>
@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="comment-textbox-wrapper">
-                    <textarea id="idTextareaComment" role="@Model.postID" class="comment-textbox" style="height:30px;resize:none" placeholder="Input comment..."></textarea>
+                    <textarea id="idTextareaComment" role="@Model.PostId" class="comment-textbox" style="height:30px;resize:none" placeholder="Input comment..."></textarea>
                 </div>
             </div>
         </div>
@@ -129,11 +129,11 @@
             FB.ui(
             {
                 method: 'feed',
-                name: '@userPost.firstName' + ' @userPost.lastName',
+                name: '@userPost.FirstName' + ' @userPost.LastName',
                 link: 'http://localhost:1644/Post/Index/10010#',
-                picture: 'http://localhost:1644/Images/UserUpload/'+'@photo.url',
+                picture: 'http://localhost:1644/Images/UserUpload/'+'@photo.Url',
                 caption: 'FlyAwayPlus.com',
-                description: '@Model.content'
+                description: '@Model.Content'
             });
         });
 
@@ -147,9 +147,9 @@
 
             var controller = "/User/ReportPost/";
             var data = {
-                postID: @Model.postID,
-                userReportID: parseInt('@Session["userID"]'),
-                userReportedID: @userPost.userID,
+                postId: @Model.PostId,
+                userReportId: parseInt('@Session["UserId"]'),
+                userReportedId: @userPost.UserId,
                 typeReport: $('input[name="optradio"]:checked').val()
             };
 

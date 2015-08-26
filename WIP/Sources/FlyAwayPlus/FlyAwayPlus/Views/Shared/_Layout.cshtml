@@ -153,8 +153,8 @@
                     otherUserId = otherUserId.substr(12, otherUserId.length - 12);
 
                     var data = {
-                        userID: currentUserId,
-                        otherUserID: otherUserId
+                        userId: currentUserId,
+                        otherUserId: otherUserId
                     };
 
                     if ($(this).text() === 'Add friend') {
@@ -262,8 +262,8 @@
                         $("#id-btn-friend-decline" + friend["userID"]).click(function (evt) {
                             var controller = "/User/DeclineRequestFriend";
                             var data = {
-                                userID: friend["userID"],
-                                otherUserID: parseInt('@Session["userID"]')
+                                userId: friend["userID"],
+                                otherUserId: parseInt('@Session["userID"]')
                             };
 
                             commonModule.callAjax(controller, data, null);
@@ -316,7 +316,7 @@
                         else if (notification["activity"] == "DISLIKE") {
                             tmp += "<div>" + notification["user"]["firstName"] + " " + notification["user"]["lastName"] + " disliked to your post</div>";
                         }
-                        tmp += "<div style='margin-top:5px;'> " + notification["dateCreated"] + "</div>";
+                        tmp += "<div style='margin-top:5px;'> " + notification["DateCreated"] + "</div>";
                         tmp += "</a>";
                         tmp += "</div>";
                         tmp += "<hr />";
@@ -399,7 +399,7 @@
                                     otherUserId: otherUserId
                                 }
                             })).done(function (otherUser, mutualFriendCount, placeCount, isFriend) {
-                                tooltipContent = '<div class="hover-card"><div class="profile"><div class="avatar"><img src="' + otherUser[0].avatar + '" alt="avatar"></div></div><div class="information"><a href="' + origin.attr('href') + '"><div class="name-user">' + otherUser[0].firstName + ' ' + otherUser[0].lastName + '</div></a><div class="dark-divider"></div><ul><li>';
+                                tooltipContent = '<div class="hover-card"><div class="profile"><div class="avatar"><img src="' + otherUser[0].Avatar + '" alt="avatar"></div></div><div class="information"><a href="' + origin.attr('href') + '"><div class="name-user">' + otherUser[0].FirstName + ' ' + otherUser[0].LastName + '</div></a><div class="dark-divider"></div><ul><li>';
 
                                 tooltipContent += mutualFriendCount[0];
                                 tooltipContent += ' mutual friends</li><li>' + placeCount[0] + ' places traveled</li></ul><div><div class="add-friend-btn">';

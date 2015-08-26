@@ -5,14 +5,14 @@ namespace FlyAwayPlus.Models
 {
     public class Post
     {
-        public int postID { get; set; }
-        public string content { get; set; }
-        public string dateCreated { get; set; }
-        public string privacy { get; set; }
+        public int PostId { get; set; }
+        public string Content { get; set; }
+        public string DateCreated { get; set; }
+        public string Privacy { get; set; }
 
-        public string toRealtime()
+        public string ToRealtime()
         {
-            return DateHelpers.Instance.DisplayRealtime(dateCreated);
+            return DateHelpers.Instance.DisplayRealtime(DateCreated);
         }
     }
 }

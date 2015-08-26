@@ -37,7 +37,7 @@
             <div role="tabpanel" class="tab-pane full-width blog-landing active" id="idSearchPlace">
                 @foreach (var place in listPlace)
                 {
-                    if (listPhotoDict[place.placeID] == null || listPhotoDict[place.placeID].Count == 0)
+                    if (listPhotoDict[place.PlaceId] == null || listPhotoDict[place.PlaceId].Count == 0)
                     {
                         continue;
                     }
@@ -46,17 +46,17 @@
                             <div style="position:absolute; width:100%; height:100%">
                                 <span class="boardPinCount">
                                     <div class="Module PinCount">
-                                        <span class="pinIcon glyphicon glyphicon-pencil"></span> @numberOfPostDict[place.placeID]
+                                        <span class="pinIcon glyphicon glyphicon-pencil"></span> @numberOfPostDict[place.PlaceId]
                                     </div>
                                 </span>
-                                <div class="place-result-bio" alt="@place.name" style="background-image:url(/Images/UserUpload/@listPhotoDict[place.placeID][0].url)"><!--BG--></div>
+                                <div class="place-result-bio" alt="@place.Name" style="background-image:url(/Images/UserUpload/@listPhotoDict[place.PlaceId][0].Url)"><!--BG--></div>
                             </div>
                         </div>
 
                         <div class="place-result-content" style="display:block; float:left">
                             <div class="place-result-place-name">
-                                <a href="/Search/SearchDetail/@place.placeID">
-                                    <h3>@place.name</h3>
+                                <a href="/Search/SearchDetail/@place.PlaceId">
+                                    <h3>@place.Name</h3>
                                 </a>
                             </div>
                             <ul class="boardThumbs">
@@ -64,22 +64,22 @@
                                 {
                                     <li>
                                         <span class="hoverMask"></span>
-                                        @if (index < listPhotoDict[place.placeID].Count)
+                                        @if (index < listPhotoDict[place.PlaceId].Count)
                                         {
-                                            <img style="" class="thumb" src="/Images/UserUpload/@listPhotoDict[place.placeID][index].url">
+                                            <img style="" class="thumb" src="/Images/UserUpload/@listPhotoDict[place.PlaceId][index].Url">
                                         }
                                     </li>
                                 }
                             </ul>
-                            @if (wishlist[place.placeID])
+                            @if (wishlist[place.PlaceId])
                             {
-                                <a class="cls-add-wishlist-btn" style="display:none;" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Add To Wishlist</div></a>
-                                <a class="cls-remove-wishlist-btn" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Remove From Wishlist</div></a>
+                                <a class="cls-add-wishlist-btn" style="display:none;" role="@place.PlaceId" href="javascript:;"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                                <a class="cls-remove-wishlist-btn" role="@place.PlaceId" href="javascript:;"><div class="place-result-view-detail">Remove From Wishlist</div></a>
                             }
                             else
                             {
-                                <a class="cls-add-wishlist-btn" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Add To Wishlist</div></a>
-                                <a class="cls-remove-wishlist-btn" style="display:none;" role="@place.placeID" href="javascript:;"><div class="place-result-view-detail">Remove From Wishlist</div></a>
+                                <a class="cls-add-wishlist-btn" role="@place.PlaceId" href="javascript:;"><div class="place-result-view-detail">Add To Wishlist</div></a>
+                                <a class="cls-remove-wishlist-btn" style="display:none;" role="@place.PlaceId" href="javascript:;"><div class="place-result-view-detail">Remove From Wishlist</div></a>
                             }
                         </div>
                     </div>
@@ -90,24 +90,24 @@
                 @foreach (var user in listUser)
                 {
                     <div class="full-width">
-                        <li data-index="@user.userID">
+                        <li data-index="@user.UserId">
                             <div class="Module User followFriendsItem small">
                                 <div class="content">
                                     <a href="/User/Index/2/">
                                         <span class="thumbImageWrapper">
                                             <div class="Image Module">
                                                 <div class="heightContainer">
-                                                    <img data-src="@user.avatar" alt="@string.Format("{0} {1}", user.firstName, user.lastName)" style="" src="@user.avatar">
+                                                    <img data-src="@user.Avatar" alt="@string.Format("{0} {1}", user.FirstName, user.LastName)" style="" src="@user.Avatar">
                                                 </div>
                                             </div>
                                         </span>
                                     </a>
                                     <div class="contactUser">
-                                        <a class="contactUsername hover-card-user" href="/User/Index/@user.userID">@string.Format("{0} {1}", user.firstName, user.lastName)</a>
+                                        <a class="contactUsername hover-card-user" href="/User/Index/@user.UserId">@string.Format("{0} {1}", user.FirstName, user.LastName)</a>
                                         <br />
                                         <p style="margin:0px;">mutuals friends</p>
 
-                                        <button role="@user.userID" type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                        <button role="@user.UserId" type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
                                             <span class="buttonText">Waitting for accept</span>
                                         </button>
                                     </div>
@@ -136,14 +136,14 @@
 
         $(".cls-add-wishlist-btn").click(function (evt) {
             var controller = "/User/AddWishPlace/";
-            var userID = '@Session["userID"]';
-            if (userID.trim().length == 0) {
+            var userId = '@Session["UserId"]';
+            if (userId.trim().length == 0) {
                 alert("You must login first!!!");
             }
             else {
                 var data = {
-                    placeID: parseInt($(this).attr("role")),
-                    userID: parseInt(userID)
+                    placeId: parseInt($(this).attr("role")),
+                    userId: parseInt(userId)
                 };
                 commonModule.callAjax(controller, data, null);
                 $(this).hide();
@@ -154,14 +154,14 @@
 
         $(".cls-remove-wishlist-btn").click(function (evt) {
             var controller = "/User/RemoveWishPlace/";
-            var userID = '@Session["userID"]';
-            if (userID.trim().length == 0) {
+            var userId = '@Session["UserId"]';
+            if (userId.trim().length == 0) {
                 alert("You must login first!!!");
             }
             else {
                 var data = {
-                    placeID: parseInt($(this).attr("role")),
-                    userID: parseInt(userID)
+                    placeId: parseInt($(this).attr("role")),
+                    pserId: parseInt(userId)
                 };
                 commonModule.callAjax(controller, data, null);
                 $(this).hide();

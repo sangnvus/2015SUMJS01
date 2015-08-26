@@ -19,31 +19,31 @@
                 <li data-index="@index">
                     <div class="Module User followFriendsItem small">
                         <div class="content">
-                            <a href="/User/Index/@suggest.userID">
+                            <a href="/User/Index/@suggest.UserId">
                                 <span class="thumbImageWrapper">
                                     <div class="Image Module">
                                         <div class="heightContainer">
-                                            <img data-src="@suggest.avatar" alt="@String.Format("{0} {1}", suggest.firstName, suggest.lastName)" style="" src="@suggest.avatar">
+                                            <img data-src="@suggest.Avatar" alt="@String.Format("{0} {1}", suggest.FirstName, suggest.LastName)" style="" src="@suggest.Avatar">
                                         </div>
                                     </div>
                                 </span>
                             </a>
                             <div class="contactUser">
-                                <a class="contactUsername hover-card-user" href="/User/Index/@suggest.userID">@String.Format("{0} {1}", suggest.firstName, suggest.lastName)</a>
+                                <a class="contactUsername hover-card-user" href="/User/Index/@suggest.UserId">@String.Format("{0} {1}", suggest.FirstName, suggest.LastName)</a>
                                 <br />
                                 <p style="margin:0px;">@listMutualFriends[index] mutuals friends</p>
                                 @if (listFriendType[index].Equals("request"))
                                 {
-                                    <button role="@suggest.userID"  type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                    <button role="@suggest.UserId"  type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Waitting for accept</span>
                                     </button>
                                 }
                                 else
                                 {
-                                    <button role="@suggest.userID" type="button" class="cls-friend-request Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                    <button role="@suggest.UserId" type="button" class="cls-friend-request Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Send Friend Request</span>
                                     </button>
-                                    <button style="display:none" role="@suggest.userID" type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
+                                    <button style="display:none" role="@suggest.UserId" type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
                                         <span class="buttonText">Friend request is sent</span>
                                     </button>
                                 }
@@ -60,17 +60,17 @@
 <script>
     $(document).ready(function () {
         $(".cls-friend-request").click(function (evt) {
-            var otherID = parseInt($(this).attr("role"));
+            var otherId = parseInt($(this).attr("role"));
 
             var controller = "/User/SendRequestFriend/";
             var data = {
-                userID: @Model.userID,
-                otherUserID: otherID
+                userId: @Model.UserId,
+                otherUserId: otherId
             };
 
             commonModule.callAjax(controller, data, null);
 
-            $(".UserFollowButton[role=" + otherID + "]").show();
+            $(".UserFollowButton[role=" + otherId + "]").show();
             $(this).hide();
             evt.preventDefault();
         });

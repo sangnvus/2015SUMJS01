@@ -10,7 +10,7 @@ namespace FlyAwayPlus.Helpers
         private DateHelpers()
         { }
 
-        private readonly String[] LIST_MONTH = {   "Jan", "Feb", "March", "April", 
+        private readonly String[] _listMonth = {   "Jan", "Feb", "March", "April", 
                                             "May", "June", "July", "Aug", 
                                             "Sep", "Oct", "Nov", "Dec"
                                         };
@@ -24,11 +24,11 @@ namespace FlyAwayPlus.Helpers
 
             foreach (var post in listPost)
             {
-                date = DateTime.Parse(post.dateCreated);
+                date = DateTime.Parse(post.DateCreated);
                 year = date.Year;
                 month = date.Month;
 
-                timeline = LIST_MONTH[month - 1] + " " + year;
+                timeline = _listMonth[month - 1] + " " + year;
 
                 List<Post> listPostTimeline = null;
 

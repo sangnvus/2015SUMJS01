@@ -11,9 +11,9 @@ namespace FlyAwayPlus.Hubs
 {
     public class FriendHub : Hub
     {
-        public void GetListFriendRequest(int userID)
+        public void GetListFriendRequest(int userId)
         {
-            List<User> listFriend = GraphDatabaseHelpers.Instance.GetListFriend(userID);
+            List<User> listFriend = GraphDatabaseHelpers.Instance.GetListFriend(userId);
             Clients.Caller.receiveListFriendRequest(JsonConvert.SerializeObject(listFriend));
         }
     }

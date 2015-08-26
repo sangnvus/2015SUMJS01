@@ -31,23 +31,23 @@ namespace FlyAwayPlus.Controllers
             //if (!ModelState.IsValid)
             {
                 Session["loginMessageError"] = "";
-                user.typeID = 0; // Fap Account
+                user.TypeId = 0; // Fap Account
 
                 // select from DB
-                User newUser = GraphDatabaseHelpers.Instance.GetUser(user.typeID, user.email);
+                User newUser = GraphDatabaseHelpers.Instance.GetUser(user.TypeId, user.Email);
 
                 /*
                  *  Insert into Graph DB 
                  */
                 if (newUser == null)
                 {
-                    user.typeID = 0; // Fap account
-                    user.dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+                    user.TypeId = 0; // Fap account
+                    user.DateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                     //user.dateOfBirth = DateTime.Now.ToString();
-                    user.status = "active";
-                    if (string.IsNullOrWhiteSpace(user.avatar))
+                    user.Status = "active";
+                    if (string.IsNullOrWhiteSpace(user.Avatar))
                     {
-                        user.avatar = "/Images/UIHelper/default-avatar.jpg";
+                        user.Avatar = "/Images/UIHelper/default-avatar.jpg";
                     }
                     Session["registerMessageError"] = "";
                     // insert user to Database
@@ -62,13 +62,13 @@ namespace FlyAwayPlus.Controllers
 
                 // Set the auth cookie
                 Session["authenicated"] = true;
-                Session["username"] = user.firstName + " " + user.lastName;
-                Session["userAva"] = user.avatar;
-                Session["userID"] = user.userID;
+                Session["username"] = user.FirstName + " " + user.LastName;
+                Session["userAva"] = user.Avatar;
+                Session["UserId"] = user.UserId;
                 UserHelpers.SetCurrentUser(Session, user);
 
                 //Send email confirm
-                string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+                string senderId = "flyawayplus.system@gmail.com"; // use sender’s email id here..
                 const string senderPassword = "doan2015"; // sender password here…
                 try
                 {
@@ -78,11 +78,11 @@ namespace FlyAwayPlus.Controllers
                         Port = 587,
                         EnableSsl = true,
                         DeliveryMethod = SmtpDeliveryMethod.Network,
-                        Credentials = new NetworkCredential(senderID, senderPassword),
+                        Credentials = new NetworkCredential(senderId, senderPassword),
                         Timeout = 30000,
                     };
-                    var message = new MailMessage(senderID, user.email, "Getting started on FlyAwayPlus",
-                        "Welcome to FlyAwayPlus, " + user.firstName + " " + user.lastName + "!");
+                    var message = new MailMessage(senderId, user.Email, "Getting started on FlyAwayPlus",
+                        "Welcome to FlyAwayPlus, " + user.FirstName + " " + user.LastName + "!");
                     smtp.Send(message);
 
                 }
@@ -104,22 +104,22 @@ namespace FlyAwayPlus.Controllers
             if (!ModelState.IsValid)
             {
                 Session["registerMessageError"] = "";
-                user.typeID = 0;
+                user.TypeId = 0;
 
-                var newUser = GraphDatabaseHelpers.Instance.GetUser(user.typeID, user.email);
+                var newUser = GraphDatabaseHelpers.Instance.GetUser(user.TypeId, user.Email);
 
                 if (newUser == null)
                 {
                     // TODO
                     Session["loginMessageError"] = "Email or password is incorrect!";
                 }
-                else if (user.password.Equals(newUser.password))
+                else if (user.Password.Equals(newUser.Password))
                 {
                     Session["authenicated"] = true;
-                    Session["username"] = newUser.firstName + " " + newUser.lastName;
-                    Session["userAva"] = newUser.avatar;
+                    Session["username"] = newUser.FirstName + " " + newUser.LastName;
+                    Session["userAva"] = newUser.Avatar;
                     Session["user"] = newUser;
-                    Session["userID"] = newUser.userID;
+                    Session["UserId"] = newUser.UserId;
                     Session["loginMessageError"] = "";
                 }
                 else
@@ -134,14 +134,14 @@ namespace FlyAwayPlus.Controllers
         public ActionResult Logout()
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            if (user.typeID == 2)
+            if (user.TypeId == 2)
             {
                 GoogleConnect.Clear();
             }
             Session["authenicated"] = "";
             Session["username"] = "";
             Session["userAva"] = "";
-            Session["userID"] = "";
+            Session["UserId"] = "";
             UserHelpers.SetCurrentUser(Session, null);
             return RedirectToAction("Index", "Home");
         }
@@ -236,8 +236,8 @@ namespace FlyAwayPlus.Controllers
             string email = me.email;
 
             // select from DB
-            User newUser = GraphDatabaseHelpers.Instance.GetUser(1, email); // Facebook account: typeID = 1
-            string facebookID = me.id;
+            User newUser = GraphDatabaseHelpers.Instance.GetUser(1, email); // Facebook account: TypeId = 1
+            string facebookId = me.id;
 
             /*
              *  Insert into Graph DB 
@@ -246,18 +246,18 @@ namespace FlyAwayPlus.Controllers
             {
                 newUser = new User
                 {
-                    typeID = 1,
-                    email = email,
-                    address = me.adress,
-                    dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                    dateOfBirth = me.date_of_birth,
-                    firstName = me.first_name,
-                    lastName = me.last_name,
-                    gender = me.gender,
-                    phoneNumber = me.phone_number,
-                    status = "active",
-                    avatar = "https://graph.facebook.com/" + facebookID + "/picture?type=large",
-                    password = ""
+                    TypeId = 1,
+                    Email = email,
+                    Address = me.adress,
+                    DateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                    DateOfBirth = me.date_of_birth,
+                    FirstName = me.first_name,
+                    LastName = me.last_name,
+                    Gender = me.gender,
+                    PhoneNumber = me.phone_number,
+                    Status = "active",
+                    Avatar = "https://graph.facebook.com/" + facebookId + "/picture?type=large",
+                    Password = ""
                 };
                 // Facebook account
 
@@ -267,9 +267,9 @@ namespace FlyAwayPlus.Controllers
 
             // Set the auth cookie
             Session["authenicated"] = true;
-            Session["username"] = newUser.firstName + " " + newUser.lastName;
-            Session["userAva"] = newUser.avatar;
-            Session["userID"] = newUser.userID;
+            Session["username"] = newUser.FirstName + " " + newUser.LastName;
+            Session["userAva"] = newUser.Avatar;
+            Session["UserId"] = newUser.UserId;
             UserHelpers.SetCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -325,7 +325,7 @@ namespace FlyAwayPlus.Controllers
                               .ToArray());
                 GraphDatabaseHelpers.Instance.ResetPassword(email, newPassword);
 
-                string senderID = "flyawayplus.system@gmail.com"; // use sender’s email id here..
+                string senderId = "flyawayplus.system@gmail.com"; // use sender’s email id here..
                 const string senderPassword = "doan2015"; // sender password here…
                 try
                 {
@@ -335,10 +335,10 @@ namespace FlyAwayPlus.Controllers
                         Port = 587,
                         EnableSsl = true,
                         DeliveryMethod = SmtpDeliveryMethod.Network,
-                        Credentials = new NetworkCredential(senderID, senderPassword),
+                        Credentials = new NetworkCredential(senderId, senderPassword),
                         Timeout = 30000,
                     };
-                    var message = new MailMessage(senderID, email, "Reset password FlyAwayPlus",
+                    var message = new MailMessage(senderId, email, "Reset password FlyAwayPlus",
                         "Your new password: " + newPassword);
                     smtp.Send(message);
 
@@ -396,7 +396,7 @@ namespace FlyAwayPlus.Controllers
 
                 }
                 string avatar = google.image.url.Value;
-                avatar = avatar.Substring(0, avatar.LastIndexOf("?sz=") + 4) + "100";
+                avatar = avatar.Substring(0, avatar.LastIndexOf("?sz=") + 4) + "200";
                 JArray addressList = new JArray();
                 if (google.placesLived != null)
                 {
@@ -413,7 +413,7 @@ namespace FlyAwayPlus.Controllers
                 }
 
                 // select from DB
-                User newUser = GraphDatabaseHelpers.Instance.GetUser(2, email); // Google account: typeID = 2
+                User newUser = GraphDatabaseHelpers.Instance.GetUser(2, email); // Google account: TypeId = 2
 
                 /*
                  *  Insert into Graph DB 
@@ -422,18 +422,18 @@ namespace FlyAwayPlus.Controllers
                 {
                     newUser = new User
                     {
-                        typeID = 2,
-                        email = email,
-                        address = address,
-                        dateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                        dateOfBirth = "",
-                        firstName = google.name.familyName.Value,
-                        lastName = google.name.givenName.Value,
-                        gender = google.gender == null ? "" : google.gender.Value,
-                        phoneNumber = "",
-                        status = "active",
-                        avatar = avatar,
-                        password = ""
+                        TypeId = 2,
+                        Email = email,
+                        Address = address,
+                        DateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                        DateOfBirth = "",
+                        FirstName = google.name.familyName.Value,
+                        LastName = google.name.givenName.Value,
+                        Gender = google.gender == null ? "" : google.gender.Value,
+                        PhoneNumber = "",
+                        Status = "active",
+                        Avatar = avatar,
+                        Password = ""
                     };
                     // Google account
 
@@ -443,9 +443,9 @@ namespace FlyAwayPlus.Controllers
 
                 // Set the auth cookie
                 Session["authenicated"] = true;
-                Session["username"] = newUser.firstName + " " + newUser.lastName;
-                Session["userAva"] = newUser.avatar;
-                Session["userID"] = newUser.userID;
+                Session["username"] = newUser.FirstName + " " + newUser.LastName;
+                Session["userAva"] = newUser.Avatar;
+                Session["UserId"] = newUser.UserId;
                 UserHelpers.SetCurrentUser(Session, newUser);
             }
 

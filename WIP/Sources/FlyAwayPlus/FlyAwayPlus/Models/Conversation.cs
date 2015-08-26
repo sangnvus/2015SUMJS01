@@ -7,7 +7,7 @@ namespace FlyAwayPlus.Models
 {
     public class Conversation
     {
-        public int conversationID { get; set; }
+        public int ConversationId { get; set; }
         public string DateCreated { get; set; }
     }
 }

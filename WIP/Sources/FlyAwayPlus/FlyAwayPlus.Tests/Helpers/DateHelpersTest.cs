@@ -17,7 +17,7 @@ namespace FlyAwayPlus.Tests.Helpers
 
 
             string date = now.ToString(FapConstants.DatetimeFormat);
-            string result = DateHelpers.DisplayRealtime(date);
+            string result = DateHelpers.Instance.DisplayRealtime(date);
             string expected = "29 seconds ago";
 
             Assert.IsTrue(expected.CompareTo(result) == 0);
@@ -33,7 +33,7 @@ namespace FlyAwayPlus.Tests.Helpers
 
 
             string date = now.ToString(FapConstants.DatetimeFormat);
-            string result = DateHelpers.DisplayRealtime(date);
+            string result = DateHelpers.Instance.DisplayRealtime(date);
             string expected = "28 minutes ago";
 
             Assert.IsTrue(expected.CompareTo(result) == 0);
@@ -49,7 +49,7 @@ namespace FlyAwayPlus.Tests.Helpers
 
 
             string date = now.ToString(FapConstants.DatetimeFormat);
-            string result = DateHelpers.DisplayRealtime(date);
+            string result = DateHelpers.Instance.DisplayRealtime(date);
             string expected = "6 hours ago";
 
             Assert.IsTrue(expected.CompareTo(result) == 0);
@@ -65,7 +65,7 @@ namespace FlyAwayPlus.Tests.Helpers
 
 
             string date = now.ToString(FapConstants.DatetimeFormat);
-            string result = DateHelpers.DisplayRealtime(date);
+            string result = DateHelpers.Instance.DisplayRealtime(date);
             string expected = now.ToString("HH:mm") + " yesterday";
 
             Assert.IsTrue(expected.CompareTo(result) == 0);

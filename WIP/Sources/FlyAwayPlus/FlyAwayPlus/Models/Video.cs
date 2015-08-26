@@ -7,8 +7,8 @@ namespace FlyAwayPlus.Models
 {
     public class Video
     {
-        public int videoID { get; set; }
-        public string path { get; set; }
-        public string dateCreated { get; set; }
+        public int VideoId { get; set; }
+        public string Path { get; set; }
+        public string DateCreated { get; set; }
     }
 }

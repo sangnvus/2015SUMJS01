@@ -43,15 +43,15 @@ namespace FlyAwayPlus.Controllers
 
             foreach (var place in listPlace)
             {
-                listPhotoDict.Add(place.placeID, GraphDatabaseHelpers.Instance.SearchPhotoInPlace(place.placeID));
-                numberOfPostDict.Add(place.placeID, GraphDatabaseHelpers.Instance.CountPostAtPlace(place.placeID));
+                listPhotoDict.Add(place.PlaceId, GraphDatabaseHelpers.Instance.SearchPhotoInPlace(place.PlaceId));
+                numberOfPostDict.Add(place.PlaceId, GraphDatabaseHelpers.Instance.CountPostAtPlace(place.PlaceId));
                 if (user == null)
                 {
-                    wishlist.Add(place.placeID, false);
+                    wishlist.Add(place.PlaceId, false);
                 }
                 else
                 {
-                    wishlist.Add(place.placeID, GraphDatabaseHelpers.Instance.IsInWishist(place.placeID, user.userID));
+                    wishlist.Add(place.PlaceId, GraphDatabaseHelpers.Instance.IsInWishist(place.PlaceId, user.UserId));
                 }
             }
 
@@ -90,19 +90,19 @@ namespace FlyAwayPlus.Controllers
                 if (currentPlace == null)
                 {
                     currentPlace = new Place();
-                    currentPlace.placeID = -1;
-                    currentPlace.name = name;
-                    currentPlace.longitude = longitude;
-                    currentPlace.latitude = latitude;
+                    currentPlace.PlaceId = -1;
+                    currentPlace.Name = name;
+                    currentPlace.Longitude = longitude;
+                    currentPlace.Latitude = latitude;
                 }
-                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(currentPlace.placeID);
+                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(currentPlace.PlaceId);
                 listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword("");
                 listPlace.Remove(currentPlace);
-                listPlace.RemoveAll(item => (calculateDistance(currentPlace, item) - 50.0) > 1E-6);
+                listPlace.RemoveAll(item => (CalculateDistance(currentPlace, item) - 50.0) > 1E-6);
 
                 foreach (var p in listPlace)
                 {
-                    distance.Add(calculateDistance(currentPlace, p));
+                    distance.Add(CalculateDistance(currentPlace, p));
                 }
                 FindRelatedInformationPost(listPost, currentPlace);
             }
@@ -133,13 +133,13 @@ namespace FlyAwayPlus.Controllers
                  */
                 listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(id);
                 listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword("");
-                currentPlace = listPlace.Find(item => item.placeID == id);
+                currentPlace = listPlace.Find(item => item.PlaceId == id);
                 listPlace.Remove(currentPlace);
-                listPlace.RemoveAll(item => (calculateDistance(currentPlace, item) - 50.0) > 1E-6);
+                listPlace.RemoveAll(item => (CalculateDistance(currentPlace, item) - 50.0) > 1E-6);
 
                 foreach (var p in listPlace)
                 {
-                    distance.Add(calculateDistance(currentPlace, p));
+                    distance.Add(CalculateDistance(currentPlace, p));
                 }
                 FindRelatedInformationPost(listPost, currentPlace);
             }
@@ -149,18 +149,18 @@ namespace FlyAwayPlus.Controllers
             return View();
         }
 
-        public ActionResult LoadPostInPlace(int placeID = 0)
+        public ActionResult LoadPostInPlace(int placeId = 0)
         {
             if (Request.IsAjaxRequest())
             {
                 User user = UserHelpers.GetCurrentUser(Session);
-                Place currentPlace = GraphDatabaseHelpers.Instance.FindPlaceByID(placeID);
+                Place currentPlace = GraphDatabaseHelpers.Instance.FindPlaceById(placeId);
                 if (user == null || currentPlace == null)
                 {
                     return null;
                 }
                 List<Post> listPost = new List<Post>();
-                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(placeID);
+                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(placeId);
                 FindRelatedInformationPost(listPost, currentPlace);
                 return PartialView("_ListPost");
             }
@@ -184,26 +184,26 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
-                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
-                listPlaceDict.Add(po.postID, currentPlace);
-                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
-                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
-                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
-                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
-                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
+                listPhotoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPhoto(po.PostId));
+                listVideoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindVideo(po.PostId));
+                listPlaceDict.Add(po.PostId, currentPlace);
+                listUserDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindUser(po));
+                dictLikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountLike(po.PostId));
+                dictDislikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountDislike(po.PostId));
+                dictCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountComment(po.PostId));
+                dictUserCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountUserComment(po.PostId));
 
                 if (user != null)
                 {
-                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsLike(po.postID, user.userID));
-                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsDislike(po.postID, user.userID));
-                    isWishDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsWish(po.postID, user.userID));
+                    isLikeDict.Add(po.PostId, GraphDatabaseHelpers.Instance.IsLike(po.PostId, user.UserId));
+                    isDislikeDict.Add(po.PostId, GraphDatabaseHelpers.Instance.IsDislike(po.PostId, user.UserId));
+                    isWishDict.Add(po.PostId, GraphDatabaseHelpers.Instance.IsWish(po.PostId, user.UserId));
                 }
                 else
                 {
-                    isLikeDict.Add(po.postID, false);
-                    isDislikeDict.Add(po.postID, false);
-                    isWishDict.Add(po.postID, false);
+                    isLikeDict.Add(po.PostId, false);
+                    isDislikeDict.Add(po.PostId, false);
+                    isWishDict.Add(po.PostId, false);
                 }
             }
 
@@ -231,14 +231,14 @@ namespace FlyAwayPlus.Controllers
             }
         }
 
-        private double calculateDistance(Place p1, Place p2)
+        private double CalculateDistance(Place p1, Place p2)
         {
             // using formula in http://www.movable-type.co.uk/scripts/latlong.html
             double R = 6371; // distance of the earth in km
-            double dLatitude = Radians(p1.latitude - p2.latitude);      // different in Rad of latitude
-            double dLongitude = Radians(p1.longitude - p2.longitude);   // different in Rad of longitude
+            double dLatitude = Radians(p1.Latitude - p2.Latitude);      // different in Rad of latitude
+            double dLongitude = Radians(p1.Longitude - p2.Longitude);   // different in Rad of longitude
 
-            double a = Math.Sin(dLatitude / 2) * Math.Sin(dLatitude / 2) + Math.Cos(Radians(p1.latitude)) * Math.Cos(Radians(p2.latitude))
+            double a = Math.Sin(dLatitude / 2) * Math.Sin(dLatitude / 2) + Math.Cos(Radians(p1.Latitude)) * Math.Cos(Radians(p2.Latitude))
                         * Math.Sin(dLongitude / 2) * Math.Sin(dLongitude / 2);
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1.0 - a));
             return R * c;

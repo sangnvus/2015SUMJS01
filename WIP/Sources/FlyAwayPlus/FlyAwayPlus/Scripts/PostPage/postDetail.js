@@ -1,5 +1,5 @@
 ﻿var postDetailModule = (function () {
-    var _isTagging = false;
+    var isTagging = false;
     var _listFriend = [];
 
     var likePost = function () {
@@ -74,9 +74,9 @@
 
     var likeAjax = function (post) {
         var controller = "/User/Like";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var data = {
-            postId: postID
+            postId: postId
         }
 
         commonModule.callAjax(controller, data, null);
@@ -84,9 +84,9 @@
 
     var dislikeAjax = function (post) {
         var controller = "/User/Dislike";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var data = {
-            postId: postID
+            postId: postId
         }
 
         commonModule.callAjax(controller, data, null);
@@ -94,10 +94,10 @@
 
     var editCommentAjax = function (comment) {
         var controller = "/User/EditComment";
-        var commentID = parseInt($(comment).attr("role"));
+        var commentId = parseInt($(comment).attr("role"));
         var content = $(comment).val();
         var data = {
-            commentID: commentID,
+            CommentId: commentId,
             content: content
         }
 
@@ -115,10 +115,10 @@
 
     var commentAjax = function (post) {
         var controller = "/User/Comment";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var content = $(post).val();
         var data = {
-            postId: postID,
+            postId: postId,
             content: content
         }
 
@@ -151,10 +151,10 @@
         });
     }
 
-    var deleteComment = function (commentID) {
+    var deleteComment = function (commentId) {
         var controller = "/User/DeleteComment";
         var data = {
-            commentID: commentID
+            CommentId: commentId
         }
 
         $.ajax({
@@ -178,7 +178,7 @@
             evt.preventDefault();
         }
         else if (evt.keyCode == 50 && evt.shiftKey) {
-            _isTagging = true;
+            isTagging = true;
             // input @ character
             createTagFriendUI("", selector);
         }
@@ -214,9 +214,9 @@
         }
         else if (evt.keyCode == 8) {
             var obj = selector ? selector : $("#idTextareaComment");
-            if (_isTagging == true) {
+            if (isTagging == true) {
                 if ($(obj).val().length > 0 && $(obj).val().slice(-1) == '@') {
-                    _isTagging = false;
+                    isTagging = false;
                     $("#id-tag-friend-tab-ui").hide();
                 }
                 else {
@@ -227,7 +227,7 @@
                 }
             }
         } else {
-            if (_isTagging == true) {
+            if (isTagging == true) {
                 var obj = selector ? selector : $("#idTextareaComment");
                 var keyword = $(obj).val().substring($(obj).val().lastIndexOf("@") + 1, $(obj).val().length) + String.fromCharCode((96 <= evt.keyCode && evt.keyCode <= 105) ? evt.keyCode - 48 : evt.keyCode);
                 console.log(keyword);
@@ -317,11 +317,11 @@
     };
 
     isTagging = function () {
-        return _isTagging;
+        return isTagging;
     };
 
     setTagging = function (value) {
-        _isTagging = value;
+        isTagging = value;
     };
 
     setListFriend = function (val) {
@@ -376,7 +376,7 @@
                 $(obj).val(currentText + username + ": ");
                 $(obj).focus();
                 $("#id-tag-friend-tab-ui").hide();
-                _isTagging = false;
+                isTagging = false;
 
                 evt.handled = true;
                 evt.preventDefault();
@@ -388,7 +388,7 @@
         for (var index = 0; index < _listFriend.length; index++) {
             var username = _listFriend[index]["firstName"].toUpperCase() + " " + _listFriend[index]["lastName"].toUpperCase();
             if (username.toUpperCase() == keyword.toUpperCase()) {
-                return _listFriend[index]["userID"];
+                return _listFriend[index]["UserId"];
             }
         }
     };

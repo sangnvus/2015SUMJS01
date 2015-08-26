@@ -9,11 +9,11 @@ namespace FlyAwayPlus.Helpers
 {
     public class UserHelpers
     {
-        private const string USER = "user";
+        private const string User = "user";
         public static User GetCurrentUser(HttpSessionStateBase session)
         {
 
-            var userSession = session[USER];
+            var userSession = session[User];
 
             if (userSession == null || userSession.ToString().Length == 0)
             {
@@ -25,7 +25,7 @@ namespace FlyAwayPlus.Helpers
         }
         public static void SetCurrentUser(HttpSessionStateBase session, User user)
         {
-            session[USER] = user;
+            session[User] = user;
         }
     }
 }

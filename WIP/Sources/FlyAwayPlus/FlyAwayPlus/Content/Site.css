@@ -1768,6 +1768,11 @@ textarea {
             margin: 0;
         }
 
+            .hover-card .profile .avatar img {
+                width: 130px;
+                height: 130px;
+            }
+
     .hover-card .information {
         width: 200px;
         height: 130px;

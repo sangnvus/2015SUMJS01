@@ -20,23 +20,23 @@ namespace FlyAwayPlus.Helpers
 
         public class ReportPost
         {
-            public string contentReport { get; set; }
-            public int postID { get; set; }
-            public int userReportID { get; set; }
+            public string ContentReport { get; set; }
+            public int PostId { get; set; }
+            public int UserReportId { get; set; }
         }
 
         public class ReportUser
         {
-            public string contentReport { get; set; }
-            public int userReportedID { get; set; }
-            public int userReportID { get; set; }
+            public string ContentReport { get; set; }
+            public int UserReportedId { get; set; }
+            public int UserReportId { get; set; }
         }
 
         public string GetEmailByUserId(int userId)
         {
             _client.Connect();
-            string email = _client.Cypher.Match("(u:user {userID:" + userId + "})")
-                                    .Return<string>("u.email")
+            string email = _client.Cypher.Match("(u:user {UserId:" + userId + "})")
+                                    .Return<string>("u.Email")
                                     .Results.Single();
             return email;
         }
@@ -44,46 +44,46 @@ namespace FlyAwayPlus.Helpers
         public void LockUser(int userId)
         {
             /*
-             * MATCH (n:user { userID: userId })
+             * MATCH (n:user { UserId: userId })
                 SET n.status = 'lock'
                 RETURN n
              */
             _client.Connect();
-            _client.Cypher.Match("(n:user { userID: " + userId + " })")
-                           .Set("n.status = 'lock'")
+            _client.Cypher.Match("(n:user { UserId: " + userId + " })")
+                           .Set("n.Status = 'lock'")
                            .ExecuteWithoutResults();
         }
 
         public void LockPost(int postId)
         {
             /*
-             * MATCH (n:post { postID: postId })
+             * MATCH (n:post { PostId: postId })
                 SET n.status = 'lock'
                 RETURN n
              */
             _client.Connect();
-            _client.Cypher.Match("(n:post { postID: " + postId + " })")
-                           .Set("n.privacy = 'lock' RETURN n")
+            _client.Cypher.Match("(n:post { PostId: " + postId + " })")
+                           .Set("n.Privacy = 'lock' RETURN n")
                            .ExecuteWithoutResults();
         }
 
         public void UnlockUser(int userId)
         {
             /*
-             * MATCH (n:user { userID: userId })
+             * MATCH (n:user { UserId: userId })
                 SET n.status = 'lock'
                 RETURN n
              */
             _client.Connect();
-            _client.Cypher.Match("(n:user { userID: " + userId + " })")
-                           .Set("n.status = 'active' RETURN n")
+            _client.Cypher.Match("(n:user { UserId: " + userId + " })")
+                           .Set("n.Status = 'active' RETURN n")
                            .ExecuteWithoutResults();
         }
 
         public void InsertUser(ref User user)
         {
             // Auto increment Id.
-            user.userID = GetGlobalIncrementId();
+            user.UserId = GetGlobalIncrementId();
             _client.Connect();
 
             _client.Cypher
@@ -92,56 +92,56 @@ namespace FlyAwayPlus.Helpers
                    .ExecuteWithoutResults();
         }
 
-        public void InsertReportPost(int postID, int userReportID, int typeReport)
+        public void InsertReportPost(int postId, int userReportId, int typeReport)
         {
-            string contentReport = null;
+            string ContentReport = null;
             if (typeReport == 1)
             {
-                contentReport = "This post annoying or unpleasant";
+                ContentReport = "This post annoying or unpleasant";
             }
             else if (typeReport == 2)
             {
-                contentReport = "I think this post should not appear on FlyAwayPlus";
+                ContentReport = "I think this post should not appear on FlyAwayPlus";
             }
             else if (typeReport == 3)
             {
-                contentReport = "This post is spam";
+                ContentReport = "This post is spam";
             }
-            int count = _client.Cypher.Match("(u:user{userID:" + userReportID + "})-[r:REPORT_POST]->(p:post{postID:" + postID + "})")
+            int count = _client.Cypher.Match("(u:user{UserId:" + userReportId + "})-[r:REPORT_POST]->(p:post{PostId:" + postId + "})")
                                    .Return<int>("COUNT(r)")
                                    .Results.Single();
             if (count == 0)
             {
                 _client.Cypher.Match("(a:user), (b:post)")
-                                 .Where("a.userID = " + userReportID + " AND b.postID = " + postID)
-                                 .Create("(a)-[r:REPORT_POST {contentReport: '" + contentReport + "'}]->(b)")
+                                 .Where("a.UserId = " + userReportId + " AND b.PostId = " + postId)
+                                 .Create("(a)-[r:REPORT_POST {ContentReport: '" + ContentReport + "'}]->(b)")
                                  .ExecuteWithoutResults();
             }
         }
 
-        public void InsertReportUser(int userReportID, int userReportedID, int typeReport)
+        public void InsertReportUser(int userReportId, int userReportedId, int typeReport)
         {
-            string contentReport = null;
+            string ContentReport = null;
             if (typeReport == 1)
             {
-                contentReport = "This user annoying or unpleasant";
+                ContentReport = "This user annoying or unpleasant";
             }
             else if (typeReport == 2)
             {
-                contentReport = "I think this user should not appear on FlyAwayPlus";
+                ContentReport = "I think this user should not appear on FlyAwayPlus";
             }
             else if (typeReport == 3)
             {
-                contentReport = "This user is spam";
+                ContentReport = "This user is spam";
             }
-            int count = _client.Cypher.Match("(u1:user{userID:" + userReportID + "})-[r:REPORT_USER]->(u2:user{userID:" + userReportedID + "})")
+            int count = _client.Cypher.Match("(u1:user{UserId:" + userReportId + "})-[r:REPORT_USER]->(u2:user{UserId:" + userReportedId + "})")
                                    .Return<int>("COUNT(r)")
                                    .Results.Single();
             if (count == 0)
             {
                 _client.Cypher.Match("(a:user), (b:user)")
-                                 .Where("a.userID = " + userReportID + " AND b.userID = " + userReportedID)
-                                 .Create("(a)-[r:REPORT_USER {contentReport: '" + contentReport + "'}]->(b)")
+                                 .Where("a.UserId = " + userReportId + " AND b.UserId = " + userReportedId)
+                                 .Create("(a)-[r:REPORT_USER {ContentReport: '" + ContentReport + "'}]->(b)")
                                  .ExecuteWithoutResults();
             }
         }
@@ -149,7 +149,7 @@ namespace FlyAwayPlus.Helpers
         public bool IsLike(int postId, int userId)
         {
             _client.Connect();
-            int like = _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:LIKE]->(p:post {postID:" + postId + "})")
+            int like = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:LIKE]->(p:post {PostId:" + postId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -159,7 +159,7 @@ namespace FlyAwayPlus.Helpers
         public bool IsFriend(int userId, int otherUserId)
         {
             _client.Connect();
-            int friend = _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:FRIEND]->(u1: user{userID: " + otherUserId + "})")
+            int friend = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:FRIEND]->(u1: user{UserId: " + otherUserId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -175,7 +175,7 @@ namespace FlyAwayPlus.Helpers
             }
 
             _client.Connect();
-            int friend = _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:FRIEND_REQUEST]->(u1: user{userID: " + otherUserId + "})")
+            int friend = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:FRIEND_REQUEST]->(u1: user{UserId: " + otherUserId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -187,7 +187,7 @@ namespace FlyAwayPlus.Helpers
             // Auto increment Id
 
             _client.Connect();
-            int dislike = _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:DISLIKE]->(p:post {postID:" + postId + "})")
+            int dislike = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:DISLIKE]->(p:post {PostId:" + postId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -197,7 +197,7 @@ namespace FlyAwayPlus.Helpers
         public bool IsWish(int postId, int userId)
         {
             _client.Connect();
-            int wish = _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:WISH]->(p:post {postID:" + postId + "})")
+            int wish = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:WISH]->(p:post {PostId:" + postId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -207,7 +207,7 @@ namespace FlyAwayPlus.Helpers
         public bool IsInWishist(int placeId, int userId)
         {
             _client.Connect();
-            int wish = _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[r:WISH]->(p:place {placeID:" + placeId + "})")
+            int wish = _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "})-[r:WISH]->(p:place {PlaceId:" + placeId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.FirstOrDefault();
 
@@ -219,7 +219,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userId + "}), (p:place {placeID:" + placeId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "}), (p:place {PlaceId:" + placeId + "})")
                                     .Create("(u)-[:WISH]->(p)")
                                     .ExecuteWithoutResults();
             }
@@ -236,7 +236,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:WISH]->(p:place {placeID:" + placeId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:WISH]->(p:place {PlaceId:" + placeId + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -268,7 +268,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:WISH]->(p:post {postID:" + postId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:WISH]->(p:post {PostId:" + postId + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -283,13 +283,13 @@ namespace FlyAwayPlus.Helpers
         public int CountUserComment(int postId)
         {
             /*
-             * Match (p:post {postID:@postID})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
+             * Match (p:post {PostId:@PostId})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
                 return COUNT (DISTINCT u)
              */
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(p:post {postID:" + postId + "})<-[r:COMMENTED]-(u:user)")
+                return _client.Cypher.Match("(p:post {PostId:" + postId + "})<-[r:COMMENTED]-(u:user)")
                                 .Return<int>("COUNT(distinct u)")
                                 .Results.Single();
             }
@@ -303,13 +303,13 @@ namespace FlyAwayPlus.Helpers
         public int CountComment(int postId)
         {
             /*
-             * match(p:post {postID:@postID})-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)
+             * match(p:post {PostId:@PostId})-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)
                     return Length(collect(c1)) as CommentNumber
              */
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(p:post {postID:" + postId + "})-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)")
+                return _client.Cypher.Match("(p:post {PostId:" + postId + "})-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)")
                                 .Return<int>("Length(collect(c1)) as CommentNumber")
                                 .Results.Single();
             }
@@ -323,13 +323,13 @@ namespace FlyAwayPlus.Helpers
         public int CountDislike(int postId)
         {
             /*
-             * Match (p:post {postID:@postID})<-[r:DISLIKE]-(u:user)
+             * Match (p:post {PostId:@PostId})<-[r:DISLIKE]-(u:user)
                 return COUNT(DISTINCT c)
              */
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(p:post {postID:" + postId + "})<-[r:DISLIKE]-(u:user)")
+                return _client.Cypher.Match("(p:post {PostId:" + postId + "})<-[r:DISLIKE]-(u:user)")
                                 .Return<int>("COUNT(distinct r)")
                                 .Results.Single();
             }
@@ -343,13 +343,13 @@ namespace FlyAwayPlus.Helpers
         public int CountLike(int postId)
         {
             /*
-             * Match (p:post {postID:@postID})<-[r:LIKE]-(u:user)
+             * Match (p:post {PostId:@PostId})<-[r:LIKE]-(u:user)
                 return COUNT(DISTINCT r)
              */
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(p:post {postID:" + postId + "})<-[r:LIKE]-(u:user)")
+                return _client.Cypher.Match("(p:post {PostId:" + postId + "})<-[r:LIKE]-(u:user)")
                                 .Return<int>("COUNT(DISTINCT r)")
                                 .Results.Single();
             }
@@ -363,7 +363,7 @@ namespace FlyAwayPlus.Helpers
         public int CountMutualFriend(int userId, int otherUserId)
         {
             /*
-             * optional match (u:user {userID:@userID})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:@otherUserID})
+             * optional match (u:user {UserId:@UserId})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{UserId:@otherUserID})
                     With count(DISTINCT mf) AS mutualFriends
                     RETURN mutualFriends
              */
@@ -372,7 +372,7 @@ namespace FlyAwayPlus.Helpers
                 _client.Connect();
                 return userId == otherUserId
                     ? CountFriends(userId)
-                    : _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{userID:" + otherUserId + "})")
+                    : _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user{UserId:" + otherUserId + "})")
                                 .With("count(DISTINCT mf) AS mutualFriends")
                                 .Return<int>("mutualFriends")
                                 .Results.Single();
@@ -389,7 +389,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(u:user {userID:" + userId + "})<-[:FRIEND]-(other:user)")
+                return _client.Cypher.Match("(u:user {UserId:" + userId + "})<-[:FRIEND]-(other:user)")
                                 .Return<int>("COUNT(DISTINCT other)")
                                 .Results.Single();
             }
@@ -403,7 +403,7 @@ namespace FlyAwayPlus.Helpers
         public int CountUser()
         {
             /*
-             * Match (p:post {postID:@postID})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
+             * Match (p:post {PostId:@PostId})-[r:has]->(c:comment), (u:user)-[r1:has]-(c)
                 return COUNT (DISTINCT u)
              */
             try
@@ -425,7 +425,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(:user{userID: " + userId + "})-[:VISITED]->(p:place)")
+                return _client.Cypher.Match("(:user{UserId: " + userId + "})-[:VISITED]->(p:place)")
                                 .Return<int>("COUNT(distinct p)")
                                 .Results.Single();
             }
@@ -441,7 +441,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:LIKE]->(p:post {postID:" + postId + "})")
+                return _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:LIKE]->(p:post {PostId:" + postId + "})")
                                 .Return<int>("COUNT(r)")
                                 .Results.Single();
             }
@@ -457,7 +457,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 _client.Connect();
-                return _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:DISLIKE]->(p:post {postID:" + postId + "})")
+                return _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:DISLIKE]->(p:post {PostId:" + postId + "})")
                                 .Return<int>("COUNT(r)")
                                 .Results.Single();
             }
@@ -471,13 +471,13 @@ namespace FlyAwayPlus.Helpers
         public bool DeleteLike(int userId, int postId)
         {
             /**
-             * Match(u:user {userID:@userID})-[r:like]->(p:post {postID:@postID})
+             * Match(u:user {UserId:@UserId})-[r:like]->(p:post {PostId:@PostId})
                 delete r
              */
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:LIKE]->(p:post {postID:" + postId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:LIKE]->(p:post {PostId:" + postId + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
             }
@@ -492,13 +492,13 @@ namespace FlyAwayPlus.Helpers
         public bool DeleteDislike(int userId, int postId)
         {
             /**
-             * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
+             * Match(u:user {UserId:@UserId})-[r:dislike]->(p:post {PostId:@PostId})
                 delete r
              */
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:DISLIKE]->(p:post {postID:" + postId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:DISLIKE]->(p:post {PostId:" + postId + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
             }
@@ -510,16 +510,16 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
-        public bool DeleteReportPost(int postId, int userReportID)
+        public bool DeleteReportPost(int postId, int userReportId)
         {
             /**
-             * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
+             * Match(u:user {UserId:@UserId})-[r:dislike]->(p:post {PostId:@PostId})
                 delete r
              */
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u:user {userID:" + userReportID + "})-[r:REPORT_POST]-(p:post {postID:" + postId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userReportId + "})-[r:REPORT_POST]-(p:post {PostId:" + postId + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
                 return true;
@@ -531,16 +531,16 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public bool DeleteReportUser(int userReportedID, int userReportID)
+        public bool DeleteReportUser(int userReportedId, int userReportId)
         {
             /**
-             * Match(u:user {userID:@userID})-[r:dislike]->(p:post {postID:@postID})
+             * Match(u:user {UserId:@UserId})-[r:dislike]->(p:post {PostId:@PostId})
                 delete r
              */
             try
             {
                 _client.Connect();
-                _client.Cypher.Match("(u1:user {userID:" + userReportID + "})-[r:REPORT_USER]-(u2:user {userID:" + userReportedID + "})")
+                _client.Cypher.Match("(u1:user {UserId:" + userReportId + "})-[r:REPORT_USER]-(u2:user {UserId:" + userReportedId + "})")
                                 .Delete("r")
                                 .ExecuteWithoutResults();
                 return true;
@@ -556,14 +556,14 @@ namespace FlyAwayPlus.Helpers
         {
             Node<User> userNode = GetNodeUser(userId);
 
-            NodeReference<Post> postRef = _client.Cypher.Match("(p:post {postID:" + postId + "})")
+            NodeReference<Post> postRef = _client.Cypher.Match("(p:post {PostId:" + postId + "})")
                                             .Return<Node<Post>>("p")
                                             .Results.Single()
                                             .Reference;
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                _client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
+                _client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), ActivtyId = GetActivityIncrementId() }));
                 return true;
             }
             return false;
@@ -573,14 +573,14 @@ namespace FlyAwayPlus.Helpers
         {
             Node<User> userNode = GetNodeUser(userId);
 
-            NodeReference<Post> postRef = _client.Cypher.Match("(p:post {postID:" + postId + "})")
+            NodeReference<Post> postRef = _client.Cypher.Match("(p:post {PostId:" + postId + "})")
                                             .Return<Node<Post>>("p")
                                             .Results.Single()
                                             .Reference;
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                _client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), activtyID = GetActivityIncrementId() }));
+                _client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), ActivtyId = GetActivityIncrementId() }));
                 return true;
             }
             return false;
@@ -589,19 +589,19 @@ namespace FlyAwayPlus.Helpers
         public Node<User> GetNodeUser(int id)
         {
             _client.Connect();
-            return _client.Cypher.Match("(u:user {userID: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
+            return _client.Cypher.Match("(u:user {UserId: " + id + "})").Return<Node<User>>("u").Results.FirstOrDefault();
         }
 
         public Node<Post> GetNodePost(int id)
         {
             _client.Connect();
-            return _client.Cypher.Match("(p:post {postID: " + id + "})").Return<Node<Post>>("p").Results.FirstOrDefault();
+            return _client.Cypher.Match("(p:post {PostId: " + id + "})").Return<Node<Post>>("p").Results.FirstOrDefault();
         }
 
         public User GetUser(int typeId, string email)
         {
             _client.Connect();
-            var user = _client.Cypher.Match("(u:user {typeID:" + typeId + ", email: '" + email + "'})")
+            var user = _client.Cypher.Match("(u:user {TypeId:" + typeId + ", Email: '" + email + "'})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -610,7 +610,7 @@ namespace FlyAwayPlus.Helpers
         public User GetUser(int userId)
         {
             _client.Connect();
-            var user = _client.Cypher.Match("(u:user {userID:" + userId + "})")
+            var user = _client.Cypher.Match("(u:user {UserId:" + userId + "})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -647,11 +647,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find User has comment
                  * 
-                 * MATCH(u:user)-[:has]->(c:comment{commentID:@commentID})
+                 * MATCH(u:user)-[:has]->(c:comment{CommentId:@CommentId})
                     return u
                  */
             _client.Connect();
-            var user = _client.Cypher.Match("(u:user)-[:CREATE]->(c:comment{commentID:" + comment.commentID + "})")
+            var user = _client.Cypher.Match("(u:user)-[:CREATE]->(c:comment{CommentId:" + comment.CommentId + "})")
                 .Return<User>("u")
                 .Results.Single();
             return user;
@@ -664,14 +664,14 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find User has id
                  * 
-                 * MATCH(u:user {userID:@userID})
+                 * MATCH(u:user {UserId:@UserId})
                     return u
                  */
             User user;
             try
             {
                 _client.Connect();
-                user = _client.Cypher.Match("(u:user {userID:" + id + "})")
+                user = _client.Cypher.Match("(u:user {UserId:" + id + "})")
                                 .Return<User>("u")
                                 .Results.Single();
             }
@@ -690,14 +690,14 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find User has email
                  * 
-                 * MATCH(u:user {userID:@userEmail})
+                 * MATCH(u:user {UserId:@userEmail})
                     return u
                  */
             User user;
             try
             {
                 _client.Connect();
-                user = _client.Cypher.Match("(u:user {email:'" + email + "'})")
+                user = _client.Cypher.Match("(u:user {Email:'" + email + "'})")
                                 .Return<User>("u")
                                 .Results.Single();
             }
@@ -740,12 +740,12 @@ namespace FlyAwayPlus.Helpers
                  */
             _client.Connect();
             var listAllReportPosts = _client.Cypher.OptionalMatch("(u:user)-[r:REPORT_POST]->(p:post)")
-                .With("r.contentReport as contentReport, u.userID as userReportID, p.postID as postID")
-                .Return((contentReport, userReportID, postID) => new ReportPost
+                .With("r.ContentReport as ContentReport, u.UserId as userReportID, p.PostId as PostId")
+                .Return((contentReport, userReportId, postId) => new ReportPost
                 {
-                    contentReport = contentReport.As<String>(),
-                    userReportID = userReportID.As<Int16>(),
-                    postID = postID.As<Int16>()
+                    ContentReport = contentReport.As<String>(),
+                    UserReportId = userReportId.As<Int16>(),
+                    PostId = postId.As<Int16>()
                 })
                 .Results.ToList();
             return listAllReportPosts;
@@ -764,12 +764,12 @@ namespace FlyAwayPlus.Helpers
                  */
             _client.Connect();
             var listAllReportUsers = _client.Cypher.OptionalMatch("(u1:user)-[r:REPORT_USER]->(u2:user)")
-                 .With("r.contentReport as contentReport, u1.userID as userReportID, u2.userID as userReportedID")
-                 .Return((contentReport, userReportID, userReportedID) => new ReportUser
+                 .With("r.ContentReport as ContentReport, u1.UserId as userReportID, u2.UserId as userReportedID")
+                 .Return((contentReport, userReportId, userReportedId) => new ReportUser
                  {
-                     contentReport = contentReport.As<String>(),
-                     userReportID = userReportID.As<Int16>(),
-                     userReportedID = userReportedID.As<Int16>()
+                     ContentReport = contentReport.As<String>(),
+                     UserReportId = userReportId.As<Int16>(),
+                     UserReportedId = userReportedId.As<Int16>()
                  })
                  .Results.ToList();
             return listAllReportUsers;
@@ -783,11 +783,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all friend of current user
                  * 
-                 * match(u1:user{userID:@userID})-[m:friend]->(u2:user)
+                 * match(u1:user{UserId:@UserId})-[m:friend]->(u2:user)
                     return u2;
                  */
             _client.Connect();
-            var listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + user.userID + "})-[:FRIEND]->(u2:user)")
+            var listUser = _client.Cypher.OptionalMatch("(u1:user {UserId:" + user.UserId + "})-[:FRIEND]->(u2:user)")
                 .ReturnDistinct<User>("u2")
                 .Results.ToList();
             listUser.RemoveAll(item => item == null);
@@ -802,7 +802,7 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all friend of current user
                  * 
-                 * optional match (u:user {userID:@userID})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)
+                 * optional match (u:user {UserId:@UserId})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)
                     WHERE NOT(u-[:FRIEND]->other)
                     WITH other,count(DISTINCT mf) AS mutualFriends
                     ORDER BY mutualFriends DESC
@@ -810,7 +810,7 @@ namespace FlyAwayPlus.Helpers
                     RETURN other
                  */
             _client.Connect();
-            var listUser = _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)")
+            var listUser = _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "})-[:FRIEND]->(mf:user)<-[:FRIEND]-(other:user)")
                 .Where("NOT(u-[:FRIEND]->other)")
                 .With("other,count(DISTINCT mf) AS mutualFriends")
                 .OrderByDescending("mutualFriends")
@@ -832,7 +832,7 @@ namespace FlyAwayPlus.Helpers
             // Auto increment Id
 
             _client.Connect();
-            int relation = _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:VISITED]->(p:place {placeID:" + placeId + "})")
+            int relation = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:VISITED]->(p:place {PlaceId:" + placeId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -844,7 +844,7 @@ namespace FlyAwayPlus.Helpers
             // Auto increment Id
 
             _client.Connect();
-            int count = _client.Cypher.Match("(po:post)-[r:AT]->(pl:place {placeID:" + placeId + "})")
+            int count = _client.Cypher.Match("(po:post)-[r:AT]->(pl:place {PlaceId:" + placeId + "})")
                                    .Return<int>("COUNT(Distinct po)")
                                    .Results.Single();
 
@@ -919,13 +919,13 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all friend of current user
                  * 
-                 * optional match (u:user {userID:@userID})-[:FRIEND]->(u1:user), (other:user)
+                 * optional match (u:user {UserId:@UserId})-[:FRIEND]->(u1:user), (other:user)
                     WHERE NOT(u-[:FRIEND]->other) AND NOT(u1-[:FRIEND]->other)
                     RETURN other
                     limit @limit
                  */
             _client.Connect();
-            var listUser = _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:FRIEND]->(u1:user), (other:user)")
+            var listUser = _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "})-[:FRIEND]->(u1:user), (other:user)")
                 .Where("NOT(u-[:FRIEND]->other) AND NOT(u1-[:FRIEND]->other)")
                 .ReturnDistinct<User>("other")
                 .Limit(limit)
@@ -934,8 +934,8 @@ namespace FlyAwayPlus.Helpers
 
             if (listUser.Count == 0)
             {
-                listUser = _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "}), (other:user)")
-                            .Where("u.userID <> other.userID")
+                listUser = _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "}), (other:user)")
+                            .Where("u.UserId <> other.UserId")
                             .ReturnDistinct<User>("other")
                             .Limit(limit)
                             .Results.ToList();
@@ -953,11 +953,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all friend of current user
                  * 
-                 * match(u1:user{userID:@userID})-[m:friend]->(u2:user)
+                 * match(u1:user{UserId:@UserId})-[m:friend]->(u2:user)
                     return u2;
                  */
             _client.Connect();
-            var listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + userId + "})-[:FRIEND]-(u2:user)")
+            var listUser = _client.Cypher.OptionalMatch("(u1:user {UserId:" + userId + "})-[:FRIEND]-(u2:user)")
                 .ReturnDistinct<User>("u2")
                 .Results.ToList();
             listUser.RemoveAll(item => item == null);
@@ -971,14 +971,14 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - wishlist
                  * 
-                 * match(u1:user {userID:@userID})-[:wish]->(p:post)
+                 * match(u1:user {UserId:@UserId})-[:wish]->(p:post)
                    return p
-                   orderby p.dateCreated
+                   orderby p.DateCreated
                  */
             _client.Connect();
-            var listPost = _client.Cypher.Match("(u1:user {userID:" + user.userID + "})-[:WISH]->(p:post)")
+            var listPost = _client.Cypher.Match("(u1:user {UserId:" + user.UserId + "})-[:WISH]->(p:post)")
                 .ReturnDistinct<Post>("p")
-                .OrderByDescending("p.dateCreated")
+                .OrderByDescending("p.DateCreated")
                 .Skip(skip)
                 .Limit(limit)
                 .Results.ToList();
@@ -1015,43 +1015,43 @@ namespace FlyAwayPlus.Helpers
                          .ExecuteWithoutResults();
             }
 
-            Node<User> userNode = GetNodeUser(user.userID);
+            Node<User> userNode = GetNodeUser(user.UserId);
             if (userNode != null)
             {
                 var existingPlace = FindExistingPlace(place);
 
                 if (existingPlace == null)
                 {
-                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + place.placeID + "})")
+                    _client.Cypher.Match("(po:post {PostId:" + post.PostId + "}), (pl:place {PlaceId: " + place.PlaceId + "})")
                              .Create("(po)-[r:AT]->(pl)")
                              .ExecuteWithoutResults();
                 }
                 else
                 {
-                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pl:place {placeID: " + existingPlace.placeID + "})")
+                    _client.Cypher.Match("(po:post {PostId:" + post.PostId + "}), (pl:place {PlaceId: " + existingPlace.PlaceId + "})")
                                  .Create("(po)-[r:AT]->(pl)")
                                  .ExecuteWithoutResults();
                 }
 
                 if (video != null)
                 {
-                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (vi:video {videoID: " + video.videoID + "})")
+                    _client.Cypher.Match("(po:post {PostId:" + post.PostId + "}), (vi:video {VideoId: " + video.VideoId + "})")
                              .Create("(po)-[r:HAS]->(vi)")
                              .ExecuteWithoutResults();
                 }
 
                 foreach (var photo in photos)
                 {
-                    _client.Cypher.Match("(po:post {postID:" + post.postID + "}), (pt:photo {photoID: " + photo.photoID + "})")
+                    _client.Cypher.Match("(po:post {PostId:" + post.PostId + "}), (pt:photo {PhotoId: " + photo.PhotoId + "})")
                                  .Create("(po)-[r:HAS]->(pt)")
                                  .ExecuteWithoutResults();
 
-                    _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:photo {photoID: " + photo.photoID + "})")
+                    _client.Cypher.Match("(u:user {UserId:" + user.UserId + "}), (p:photo {PhotoId: " + photo.PhotoId + "})")
                                  .Create("(u)-[r:HAS]->(p)")
                                  .ExecuteWithoutResults();
                 }
 
-                _client.Cypher.Match("(u:user {userID:" + user.userID + "}), (p:place {placeID: " + place.placeID + "})")
+                _client.Cypher.Match("(u:user {UserId:" + user.UserId + "}), (p:place {PlaceId: " + place.PlaceId + "})")
                              .Create("(u)-[r:VISITED]->(p)")
                              .ExecuteWithoutResults();
 
@@ -1066,20 +1066,20 @@ namespace FlyAwayPlus.Helpers
                  *  else do the following step:
                  *      1. CREATE LATEST_POST relationship from user to newPost
                  */
-                int oldPost = _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[:LATEST_POST]->(p:post)")
+                int oldPost = _client.Cypher.Match("(u:user{UserId:" + user.UserId + "})-[:LATEST_POST]->(p:post)")
                                     .Return<int>("COUNT (p)")
                                     .Results.Single();
 
                 if (oldPost == 0)
                 {
                     // CREATE New LATEST_POST
-                    _client.Cypher.Match("(u:user{userID:" + user.userID + "}), (p1:post{postID:" + post.postID + "})")
+                    _client.Cypher.Match("(u:user{UserId:" + user.UserId + "}), (p1:post{PostId:" + post.PostId + "})")
                                     .Create("(u)-[:LATEST_POST]->(p1)")
                                     .ExecuteWithoutResults();
                 }
                 else
                 {
-                    _client.Cypher.Match("(u:user{userID:" + user.userID + "})-[r:LATEST_POST]->(p:post), (p1:post{postID:" + post.postID + "})")
+                    _client.Cypher.Match("(u:user{UserId:" + user.UserId + "})-[r:LATEST_POST]->(p:post), (p1:post{PostId:" + post.PostId + "})")
                                     .Delete("r")
                                     .Create("(u)-[:LATEST_POST]->(p1)")
                                     .Create("(p1)-[:PREV_POST]->(p)")
@@ -1090,27 +1090,27 @@ namespace FlyAwayPlus.Helpers
 
         private void SpecifyIds(ref Post post, ref List<Photo> photos, ref Place place, ref Video video)
         {
-            post.postID = GetGlobalIncrementId();
+            post.PostId = GetGlobalIncrementId();
             foreach (var photo in photos)
             {
-                photo.photoID = GetGlobalIncrementId();
+                photo.PhotoId = GetGlobalIncrementId();
             }
 
-            place.placeID = GetGlobalIncrementId();
+            place.PlaceId = GetGlobalIncrementId();
             if (video != null)
             {
-                video.videoID = GetGlobalIncrementId();
+                video.VideoId = GetGlobalIncrementId();
             }
         }
 
         public User SearchUser(int postId)
         {
             /**
-             * match (p:post{postID:1003})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
+             * match (p:post{PostId:1003})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
                 return u
              */
             _client.Connect();
-            var user = _client.Cypher.Match("(p:post{postID:" + postId + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
+            var user = _client.Cypher.Match("(p:post{PostId:" + postId + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
                 .ReturnDistinct<User>("u")
                 .Results.Single();
             return user;
@@ -1123,13 +1123,13 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find comment of post
                  * 
-                 * match (p:post{postID:@postID})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)
+                 * match (p:post{PostId:@PostId})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)
                     return c1
                  */
             _client.Connect();
-            var list = _client.Cypher.Match("(p:post{postID:" + postId + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+            var list = _client.Cypher.Match("(p:post{PostId:" + postId + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
                 .Return<Comment>("c1")
-                .OrderBy("c1.dateCreated")
+                .OrderBy("c1.DateCreated")
                 .Results.ToList();
             list.RemoveAll(item => item == null);
             return list;
@@ -1142,26 +1142,26 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all post of current user
                  * 
-                 * match (u:user{userID:@userID})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)
+                 * match (u:user{UserId:@UserId})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)
                     return p1
                  */
             _client.Connect();
-            var listPost = _client.Cypher.Match("(u:user {userID:" + user.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
+            var listPost = _client.Cypher.Match("(u:user {UserId:" + user.UserId + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post)")
                 .ReturnDistinct<Post>("p1")
-                //.OrderByDescending("p.dateCreated")
+                //.OrderByDescending("p.DateCreated")
                 .Results.ToList();
             listPost.RemoveAll(item => item == null);
             return listPost;
         }
 
-        public Post FindPostByID(int postID)
+        public Post FindPostById(int postId)
         {
             /*
                  * Query:
                  * Find:
                  */
             _client.Connect();
-            var post = _client.Cypher.Match("(p:post {postID:" + postID + "})")
+            var post = _client.Cypher.Match("(p:post {PostId:" + postId + "})")
                 .ReturnDistinct<Post>("p")
                 .Results.SingleOrDefault();
             return post;
@@ -1175,14 +1175,14 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - Find photo of post
                  * 
-                 * match (po:post {postID:@postID})-[:has]->(ph:photo)
+                 * match (po:post {PostId:@PostId})-[:has]->(ph:photo)
                     return ph
                  */
 
             _client.Connect();
-            return _client.Cypher.Match("(po:post {postID:" + postId + "})-[:HAS]->(ph:photo)")
+            return _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
                             .Return<Photo>("ph")
-                            .OrderBy("ph.photoID")
+                            .OrderBy("ph.PhotoId")
                             .Results
                             .ToList();
         }
@@ -1191,9 +1191,9 @@ namespace FlyAwayPlus.Helpers
         {
             _client.Connect();
 
-            return _client.Cypher.Match("(po:post {postID:" + postId + "})-[:HAS]->(v:video)")
+            return _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(v:video)")
                             .Return<Video>("v")
-                            .OrderBy("v.videoID")
+                            .OrderBy("v.VideoId")
                             .Results
                             .ToList()
                             .FirstOrDefault();
@@ -1206,11 +1206,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find User has post
                  * 
-                 * match (p:post{postID:@postID})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
+                 * match (p:post{PostId:@PostId})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
                     return u
                  */
             _client.Connect();
-            var user = _client.Cypher.Match("(p:post{postID:" + post.postID + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
+            var user = _client.Cypher.Match("(p:post{PostId:" + post.PostId + "})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -1223,11 +1223,11 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find User has post
                  * 
-                 * match (p:post{postID:@postID})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
+                 * match (p:post{PostId:@PostId})-[:PREV_POST*0..]-(p1:post)-[:LATEST_POST]-(u:user)
                     return u
                  */
             _client.Connect();
-            var user = _client.Cypher.Match("(p:post{postID:" + postId + "})<-[:CREATE]-(u:user)")
+            var user = _client.Cypher.Match("(p:post{PostId:" + postId + "})<-[:CREATE]-(u:user)")
                 .Return<User>("u")
                 .Results.Single();
             return user;
@@ -1250,7 +1250,7 @@ namespace FlyAwayPlus.Helpers
             var listPost = _client.Cypher.Match("(p:post)")
                 .Where("p.privacy='public'")
                 .Return<Post>("p")
-                .OrderByDescending("p.dateCreated")
+                .OrderByDescending("p.DateCreated")
                 .Results.ToList();
             listPost.RemoveAll(item => item == null);
             return listPost;
@@ -1264,17 +1264,17 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - Find Place of post
                  * 
-                 * match (po:post {postID:@postID})-[:at]->(pl:place)
+                 * match (po:post {PostId:@PostId})-[:at]->(pl:place)
                     return pl
                  */
 
             _client.Connect();
-            Place place = null;
+            Place place;
             try
             {
-                place = _client.Cypher.Match("(po:post {postID:" + po.postID + "})-[:AT]->(pl:place)")
+                place = _client.Cypher.Match("(po:post {PostId:" + po.PostId + "})-[:AT]->(pl:place)")
                     .Return<Place>("pl")
-                    .OrderBy("pl.placeID")
+                    .OrderBy("pl.PlaceId")
                     .Results
                     .ToList()
                     .First();
@@ -1290,8 +1290,8 @@ namespace FlyAwayPlus.Helpers
         public Place FindExistingPlace(Place place)
         {
             _client.Connect();
-            return _client.Cypher.Match("(pl:place {longitude: '" + place.longitude + "', latitude: '" + place.latitude +
-                                       "', name: '" + place.name + "'})")
+            return _client.Cypher.Match("(pl:place {longitude: '" + place.Longitude + "', latitude: '" + place.Latitude +
+                                       "', name: '" + place.Name + "'})")
                                 .Return<Place>("pl")
                                 .Results.FirstOrDefault();
         }
@@ -1303,15 +1303,15 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - all post of otherUser that currentUser can view
                  * 
-                 * match (u1:user{userID:@otherUserID})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user{userID:@userID})
+                 * match (u1:user{UserId:@otherUserID})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user{UserId:@UserId})
                     where p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2)
                     return p1
                  */
             _client.Connect();
-            var listPost = _client.Cypher.Match("(u1:user {userID:" + otherUser.userID + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {userID:" + currentUser.userID + "})")
+            var listPost = _client.Cypher.Match("(u1:user {UserId:" + otherUser.UserId + "})-[:LATEST_POST]-(p:post)-[:PREV_POST*0..]-(p1:post), (u2:user {UserId:" + currentUser.UserId + "})")
                 .Where("p1.privacy = 'public' or (p1.privacy = 'friend' and u1-[:FRIEND]-u2)")
                 .ReturnDistinct<Post>("p1")
-                //.OrderByDescending("p.dateCreated")
+                //.OrderByDescending("p.DateCreated")
                 .Results.ToList();
             listPost.RemoveAll(item => item == null);
             return listPost;
@@ -1326,7 +1326,7 @@ namespace FlyAwayPlus.Helpers
                  *     - post with privacy = 'public'
                  *     - post of friend with privacy = 'friend'
                  * 
-                 * optional match (u1:user{userID:@userID})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)
+                 * optional match (u1:user{UserId:@UserId})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)
                     optional match (u1)-[:FRIEND]-(u2:user)-[:LATEST_POST]-(b:post)-[:PREV_POST*0..]-(p2:post)
                     with collect(distinct p1) as list1, collect(distinct p2) as list2
                     match (p3:post)
@@ -1334,13 +1334,13 @@ namespace FlyAwayPlus.Helpers
                     return distinct p3
                  */
             _client.Connect();
-            var listPost = _client.Cypher.OptionalMatch("(u1:user{userID:" + user.userID + "})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)")
+            var listPost = _client.Cypher.OptionalMatch("(u1:user{UserId:" + user.UserId + "})-[:LATEST_POST]-(a:post)-[:PREV_POST*0..]-(p1:post)")
                 .OptionalMatch("(u1)-[:FRIEND]-(u2:user)-[:LATEST_POST]-(b:post)-[:PREV_POST*0..]-(p2:post)")
                 .With("collect(distinct p1) as list1, collect(distinct p2) as list2")
                 .Match("(p3:post)")
                 .Where("p3.privacy = 'public' or (p3 in list1) or (p3 in list2 and p3.privacy='friend')")
                 .ReturnDistinct<Post>("p3")
-                .OrderByDescending("p3.dateCreated")
+                .OrderByDescending("p3.DateCreated")
                 .Skip(skip)
                 .Limit(limit)
                 .Results.ToList();
@@ -1357,16 +1357,16 @@ namespace FlyAwayPlus.Helpers
                  *     - post with privacy = 'public'
                  *     - post of friend with privacy = 'friend'
                  * 
-                 * MATCH (u:user { userID:@userID }),(p:post { postID: @postID}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))
+                 * MATCH (u:user { UserId:@UserId }),(p:post { PostId: @PostId}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))
                     RETURN COUNT(c)
                  */
             _client.Connect();
-            var p = _client.Cypher.Match("(p:post {postID:" + postId + "})")
+            var p = _client.Cypher.Match("(p:post {PostId:" + postId + "})")
                 .ReturnDistinct<Post>("p")
                 .Results.SingleOrDefault();
-            if (p == null || !p.privacy.Equals("public"))
+            if (p == null || !p.Privacy.Equals("public"))
             {
-                int path = _client.Cypher.Match("(u:user {userID:" + user.userID + "}),(p:post { postID: " + postId + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
+                int path = _client.Cypher.Match("(u:user {UserId:" + user.UserId + "}),(p:post { PostId: " + postId + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
                             .ReturnDistinct<int>("COUNT(c)")
                             .Results.Single();
                 if (path != 0)
@@ -1397,7 +1397,7 @@ namespace FlyAwayPlus.Helpers
             var listPost = _client.Cypher.Match("(p:post)")
                 .Where("p.privacy='public'")
                 .Return<Post>("p")
-                .OrderByDescending("p.dateCreated")
+                .OrderByDescending("p.DateCreated")
                 .Skip(skip)
                 .Limit(limit)
                 .Results.ToList();
@@ -1409,7 +1409,7 @@ namespace FlyAwayPlus.Helpers
         public bool InsertComment(int postId, Comment comment, int userId)
         {
             // Auto increment Id
-            comment.commentID = GetGlobalIncrementId();
+            comment.CommentId = GetGlobalIncrementId();
 
             _client.Connect();
             NodeReference<Comment> comRef = _client.Cypher.Create("(c:comment {newComment})").
@@ -1425,17 +1425,17 @@ namespace FlyAwayPlus.Helpers
                 /*
                  * Create Commented relationship
                  * 
-                 * match (u:user{userID:@otherUserID})-[r:COMMENTED]->(p:post{postID:@postID})
+                 * match (u:user{UserId:@otherUserID})-[r:COMMENTED]->(p:post{PostId:@PostId})
                     delete r
-                    create (u)-[r1:COMMENTED {dateCreated: @now, activityID : @activityID}]->(p)
+                    create (u)-[r1:COMMENTED {DateCreated: @now, ActivtyId : @ActivtyId}]->(p)
                  */
                 User otherUser = FindUser(comment);
-                _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "})-[r:COMMENTED]->(p:post{postID:" + postId + "})")
+                _client.Cypher.Match("(u:user{UserId:" + otherUser.UserId + "})-[r:COMMENTED]->(p:post{PostId:" + postId + "})")
                             .Delete("r").
                             ExecuteWithoutResults();
 
-                _client.Cypher.Match("(u:user{userID:" + otherUser.userID + "}), (p:post{postID:" + postId + "})")
-                            .Create("(u)-[r1:COMMENTED {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', activityID : " + GetActivityIncrementId() + "}]->(p)")
+                _client.Cypher.Match("(u:user{UserId:" + otherUser.UserId + "}), (p:post{PostId:" + postId + "})")
+                            .Create("(u)-[r1:COMMENTED {DateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', ActivtyId : " + GetActivityIncrementId() + "}]->(p)")
                             .ExecuteWithoutResults();
 
                 //Client.CreateRelationship(postRef, new PostHasCommentRelationship(comRef));
@@ -1449,20 +1449,20 @@ namespace FlyAwayPlus.Helpers
                  *  else do the following step:
                  *      1. CREATE LATEST_COMMENT relationship from user to newPost
                  */
-                int oldComment = _client.Cypher.Match("(p:post{postID:" + postId + "})-[:LATEST_COMMENT]->(c:comment)")
+                int oldComment = _client.Cypher.Match("(p:post{PostId:" + postId + "})-[:LATEST_COMMENT]->(c:comment)")
                                     .Return<int>("COUNT (c)")
                                     .Results.Single();
 
                 if (oldComment == 0)
                 {
                     // CREATE New LATEST_COMMENT
-                    _client.Cypher.Match("(p:post{postID:" + postId + "}), (c:comment{commentID:" + comment.commentID + "})")
+                    _client.Cypher.Match("(p:post{PostId:" + postId + "}), (c:comment{CommentId:" + comment.CommentId + "})")
                                     .Create("(p)-[:LATEST_COMMENT]->(c)")
                                     .ExecuteWithoutResults();
                 }
                 else
                 {
-                    _client.Cypher.Match("(p:post{postID:" + postId + "})-[r:LATEST_COMMENT]->(c:comment), (c1:comment{commentID:" + comment.commentID + "})")
+                    _client.Cypher.Match("(p:post{PostId:" + postId + "})-[r:LATEST_COMMENT]->(c:comment), (c1:comment{CommentId:" + comment.CommentId + "})")
                                     .Delete("r")
                                     .Create("(p)-[:LATEST_COMMENT]->(c1)")
                                     .Create("(c1)-[:PREV_COMMENT]->(c)")
@@ -1480,37 +1480,37 @@ namespace FlyAwayPlus.Helpers
                 * Find:
                 *     - Search limit post with privacy public
                 * 
-                * optional match (u:user {userID:10000})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)
+                * optional match (u:user {UserId:10000})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)
                 with p, u
                 optional match (p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)
-                WHERE u1.userID <> u.userID and m.activityID < @activityID
-                m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID
-                return dateCreated, u1, p, activity, lastActivityID
-                ORDER BY m.dateCreated
+                WHERE u1.UserId <> u.UserId and m.ActivtyId < @ActivtyId
+                m.DateCreated as DateCreated, p, u1, type(m) as activity, m.ActivtyId as lastActivityID
+                return DateCreated, u1, p, activity, lastActivityID
+                ORDER BY m.DateCreated
                 limit @limit
             */
 
             string limitActivity = "";
             if (activityId != 0)
             {
-                limitActivity = "and m.activityID < " + activityId;
+                limitActivity = "and m.ActivtyId < " + activityId;
             }
             _client.Connect();
-            var listNotification = _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)")
+            var listNotification = _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "})-[:LATEST_POST]-(p1:post)-[:PREV_POST*0..]-(p:post)")
                 .With("p, u")
                 .OptionalMatch("(p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)")
-                .Where("u1.userID <> u.userID " + limitActivity)
-                .With("m.dateCreated as dateCreated, p, u1, type(m) as activity, m.activityID as lastActivityID")
-                .Return((dateCreated, u1, p, activity, lastActivityID) => new Notification
+                .Where("u1.UserId <> u.UserId " + limitActivity)
+                .With("m.DateCreated as DateCreated, p, u1, type(m) as activity, m.ActivtyId as LastActivityId")
+                .Return((DateCreated, u1, p, activity, LastActivityId) => new Notification
                 {
-                    dateCreated = dateCreated.As<String>(),
-                    activity = activity.As<String>(),
-                    lastActivityID = lastActivityID.As<Int16>(),
-                    user = u1.As<User>(),
-                    post = p.As<Post>()
+                    DateCreated = DateCreated.As<String>(),
+                    Activity = activity.As<String>(),
+                    LastActivityId = LastActivityId.As<Int16>(),
+                    User = u1.As<User>(),
+                    Post = p.As<Post>()
                 })
-                //.Return<Notification>("distinct m.dateCreated as dateCreated, u1 as user, p as post")
-                .OrderByDescending("dateCreated, lastActivityID")
+                //.Return<Notification>("distinct m.DateCreated as DateCreated, u1 as user, p as post")
+                .OrderByDescending("DateCreated, LastActivityId")
                 .Limit(limit)
                 .Results.ToList();
             listNotification.RemoveAll(item => item == null);
@@ -1535,14 +1535,14 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(n:user { userID: " + user.userID + "})")
-                           .Set("n.firstName = '" + user.firstName + "'")
-                           .Set("n.lastName = '" + user.lastName + "'")
-                           .Set("n.address = '" + user.address + "'")
-                           .Set("n.gender = '" + user.gender + "'")
-                           .Set("n.phoneNumber = '" + user.phoneNumber + "'")
-                           .Set("n.dateOfBirth = '" + user.dateOfBirth + "'")
-                           .Set("n.password = '" + user.password + "'")
+                _client.Cypher.Match("(n:user { UserId: " + user.UserId + "})")
+                           .Set("n.firstName = '" + user.FirstName + "'")
+                           .Set("n.lastName = '" + user.LastName + "'")
+                           .Set("n.address = '" + user.Address + "'")
+                           .Set("n.gender = '" + user.Gender + "'")
+                           .Set("n.phoneNumber = '" + user.PhoneNumber + "'")
+                           .Set("n.dateOfBirth = '" + user.DateOfBirth + "'")
+                           .Set("n.password = '" + user.Password + "'")
                            .ExecuteWithoutResults();
             }
             catch (Exception e)
@@ -1558,9 +1558,9 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(c:comment { commentID: " + comment.commentID + " })")
-                       .Set("c.dateCreated = '" + comment.dateCreated + "'")
-                       .Set("c.content = '" + comment.content + "'")
+                _client.Cypher.Match("(c:comment { CommentId: " + comment.CommentId + " })")
+                       .Set("c.DateCreated = '" + comment.DateCreated + "'")
+                       .Set("c.Content = '" + comment.Content + "'")
                        .ExecuteWithoutResults();
             }
             catch (Exception e)
@@ -1586,15 +1586,15 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                var prev = _client.Cypher.OptionalMatch("(c:comment {commentID:" + commentId + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
+                var prev = _client.Cypher.OptionalMatch("(c:comment {CommentId:" + commentId + "})<-[:PREV_COMMENT*1..1]-(c_prev:comment)")
                     .Return<Comment>("c_prev")
                     .Results.SingleOrDefault();
 
-                var next = _client.Cypher.OptionalMatch("(c:comment {commentID:" + commentId + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
+                var next = _client.Cypher.OptionalMatch("(c:comment {CommentId:" + commentId + "})-[:PREV_COMMENT*1..1]->(c_next:comment)")
                     .Return<Comment>("c_next")
                     .Results.SingleOrDefault();
 
-                var post = _client.Cypher.OptionalMatch("(c:comment {commentID:" + commentId + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
+                var post = _client.Cypher.OptionalMatch("(c:comment {CommentId:" + commentId + "})-[:PREV_COMMENT*0..]-(c1:comment)-[:LATEST_COMMENT]-(p:post)")
                     .Return<Post>("p")
                     .Results.SingleOrDefault();
 
@@ -1603,7 +1603,7 @@ namespace FlyAwayPlus.Helpers
                     if (next != null)
                     {
                         if (post != null)
-                            _client.Cypher.Match("(c:comment {commentID:" + next.commentID + "}), (p:post {postID: " + post.postID + "})")
+                            _client.Cypher.Match("(c:comment {CommentId:" + next.CommentId + "}), (p:post {PostId: " + post.PostId + "})")
                                 .Create("p-[:LATEST_COMMENT]->c")
                                 .ExecuteWithoutResults();
                     }
@@ -1612,34 +1612,34 @@ namespace FlyAwayPlus.Helpers
                 {
                     if (next != null)
                     {
-                        _client.Cypher.Match("(c:comment {commentID:" + prev.commentID + "}), (c1:comment {commentID: " + next.commentID + "})")
+                        _client.Cypher.Match("(c:comment {CommentId:" + prev.CommentId + "}), (c1:comment {CommentId: " + next.CommentId + "})")
                                 .Create("c-[:PREV_COMMENT]->c1")
                                 .ExecuteWithoutResults();
                     }
                 }
 
-                _client.Cypher.Match("(c:comment {commentID:" + commentId + "})-[r]-()")
+                _client.Cypher.Match("(c:comment {CommentId:" + commentId + "})-[r]-()")
                                 .Delete("c,r")
                                 .ExecuteWithoutResults();
 
                 if (post != null)
                 {
-                    var newLast = _client.Cypher.OptionalMatch("(p:post {postID:" + post.postID + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
-                        .Where("(:user {userID:" + userId + "})-[:CREATE]->(c1)")
+                    var newLast = _client.Cypher.OptionalMatch("(p:post {PostId:" + post.PostId + "})-[:LATEST_COMMENT]-(c:comment)-[:PREV_COMMENT*0..]-(c1:comment)")
+                        .Where("(:user {UserId:" + userId + "})-[:CREATE]->(c1)")
                         .Return<Comment>("c1")
-                        .OrderByDescending("c1.dateCreated")
+                        .OrderByDescending("c1.DateCreated")
                         .Results.FirstOrDefault();
 
                     if (newLast == null)
                     {
-                        _client.Cypher.OptionalMatch("(u:user {userID: " + userId + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
+                        _client.Cypher.OptionalMatch("(u:user {UserId: " + userId + "})-[r:COMMENTED]->(p:post {PostId:" + post.PostId + "})")
                                      .Delete("r")
                                      .ExecuteWithoutResults();
                     }
                     else
                     {
-                        _client.Cypher.OptionalMatch("(u:user {userID: " + userId + "})-[r:COMMENTED]->(p:post {postID:" + post.postID + "})")
-                                     .Set("r.dateCreated = '" + newLast.dateCreated + "'")
+                        _client.Cypher.OptionalMatch("(u:user {UserId: " + userId + "})-[r:COMMENTED]->(p:post {PostId:" + post.PostId + "})")
+                                     .Set("r.DateCreated = '" + newLast.DateCreated + "'")
                                      .ExecuteWithoutResults();
                     }
                 }
@@ -1659,7 +1659,7 @@ namespace FlyAwayPlus.Helpers
             Message message;
             try
             {
-                message = _client.Cypher.OptionalMatch("(c:conversation { conversationID: " + conversationId + "})-[:LATEST_MESSAGE]-(m:message)")
+                message = _client.Cypher.OptionalMatch("(c:conversation { ConversationId: " + conversationId + "})-[:LATEST_MESSAGE]-(m:message)")
                                         .Return<Message>("m")
                                         .Results.FirstOrDefault();
             }
@@ -1673,7 +1673,7 @@ namespace FlyAwayPlus.Helpers
         public List<Message> GetListMessageInRoom(int roomId)
         {
             _client.Connect();
-            List<Message> listMessage = new List<Message>();
+            List<Message> listMessage;
             try
             {
                 listMessage = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
@@ -1697,7 +1697,7 @@ namespace FlyAwayPlus.Helpers
             {
                 int conversationId = GetConversationId(userId, friendId);
 
-                listMessage = _client.Cypher.OptionalMatch("(c:conversation { conversationID: " + conversationId + "})-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
+                listMessage = _client.Cypher.OptionalMatch("(c:conversation { ConversationId: " + conversationId + "})-[:LATEST_MESSAGE]-(m:message)-[:PREV_MESSAGE*0.." + limit + "]-(m1:message)")
                                         .ReturnDistinct<Message>("m1")
                                         .Results.ToList();
                 listMessage.RemoveAll(item => item == null);
@@ -1717,7 +1717,7 @@ namespace FlyAwayPlus.Helpers
                  * Find:
                  *     - find User has message
                  * 
-                 * MATCH(u:user)-[:CREATE]->(m:message{messageID:@messageID})
+                 * MATCH(u:user)-[:CREATE]->(m:message{MessageId:@MessageId})
                     return u
                  */
             if (message == null)
@@ -1725,7 +1725,7 @@ namespace FlyAwayPlus.Helpers
                 return null;
             }
             _client.Connect();
-            var user = _client.Cypher.OptionalMatch("(u:user)-[:CREATE]->(m:message{messageID:" + message.messageID + "})")
+            var user = _client.Cypher.OptionalMatch("(u:user)-[:CREATE]->(m:message{MessageId:" + message.MessageId + "})")
                 .Return<User>("u")
                 .Results.FirstOrDefault();
             return user;
@@ -1740,7 +1740,7 @@ namespace FlyAwayPlus.Helpers
                     .Return<Conversation>("c")
                     .Results.First();
 
-            return CreateMessage(content, userId, 0, conversation.conversationID);
+            return CreateMessage(content, userId, 0, conversation.ConversationId);
         }
         public Message CreateMessage(string content, int userId, int otherId, int conversationId = -1)
         {
@@ -1771,9 +1771,9 @@ namespace FlyAwayPlus.Helpers
             {
                 message = new Message
                 {
-                    content = content,
-                    dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                    messageID = GetGlobalIncrementId()
+                    Content = content,
+                    DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                    MessageId = GetGlobalIncrementId()
                 };
 
                 _client.Cypher.Create("(m:message {newMessage})")
@@ -1785,14 +1785,14 @@ namespace FlyAwayPlus.Helpers
                     var conversation = new Conversation
                     {
                         DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                        conversationID = GetGlobalIncrementId()
+                        ConversationId = GetGlobalIncrementId()
                     };
 
                     _client.Cypher.Create("(c:conversation {newConversation})")
                                         .WithParam("newConversation", conversation)
                                         .ExecuteWithoutResults();
 
-                    _client.Cypher.Match("(c:conversation {conversationID: " + conversationId + "}), (u:user {userID:" + userId + "}), (u1:user {userID:" + otherId + "}), (m:message {messageID:" + message.messageID + "})")
+                    _client.Cypher.Match("(c:conversation {ConversationId: " + conversationId + "}), (u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherId + "}), (m:message {MessageId:" + message.MessageId + "})")
                                         .Create("u-[:BELONG_TO]->c")
                                         .Create("u1-[:BELONG_TO]->c")
                                         .Create("c-[:LATEST_MESSAGE]->m")
@@ -1801,7 +1801,7 @@ namespace FlyAwayPlus.Helpers
                 }
                 else
                 {
-                    _client.Cypher.OptionalMatch("(c:conversation {conversationID: " + conversationId + "})-[r:LATEST_MESSAGE]->(m1:message), (u:user {userID:" + userId + "}), (m:message {messageID:" + message.messageID + "})")
+                    _client.Cypher.OptionalMatch("(c:conversation {ConversationId: " + conversationId + "})-[r:LATEST_MESSAGE]->(m1:message), (u:user {UserId:" + userId + "}), (m:message {MessageId:" + message.MessageId + "})")
                                         .Delete("r")
                                         .Create("c-[:LATEST_MESSAGE]->m")
                                         .Create("m-[:PREV_MESSAGE]->m1")
@@ -1822,9 +1822,9 @@ namespace FlyAwayPlus.Helpers
         {
             _client.Connect();
 
-            var conversationIdList = _client.Cypher.Match("(u1:user{userID: " + userId +
-                                 "})-[:BELONG_TO]->(c:conversation)<-[:BELONG_TO]-(u2:user{userID: " + otherId + "})")
-                .ReturnDistinct<int>("c.conversationID")
+            var conversationIdList = _client.Cypher.Match("(u1:user{UserId: " + userId +
+                                 "})-[:BELONG_TO]->(c:conversation)<-[:BELONG_TO]-(u2:user{UserId: " + otherId + "})")
+                .ReturnDistinct<int>("c.ConversationId")
                 .Results
                 .ToList();
 
@@ -1836,8 +1836,8 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(u:user {userID:" + userId + "}), (u1:user {userID:" + otherUserId + "})")
-                                    .Create("u-[:FRIEND_REQUEST {dateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'}]->u1")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherUserId + "})")
+                                    .Create("u-[:FRIEND_REQUEST {DateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'}]->u1")
                                     .ExecuteWithoutResults();
             }
             catch (Exception e)
@@ -1853,7 +1853,7 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:FRIEND_REQUEST]-(u1:user {UserId:" + otherUserId + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -1870,12 +1870,12 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(u:user {userID:" + userId + "}), (u1:user {userID:" + otherUserId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherUserId + "})")
                                     .Create("u-[:FRIEND]->u1")
                                     .Create("u1-[:FRIEND]->u")
                                     .ExecuteWithoutResults();
 
-                _client.Cypher.OptionalMatch("(u:user {userID:" + userId + "})-[r:FRIEND_REQUEST]-(u1:user {userID:" + otherUserId + "})")
+                _client.Cypher.OptionalMatch("(u:user {UserId:" + userId + "})-[r:FRIEND_REQUEST]-(u1:user {UserId:" + otherUserId + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -1892,7 +1892,7 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(u:user {userID:" + userId + "})-[r:FRIEND]-(u1:user {userID:" + otherUserId + "})")
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:FRIEND]-(u1:user {UserId:" + otherUserId + "})")
                                     .Delete("r")
                                     .ExecuteWithoutResults();
             }
@@ -1916,7 +1916,7 @@ namespace FlyAwayPlus.Helpers
                     return u2;
                  */
             _client.Connect();
-            var listUser = _client.Cypher.OptionalMatch("(u1:user {userID:" + userId + "})<-[:FRIEND_REQUEST]-(u2:user)")
+            var listUser = _client.Cypher.OptionalMatch("(u1:user {UserId:" + userId + "})<-[:FRIEND_REQUEST]-(u2:user)")
                 .ReturnDistinct<User>("u2")
                 .Results.ToList();
             listUser.RemoveAll(item => item == null);
@@ -1928,14 +1928,14 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             User user = SearchUser(postId);
 
-            DeleteRelatedPhotosAndRelationships(postId, user.userID);
+            DeleteRelatedPhotosAndRelationships(postId, user.UserId);
             DeletePlaceRelationship(postId);
 
             try
             {
                 //TODO: Remove likes, dislike
                 DeleteCommentsAndRelationship(postId);
-                RebuildPostsChainFlow(user.userID, postId);
+                RebuildPostsChainFlow(user.UserId, postId);
                 DeletePostAndRelationships(postId);
             }
             catch (Exception e)
@@ -1950,7 +1950,7 @@ namespace FlyAwayPlus.Helpers
 
         private void DeleteCommentsAndRelationship(int postId)
         {
-            _client.Cypher.Match("(post{postID: " + postId + "})-[lcr:LATEST_COMMENT]->(lc:comment)-[pcrs:PREV_COMMENT*]->(pc:comment), ()-[ccrl:CREATE]->lc,()-[ccrp:CREATE]->pc")
+            _client.Cypher.Match("(post{PostId: " + postId + "})-[lcr:LATEST_COMMENT]->(lc:comment)-[pcrs:PREV_COMMENT*]->(pc:comment), ()-[ccrl:CREATE]->lc,()-[ccrp:CREATE]->pc")
                           .ForEach("(pcr IN pcrs| DELETE pcr)")
                          .Delete("lcr, ccrl, ccrp, lc, pc")
                          .ExecuteWithoutResults();
@@ -1958,7 +1958,7 @@ namespace FlyAwayPlus.Helpers
 
         private void DeletePostAndRelationships(int postId)
         {
-            _client.Cypher.Match("(p:post {postID:" + postId + "})-[r]-()")
+            _client.Cypher.Match("(p:post {PostId:" + postId + "})-[r]-()")
                 .Delete("p,r")
                 .ExecuteWithoutResults();
         }
@@ -1972,7 +1972,7 @@ namespace FlyAwayPlus.Helpers
             {
                 if (next != null)
                 {
-                    _client.Cypher.Match("(u:user {userID:" + userId + "}), (p:post {postID: " + next.postID + "})")
+                    _client.Cypher.Match("(u:user {UserId:" + userId + "}), (p:post {PostId: " + next.PostId + "})")
                         .Create("(u)-[:LATEST_POST]->(p)")
                         .ExecuteWithoutResults();
                 }
@@ -1981,7 +1981,7 @@ namespace FlyAwayPlus.Helpers
             {
                 if (next != null)
                 {
-                    _client.Cypher.Match("(pp:post {postID:" + prev.postID + "}), (pn:post {postID: " + next.postID + "})")
+                    _client.Cypher.Match("(pp:post {PostId:" + prev.PostId + "}), (pn:post {PostId: " + next.PostId + "})")
                         .Create("pp-[:PREV_POST]->pn")
                         .ExecuteWithoutResults();
                 }
@@ -1990,28 +1990,28 @@ namespace FlyAwayPlus.Helpers
 
         private Post FindNextPost(int postId)
         {
-            return _client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})-[:PREV_POST*1..1]->(p_next:post)")
+            return _client.Cypher.OptionalMatch("(p:post {PostId:" + postId + "})-[:PREV_POST*1..1]->(p_next:post)")
                 .Return<Post>("p_next")
                 .Results.SingleOrDefault();
         }
 
         private Post FindPrevPost(int postId)
         {
-            return _client.Cypher.OptionalMatch("(p:post {postID:" + postId + "})<-[:PREV_POST*1..1]-(p_prev:post)")
+            return _client.Cypher.OptionalMatch("(p:post {PostId:" + postId + "})<-[:PREV_POST*1..1]-(p_prev:post)")
                 .Return<Post>("p_prev")
                 .Results.SingleOrDefault();
         }
 
         private void DeletePlaceRelationship(int postId)
         {
-            _client.Cypher.Match("(post{postID: " + postId + "})-[r1:AT]->(place)<-[r2:VISITED]-(user)")
+            _client.Cypher.Match("(post{PostId: " + postId + "})-[r1:AT]->(place)<-[r2:VISITED]-(user)")
                          .Delete("r1, r2")
                          .ExecuteWithoutResults();
         }
 
         private void DeleteRelatedPhotosAndRelationships(int postId, int userId)
         {
-            _client.Cypher.OptionalMatch("(p:Post {postID: " + postId + "})-[r1:HAS]-(pt:Photo)<-[r2:HAS]-(u:User {userID: " + userId + "})")
+            _client.Cypher.OptionalMatch("(p:Post {PostId: " + postId + "})-[r1:HAS]-(pt:Photo)<-[r2:HAS]-(u:User {UserId: " + userId + "})")
                 .Delete("r1, r2, pt")
                 .ExecuteWithoutResults();
         }
@@ -2022,8 +2022,8 @@ namespace FlyAwayPlus.Helpers
             _client.Connect();
             try
             {
-                _client.Cypher.Match("(p:post { postID: " + postId + " })")
-                       .Set("p.dateCreated = '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'")
+                _client.Cypher.Match("(p:post { PostId: " + postId + " })")
+                       .Set("p.DateCreated = '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "'")
                        .Set("p.content = '" + newContent + "'")
                        .ExecuteWithoutResults();
             }
@@ -2116,7 +2116,7 @@ namespace FlyAwayPlus.Helpers
             return listRoom;
         }
 
-        public List<Room> SearchRoomByUserID(int userID)
+        public List<Room> SearchRoomByUserId(int userId)
         {
             List<Room> listRoom;
             /*
@@ -2128,7 +2128,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listRoom = _client.Cypher
-                   .OptionalMatch("(u:user {userID: " + userID + "})-[m:JOIN{type:" + FapConstants.JOIN_ADMIN + "}]->(r:room)")
+                   .OptionalMatch("(u:user {UserId: " + userId + "})-[m:JOIN{type:" + FapConstants.JoinAdmin + "}]->(r:room)")
                    .ReturnDistinct<Room>("r")
                    .Results.ToList();
             }
@@ -2145,7 +2145,7 @@ namespace FlyAwayPlus.Helpers
         public List<Photo> SearchPhotoInPlace(int placeId)
         {
             /*
-             * match(pl:place {placeID:@placeID})<-[:AT]-(p:post)
+             * match(pl:place {PlaceId:@PlaceId})<-[:AT]-(p:post)
                 with pl, p
                 optional match (p)<-[:LIKE]-(u:user)
                 with p, COUNT(Distinct u) as number
@@ -2158,7 +2158,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listPhoto = _client.Cypher
-                   .Match("(pl:place {placeID:" + placeId + "})<-[:AT]-(p:post)")
+                   .Match("(pl:place {PlaceId:" + placeId + "})<-[:AT]-(p:post)")
                    .With("pl, p")
                    .OptionalMatch("(p)<-[:LIKE]-(u:user)")
                    .With("p, COUNT(Distinct u) as number")
@@ -2182,7 +2182,7 @@ namespace FlyAwayPlus.Helpers
         public int CountPostAtPlace(int placeId)
         {
             /*
-             * optional match (pl:place {placeID:@placeID})<-[:AT]-(p:post)
+             * optional match (pl:place {PlaceId:@PlaceId})<-[:AT]-(p:post)
                 return COUNT(p)
              */
             int numberOfPost;
@@ -2190,7 +2190,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 numberOfPost = _client.Cypher
-                   .OptionalMatch("(pl:place {placeID:" + placeId + "})<-[:AT]-(p:post)")
+                   .OptionalMatch("(pl:place {PlaceId:" + placeId + "})<-[:AT]-(p:post)")
                    .ReturnDistinct<int>("COUNT (p)")
                    .Results.First();
             }
@@ -2217,7 +2217,7 @@ namespace FlyAwayPlus.Helpers
                          .Create("(r)-[:HAS]->(p)")
                          .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(u:user {userID: " + userId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
+            _client.Cypher.Match("(u:user {UserId: " + userId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
                          .Create("(u)-[r:CREATE]->(p)")
                          .ExecuteWithoutResults();
 
@@ -2225,7 +2225,7 @@ namespace FlyAwayPlus.Helpers
             {
                 foreach (int assigneeId in assigneesId)
                 {
-                    _client.Cypher.Match("(u:user {userID: " + assigneeId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
+                    _client.Cypher.Match("(u:user {UserId: " + assigneeId + "}), (p:plan {PlanId: " + newPlan.PlanId + "})")
                                  .Create("(u)-[:IN_CHARGE]->(p)")
                                  .ExecuteWithoutResults();
                 }
@@ -2302,7 +2302,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listPost = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[l:LATEST_POST]->(p1:post)-[pr:PREV_POST*0..]->(p2:post)")
-                    //.Where("p2.id < " + postID)
+                    //.Where("p2.id < " + PostId)
                     .ReturnDistinct<Post>("p2")
                     .Limit(limit)
                     .Results.ToList();
@@ -2355,7 +2355,7 @@ namespace FlyAwayPlus.Helpers
             User admin = new User();
             try
             {
-                admin = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_ADMIN + "}]-(u:user)")
+                admin = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JoinAdmin + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.FirstOrDefault();
             }
@@ -2379,7 +2379,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JOIN_REQUEST + "}]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN {type:" + FapConstants.JoinRequest + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
@@ -2400,7 +2400,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listMessage = _client.Cypher.OptionalMatch("(r:room {RoomId: " + roomId + "})-[:HAS]->(c:conversation)-[:LATEST_MESSAGE]->(m:message)-[:PREV_MESSAGE*0..]->(m1:message)")
-                    //.Where("p1.messageID < " + messageID)
+                    //.Where("p1.MessageId < " + MessageId)
                                         .ReturnDistinct<Message>("m1")
                                         .Results.Reverse().ToList();
                 listMessage.RemoveAll(item => item == null);
@@ -2413,12 +2413,12 @@ namespace FlyAwayPlus.Helpers
             return listMessage;
         }
 
-        public List<Post> FindPostInPlace(int placeID, int postID = 0, int limit = 5)
+        public List<Post> FindPostInPlace(int placeId, int postId = 0, int limit = 5)
         {
             /*
                  * Query:
                  * Find:
-                 *     optional match (pl:place {placeID:@placeID})<-[:AT]-(p:post)
+                 *     optional match (pl:place {PlaceId:@PlaceId})<-[:AT]-(p:post)
                         optional match (p)<-[:LIKE]-(ul:user)
                         optional match (p)<-[:DISLIKE]-(udl:user)
                         optional match (p)-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)
@@ -2431,14 +2431,14 @@ namespace FlyAwayPlus.Helpers
             List<Post> listPost = new List<Post>();
             try
             {
-                listPost = _client.Cypher.OptionalMatch("(pl:place {placeID:" + placeID + "})<-[:AT]-(p:post)")
+                listPost = _client.Cypher.OptionalMatch("(pl:place {PlaceId:" + placeId + "})<-[:AT]-(p:post)")
                                         .OptionalMatch("(p)<-[:LIKE]-(ul:user)")
                                         .OptionalMatch("(p)<-[:DISLIKE]-(udl:user)")
                                         .OptionalMatch("(p)-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)")
                                         .With("p, (COUNT(DISTINCT ul)) - (COUNT(DISTINCT udl)) + (COUNT(DISTINCT c1)) as mark")
                                         .OrderByDescending("mark")
                                         .Return<Post>("p")
-                    //.Where("p2.id < " + postID)
+                    //.Where("p2.id < " + PostId)
                     //.Limit(limit)
                                         .Results.ToList();
 
@@ -2452,7 +2452,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public Place FindPlaceByID(int placeID)
+        public Place FindPlaceById(int placeId)
         {
 
             /*
@@ -2462,10 +2462,10 @@ namespace FlyAwayPlus.Helpers
                  */
 
             _client.Connect();
-            Place place = null;
+            Place place;
             try
             {
-                place = _client.Cypher.OptionalMatch("(pl:place {placeID:" + placeID + "})")
+                place = _client.Cypher.OptionalMatch("(pl:place {PlaceId:" + placeId + "})")
                     .Return<Place>("pl")
                     .Results
                     .FirstOrDefault();
@@ -2480,14 +2480,13 @@ namespace FlyAwayPlus.Helpers
 
         public Place FindPlaceByCoordinate(double longitude, double latitude)
         {
-
             /*
                  * Query:
                  * Find:
                  */
 
             _client.Connect();
-            Place place = null;
+            Place place;
             try
             {
                 place = _client.Cypher.OptionalMatch("(pl:place {longitude:" + longitude + ", latitude: " + latitude + "})")
@@ -2535,12 +2534,12 @@ namespace FlyAwayPlus.Helpers
 
             var newConversation = new Conversation
             {
-                conversationID = GetGlobalIncrementId(),
+                ConversationId = GetGlobalIncrementId(),
                 DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat, CultureInfo.InvariantCulture)
             };
 
-            _client.Cypher.Match("(u:user {userID:" + currentUserId + "}), (r:room {RoomId: " + newRoom.RoomId + "})")
-                     .Create("(u)-[:JOIN {type: " + FapConstants.JOIN_ADMIN + "}]->(r)")
+            _client.Cypher.Match("(u:user {UserId:" + currentUserId + "}), (r:room {RoomId: " + newRoom.RoomId + "})")
+                     .Create("(u)-[:JOIN {type: " + FapConstants.JoinAdmin + "}]->(r)")
                      .ExecuteWithoutResults();
 
             _client.Cypher
@@ -2548,7 +2547,7 @@ namespace FlyAwayPlus.Helpers
                    .WithParam("newConversation", newConversation)
                    .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {conversationID: " + newConversation.conversationID + "})")
+            _client.Cypher.Match("(r:room {RoomId: " + newRoom.RoomId + "}), (c:conversation {ConversationId: " + newConversation.ConversationId + "})")
                      .Create("(r)-[:HAS]->(c)")
                      .ExecuteWithoutResults();
         }

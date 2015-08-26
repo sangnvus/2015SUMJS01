@@ -6,6 +6,7 @@
 
 <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
 <script src="~/Scripts/bootstrap-table.min.js"></script>
+<script src="~/Scripts/bootstrap-table-export.min.js"></script>
 
 @{
     ViewBag.Title = "Room Detail";
@@ -99,7 +100,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "/Room/SaveEvent",
+                url: "/Room/SaveTimelinePlan",
                 data: dataRow,
                 success: function (response) {
                     if (response == 'True') {
@@ -136,7 +137,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "/Room/UpdatePlanEvent/",
+                url: "/Room/UpdateTimelinePlan/",
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(dataRow)
@@ -152,7 +153,7 @@
     var listUserRequestJoinRoom = ViewData["listUserRequestJoinRoom"] as List<User>;
     var listMessage = ViewData["listMessage"] as List<Message>;
     var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
-    int userID = Int16.Parse(@Session["userID"].ToString());
+    int userId = Int16.Parse(@Session["UserId"].ToString());
 
     var listPost = ViewData["listPost"] as List<Post>;
     var listGeneralPlan = ViewData["listGeneralPlan"] as List<Plan>;
@@ -166,7 +167,7 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
-    var dictPlanIdPICs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
+    var dictPlanIdPiCs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
     var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
 }
@@ -201,7 +202,7 @@
         </div>
         <div class="col-md-2 room-detail-interact-area">
             <div class="room-detail-admin-avatar">
-                <img class="circle-image" height="50" src="@admin.avatar" alt="Admin" />
+                <img class="circle-image" height="50" src="@admin.Avatar" alt="Admin" />
             </div>
             <div>
                 <a href="javascript:;" class="btn btn-primary room-detail-request-join">Request join</a>
@@ -274,19 +275,19 @@
                                             <li><b>Complete on:</b> @gp.DatePlanStart.Remove(10)</li>
                                             <li>
                                                 <b>Person in charge:</b>
-                                                @foreach (var pic in dictPlanIdPICs[gp.PlanId])
+                                                @foreach (var pic in dictPlanIdPiCs[gp.PlanId])
                                                 {
-                                                    <a href="/User/Index/@pic.userID" class="hover-card-user">@(pic.firstName + " " + pic.lastName + "; ")</a>
+                                                    <a href="/User/Index/@pic.UserId" class="hover-card-user">@(pic.FirstName + " " + pic.LastName + "; ")</a>
                                                 }
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="dark-divider"><!--DIVIDER--></div>
                                     <div class="user-info">
-                                        <img src="@dictPlanIdCreator[gp.PlanId].avatar" alt="Avatar" class="avatar" />
+                                        <img src="@dictPlanIdCreator[gp.PlanId].Avatar" alt="Avatar" class="avatar" />
                                         <div style="width: 100%">
-                                            <a href="/User/Index/@dictPlanIdCreator[gp.PlanId].userID" class="hover-card-user">
-                                                <div class="name-user">@(dictPlanIdCreator[gp.PlanId].firstName + " " + dictPlanIdCreator[gp.PlanId].lastName)</div>
+                                            <a href="/User/Index/@dictPlanIdCreator[gp.PlanId].UserId" class="hover-card-user">
+                                                <div class="name-user">@(dictPlanIdCreator[gp.PlanId].FirstName + " " + dictPlanIdCreator[gp.PlanId].LastName)</div>
                                             </a>
                                             <div class="post-time">@gp.DatePlanCreated</div>
                                         </div>
@@ -304,21 +305,30 @@
                 <!-- End timeline -->
                 <!-- estimation -->
                 <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
+                    <div style="margin-bottom: -10px">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#create-general-plan-modal" style="background-color: #2DCC70; position: absolute;">
+                            Add an estimation item
+                        </button>
+                    </div>
+
                     <table data-toggle="table"
                            data-striped="true"
                            data-sort-name="name"
                            data-search="true"
+                           data-show-export="true"
                            data-show-header="true"
-                           data-show-footer="true"
                            data-show-columns="true"
                            data-show-refresh="true"
-                           data-url="data1.json">
+                           data-url="/Room/ExportEstimationData?roomId=10">
                         <thead>
-                            <tr>
-                                <th data-field="id">Item ID</th>
-                                <th data-field="name">Item Name</th>
-                                <th data-field="price">Item Price</th>
-                            </tr>
+                        <tr>
+                            <th data-field="id">No.</th>
+                            <th data-field="payment">Payment</th>
+                            <th data-field="price">Price</th>
+                            <th data-field="creator">Creator</th>
+                            <th data-field="payer">Payer</th>
+                            <th data-field="datecreated">Date created</th>
+                        </tr>
                         </thead>
                     </table>
                 </div>
@@ -338,8 +348,8 @@
                 @foreach (User user in listUserInRoom)
                 {
                     <div class="padding-5 col-md-2">
-                        <a href="/User/Index/@user.userID" class="hover-card-user tooltipstered">
-                            <img class="circle-image" height="50" src="@user.avatar" alt="Avatar" />
+                        <a href="/User/Index/@user.UserId" class="hover-card-user tooltipstered">
+                            <img class="circle-image" height="50" src="@user.Avatar" alt="Avatar" />
                         </a>
                     </div>
                 }
@@ -467,26 +477,26 @@
                             <div class="post-area">
                                 <div class="post-info">
                                     <div class="user-avatar">
-                                        <img src="@listUserDict[p.postID].avatar" alt="@String.Format("{0} {1}", @listUserDict[p.postID].firstName, @listUserDict[p.postID].lastName)'s avatar" class="img-circle" />
+                                        <img src="@listUserDict[p.PostId].Avatar" alt="@String.Format("{0} {1}", @listUserDict[p.PostId].FirstName, @listUserDict[p.PostId].LastName)'s avatar" class="img-circle" />
                                     </div>
                                     <div class="post-info-area">
                                         <div class="user-name">
-                                            <a href="/User/Index/@listUserDict[p.postID].userID" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[p.postID].firstName, @listUserDict[p.postID].lastName)</a>
+                                            <a href="/User/Index/@listUserDict[p.PostId].UserId" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[p.PostId].FirstName, @listUserDict[p.PostId].LastName)</a>
                                         </div>
                                         <span class="post-time">
-                                            <span>@p.toRealtime()</span>
+                                            <span>@p.ToRealtime()</span>
                                         </span>
                                     </div>
                                 </div>
 
                                 <div class="post-content" style="display:flex;">
-                                    @foreach (var photo in listPhotoDict[p.postID])
+                                    @foreach (var photo in listPhotoDict[p.PostId])
                                     {
-                                        <img src="/Images/UserUpload/@photo.url" style="max-height: 100%; margin:auto;" />
+                                        <img src="/Images/UserUpload/@photo.Url" style="max-height: 100%; margin:auto;" />
                                     }
                                 </div>
                                 <div class="post-content">
-                                    @p.content
+                                    @p.Content
                                 </div>
                             </div>
 
@@ -499,15 +509,15 @@
                             <div class="divide-area"></div>
                             <div class="comment-area">
                                 <div style="margin: 0 20px 12px">
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[p.postID]</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[p.postID]</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[p.postID]</b>
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[p.PostId]</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[p.PostId]</b>&nbsp;
+                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[p.PostId]</b>
                                 </div>
                                 <div class="comment-stats">
-                                    <span>@dictCommentCount[p.postID] comments</span>
+                                    <span>@dictCommentCount[p.PostId] comments</span>
                                 </div>
                                 <div class="comment-list">
-                                    @foreach (var comment in dictListComment[p.postID])
+                                    @foreach (var comment in dictListComment[p.PostId])
                                     {
                                         @Html.Partial("_PostDetailPartial", comment)
                                     }
@@ -529,19 +539,19 @@
                         <img src="~/Images/FAP logo.png" />
                     </div>
                     <div class="messages" style="border-bottom: #19B5FF 3px solid">
-                        <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.userID" class="hover-card-user">@String.Format("{0} {1}", @admin.firstName, @admin.lastName)</a> on time</b></p>
+                        <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.UserId" class="hover-card-user">@String.Format("{0} {1}", @admin.FirstName, @admin.LastName)</a> on time</b></p>
                         <time datetime=""><a href="javascript:;">Fly Away Plus System</a></time>
                     </div>
                 </li>
                 @for (int index = 0; index < listMessage.Count; index++)
                 {
-                    <li class="@String.Format("{0}", userID == listUserOwnMessage[index].userID ? "self" : "other")">
+                    <li class="@String.Format("{0}", userId == listUserOwnMessage[index].UserId ? "self" : "other")">
                         <div class="avatar">
-                            <img src="@listUserOwnMessage[index].avatar" />
+                            <img src="@listUserOwnMessage[index].Avatar" />
                         </div>
                         <div class="messages" style="border-bottom: #19B5FF 3px solid">
-                            <p>@listMessage[index].content</p>
-                            <time datetime="@listMessage[index].dateCreated"><a href="/User/Index/@listUserOwnMessage[index].userID" class="hover-card-user">@String.Format("{0} {1}", @listUserOwnMessage[index].firstName, @listUserOwnMessage[index].lastName)</a> @listMessage[index].dateCreated</time>
+                            <p>@listMessage[index].Content</p>
+                            <time datetime="@listMessage[index].DateCreated"><a href="/User/Index/@listUserOwnMessage[index].UserId" class="hover-card-user">@String.Format("{0} {1}", @listUserOwnMessage[index].FirstName, @listUserOwnMessage[index].LastName)</a> @listMessage[index].DateCreated</time>
                         </div>
                     </li>
                 }
@@ -642,17 +652,17 @@
                     planContent += '<b>Person in charge:</b>';
 
                     for (var i = 0; i < data.length; i++) {
-                        planContent += '<a href="/User/Index/' + data[i].userID + '" class="hover-card-user">' + data[i].firstName + ' ' + data[i].lastName + '</a>; ';
+                        planContent += '<a href="/User/Index/' + data[i].UserId + '" class="hover-card-user">' + data[i].FirstName + ' ' + data[i].LastName + '</a>; ';
                     }
 
                     planContent += '</li>';
                     planContent += '</ul>';
                     planContent += '<div class="dark-divider"></div>';
                     planContent += '<div class="user-info">';
-                    planContent += '<img src="@(((User)Session["user"]).avatar)" alt="Avatar" class="avatar"/>';
+                    planContent += '<img src="@(((User)Session["user"]).Avatar)" alt="Avatar" class="avatar"/>';
                     planContent += '<div style="width: 100%">';
-                    planContent += '<a href="/User/Index/@(((User)Session["user"]).userID)" class="hover-card-user">';
-                    planContent += '<div class="name-user">@(((User)Session["user"]).firstName)' + ' ' + '@(((User)Session["user"]).lastName)' + '</div>';
+                    planContent += '<a href="/User/Index/@(Session["UserId"])" class="hover-card-user">';
+                    planContent += '<div class="name-user">@(((User)Session["user"]).FirstName)' + ' ' + '@(((User)Session["user"]).LastName)' + '</div>';
                     planContent += '</a>';
                     planContent += '<div class="post-time">' + moment().format('YYYY-MM-DD hh:mm:ss') + '</div>';
                     planContent += '</div>';
@@ -693,7 +703,7 @@
             var controller = "/User/CreateMessageInRoom/";
 
             var data = {
-                roomID: @roomId,
+                roomId: @roomId,
                 content: content
             };
 
@@ -715,7 +725,7 @@
                     tmp += "</div>";
                     tmp += "<div class='messages' style='border-bottom: #19B5FF 3px solid'>";
                     tmp += "<p>" + message["content"] + "</p>";
-                    tmp += "<time datetime='" + message["dateCreated"] + "'><a href='/User/Index/@userID'>" + $("#id-avatar-current-user").attr("alt") + "</a>" + message["dateCreated"] + "</time>";
+                    tmp += "<time datetime='" + message["DateCreated"] + "'><a href='/User/Index/@userId'>" + $("#id-avatar-current-user").attr("alt") + "</a>" + message["DateCreated"] + "</time>";
                     tmp += "</div>";
                     tmp += "</li>";
 

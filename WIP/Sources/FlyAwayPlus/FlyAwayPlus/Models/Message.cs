@@ -7,8 +7,8 @@ namespace FlyAwayPlus.Models
 {
     public class Message
     {
-        public int messageID { get; set; }
-        public string content { get; set; }
-        public string dateCreated { get; set; }
+        public int MessageId { get; set; }
+        public string Content { get; set; }
+        public string DateCreated { get; set; }
     }
 }

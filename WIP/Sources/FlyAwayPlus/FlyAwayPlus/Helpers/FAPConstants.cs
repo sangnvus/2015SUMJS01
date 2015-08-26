@@ -9,9 +9,9 @@
         public static string[] ImageFileExtensions = { ".jpg", ".png", ".jpeg" };
         public static int RecordsPerPage = 20;
 
-        public static int JOIN_ADMIN     = 0;
-        public static int JOIN_MEMBER    = 1;
-        public static int JOIN_REQUEST   = 2;
+        public static int JoinAdmin     = 0;
+        public static int JoinMember    = 1;
+        public static int JoinRequest   = 2;
 
         public static int PlanGeneral    = 0;
         public static int PlanTimeline   = 1;

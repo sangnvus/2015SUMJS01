@@ -29,11 +29,11 @@ namespace FlyAwayPlus.Controllers
 
             int skip = pageNumber * RecordsPerPage + totalAdd;
             
-            loadData(skip);
+            LoadData(skip);
             return PartialView("_ListPost");
         }
 
-        private void loadData(int skip)
+        private void LoadData(int skip)
         {
             List<Post> listPost = new List<Post>();
             User user = UserHelpers.GetCurrentUser(Session);
@@ -84,26 +84,26 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
-                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
-                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
-                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
-                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
-                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
-                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
-                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
+                listPhotoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPhoto(po.PostId));
+                listVideoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindVideo(po.PostId));
+                listPlaceDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPlace(po));
+                listUserDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindUser(po));
+                dictLikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountLike(po.PostId));
+                dictDislikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountDislike(po.PostId));
+                dictCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountComment(po.PostId));
+                dictUserCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountUserComment(po.PostId));
 
                 if (user != null)
                 {
-                    isLikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsLike(po.postID, user.userID));
-                    isDislikeDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsDislike(po.postID, user.userID));
-                    isWishDict.Add(po.postID, GraphDatabaseHelpers.Instance.IsWish(po.postID, user.userID));
+                    isLikeDict.Add(po.PostId, GraphDatabaseHelpers.Instance.IsLike(po.PostId, user.UserId));
+                    isDislikeDict.Add(po.PostId, GraphDatabaseHelpers.Instance.IsDislike(po.PostId, user.UserId));
+                    isWishDict.Add(po.PostId, GraphDatabaseHelpers.Instance.IsWish(po.PostId, user.UserId));
                 }
                 else
                 {
-                    isLikeDict.Add(po.postID, false);
-                    isDislikeDict.Add(po.postID, false);
-                    isWishDict.Add(po.postID, false);
+                    isLikeDict.Add(po.PostId, false);
+                    isDislikeDict.Add(po.PostId, false);
+                    isWishDict.Add(po.PostId, false);
                 }
             }
 
@@ -156,7 +156,7 @@ namespace FlyAwayPlus.Controllers
             }
             else 
             {
-                loadData(0);
+                LoadData(0);
             }
             return View();
         }

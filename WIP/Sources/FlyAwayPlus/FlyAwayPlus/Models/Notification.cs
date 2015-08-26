@@ -7,10 +7,10 @@ namespace FlyAwayPlus.Models
 {
     public class Notification
     {
-        public String activity { get; set; }
-        public String dateCreated { get; set; }
-        public User user { get; set; }
-        public Post post { get; set; }
-        public Int16 lastActivityID { get; set; }
+        public String Activity { get; set; }
+        public String DateCreated { get; set; }
+        public User User { get; set; }
+        public Post Post { get; set; }
+        public Int16 LastActivityId { get; set; }
     }
 }

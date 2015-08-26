@@ -68,8 +68,8 @@ namespace FlyAwayPlus.Models.Relationships
         IRelationshipAllowingTargetNode<Post>
     {
         public static readonly string TypeKey = "LIKE";
-        public string dateCreated { get; set; }
-        public int activityID { get; set; }
+        public string DateCreated { get; set; }
+        public int ActivityId { get; set; }
         /*public bool isSeen { get; set; }*/
 
         public UserLikePostRelationship(NodeReference targetNode)
@@ -93,7 +93,7 @@ namespace FlyAwayPlus.Models.Relationships
         IRelationshipAllowingTargetNode<Comment>
     {
         public static readonly string TypeKey = "CREATE";
-        public string dateCreated { get; set; }
+        public string DateCreated { get; set; }
 
         public UserCreateCommentRelationship(NodeReference targetNode)
             : base(targetNode)
@@ -115,8 +115,8 @@ namespace FlyAwayPlus.Models.Relationships
         IRelationshipAllowingTargetNode<Post>
     {
         public static readonly string TypeKey = "DISLIKE";
-        public string dateCreated { get; set; }
-        public int activityID { get; set; }
+        public string DateCreated { get; set; }
+        public int ActivityId { get; set; }
         public UserDislikePostRelationship(NodeReference targetNode)
             : base(targetNode)
         {

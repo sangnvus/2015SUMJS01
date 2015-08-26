@@ -55,7 +55,7 @@
                                 foreach (var user in ViewBag.OnePageOfUsers)
                                 {
                                     <tr>
-                                        <td>@user.userID</td>
+                                        <td>@user.UserId</td>
                                         <td>@user.firstName</td>
                                         <td>@user.lastName</td>
                                         <td>@user.email</td>
@@ -63,8 +63,8 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick=" lock(@user.userid) " name=" onoffswitch_@user.userid" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID" checked>
-                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                    <input type="checkbox" onclick=" lock(@user.userid) " name=" onoffswitch_@user.userid" class="onoffswitch-checkbox" id="myonoffswitch_@user.UserId" checked>
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.UserId">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
                                                     </label>
@@ -75,8 +75,8 @@
                                         {
                                             <td>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" onclick=" unLock(@user.userID) " name="onoffswitch_@user.userID" class="onoffswitch-checkbox" id="myonoffswitch_@user.userID">
-                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.userID">
+                                                    <input type="checkbox" onclick=" unLock(@user.UserId) " name="onoffswitch_@user.UserId" class="onoffswitch-checkbox" id="myonoffswitch_@user.UserId">
+                                                    <label class="onoffswitch-label" for="myonoffswitch_@user.UserId">
                                                         <span class="onoffswitch-inner"></span>
                                                         <span class="onoffswitch-switch"></span>
                                                     </label>
@@ -117,13 +117,13 @@
                                     foreach (var reportPost in ViewBag.OnePageOfReportPosts)
                                     {
                                         <tr>
-                                            <td>@reportPost.postID</td>
-                                            <td>@reportPost.contentReport</td>
+                                            <td>@reportPost.PostId</td>
+                                            <td>@reportPost.ContentReport</td>
                                             <td>@reportPost.userReportID</td>
-                                            <td><a href="/Admin/ViewPost/@reportPost.postID" type="button" class="btn btn-primary">View post</a></td>
+                                            <td><a href="/Admin/ViewPost/@reportPost.PostId" type="button" class="btn btn-primary">View post</a></td>
                                             <td>
-                                                <a onclick=" lockPost(@reportPost.postID, @reportPost.userReportID) " class="btn btn-primary">Lock post</a>
-                                                <a onclick=" cancelReportPost(@reportPost.postID, @reportPost.userReportID) " class="btn btn-primary">Cancel</a>
+                                                <a onclick=" lockPost(@reportPost.PostId, @reportPost.userReportID) " class="btn btn-primary">Lock post</a>
+                                                <a onclick=" cancelReportPost(@reportPost.PostId, @reportPost.userReportID) " class="btn btn-primary">Cancel</a>
                                             </td>
                                         </tr>
                                     }
@@ -158,12 +158,12 @@
                                 foreach (var reportUser in ViewBag.OnePageOfReportUsers)
                                 {
                                     <tr>
-                                        <td>@reportUser.userReportID</td>
-                                        <td>@reportUser.userReportedID</td>
-                                        <td>@reportUser.contentReport</td>
+                                        <td>@reportUser.UserReportId</td>
+                                        <td>@reportUser.UserReportedId</td>
+                                        <td>@reportUser.ContentReport</td>
                                         <td>
-                                            <a onclick=" lockReportUser(@reportUser.userReportedID, @reportUser.userReportID) " class="btn btn-primary">Lock user</a>
-                                            <a onclick=" cancelReportUser(@reportUser.userReportedID, @reportUser.userReportID) " class="btn btn-primary">Cancel</a>
+                                            <a onclick=" lockReportUser(@reportUser.UserReportedId, @reportUser.UserReportId) " class="btn btn-primary">Lock user</a>
+                                            <a onclick=" cancelReportUser(@reportUser.UserReportedId, @reportUser.UserReportId) " class="btn btn-primary">Cancel</a>
                                         </td>
                                     </tr>
                                 }
@@ -234,14 +234,14 @@ function unLock(id) {
     }
 }
 
-function lockPost(postID,userReportID) {
+function lockPost(postId,userReportId) {
     $.ajax({
         url: "/Admin/LockReportPost/",
         type: 'POST',
         dataType: 'json',
         data: {
-            postId: postID,
-            userReportID: userReportID
+            postId: postId,
+            userReportId: userReportId
         },
         success: function (data) {
             if (data == true) {
@@ -259,14 +259,14 @@ function lockPost(postID,userReportID) {
     });
 }
 
-function cancelReportPost(postID,userReportID) {
+function cancelReportPost(postId,userReportId) {
     $.ajax({
         url: "/Admin/CancelReportPost/",
         type: 'POST',
         dataType: 'json',
         data: {
-            postId: postID,
-            userReportID: userReportID
+            postId: postId,
+            userReportId: userReportId
         },
         success: function (data) {
             if (data == true) {
@@ -284,14 +284,14 @@ function cancelReportPost(postID,userReportID) {
     });
 }
 
-function lockReportUser(userReportedID, userReportID) {
+function lockReportUser(userReportedId, userReportId) {
     $.ajax({
         url: "/Admin/LockReportUser/",
         type: 'POST',
         dataType: 'json',
         data: {
-            userReportedID: userReportedID,
-            userReportID: userReportID
+            userReportedId: userReportedId,
+            userReportId: userReportId
         },
         success: function (data) {
             if (data == true) {
@@ -306,14 +306,14 @@ function lockReportUser(userReportedID, userReportID) {
     });
 }
 
-function cancelReportUser(userReportedID, userReportID) {
+function cancelReportUser(userReportedId, userReportId) {
     $.ajax({
         url: "/Admin/CancelReportUser/",
         type: 'POST',
         dataType: 'json',
         data: {
-            userReportedID: userReportedID,
-            userReportID: userReportID
+            userReportedId: userReportedId,
+            userReportId: userReportId
         },
         success: function (data) {
             if (data == true) {

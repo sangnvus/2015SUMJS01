@@ -9,29 +9,29 @@ namespace FlyAwayPlus.Models
 {
     public class User
     {
-        public int userID { get; set; }
-        public int typeID { get; set; }
+        public int UserId { get; set; }
+        public int TypeId { get; set; }
         [Required(ErrorMessage="email is required")]
-        public string email { get; set; }
+        public string Email { get; set; }
         [Required(ErrorMessage = "First Name is required")]
         [StringLength(50, ErrorMessage = "Must not greater than 50 characters", MinimumLength = 1)]
         [DisplayName("First Name")]
-        public string firstName { get; set; }
+        public string FirstName { get; set; }
         [Required(ErrorMessage = "Last Name is required")]
         [StringLength(50, ErrorMessage = "Must not greater than 50 characters", MinimumLength = 1)]
-        public string lastName { get; set; }
+        public string LastName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [StringLength(50, ErrorMessage = "Must be between 5 and 50 characters", MinimumLength = 5)]
-        public string password { get; set; }
+        public string Password { get; set; }
         [Compare("password", ErrorMessage = "Passwords must match")]
-        public string confirmPassword { get; set; }
-        public string address { get; set; }
+        public string ConfirmPassword { get; set; }
+        public string Address { get; set; }
         [Required(ErrorMessage = "Gender is required")]
-        public string gender { get; set; }
-        public string phoneNumber { get; set; }
-        public string dateOfBirth { get; set; }
-        public string status { get; set; }
-        public string dateJoined { get; set; }
-        public string avatar { get; set; }
+        public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
+        public string DateOfBirth { get; set; }
+        public string Status { get; set; }
+        public string DateJoined { get; set; }
+        public string Avatar { get; set; }
     }
 }

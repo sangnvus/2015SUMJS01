@@ -8,13 +8,13 @@ namespace FlyAwayPlus.Models
 {
     public class Photo
     {
-        public int photoID { get; set; }
-        public string url { get; set; }
-        public string dateCreated { get; set; }
+        public int PhotoId { get; set; }
+        public string Url { get; set; }
+        public string DateCreated { get; set; }
 
-        public string toRealtime()
+        public string ToRealtime()
         {
-            return DateHelpers.Instance.DisplayRealtime(this.dateCreated);
+            return DateHelpers.Instance.DisplayRealtime(this.DateCreated);
         }
     }
 }

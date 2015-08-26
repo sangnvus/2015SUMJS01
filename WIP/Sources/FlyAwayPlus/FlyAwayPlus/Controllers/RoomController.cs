@@ -33,7 +33,7 @@ namespace FlyAwayPlus.Controllers
             }
             else
             {
-                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByUserID(user.userID);   // search All room
+                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByUserId(user.UserId);   // search All room
                 for (int i = 0; i < listRoom.Count; i++)
                 {
                     listAdminRoom.Add(user);
@@ -68,7 +68,7 @@ namespace FlyAwayPlus.Controllers
             List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomId, 0);
             List<User> listUserOwnMessage = listMessage.Select(message => GraphDatabaseHelpers.Instance.FindUser(message)).ToList();
 
-            var roomStartDate = DateTime.ParseExact(roomInfo.StartDate, FapConstants.DatetimeFormat, CultureInfo.InvariantCulture);
+            var roomStartDate = DateTime.ParseExact(roomInfo.StartDate, FapConstants.DateFormat, CultureInfo.InvariantCulture);
             var roomEndDate = roomStartDate.AddDays(roomInfo.LengthInDays);
 
             List<Plan> listGeneralPlan = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(roomStartDate, roomEndDate, FapConstants.PlanGeneral, roomId);
@@ -106,7 +106,7 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, bool> isDislikeDict = new Dictionary<int, bool>();
             Dictionary<int, List<Comment>> dictListComment = new Dictionary<int, List<Comment>>();
             Dictionary<int, User> dict = new Dictionary<int, User>();
-            foreach (int postId in listPost.Select(p => p.postID))
+            foreach (int postId in listPost.Select(p => p.PostId))
             {
                 listPhotoDict.Add(postId, GraphDatabaseHelpers.Instance.FindPhoto(postId));
                 listVideoDict.Add(postId, GraphDatabaseHelpers.Instance.FindVideo(postId));
@@ -120,13 +120,13 @@ namespace FlyAwayPlus.Controllers
 
                 foreach (var comment in listComment)
                 {
-                    dict.Add(comment.commentID, GraphDatabaseHelpers.Instance.FindUser(comment));
+                    dict.Add(comment.CommentId, GraphDatabaseHelpers.Instance.FindUser(comment));
                 }
 
                 if (user != null)
                 {
-                    isLikeDict.Add(postId, GraphDatabaseHelpers.Instance.IsLike(postId, user.userID));
-                    isDislikeDict.Add(postId, GraphDatabaseHelpers.Instance.IsDislike(postId, user.userID));
+                    isLikeDict.Add(postId, GraphDatabaseHelpers.Instance.IsLike(postId, user.UserId));
+                    isDislikeDict.Add(postId, GraphDatabaseHelpers.Instance.IsDislike(postId, user.UserId));
                 }
                 else
                 {
@@ -162,16 +162,16 @@ namespace FlyAwayPlus.Controllers
         // AJAX CALLS //
         ///////////////
 
-        public void UpdatePlanEvent(string id, string newEventStart, string newEventEnd)
+        public void UpdateTimelinePlan(string id, string newEventStart, string newEventEnd)
         {
             GraphDatabaseHelpers.Instance
                 .UpdatePlanEvent(id, DateTime.Parse(newEventStart, null, DateTimeStyles.RoundtripKind),
                                      DateTime.Parse(newEventEnd, null, DateTimeStyles.RoundtripKind));
         }
 
-        public bool SaveEvent(string title, string newEventDate, string newEventTime, string newEventDuration)
+        public bool SaveTimelinePlan(string title, string newEventDate, string newEventTime, string newEventDuration)
         {
-            var userId = ((User)Session["user"]).userID;
+            var userId = int.Parse(@Session["UserId"] + string.Empty);
 
             var newPlan = new Plan
             {
@@ -209,7 +209,7 @@ namespace FlyAwayPlus.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
-        public RedirectToRouteResult AddTimelinePlan(FormCollection form)
+        public RedirectToRouteResult CreateRoom(FormCollection form)
         {
             var roomName = Request.Form["roomname"];
             var roomDesc = Request.Form["roomdesc"];
@@ -225,7 +225,7 @@ namespace FlyAwayPlus.Controllers
             int maxNoOfSlots;
             int.TryParse(Request.Form["maxnoslots"], out maxNoOfSlots);
 
-            var currentUserId = ((User)Session["user"]).userID;
+            var currentUserId = int.Parse(@Session["UserId"] + string.Empty);
 
             var newRoom = new Room
             {
@@ -254,7 +254,7 @@ namespace FlyAwayPlus.Controllers
             // TODO: Get list of assignees.
             assignee = "10000;10001";
 
-            var assignerId = ((User)Session["user"]).userID;
+            var assignerId = int.Parse(@Session["UserId"] + string.Empty);
             int roomid = (int)Session["roomID"];
             List<int> assigneesInt = assignee.Split(';').Select(int.Parse).ToList();
 
@@ -270,6 +270,60 @@ namespace FlyAwayPlus.Controllers
             GraphDatabaseHelpers.Instance.InsertPlan(newPlan, roomid, assignerId, assigneesInt);
 
             return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
+        }
+
+        public JsonResult ExportEstimationData(int roomId)
+        {
+            var estimationList = new List<object>
+            {
+                new
+                {
+                    id = 1,
+                    payment = "Mua vé tàu cho cả nhóm",
+                    price = 1200000,
+                    creator = "Duc Filan",
+                    payer = "Thuy Le",
+                    datecreated = "2015-08-24"
+                },
+                new
+                {
+                    id = 1,
+                    payment = "Tiền đặt phòng khách sạn",
+                    price = 1200000,
+                    creator = "Duc Filan",
+                    payer = "Thuy Le",
+                    datecreated = "2015-08-24"
+                },
+                new
+                {
+                    id = 1,
+                    payment = "Mua lều",
+                    price = 1200000,
+                    creator = "Duc Filan",
+                    payer = "Thuy Le",
+                    datecreated = "2015-08-24"
+                },
+                new
+                {
+                    id = 1,
+                    payment = "Mua đồ ăn",
+                    price = 1200000,
+                    creator = "Duc Filan",
+                    payer = "Thuy Le",
+                    datecreated = "2015-08-24"
+                },
+                new
+                {
+                    id = 1,
+                    payment = "Thuê xe máy",
+                    price = 1200000,
+                    creator = "Duc Filan",
+                    payer = "Thuy Le",
+                    datecreated = "2015-08-24"
+                }
+            };
+
+            return Json(estimationList, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -133,13 +133,13 @@
             chatHubProxy = $.connection.chatHub;
         }
 
-        chatHubProxy.client.getChatMessage = function (content, friendID, userID) {
-            if (userID == '@Session["userID"]') {
-                $("#idFriendListChat" + friendID).trigger("click");
-                if ($("#idListConversation" + friendID).hasClass("hidden")) {
-                    $("#idChatConversationFriend" + friendID).find(".headWrapper").trigger("click");
+        chatHubProxy.client.getChatMessage = function (content, friendId, userId) {
+            if (userId == '@Session["UserId"]') {
+                $("#idFriendListChat" + friendId).trigger("click");
+                if ($("#idListConversation" + friendId).hasClass("hidden")) {
+                    $("#idChatConversationFriend" + friendId).find(".headWrapper").trigger("click");
                 }
-                $("#idMessageList" + friendID).append(content);
+                $("#idMessageList" + friendId).append(content);
             }
         }
         chatHubProxy.client.receiveListFriend = function (listFriendJSON, listMessageJSON) {
@@ -174,7 +174,7 @@
                 var friend = listFriend[index];
                 var message = listMessage[index];
 
-                tmp += "<li role='" + friend["userID"] + "' id='idFriendListChat" + friend["userID"] + "' style='list-style: outside none none;'>";
+                tmp += "<li role='" + friend["UserId"] + "' id='idFriendListChat" + friend["UserId"] + "' style='list-style: outside none none;'>";
                 tmp += "<div class='ConversationListItem Module hasTimestamp hideable noSelectedStateAvailable'>";
                 tmp += "<div class='left'>";
                 tmp += "<div class='ConversationHead Module medium'>";
@@ -208,7 +208,7 @@
 
                 $("#idListFriend").append(tmp);
 
-                $("#idFriendListChat" + friend["userID"]).click(function (evt) {
+                $("#idFriendListChat" + friend["UserId"]).click(function (evt) {
                     chatConversationModule.createChatConversation(this);
                     evt.preventDefault();
                 });
@@ -216,7 +216,7 @@
         }
 
         $.connection.hub.start().done(function () {
-            chatHubProxy.server.getListFriend(parseInt('@Session["userID"]'));
+            chatHubProxy.server.getListFriend(parseInt('@Session["UserId"]'));
         });
     });
 
@@ -224,23 +224,23 @@
         var listChat = [];
 
         var createChatConversation = function (selector) {
-            var userID = parseInt($(selector).attr("role"));
+            var userId = parseInt($(selector).attr("role"));
             var avatar = $(selector).find("img").attr("src");
             var username = $(selector).find(".right").find("a").find("span").text();
-            var idListConversationFriend = "idChatConversationFriend" + userID;
-            var idListConversation = "idChatConversation" + userID;
-            if ($.inArray(userID, listChat) > -1) {
+            var idListConversationFriend = "idChatConversationFriend" + userId;
+            var idListConversation = "idChatConversation" + userId;
+            if ($.inArray(userId, listChat) > -1) {
                 return;
             }
 
-            listChat.push(userID);
+            listChat.push(userId);
             var tmp = "<div id='" + idListConversationFriend + "' class='chatConversation'>";
             tmp += "<div class='chatConversationHead'>";
             tmp += "<div class='chatContentContainer'>";
-            tmp += "<button role='" + userID + "' type='button' class='borderless cancelButton chatConversationHeadClose'>";
+            tmp += "<button role='" + userId + "' type='button' class='borderless cancelButton chatConversationHeadClose'>";
             tmp += "<em class='glyphicon glyphicon-remove'></em>";
             tmp += "</button>";
-            tmp += "<div role='" + userID + "' title='" + username + "' class='headWrapper'>";
+            tmp += "<div role='" + userId + "' title='" + username + "' class='headWrapper'>";
             tmp += "<div class='imagesWrapper'>";
             tmp += "<div class='fullWrapper'>";
             tmp += "<img src=" + avatar + " class='head'>";
@@ -252,7 +252,7 @@
             tmp += "</div>";
             tmp += "</div>";
 
-            var chatConversation = "<div id='idListConversation" + userID + "' class='hidden Dropdown PositionModule aboveModal activeConversationDropdown positionModuleFixed positionFixed defaultCaret active positionModuleElement positionRight' style='left: 69px; bottom: 14px;'>";
+            var chatConversation = "<div id='idListConversation" + userId + "' class='hidden Dropdown PositionModule aboveModal activeConversationDropdown positionModuleFixed positionFixed defaultCaret active positionModuleElement positionRight' style='left: 69px; bottom: 14px;'>";
             chatConversation += "<div class='ConversationPopup Module'>";
             chatConversation += "<div class='convosHeader'>";
             chatConversation += "<div class='left'>";
@@ -271,7 +271,7 @@
             chatConversation += "<ul class='conversationMessagesList' style='margin:0px;'>";
             chatConversation += "<div class='spinner'></div>";
             chatConversation += "<div class='messagesContent'>";
-            chatConversation += "<div id='idMessageList" + userID + "' class='ConversationMessages Module'>";
+            chatConversation += "<div id='idMessageList" + userId + "' class='ConversationMessages Module'>";
             /*
             chatConversation += "<li class='messageWrapper'>";
             chatConversation += "<p class='timeSeparator firstItem'>";
@@ -289,7 +289,7 @@
             chatConversation += "</div>";
             chatConversation += "<div class='inputWrapper'>";
             chatConversation += "<div class='Field Module TextField has-value'>";
-            chatConversation += "<textarea id='idTextarea" + userID + "' placeholder='Add a message' class='content autogrow' autofocus='autofocus'></textarea>";
+            chatConversation += "<textarea id='idTextarea" + userId + "' placeholder='Add a message' class='content autogrow' autofocus='autofocus'></textarea>";
             chatConversation += "</div>";
             chatConversation += "</div>";
             chatConversation += "</div>";
@@ -298,12 +298,12 @@
             $("#idListConversationFriend").append(tmp);
             $("body").append(chatConversation);
 
-            getMessage(userID, $("#idMessageList" + userID));
+            getMessage(userId, $("#idMessageList" + userId));
 
-            $("#idTextarea" + userID).keydown(function (evt) {
+            $("#idTextarea" + userId).keydown(function (evt) {
                 if (evt.keyCode == 13) {
                     var text = $(this).val();
-                    createMessage(userID, text, $("#idMessageList" + userID));
+                    createMessage(userId, text, $("#idMessageList" + userId));
 
                     $(this).text("").val("");
                     evt.preventDefault();
@@ -337,17 +337,17 @@
                 evt.preventDefault();
             });
 
-            $("#idListConversation" + userID).find("div.right").click(function (evt) {
-                $("#idListConversation" + userID).addClass("hidden");
+            $("#idListConversation" + userId).find("div.right").click(function (evt) {
+                $("#idListConversation" + userId).addClass("hidden");
                 evt.preventDefault();
             });
         };
 
-        var createMessage = function (friendID, content, selector) {
+        var createMessage = function (friendId, content, selector) {
             var controller = "/User/CreateMessage";
 
             var data = {
-                friendID: friendID,
+                friendId: friendId,
                 content: content
             };
 
@@ -364,7 +364,7 @@
                     var tmp = "";
                     tmp += "<li class='messageWrapper'>";
                     tmp += "<p class='timeSeparator firstItem'>";
-                    tmp += message["dateCreated"];
+                    tmp += message["DateCreated"];
                     tmp += "</p>";
                     tmp += "<div class='ConversationMessage Module isOwnMessage'>";
                     tmp += "<em class='messageCaret'></em>";
@@ -376,7 +376,7 @@
 
                     $.connection.hub.start().done(function () {
                         //getChatMessage
-                        chatHubProxy.server.sendChatMessage(tmp.split("isOwnMessage").join(""), parseInt('@Session["userID"]'), friendID);
+                        chatHubProxy.server.sendChatMessage(tmp.split("isOwnMessage").join(""), parseInt('@Session["UserId"]'), friendId);
                     });
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -384,11 +384,11 @@
             });
         };
 
-        var getMessage = function (friendID, selector) {
+        var getMessage = function (friendId, selector) {
             var controller = "/User/GetMessage";
 
             var data = {
-                friendID: friendID
+                friendId: friendId
             };
 
             $.ajax({
@@ -399,7 +399,7 @@
                     // send notification
                     var listMessage = data["Key"];
                     var listUser = data["Value"];
-                    var userID = parseInt('@Session["userID"]');
+                    var userId = parseInt('@Session["UserId"]');
                     for (var index = 0; index < listMessage.length; index++) {
                         var tmp = "";
                         var cls = "";
@@ -408,7 +408,7 @@
                             tmp += "<p class='timeSeparator firstItem'>";
                             tmp += listMessage[index]["dateCreated"];
                             tmp += "</p>";
-                            if (listUser[index]["userID"] == userID) {
+                            if (listUser[index]["UserId"] == userId) {
                                 cls = "isOwnMessage";
                             }
                             tmp += "<div class='ConversationMessage Module " + cls + "'>";

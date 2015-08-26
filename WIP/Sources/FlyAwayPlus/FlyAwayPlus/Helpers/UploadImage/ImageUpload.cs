@@ -15,7 +15,7 @@ namespace FlyAwayPlus.Helpers.UploadImage
         public int Height { get; set; }
 
         // Folder for the upload, you can put this in the web.config
-        private readonly string UploadPath = "~/Images/UserUpload/";
+        private readonly string _uploadPath = "~/Images/UserUpload/";
 
         public ImageResult RenameUploadFile(HttpPostedFileBase file, int counter = 0)
         {
@@ -23,7 +23,7 @@ namespace FlyAwayPlus.Helpers.UploadImage
 
             const string prepend = "item_";
             var finalFileName = prepend + ((counter)) + "_" + fileName;
-            return File.Exists(HttpContext.Current.Request.MapPath(UploadPath + finalFileName)) 
+            return File.Exists(HttpContext.Current.Request.MapPath(_uploadPath + finalFileName)) 
                 ? 
                 RenameUploadFile(file, ++counter) 
                 : 
@@ -35,7 +35,7 @@ namespace FlyAwayPlus.Helpers.UploadImage
             ImageResult imageResult = new ImageResult { Success = true, ErrorMessage = null };
 
             var path =
-          Path.Combine(HttpContext.Current.Request.MapPath(UploadPath), fileName);
+          Path.Combine(HttpContext.Current.Request.MapPath(_uploadPath), fileName);
             string extension = Path.GetExtension(file.FileName);
 
             //make sure the file is valid

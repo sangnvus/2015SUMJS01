@@ -119,7 +119,7 @@
         $(".btn-plus").click(function (evt) {
             var controller = "";
             var data = {
-                postID: parseInt($(this).attr("role"))
+                PostId: parseInt($(this).attr("role"))
             };
             if ($(this).hasClass("btn-primary")) {
                 controller = "/User/AddToWishlist";
@@ -137,18 +137,18 @@
     };
     var likeAjax = function (post) {
         var controller = "/User/Like";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var data = {
-            postId: postID
+            postId: postId
         }
 
         commonModule.callAjax(controller, data, null);
     };
     var dislikeAjax = function (post) {
         var controller = "/User/Dislike";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var data = {
-            postId: postID
+            postId: postId
         }
 
         commonModule.callAjax(controller, data, null);

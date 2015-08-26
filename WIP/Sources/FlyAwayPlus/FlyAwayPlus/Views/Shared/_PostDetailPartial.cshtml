@@ -2,27 +2,27 @@
 
 @{
     var dict = ViewData["dict"] as Dictionary<int, FlyAwayPlus.Models.User>;
-    var u = @dict[Model.commentID];
-    string userID = (Session["userID"] == null ? "" : Session["userID"].ToString());
+    var u = @dict[Model.CommentId];
+    string userId = (Session["UserId"] == null ? "" : Session["UserId"].ToString());
 }
 <link href="~/Content/PostDetailPage/postDetail.css" rel="stylesheet" />
 <div class="comment-detail">
     <div class="commenter-avatar">
-        <img src="@u.avatar" alt="@String.Format("{0} {1}", u.firstName, u.lastName)" />
+        <img src="@u.Avatar" alt="@String.Format("{0} {1}", u.FirstName, u.LastName)" />
     </div>
     <div class="commenter-content">
-        <span class="commenter-name"><a href="/User/Index/@u.userID" class="hover-card-user">@String.Format("{0} {1}", u.firstName, u.lastName)</a></span>
-        <span class="commenter-post-time" title="@Model.toRealtime()">- @Model.toRealtime()</span>
-        @if (userID.Equals(u.userID.ToString()))
+        <span class="commenter-name"><a href="/User/Index/@u.UserId" class="hover-card-user">@String.Format("{0} {1}", u.FirstName, u.LastName)</a></span>
+        <span class="commenter-post-time" title="@Model.ToRealtime()">- @Model.ToRealtime()</span>
+        @if (userId.Equals(u.UserId.ToString()))
         {
-            <a role="@Model.commentID" class="commenter-delete"><span class="glyphicon glyphicon-remove"></span></a>
+            <a role="@Model.CommentId" class="commenter-delete"><span class="glyphicon glyphicon-remove"></span></a>
             <a class="commenter-edit"><span class="glyphicon glyphicon-edit"></span></a>
         }
     </div>
     <div class="comment-content">
         <p class="comment-content-word" style="word-break:break-all;">
-            @Html.Raw(Html.Encode(@Model.content).Replace("\n", "<br />"))
+            @Html.Raw(Html.Encode(@Model.Content).Replace("\n", "<br />"))
         </p>
-        <textarea role="@Model.commentID" style="height: 30px; width:100%; resize: none; overflow: hidden; display:none;">@Html.Raw(Html.Encode(@Model.content).Replace("\n", "<br />"))</textarea>
+        <textarea role="@Model.CommentId" style="height: 30px; width:100%; resize: none; overflow: hidden; display:none;">@Html.Raw(Html.Encode(@Model.Content).Replace("\n", "<br />"))</textarea>
     </div>
 </div>

@@ -48,7 +48,7 @@ namespace FlyAwayPlus.Controllers
                 }
 
                 userPost = GraphDatabaseHelpers.Instance.SearchUser(id);
-                listFriend = GraphDatabaseHelpers.Instance.GetListFriend(user.userID);
+                listFriend = GraphDatabaseHelpers.Instance.GetListFriend(user.UserId);
                 listComment = GraphDatabaseHelpers.Instance.FindComment(id);
 
                 likeCount = GraphDatabaseHelpers.Instance.CountLike(id);
@@ -59,22 +59,22 @@ namespace FlyAwayPlus.Controllers
                 photo = GraphDatabaseHelpers.Instance.FindPhoto(id).FirstOrDefault();
                 foreach (var comment in listComment)
                 {
-                    dict.Add(comment.commentID, GraphDatabaseHelpers.Instance.FindUser(comment));
+                    dict.Add(comment.CommentId, GraphDatabaseHelpers.Instance.FindUser(comment));
                 }
 
-                listSuggestFriend = GraphDatabaseHelpers.Instance.SuggestFriend(user.userID);
+                listSuggestFriend = GraphDatabaseHelpers.Instance.SuggestFriend(user.UserId);
                 foreach (var otherUser in listSuggestFriend)
                 {
-                    listFriendType.Add(GraphDatabaseHelpers.Instance.GetFriendType(user.userID, otherUser.userID));
-                    listMutualFriends.Add(GraphDatabaseHelpers.Instance.CountMutualFriend(user.userID, otherUser.userID));
+                    listFriendType.Add(GraphDatabaseHelpers.Instance.GetFriendType(user.UserId, otherUser.UserId));
+                    listMutualFriends.Add(GraphDatabaseHelpers.Instance.CountMutualFriend(user.UserId, otherUser.UserId));
                 }
 
                 listSuggestPlace = GraphDatabaseHelpers.Instance.SuggestPlace();
                 foreach (var otherPlace in listSuggestPlace)
                 {
-                    listIsVisitedPlace.Add(GraphDatabaseHelpers.Instance.IsVisitedPlace(user.userID, otherPlace.placeID));
-                    listNumberOfPost.Add(GraphDatabaseHelpers.Instance.NumberOfPost(otherPlace.placeID));
-                    checkWishlist.Add(GraphDatabaseHelpers.Instance.IsInWishist(otherPlace.placeID, user.userID));
+                    listIsVisitedPlace.Add(GraphDatabaseHelpers.Instance.IsVisitedPlace(user.UserId, otherPlace.PlaceId));
+                    listNumberOfPost.Add(GraphDatabaseHelpers.Instance.NumberOfPost(otherPlace.PlaceId));
+                    checkWishlist.Add(GraphDatabaseHelpers.Instance.IsInWishist(otherPlace.PlaceId, user.UserId));
                 }
             }
             catch (Exception e)
@@ -116,28 +116,28 @@ namespace FlyAwayPlus.Controllers
 
             Post newPost = new Post
             {
-                content = message,
-                dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
-                privacy = privacy
+                Content = message,
+                DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                Privacy = privacy
             };
 
             Place newPlace = new Place
             {
-                name = location,
-                latitude = latitude,
-                longitude = longitude
+                Name = location,
+                Latitude = latitude,
+                Longitude = longitude
             };
             Video newVideo = null;
             if (!uploadedVideoYoutubeId.IsNullOrWhiteSpace())
             {
                 newVideo = new Video
                 {
-                    path = uploadedVideoYoutubeId,
-                    dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
+                    Path = uploadedVideoYoutubeId,
+                    DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
                 };
             }
 
-            List<Photo> newPhotos = images.Select(img => new Photo { dateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), url = img }).ToList();
+            List<Photo> newPhotos = images.Select(img => new Photo { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), Url = img }).ToList();
 
             var user = (User)Session["user"];
 

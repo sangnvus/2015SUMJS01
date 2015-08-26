@@ -7,9 +7,9 @@ namespace FlyAwayPlus.Models
 {
     public class Place
     {
-        public int placeID { get; set; }
-        public double longitude { get; set; }
-        public double latitude { get; set; }
-        public string name { get; set; }
+        public int PlaceId { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+        public string Name { get; set; }
     }
 }

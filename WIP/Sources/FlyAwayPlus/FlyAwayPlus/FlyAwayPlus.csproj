@@ -272,6 +272,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Conversation.cs" />
+    <Compile Include="Models\Estimation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Helpers\UploadImage\ImageResult.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -324,6 +325,7 @@
     <Content Include="Images\UIHelper\youtube.png" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-table-export.min.js" />
     <Content Include="Scripts\bootstrap-table.min.js" />
     <Content Include="Scripts\classie.js" />
     <Content Include="Scripts\bootstrap.dropdowns-enhancement.js" />

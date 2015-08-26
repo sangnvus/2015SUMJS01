@@ -7,9 +7,9 @@ namespace FlyAwayPlus.Models
 {
     public class ReportUser
     {
-        public int reportID { get; set; }
-        public int typeReport { get; set; }
-        public int userReportID { get; set; }
-        public int userReportedID { get; set; }
+        public int ReportId { get; set; }
+        public int TypeReport { get; set; }
+        public int UserReportId { get; set; }
+        public int UserReportedId { get; set; }
     }
 }
