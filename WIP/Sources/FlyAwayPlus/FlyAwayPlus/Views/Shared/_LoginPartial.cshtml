@@ -33,7 +33,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <form style="display: @loginFormClass;" role="form" method="post" id="login-form" action="/Login/Login" novalidate="novalidate">
+                                <form style="display: @loginFormClass;" onsubmit="return GeneratePwdLogin()" role="form" method="post" id="login-form" action="/Login/Login">
                                     <div class="social-box">
                                         <div class="row mg-btm">
                                             <div class="col-md-12">
@@ -213,6 +213,12 @@
             e.preventDefault();
         });
     });
+    function GeneratePwdLogin() {
+        if ($("#id_login_password").val() !== "" ) {
+            $("#id_login_password").val(hex_md5($("#id_login_password").val()));
+        }
+        return true;
+    }
 
     function GeneratePwd() {
         if ($("#id_register_password").val() !== "" && $("#id_register_password_confirmation").val() !== "") {

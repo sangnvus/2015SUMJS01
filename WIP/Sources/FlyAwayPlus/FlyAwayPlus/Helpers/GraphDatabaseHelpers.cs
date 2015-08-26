@@ -1799,7 +1799,7 @@ namespace FlyAwayPlus.Helpers
                                         .WithParam("newConversation", conversation)
                                         .ExecuteWithoutResults();
 
-                    _client.Cypher.Match("(c:conversation {ConversationId: " + conversationId + "}), (u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherId + "}), (m:message {MessageId:" + message.MessageId + "})")
+                    _client.Cypher.Match("(c:conversation {ConversationId: " + conversation.ConversationId + "}), (u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherId + "}), (m:message {MessageId:" + message.MessageId + "})")
                                         .Create("u-[:BELONG_TO]->c")
                                         .Create("u1-[:BELONG_TO]->c")
                                         .Create("c-[:LATEST_MESSAGE]->m")
