@@ -28,8 +28,9 @@ namespace FlyAwayPlus.Controllers
             List<int> listNumberOfPost = new List<int>();
             List<bool> checkWishlist = new List<bool>();
 
-            Photo photo;
+            List<Photo> listPhoto = new List<Photo>();
             Dictionary<int, User> dict = new Dictionary<int, User>();
+            Video video = new Video();
             int likeCount = 0;
             int dislikeCount = 0;
             int userComment = 0;
@@ -55,8 +56,8 @@ namespace FlyAwayPlus.Controllers
                 dislikeCount = GraphDatabaseHelpers.Instance.CountDislike(id);
                 userComment = GraphDatabaseHelpers.Instance.CountUserComment(id);
 
-                // TODO: Change to list of photos.
-                photo = GraphDatabaseHelpers.Instance.FindPhoto(id).FirstOrDefault();
+                listPhoto = GraphDatabaseHelpers.Instance.FindPhoto(id);
+                video = GraphDatabaseHelpers.Instance.FindVideo(id);
                 foreach (var comment in listComment)
                 {
                     dict.Add(comment.CommentId, GraphDatabaseHelpers.Instance.FindUser(comment));
@@ -83,6 +84,7 @@ namespace FlyAwayPlus.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            ViewData["video"] = video;
             ViewData["userPost"] = userPost;
             ViewData["user"] = user;
             ViewData["listComment"] = listComment;
@@ -90,7 +92,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["likeCount"] = likeCount;
             ViewData["dislikeCount"] = dislikeCount;
             ViewData["userComment"] = userComment;
-            ViewData["photo"] = photo;
+            ViewData["listPhoto"] = listPhoto;
             ViewData["listSuggestFriend"] = listSuggestFriend;
             ViewData["listFriendType"] = listFriendType;
             ViewData["listMutualFriends"] = listMutualFriends;

@@ -2,7 +2,7 @@
 <div id="idListConversationFriend" class="chatActiveConversations">
     <!--
         Chat Messenger
-    
+
     <div class="chatConversation">
         <div class="chatConversationHead">
             <div class="chatContentContainer">
@@ -103,18 +103,17 @@
     </div>
 </div>
 
-<div id="idChatBar" class="Module Dropdown PositionModule notificationsConversationsNewsDropdown positionModuleFixed hideModule positionFixed bigCaret slideIn positionModuleElement positionBottom" 
+<div id="idChatBar" class="Module Dropdown PositionModule notificationsConversationsNewsDropdown positionModuleFixed hideModule positionFixed bigCaret slideIn positionModuleElement positionBottom"
      style="right: 76px; bottom: 14px; height: 80%;">
     <div class="Module NotificationsConversationsDropdown conversationsShowing">
         <div class="Module SegmentedController">
             <div class="content">
                 <div class="ConversationsListDropdown Module withinSegmentedController">
-                    
+
                     <div class="convosContent" style="top: 0px;">
                         <div class="createConversationTab" style="width:100%"><span>Message</span></div>
                         <div class="ConversationsList Module">
-                            <ul id="idListFriend" class="List Module" style="padding: 0px; font-size: 12px;">
-                            </ul>
+                            <ul id="idListFriend" class="List Module" style="padding: 0px; font-size: 12px;"></ul>
                         </div>
                     </div>
                 </div>
@@ -134,12 +133,18 @@
         }
 
         chatHubProxy.client.getChatMessage = function (content, friendId, userId) {
-            if (userId == '@Session["UserId"]') {
-                $("#idFriendListChat" + friendId).trigger("click");
-                if ($("#idListConversation" + friendId).hasClass("hidden")) {
-                    $("#idChatConversationFriend" + friendId).find(".headWrapper").trigger("click");
+            try {
+                if (userId == '@Session["UserId"]') {
+                    $("#idFriendListChat" + friendId).trigger("click");
+                    if ($("#idListConversation" + friendId).hasClass("hidden")) {
+                        $("#idChatConversationFriend" + friendId).find(".headWrapper").trigger("click");
+                    }
+                    $("#idMessageList" + friendId).append(content);
+                    $("#idMessageList" + friendId).closest("ul").scrollTop($("#idMessageList" + friendId).closest("ul").scrollTopMax);
                 }
-                $("#idMessageList" + friendId).append(content);
+            }
+            catch (e) {
+                console.log(e.message);
             }
         }
         chatHubProxy.client.receiveListFriend = function (listFriendJSON, listMessageJSON) {
@@ -182,7 +187,7 @@
                 tmp += "<div class='headWrapper'>";
                 tmp += "<div class='imagesWrapper'>";
                 tmp += "<div class='fullWrapper'>";
-                tmp += "<img src='" + friend["avatar"] + "' class='head'>";
+                tmp += "<img src='" + friend["Avatar"] + "' class='head'>";
                 tmp += "</div>";
                 tmp += "</div>";
                 tmp += "</div>";
@@ -191,12 +196,12 @@
                 tmp += "</div>";
                 tmp += "<div class='right'>";
                 tmp += "<h4 class='title' style='font-size: 14px; margin-top: 0px;'>";
-                tmp += "<a href='#'><span>" + friend["firstName"] + " " + friend["lastName"] + "</span></a>";
+                tmp += "<a href='#'><span>" + friend["FirstName"] + " " + friend["LastName"] + "</span></a>";
                 tmp += "</h4>";
                 if (message != null && message != "") {
-                    tmp += "<p class='subtitle'>" + message["content"] + "</p>";
+                    tmp += "<p class='subtitle'>" + message["Content"] + "</p>";
                     tmp += "<p class='timeStamp'>";
-                    tmp += message["dateCreated"];
+                    tmp += message["DateCreated"];
                     tmp += "</p>";
                 }
                 else {
@@ -325,7 +330,7 @@
                 var id = parseInt($(this).attr("role"));
                 for (var index = 0; index < listChat.length; index++) {
                     if (listChat[index] != id) {
-                        if(!$("#idListConversation" + listChat[index]).hasClass("hidden")) {
+                        if (!$("#idListConversation" + listChat[index]).hasClass("hidden")) {
                             $("#idListConversation" + listChat[index]).addClass("hidden");
                         }
                     }
@@ -368,7 +373,7 @@
                     tmp += "</p>";
                     tmp += "<div class='ConversationMessage Module isOwnMessage'>";
                     tmp += "<em class='messageCaret'></em>";
-                    tmp += "<p>" + message["content"] + "</p>";
+                    tmp += "<p>" + message["Content"] + "</p>";
                     tmp += "</div>";
                     tmp += "</li>";
 
@@ -406,18 +411,20 @@
                         if (listMessage[index] != null) {
                             tmp += "<li class='messageWrapper'>";
                             tmp += "<p class='timeSeparator firstItem'>";
-                            tmp += listMessage[index]["dateCreated"];
+                            tmp += listMessage[index]["DateCreated"];
                             tmp += "</p>";
                             if (listUser[index]["UserId"] == userId) {
                                 cls = "isOwnMessage";
                             }
                             tmp += "<div class='ConversationMessage Module " + cls + "'>";
                             tmp += "<em class='messageCaret'></em>";
-                            tmp += "<p>" + listMessage[index]["content"] + "</p>";
+                            tmp += "<p>" + listMessage[index]["Content"] + "</p>";
                             tmp += "</div>";
                             tmp += "</li>";
 
                             $(selector).append(tmp);
+
+                            $(selector).closest("ul").scrollTop($(selector).closest("ul").scrollTopMax);
                         }
                     }
                 },

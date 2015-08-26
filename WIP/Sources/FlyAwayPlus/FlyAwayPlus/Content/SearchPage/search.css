@@ -360,7 +360,7 @@ a:hover, a:focus {
     text-align: center;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 .place-result-container .place-result-view-detail {
     background-color: #2589cc;

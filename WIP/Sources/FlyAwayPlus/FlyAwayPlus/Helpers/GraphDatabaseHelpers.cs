@@ -1185,13 +1185,17 @@ namespace FlyAwayPlus.Helpers
                  * match (po:post {PostId:@PostId})-[:has]->(ph:photo)
                     return ph
                  */
-
+            List<Photo> listPhoto = new List<Photo>();
             _client.Connect();
-            return _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
-                            .Return<Photo>("ph")
+            listPhoto = _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
+                            .ReturnDistinct<Photo>("ph")
                             .OrderBy("ph.PhotoId")
                             .Results
                             .ToList();
+
+            listPhoto.RemoveAll(item => item == null);
+
+            return listPhoto;
         }
 
         public Video FindVideo(int postId)
@@ -1799,7 +1803,7 @@ namespace FlyAwayPlus.Helpers
                                         .WithParam("newConversation", conversation)
                                         .ExecuteWithoutResults();
 
-                    _client.Cypher.Match("(c:conversation {ConversationId: " + conversationId + "}), (u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherId + "}), (m:message {MessageId:" + message.MessageId + "})")
+                    _client.Cypher.Match("(c:conversation {ConversationId: " + conversation.ConversationId + "}), (u:user {UserId:" + userId + "}), (u1:user {UserId:" + otherId + "}), (m:message {MessageId:" + message.MessageId + "})")
                                         .Create("u-[:BELONG_TO]->c")
                                         .Create("u1-[:BELONG_TO]->c")
                                         .Create("c-[:LATEST_MESSAGE]->m")

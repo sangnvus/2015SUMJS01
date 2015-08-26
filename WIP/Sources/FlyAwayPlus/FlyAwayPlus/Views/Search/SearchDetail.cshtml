@@ -24,7 +24,7 @@
 
 <div id="id-place-detail">
     <div class="right-content">
-        <h3><span id="id-name-place" class="label label-primary center-block">@currentPlace.Name</span></h3>
+        <h3><span id="id-name-place" class="label label-primary center-block" style="line-height: 110%; white-space: normal">@currentPlace.Name</span></h3>
         <div id="id-list-post-in-place" class="blog-landing">
             @Html.Partial("_ListPost")
         </div>
@@ -302,7 +302,7 @@
         for(var index = 0; index < listPlace.length; index++) {
             (function(index){
                 var otherMaker = new google.maps.Marker({
-                    position: new google.maps.LatLng(listPlace[index]["latitude"], listPlace[index]["longitude"]),
+                    position: new google.maps.LatLng(listPlace[index]["Latitude"], listPlace[index]["Longitude"]),
                     icon: {
                         url: '/Images/other-marker.png'
                     },
@@ -310,7 +310,7 @@
                 });
                 var infoOther = new google.maps.InfoWindow({
                     content: '<div id="iw_container_' + index + '">' +
-                     '<div class="iw_title">' + listPlace[index]["name"] + '</div>' +
+                     '<div class="iw_title">' + listPlace[index]["Name"] + '</div>' +
                      '</div>',
                     maxWidth: 200
                 });
@@ -321,7 +321,7 @@
                     infoOther.close();
                 });
                 google.maps.event.addListener(otherMaker, 'click', function () {
-                    searchDetailModule.loadPostInPlace(index + 1, parseInt(listPlace[index]["PlaceId"]), listPlace[index]["name"]);
+                    searchDetailModule.loadPostInPlace(index + 1, parseInt(listPlace[index]["PlaceId"]), listPlace[index]["Name"]);
                 });
             })(index);
         }
