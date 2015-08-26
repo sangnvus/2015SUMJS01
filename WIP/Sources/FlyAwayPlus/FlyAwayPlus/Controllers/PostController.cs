@@ -34,6 +34,7 @@ namespace FlyAwayPlus.Controllers
             int likeCount = 0;
             int dislikeCount = 0;
             int userComment = 0;
+            string placeName;
 
             if (user == null)
             {
@@ -47,7 +48,7 @@ namespace FlyAwayPlus.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-
+                placeName = GraphDatabaseHelpers.Instance.FindPlace(post).Name;
                 userPost = GraphDatabaseHelpers.Instance.SearchUser(id);
                 listFriend = GraphDatabaseHelpers.Instance.GetListFriend(user.UserId);
                 listComment = GraphDatabaseHelpers.Instance.FindComment(id);
@@ -102,6 +103,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listNumberOfPost"] = listNumberOfPost;
             ViewData["checkWishlist"] = checkWishlist;
             ViewData["listFriend"] = listFriend;
+            ViewData["placeName"] = placeName;
             return View(post);
         }
 

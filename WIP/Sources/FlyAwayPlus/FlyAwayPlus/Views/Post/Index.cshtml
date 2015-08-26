@@ -9,6 +9,7 @@
     var listPhoto = ViewData["listPhoto"] as List<Photo>;
     var listFriend = ViewData["listFriend"] as List<User>;
     var video = ViewData["video"] as Video;
+    var placeName = ViewData["placeName"] as string;
 }
 <script src="~/Scripts/PostPage/postDetail.js" type="text/javascript"></script>
 <script src="https://connect.facebook.net/en_US/all.js"></script>
@@ -33,10 +34,16 @@
                     </div>
                 </div>
                 <div class="post-content" style="display:inline-block;">
-                    @foreach (var photo in listPhoto)
-                    {
-                        <img src="/Images/UserUpload/@photo.Url" style="max-width: 100%; margin:auto;" />
-                    }
+                    <div class="images-list-wrapper">
+                        @foreach (var photo in listPhoto)
+                        {
+                            <div class="image-element" style="margin-top:10px;">
+                                <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
+                                    <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" />
+                                </a>
+                            </div>
+                        }
+                    </div>
                     @if (@video != null)
                     {
                         <div class="video-overlay">
@@ -57,7 +64,7 @@
                 <a href="javascript:;" role="@Model.PostId" class="btn-dislike"><span>Dislike</span></a>
                 <a href="javascript:;" id="share_button" class="btn-share"><span>Share</span></a>
                 <a href="javascript:;" role="@Model.PostId" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
-                
+
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
                     <div class="modal-dialog">
@@ -144,6 +151,36 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        // Image list.
+        var conWidth = $(".images-wrapper").width();
+        //my container width
+        var gridwidth = 212;
+        //alert(conWidth);
+        var col = conWidth / gridwidth;
+        //alert(col);
+        $(".images-wrapper").BlocksIt({
+            numOfCol: Math.floor(col)
+        });
+
+        $(".fancybox").attr('rel', 'gallery').fancybox({
+            openEffect: 'fade',
+            closeEffect: 'elastic',
+            padding: 2,
+            afterLoad: function () {
+                this.title = '<p class="text-center">' + this.title + '</p>';
+            },
+            helpers: {
+                title: {
+                    type: 'inside'
+                },
+                overlay: {
+                    css: {
+                        'background': 'rgba(58, 42, 45, 0.5)'
+                    }
+                }
+            }
+        });
+
         $('#share_button').click(function (e) {
             FB.init({
                 appId: '@ConfigurationManager.AppSettings["clientId"]',
@@ -185,13 +222,5 @@
             }
             e.preventDefault();
         });
-
     });
 </script>
-
-<style type="text/css">
-    div.inline {
-        float: left;
-        margin-right: 10px
-    }
-</style>
