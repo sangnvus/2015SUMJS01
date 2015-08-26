@@ -824,8 +824,9 @@ namespace FlyAwayPlus.Helpers
             if (listUser.Count < limit)
             {
                 listUser.AddRange(SuggestNonRelationshipUser(userId, limit - listUser.Count));
-
             }
+
+            listUser = listUser.GroupBy(x => x.UserId).Select(y => y.First()).ToList();
             return listUser;
         }
 
