@@ -306,12 +306,13 @@
                 <!-- estimation -->
                 <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
                     <div style="margin-bottom: -10px">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#create-general-plan-modal" style="background-color: #2DCC70; position: absolute;">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#create-estimation-plan-modal" style="background-color: #2DCC70; position: absolute;">
                             Add an estimation item
                         </button>
                     </div>
 
-                    <table data-toggle="table"
+                    <table id="estimation-table"
+                           data-toggle="table"
                            data-striped="true"
                            data-sort-name="name"
                            data-search="true"
@@ -322,7 +323,6 @@
                            data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
                         <thead>
                         <tr>
-                            <th data-field="id">No.</th>
                             <th data-field="payment">Payment</th>
                             <th data-field="price">Price</th>
                             <th data-field="creator">Creator</th>
@@ -616,19 +616,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Add new General Plan item</h4>
+                <h4>Add new Estimation item</h4>
             </div>
             <div class="modal-body">
                 <div id="estimation-plan-event-form">
-                    <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion"><br />
-                    <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea><br />
-                    <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name"><br />
-                    <input type="text" id="g-plan-start" class="form-control" placeholder="Start time"><br />
+                    <input type="text" id="estimation-payment" class="form-control" placeholder="Payment"><br />
+                    <input type="text" id="estimation-price" class="form-control" placeholder="Price"><br />
+                    <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name"><br />
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="g-plan-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-                <button type="button" id="g-plan-btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+                <button type="button" id="estimation-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
+                <button type="button" id="estimation-btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -695,6 +694,48 @@
 
                     $(".blog-landing").prepend(planContent);
                     commonModule.setBlocksit($(".blog-landing"), 250);
+
+                    // Clear values.
+                    $('#g-plan-work-portion').val('');
+                    $('#g-plan-note').val('');
+                    $('#g-plan-assignee').val('');
+                    $('#g-plan-start').val('');
+                },
+                error: function () {
+                    swal("Oops...", "Something went wrong! Try again later!", "error");
+                }
+            });
+        });
+
+        // Add estimation item.
+        $('#estimation-btnPopupSave').click(function() {
+            var dataPrepend = {
+                'payment': $('#estimation-payment').val(),
+                'price': $('#estimation-price').val(),
+                'creator': '@Session["username"]',
+                'payer': $('#estimation-payer').val(),
+                'datecreated': moment().format('YYYY-MM-DD')
+            };
+
+            $('#estimation-table').bootstrapTable('prepend', dataPrepend);
+
+            var dataPass = {
+                payment: $('#estimation-payment').val(),
+                price: $('#estimation-price').val(),
+                payer: $('#estimation-payer').val(),
+                datecreated: moment().format('YYYY-MM-DD')
+            };
+
+            $.ajax({
+                url: '/Room/AddEstimation',
+                type: 'POST',
+                dataType: 'json',
+                data: dataPass,
+                success: function () {
+                    // Clear values.
+                    $('#estimation-payment').val('');
+                    $('#estimation-price').val('');
+                    $('#estimation-payer').val('');
                 },
                 error: function () {
                     swal("Oops...", "Something went wrong! Try again later!", "error");

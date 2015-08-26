@@ -272,20 +272,39 @@ namespace FlyAwayPlus.Controllers
             return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
         }
 
+        public void AddEstimation(string payment, double price, int payer, string datecreated)
+        {
+            // TODO: Get list of payer.
+            var payerid = 1;
+
+            var creatorId = int.Parse(@Session["UserId"] + string.Empty);
+            int roomid = (int)Session["roomID"];
+
+            var newEstimation = new Estimation
+            {
+                Payment = payment,
+                Price = price,
+                DateCreated = datecreated
+            };
+
+            GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid);
+        }
+
         public JsonResult GetEstimationData(int roomId)
         {
             var estimationsList = GraphDatabaseHelpers.Instance.GetRoomEstimation(roomId);
             List<object> estimationDataInTable = new List<object>();
 
-            for (int i = 0; i < estimationsList.Count(); i++)
+            foreach (var est in estimationsList)
             {
                 estimationDataInTable.Add(
                     new
                     {
-                        id = i + 1,
-                        payment = estimationsList.ElementAt(i).Payment,
-                        price = estimationsList.ElementAt(i).Price,
-                        creator = GraphDatabaseHelpers.Instance.GetEstimationCreator(estimationsList.ElementAt(i).EstimationId);
+                        payment = est.Payment,
+                        price = est.Price,
+                        creator = GraphDatabaseHelpers.Instance.GetEstimationCreator(est.EstimationId),
+                        payer = GraphDatabaseHelpers.Instance.GetEstimationPayer(est.EstimationId),
+                        datecreated = est.DateCreated
                     });
             }
 
@@ -338,7 +357,7 @@ namespace FlyAwayPlus.Controllers
                 }
             };
 
-            return Json(estimationList, JsonRequestBehavior.AllowGet);
+            return Json(estimationDataInTable, JsonRequestBehavior.AllowGet);
         }
     }
 }
