@@ -1,16 +1,21 @@
 ﻿@model FlyAwayPlus.Models.User
+@using FlyAwayPlus.Models;
 @{
     ViewBag.Title = "User Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
-    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<FlyAwayPlus.Models.Photo>>;
-    var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, FlyAwayPlus.Models.Place>;
-    var friend = ViewData["friend"] as List<FlyAwayPlus.Models.User>;
-    var userSession = ViewData["userSession"] as FlyAwayPlus.Models.User;
-    var listPost = ViewData["listPost"] as List<FlyAwayPlus.Models.Post>;
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
+    var listPlaceDict = ViewData["listPlaceDict"] as Dictionary<int, Place>;
+    var friend = ViewData["friend"] as List<User>;
+    var userSession = ViewData["userSession"] as User;
+    var listPost = ViewData["listPost"] as List<Post>;
     string friendType = ViewData["isFriend"].ToString();
+
+    var listPhoto = ViewData["listPhoto"] as List<Photo>;
+    var listPlace = ViewData["listPlace"] as List<Place>;
+    var listVideo = ViewData["listVideo"] as List<Video>;
 }
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
 <header>
@@ -18,19 +23,19 @@
         <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" class="img-responsive" />
     </figure>
     <figure class="profile-picture"
-            style="background-image: url('@Model.Avatar')">
+            style="background-image: url('@Model.avatar')">
     </figure>
     <div class="profile-stats">
         <ul role="tablist">
-            <li role="presentation"><a href="javascript:;">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a></li>
+            <li role="presentation"><a href="javascript:;">@String.Format("{0} {1}", Model.firstName, Model.lastName)</a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Post</span></a></li>
-            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">18 <span>Places</span></a></li>
-            <li role="presentation"><a href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">182 <span>Photos</span></a></li>
-            <li role="presentation"><a href="#messages" style="margin-right:10px;" aria-controls="messages" role="tab" data-toggle="tab">324 <span>Videos</span></a></li>
+            <li role="presentation"><a id="btn-place-list" href="#place-list" aria-controls="place-list" role="tab" data-toggle="tab">@listPlaceDict.Count <span>Places</span></a></li>
+            <li role="presentation"><a id="btn-photo-list" href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">@listPhoto.Count <span>Photos</span></a></li>
+            <li role="presentation"><a href="#video-list" style="margin-right:10px;" aria-controls="video-list" role="tab" data-toggle="tab">@listVideo.Count <span>Videos</span></a></li>
         </ul>
 
         <div class="interact-area">
-            @if (Model.UserId == userSession.UserId)
+            @if (Model.userID == userSession.userID)
             {
                 <a href="javascript:;" id="idEditProfile" data-toggle="modal" data-target="#id-profile-modal" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
             }
@@ -57,7 +62,7 @@
             }
         </div>
     </div>
-    <h1>@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</h1>
+    <h1>@String.Format("{0} {1} has no friends", @Model.firstName, @Model.lastName)</h1>
 </header>
 
 <div class="vertical-space-15"></div>
@@ -74,8 +79,8 @@
             for (int index = 0; index < 17; index++)
             {
                 <div class="padding-5 col-md-2">
-                    <a href="/User/Index/@friend[index].UserId" class="hover-card-user">
-                        <img class="circle-image" height="50" src="@friend[index].Avatar" alt="Avatar" />
+                    <a href="/User/Index/@friend[index].userID" class="hover-card-user">
+                        <img class="circle-image" height="50" src="@friend[index].avatar" alt="Avatar" />
                     </a>
                 </div>
             }
@@ -86,15 +91,15 @@
             {
                 <div class="padding-5 col-md-2">
                     <div class="padding-5 col-md-2">
-                        <a href="/User/Index/@userFriend.UserId" class="hover-card-user">
-                            <img class="circle-image" height="50" src="@userFriend.Avatar" alt="Avatar" />
+                        <a href="/User/Index/@userFriend.userID" class="hover-card-user">
+                            <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
                         </a>
                     </div>
                 </div>
             }
             if (friend.Count == 0)
             {
-                <p>@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</p>
+                <p>@String.Format("{0} {1} has no friends", @Model.firstName, @Model.lastName)</p>
             }
         }
     </div>
@@ -121,13 +126,13 @@
             @foreach (var image in listPhotoDict)
             {
                 <div class="image-element">
-                    <img src="/Images/UserUpload/@image.Value.First().Url" class="img-zoom" alt="" />
+                    <img src="/Images/UserUpload/@image.Value.First().url" class="img-zoom" alt="" />
                     <div class="dark-wrapper">
                         <ul class="post-actions" style="padding-left: 0;">
                             <li>
-                                <a href="@(image.Value.FirstOrDefault() == null ? "/Image/UIHelper/default-avatar.jpg" : "/Images/UserUpload/" + image.Value.First().Url)" rel="group"
+                                <a href="@(image.Value.FirstOrDefault() == null ? "/Image/UIHelper/default-avatar.jpg" : "/Images/UserUpload/" + image.Value.First().url)" rel="group"
                                    class="btn btn-primary fancybox"
-                                   title="@listPlaceDict.First(p => p.Key == @image.Key).Value.Name"
+                                   title="@listPlaceDict.First(p => p.Key == @image.Key).Value.name"
                                    style="width: 90px">Enlarge</a>
                             </li>
                             <li>
@@ -139,35 +144,50 @@
             }
         </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="messages">...</div>
-    <div role="tabpanel" class="tab-pane" id="settings">...</div>
-</div>
+    <div role="tabpanel" class="tab-pane" id="place-list">
+        <div class="container" style="margin-top: 100px;">
+            <div id="id-place-map" style="width:100%; height: 500px;"></div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="video-list">
+        <div style="margin-top: 100px;" class="container">
+            @foreach (var video in listVideo)
+            {
+                <div style="width:auto; float:left; margin-left: 30px; margin-bottom: 20px;" class="video-overlay">
+                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video.path?enablejsapi=1&wmode=opaque">
+                        <img src="http://img.youtube.com/vi/@video.path/0.jpg" alt="@video.path">
+                        <span class="video-thumbnail-button"></span>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 
-<!-- Timeline -->
-<!-- Modal -->
-<div class="modal fade" id="myFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 40px">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Friend List</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    @foreach (var userFriend in friend)
-                    {
-                        <div class="padding-5 col-md-2">
-                            <img class="circle-image" height="50" src="@userFriend.Avatar" alt="Avatar" />
-                            <a href="/User/Index/@userFriend.UserId"><p class="small text-center hover-card-user">@String.Format("{0} {1}", userFriend.FirstName, userFriend.LastName)</p></a>
-                        </div>
-                    }
+    <!-- Timeline -->
+    <!-- Modal -->
+    <div class="modal fade" id="myFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 40px">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Friend List</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        @foreach (var userFriend in friend)
+                        {
+                            <div class="padding-5 col-md-2">
+                                <img class="circle-image" height="50" src="@userFriend.avatar" alt="Avatar" />
+                                <a href="/User/Index/@userFriend.userID"><p class="small text-center hover-card-user">@String.Format("{0} {1}", userFriend.firstName, userFriend.lastName)</p></a>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@if (Model.UserId == userSession.UserId)
+@if (Model.userID == userSession.userID)
 {
     <div class="modal fade" id="id-profile-modal" role="dialog" aria-labelledby="id-profile-modal" aria-hidden="true">
         <div class="modal-dialog login-modal-wrap">
@@ -191,7 +211,7 @@
                                                 <div class="form-group">
                                                     <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
                                                         <div style="width:100%; float:left;">
-                                                            <input name="firstName" style="width: 90%; float:left;" type="text" value="@Model.FirstName" class="form-control" placeholder="First Name" />
+                                                            <input name="firstName" style="width: 90%; float:left;" type="text" value="@Model.firstName" class="form-control" placeholder="First Name" />
                                                         </div>
                                                         <div class="cls-error-message" style="width:100%; float:left; display:none">
                                                             <p style="color:red">First Name is required</p>
@@ -202,7 +222,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
-                                                        <span>First Name: </span><span><b>@Model.FirstName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span>First Name: </span><span><b>@Model.firstName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -211,7 +231,7 @@
                                                 <div class="form-group">
                                                     <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
                                                         <div style="width:100%; float:left;">
-                                                            <input name="lastName" style="width: 90%; float:left;" type="text" value="@Model.LastName" class="form-control" placeholder="Last Name" />
+                                                            <input name="lastName" style="width: 90%; float:left;" type="text" value="@Model.lastName" class="form-control" placeholder="Last Name" />
                                                         </div>
                                                         <div class="cls-error-message" style="width:100%; float:left; display:none">
                                                             <p style="color:red">Last Name is required</p>
@@ -222,7 +242,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
-                                                        <span>Last Name: </span><span><b>@Model.LastName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span>Last Name: </span><span><b>@Model.lastName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,7 +252,7 @@
                                                 <div class="form-group">
                                                     <div class="cls-edit-info" style="width:100%; display: none;">
                                                         <div style="width:100%; float:left; margin-top:5px;">
-                                                            <input name="phoneNumber" style="width: 90%; float:left;" type="text" value="@Model.PhoneNumber" class="form-control" placeholder="Phone Number" />
+                                                            <input name="phoneNumber" style="width: 90%; float:left;" type="text" value="@Model.phoneNumber" class="form-control" placeholder="Phone Number" />
                                                         </div>
                                                         <div class="cls-error-message" style="width:100%; float:left; display:none">
                                                             <p style="color:red">Phone Number must be a number</p>
@@ -244,13 +264,13 @@
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>Phone number: </span>
-                                                        @if (Model.PhoneNumber.IsEmpty())
+                                                        @if (Model.phoneNumber.IsEmpty())
                                                         {
                                                             <span><b>Please input your phonenumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.PhoneNumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.phoneNumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                 </div>
@@ -260,7 +280,7 @@
                                                 <div class="form-group">
                                                     <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
                                                         <div style="width:100%; float:left;">
-                                                            <input name="dateOfBirth" style="width: 90%; float:left;" type="text" value="@Model.DateOfBirth" class="form-control edit-dob" placeholder="DOB" />
+                                                            <input name="dateOfBirth" style="width: 90%; float:left;" type="text" value="@Model.dateOfBirth" class="form-control edit-dob" placeholder="DOB" />
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
                                                             <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
@@ -269,13 +289,13 @@
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>DOB: </span>
-                                                        @if (Model.DateOfBirth.IsEmpty())
+                                                        @if (Model.dateOfBirth.IsEmpty())
                                                         {
                                                             <span><b>Please input your DOB</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.DateOfBirth</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.dateOfBirth</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                 </div>
@@ -285,7 +305,7 @@
                                         <div class="row" style="text-align: center">
                                             <div class="col-xs-12 col-sm-12 col-md-12">
                                                 <div class="form-group">
-                                                    @if (Model.Gender.Equals("male"))
+                                                    @if (Model.gender.Equals("male"))
                                                     {
                                                         <label class="radio-inline">
                                                             <input type="radio" value="male" name="gender" data-val-required="Gender is required" data-val="true" checked> Male
@@ -298,7 +318,7 @@
                                                         </label>
                                                     }
 
-                                                    @if (Model.Gender.Equals("female"))
+                                                    @if (Model.gender.Equals("female"))
                                                     {
                                                         <label class="radio-inline">
                                                             <input type="radio" value="female" name="gender"> Female
@@ -311,7 +331,7 @@
                                                         </label>
                                                     }
 
-                                                    @if (Model.Gender.Equals("other"))
+                                                    @if (Model.gender.Equals("other"))
                                                     {
                                                         <label class="radio-inline">
                                                             <input type="radio" value="other" name="gender"> Other
@@ -333,18 +353,18 @@
                                                 <div class="form-group">
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>Address: </span>
-                                                        @if (Model.Address.IsEmpty())
+                                                        @if (Model.address.IsEmpty())
                                                         {
                                                             <span><b>Please input your address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.Address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                     <div class="cls-edit-info" style="width:100%; display:none">
                                                         <div style="width:100%; float:left;">
-                                                            <input name="address" style="width: 90%; float:left;" type="text" value="@Model.Address" class="form-control text-box single-line" placeholder="address" />
+                                                            <input name="address" style="width: 90%; float:left;" type="text" value="@Model.address" class="form-control text-box single-line" placeholder="address" />
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
                                                             <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
@@ -359,7 +379,7 @@
                                                 <div class="form-group">
                                                     <div style="width:100%;">
                                                         <span>Email: </span>
-                                                        <span><b>@Model.Email</b></span>
+                                                        <span><b>@Model.email</b></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -395,7 +415,7 @@
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">
                                                     <button id="id-edit-profile-btn" tabindex="10" class="form-control btn btn-register">Save</button>
-                                                    <input id="id-password" type="hidden" name="password" value="@Model.Password" />
+                                                    <input id="id-password" type="hidden" name="password" value="@Model.password" />
                                                 </div>
                                             </div>
                                         </div>
@@ -410,7 +430,7 @@
     </div>
 }
 
-@if (Model.UserId != userSession.UserId)
+@if (Model.userID != userSession.userID)
 {
     <!-- Modal -->
     <div class="modal fade" id="myModal" role="dialog">
@@ -428,8 +448,8 @@
 
                             <div class="col-md-1">
                                 <div>
-                                    <img src="@Model.Avatar" height="100px" width="70px">
-                                    <p>By @Model.FirstName @Model.LastName</p>
+                                    <img src="@Model.avatar" height="100px" width="70px">
+                                    <p>By @Model.firstName @Model.lastName</p>
                                 </div>
                             </div>
 
@@ -470,8 +490,8 @@
         var sendRequestFriend = function () {
             var controller = "/User/SendRequestFriend/";
             var data = {
-                userId: @userSession.UserId,
-                otherUserId: @Model.UserId
+                userID: parseInt('@userSession.userID'),
+                otherUserID: parseInt('@Model.userID')
             };
 
             commonModule.callAjax(controller, data, null);
@@ -480,9 +500,9 @@
         var unfriend = function () {
             var controller = "/User/Unfriend";
             var data = {
-                userId: @Model.UserId,
-                utherUserId: @userSession.UserId
-                };
+                userID: parseInt('@Model.userID'),
+                otherUserID: parseInt('@userSession.userID')
+            };
 
             commonModule.callAjax(controller, data, null);
         };
@@ -527,6 +547,203 @@
         };
     })();
 
+    function initialize() {
+        // Marker Place
+        var listPlace = JSON.parse('@Newtonsoft.Json.JsonConvert.SerializeObject(listPlace)'.split("&quot;").join("\""));
+        if(listPlace.length > 0) {
+            var myCenter = new google.maps.LatLng(listPlace[0]["latitude"], listPlace[0]["longitude"]);
+            var myStyles = [
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "simplified"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#444444"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.province",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "simplified"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "simplified"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.neighborhood",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "landscape.natural",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "visibility": " on"
+                        },
+                        {
+                            "color": "rgb(231, 231, 231)"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        },
+                        {
+                            "hue": "#1900ff"
+                        },
+                        {
+                            "color": "#c0e8e8"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "lightness": 100
+                        },
+                        {
+                            "visibility": "simplified"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels",
+                    "stylers": [
+                        {
+                            "visibility": "on"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit.line",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        },
+                        {
+                            "lightness": 700
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "color": "#46bcec"
+                        },
+                        { invert_lightness: true }
+                    ]
+                }
+            ];
+
+            var mapOptions = {
+                zoom: 3,
+                center: myCenter,
+                disableDefaultUI: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                styles: myStyles
+            };
+            var map = new window.google.maps.Map(document.getElementById('id-place-map'), mapOptions);
+
+            for(var index = 0; index < listPlace.length; index++) {
+                (function(index){
+                    var otherMaker = new google.maps.Marker({
+                        position: new google.maps.LatLng(listPlace[index]["latitude"], listPlace[index]["longitude"]),
+                        icon: {
+                            url: '/Images/other-marker.png'
+                        },
+                        map: map
+                    });
+                    var infoOther = new google.maps.InfoWindow({
+                        content: '<div id="iw_container_' + index + '">' +
+                         '<div class="iw_title">' + listPlace[index]["name"] + '</div>' +
+                         '</div>',
+                        maxWidth: 200
+                    });
+                    google.maps.event.addListener(otherMaker, 'mouseover', function () {
+                        infoOther.open(map, otherMaker);
+                    });
+                    google.maps.event.addListener(otherMaker, 'mouseout', function () {
+                        infoOther.close();
+                    });
+                    google.maps.event.addListener(otherMaker, 'click', function () {
+                        document.location.href = document.location.origin + '/Search/SearchDetail/' + listPlace[index]["placeID"];
+                    });
+                })(index);
+            }
+        }
+    }
+
     $(document).ready(function () {
         // Datetime picker.
         $('#id_register_dob').datepicker({
@@ -564,8 +781,8 @@
 
             var controller = "/User/ReportUser/";
             var data = {
-                userReportId: parseInt('@Session["UserId"]'),
-                userReportedId: @Model.UserId,
+                userReportID: parseInt('@Session["userID"]'),
+                userReportedID: @Model.userID,
                 typeReport: $('input[name="optradio"]:checked').val()
             };
 
@@ -673,9 +890,12 @@
     });
 
     $(function () {
+        $('#btn-place-list').on('shown.bs.tab', function (e) {
+            initialize();
+        })
         $('a.follow').click(function () {
             $(this).toggleClass('followed');
-
+            /*
             if ($(this).hasClass('followed')) {
                 $(this).text('Request sent');
                 $('.profile-stats ul li:last-child').html('325<span>Friends</span>');
@@ -684,9 +904,9 @@
                 $(this).text('Add friend');
                 $('.profile-stats ul li:last-child').html('324<span>Friends</span>');
             }
+            */
         });
-
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        $('#btn-photo-list').on('shown.bs.tab', function (e) {
             var conWidth = $("#photos-gallery").width();
             //my container width
             var gridwidth = 212;

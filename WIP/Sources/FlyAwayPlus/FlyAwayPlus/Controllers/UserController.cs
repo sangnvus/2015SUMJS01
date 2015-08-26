@@ -69,17 +69,21 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, bool> isWishDict = new Dictionary<int, bool>();
             List<Photo> listPhoto = new List<Photo>();
             List<Place> listPlace = new List<Place>();
+            List<Video> listVideo = new List<Video>();
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPhoto(po.PostId));
-                listVideoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindVideo(po.PostId));
-                listPlaceDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPlace(po));
-                listUserDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindUser(po));
-                dictLikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountLike(po.PostId));
-                dictDislikeCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountDislike(po.PostId));
-                dictCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountComment(po.PostId));
-                dictUserCommentCount.Add(po.PostId, GraphDatabaseHelpers.Instance.CountUserComment(po.PostId));
+                listPhotoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPhoto(po.postID));
+                listPhoto.AddRange(listPhotoDict[po.postID]);
+                listVideoDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindVideo(po.postID));
+                listVideo.Add(listVideoDict[po.postID]);
+                listPlaceDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindPlace(po));
+                listPlace.Add(listPlaceDict[po.postID]);
+                listUserDict.Add(po.postID, GraphDatabaseHelpers.Instance.FindUser(po));
+                dictLikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountLike(po.postID));
+                dictDislikeCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountDislike(po.postID));
+                dictCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountComment(po.postID));
+                dictUserCommentCount.Add(po.postID, GraphDatabaseHelpers.Instance.CountUserComment(po.postID));
 
                 if (user != null)
                 {
@@ -95,6 +99,10 @@ namespace FlyAwayPlus.Controllers
                 }
             }
 
+            listPhoto.RemoveAll(item => item == null);
+            listVideo.RemoveAll(item => item == null);
+            listPlace.RemoveAll(item => item == null);
+
             ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listVideoDict"] = listVideoDict;
@@ -108,6 +116,9 @@ namespace FlyAwayPlus.Controllers
             ViewData["isDislikeDict"] = isDislikeDict;
             ViewData["isWishDict"] = isWishDict;
             ViewData["typePost"] = "index";
+            ViewData["listPhoto"] = listPhoto;
+            ViewData["listPlace"] = listPlace;
+            ViewData["listVideo"] = listVideo;
 
             if (listPost.Count < RecordsPerPage)
             {

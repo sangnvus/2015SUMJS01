@@ -1849,3 +1849,8 @@ textarea {
     height: 130px;
     width: 348px;
 }
+
+#post-add-videos-wrapper #signinButton div:first-child, #post-add-videos-wrapper #signinButton div:first-child iframe {
+    width: 136px!important;
+    height: 36px!important;
+}

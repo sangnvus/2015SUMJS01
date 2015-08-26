@@ -1,10 +1,11 @@
-﻿@using FlyAwayPlus.Models
+﻿@using FlyAwayPlus.Helpers
+@using FlyAwayPlus.Models
 
 @{
     Layout = null;
     var post = ViewData["post"] as Post;
     var user = ViewData["user"] as User;
-    var photo = ViewData["photo"] as Photo;
+    var photo = ViewData["photo"] as List<Photo>;
     var listComment = ViewData["listComment"] as List<Comment>;
 }
 <!DOCTYPE html>
@@ -15,16 +16,30 @@
     <title>ViewPost</title>
 </head>
     <body>
-        <h3>Post</h3>
         <div class="container">
             <div class="user-info">
-                <img src="@user.Avatar" alt="@String.Format("{0} {1}", user.FirstName, user.LastName)"/>
-                <p>@user.FirstName @user.LastName</p>
+                <img src="@user.avatar" alt="@String.Format("{0} {1}", user.firstName, user.lastName)" height="60" width="60" style="display: inline-block;" />
+                <p style="display: inline-block;">@user.firstName @user.lastName</p>
             </div>
+
+            <h3>Post</h3>
             <div class="post-area">
                 <div class="post-content">
-                    <b>Date created:</b> @post.DateCreated<br/>
-                    <b>Content:</b> @post.Content
+                    @foreach (var x in photo)
+                    {
+                        <img src="/Images/UserUpload/@x.url" style="max-height: 100%; margin: auto; display: inline-block;" />
+                    }
+                    <p><b>Date created:</b> @post.dateCreated<br /></p>
+                    <p><b>Content:</b> @post.content</p>
+                </div>
+                
+                <div>
+                    <p><b>Comment:</b></p>
+                    @foreach (var x in listComment)
+                    {
+                        var a = GraphDatabaseHelpers.Instance.FindUser(x);
+                        <p>@x.toRealtime() - @a.firstName @a.lastName : @x.content</p>
+                    }
                 </div>
             </div>
         </div>

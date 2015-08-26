@@ -16,5 +16,8 @@
         public static int PlanGeneral    = 0;
         public static int PlanTimeline   = 1;
         public static int PlanEstimation = 2;
+
+        public static string USER_ACTIVE = "active";
+        public static string USER_LOCK = "lock";
     }
 }

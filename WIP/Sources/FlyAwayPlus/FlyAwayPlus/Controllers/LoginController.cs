@@ -44,7 +44,7 @@ namespace FlyAwayPlus.Controllers
                     user.TypeId = 0; // Fap account
                     user.DateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                     //user.dateOfBirth = DateTime.Now.ToString();
-                    user.Status = "active";
+                    user.status = FapConstants.USER_ACTIVE;
                     if (string.IsNullOrWhiteSpace(user.Avatar))
                     {
                         user.Avatar = "/Images/UIHelper/default-avatar.jpg";
@@ -110,11 +110,17 @@ namespace FlyAwayPlus.Controllers
 
                 if (newUser == null)
                 {
-                    // TODO
                     Session["loginMessageError"] = "Email or password is incorrect!";
                 }
                 else if (user.Password.Equals(newUser.Password))
                 {
+                    if (!FapConstants.USER_ACTIVE.Equals(newUser.status))
+                    {
+                        // user is Locked
+                        Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
+                        return RedirectToAction("Index", "Home");
+                    }
+
                     Session["authenicated"] = true;
                     Session["username"] = newUser.FirstName + " " + newUser.LastName;
                     Session["userAva"] = newUser.Avatar;
@@ -255,7 +261,7 @@ namespace FlyAwayPlus.Controllers
                     LastName = me.last_name,
                     Gender = me.gender,
                     PhoneNumber = me.phone_number,
-                    Status = "active",
+                    Status = FapConstants.USER_ACTIVE,
                     Avatar = "https://graph.facebook.com/" + facebookId + "/picture?type=large",
                     Password = ""
                 };
@@ -263,6 +269,12 @@ namespace FlyAwayPlus.Controllers
 
                 // insert user to Database
                 GraphDatabaseHelpers.Instance.InsertUser(ref newUser);
+            }
+            else if (!FapConstants.USER_ACTIVE.Equals(newUser.status))
+            {
+                // user is Locked
+                Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
+                return RedirectToAction("Index", "Home");
             }
 
             // Set the auth cookie
@@ -431,7 +443,7 @@ namespace FlyAwayPlus.Controllers
                         LastName = google.name.givenName.Value,
                         Gender = google.gender == null ? "" : google.gender.Value,
                         PhoneNumber = "",
-                        Status = "active",
+                        Status = FapConstants.USER_ACTIVE,
                         Avatar = avatar,
                         Password = ""
                     };
@@ -439,6 +451,12 @@ namespace FlyAwayPlus.Controllers
 
                     // insert user to Database
                     GraphDatabaseHelpers.Instance.InsertUser(ref newUser);
+                }
+                else if (!FapConstants.USER_ACTIVE.Equals(newUser.status))
+                {
+                    // user is Locked
+                    Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
+                    return RedirectToAction("Index", "Home");
                 }
 
                 // Set the auth cookie

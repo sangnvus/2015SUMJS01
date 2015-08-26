@@ -9,7 +9,7 @@
     };
 
     var fadeImage = function () {
-        $(".dark-wrapper").hover(function () {
+        $(".dark-wrapper").unbind("hover").bind("hover", function () {
             $(this).find("img").stop().fadeTo(500, 0.5);
 
             var postActions = $(this).find(".post-actions");
@@ -27,7 +27,7 @@
     };
 
     var likePost = function () {
-        $(".btn-like").click(function (evt) {
+        $(".btn-like").unbind("click").bind("click", function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
             var likeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
@@ -56,7 +56,7 @@
                                 .parent()
                                 .find(".fa-thumbs-o-up");
 
-        var likeCountElement = $(this).parentsUntil(".white-panel").parent()
+        var likeCountElement = $(post).parentsUntil(".white-panel").parent()
             .find(".like-count");
 
         if (likeIcon.hasClass("interacted")) {
@@ -75,7 +75,7 @@
             .parent()
             .find(".fa-thumbs-o-down");
 
-        var dislikeCountElement = $(this).parentsUntil(".white-panel").parent()
+        var dislikeCountElement = $(post).parentsUntil(".white-panel").parent()
             .find(".dislike-count");
 
         if (dislikeIcon.hasClass("interacted")) {
@@ -90,7 +90,7 @@
         }
     };
     var dislikePost = function () {
-        $(".btn-dislike").click(function (evt) {
+        $(".btn-dislike").unbind("click").bind("click", function (evt) {
             $(this).toggleClass("btn-primary").toggleClass("btn-warning");
             var dislikeIcon = $(this).parentsUntil(".white-panel")
                                   .parent()
@@ -210,17 +210,13 @@
 $(window).scroll(function () {
     if ($(window).scrollTop() === $(document).height() - $(window).height()) {
         if (isLoadMore || isLoadMore === "true") {
-            homeModule.loadMoreData();
+            homeModule.loadMoreData(typePost);
         }
     }
 });
 
 $(window).load(function () {
     homeModule.setBlocksit();
-    //homeModule.fadeImage();
-    //homeModule.likePost();
-    //homeModule.dislikePost();
-    //homeModule.plusPost();
     $("div#loading").hide();
 });
 

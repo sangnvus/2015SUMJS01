@@ -184,7 +184,7 @@
         }
         else if (evt.keyCode == 13) {
             if (selector) {
-                if ($(selector).val() != "") {
+                if ($(selector).val().trim().length > 0) {
                     editCommentAjax($(selector));
                     var parent = $(selector).closest(".comment-content");
                     $(selector).hide();
@@ -195,14 +195,19 @@
                     var username = "";
                     var replaceUser = "";
 
-                    for (var index = 0; index < tagFriend.length; index++) {
-                        username = tagFriend[index].substring(1, tagFriend[index].length - 1);
-                        replaceUser = "<a href='/User/Index/" + findUserID(username) + "'>" + username + "</a>";
-                        value = value.split(tagFriend[index]).join(replaceUser);
+                    if (tagFriend != null) {
+                        for (var index = 0; index < tagFriend.length; index++) {
+                            username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                            replaceUser = "<a href='/User/Index/" + findUserID(username) + "'>" + username + "</a>";
+                            value = value.split(tagFriend[index]).join(replaceUser);
+                        }
                     }
 
                     $(parent).find("p").text("").append(value);
                     $(parent).find("p").show();
+                }
+                else {
+                    alert("comment's content must not empty!");
                 }
             }
             else {

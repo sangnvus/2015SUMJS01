@@ -1,5 +1,6 @@
-﻿@model FlyAwayPlus.Models.Post
-
+﻿@using System.Configuration
+@model FlyAwayPlus.Models.Post
+@using System.Configuration;
 @{
     var userPost = ViewData["userPost"] as FlyAwayPlus.Models.User;
     var user = ViewData["user"] as FlyAwayPlus.Models.User;
@@ -56,7 +57,14 @@
                             <div class="modal-body">
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-1">
+                                            <div>
+                                                <img src="/Images/UserUpload/@photo.url" height="100" width="70">
+                                                <p>By @userPost.firstName @userPost.lastName</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-5">
                                             <div class="row" style="margin-left: 20px">
                                                 <div class="radio">
                                                     <label><input type="radio" name="optradio" value="1">This post annoying or unpleasant</label>
@@ -68,7 +76,7 @@
                                                     <label><input type="radio" name="optradio" value="2">I think this post should not appear on FlyAwayPlus</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row" style="margin-left: 20px">
                                                 <div class="radio">
                                                     <label><input type="radio" name="optradio" value="3">This post is spam</label>
@@ -120,9 +128,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#share_button').click(function (e) {
-            e.preventDefault();
             FB.init({
-                appId: '974195839291185',
+                appId: '@ConfigurationManager.AppSettings["clientId"]',
                 status: true,
                 xfbml: true
             });
@@ -130,35 +137,38 @@
             {
                 method: 'feed',
                 name: '@userPost.FirstName' + ' @userPost.LastName',
-                link: 'http://localhost:1644/Post/Index/10010#',
-                picture: 'http://localhost:1644/Images/UserUpload/'+'@photo.Url',
+                link: document.location.origin + '/Post/Index/@Model.PostID#',
+                picture: document.location.origin + '/Images/UserUpload/'+'@photo.Url',
                 caption: 'FlyAwayPlus.com',
                 description: '@Model.Content'
             });
-        });
-
-        $('input:radio[name=optradio]').click(function () {
-            var checkval = $(this).val();
-            $('#closeBtn').prop('disabled', (checkval == null));
-            
-        });
-
-        $('#closeBtn').click(function (e) {
-
-            var controller = "/User/ReportPost/";
-            var data = {
-                postId: @Model.PostId,
-                userReportId: parseInt('@Session["UserId"]'),
-                userReportedId: @userPost.UserId,
-                typeReport: $('input[name="optradio"]:checked').val()
-            };
-
-            commonModule.callAjax(controller, data, null);
-
-            alert("This user has been reported!");
             e.preventDefault();
         });
-        
+
+        $('input:radio[name=optradio]').click(function() {
+            var checkval = $(this).val();
+            $('#closeBtn').prop('disabled', (checkval == null));
+        });
+
+        $('#closeBtn').click(function(e) {
+            if (parseInt('@Session["userID"]') == parseInt('@userPost.userID')) {
+                alert("You can not report yourself!");
+            } else {
+                var controller = "/User/ReportPost/";
+                var data = {
+                    postID: @Model.postID,
+                    userReportID: parseInt('@Session["userID"]'),
+                    userReportedID: @userPost.userID,
+                    typeReport: $('input[name="optradio"]:checked').val()
+                };
+
+                commonModule.callAjax(controller, data, null);
+
+                alert("This user has been reported!");
+            }
+            e.preventDefault();
+        });
+
     });
 </script>
 
