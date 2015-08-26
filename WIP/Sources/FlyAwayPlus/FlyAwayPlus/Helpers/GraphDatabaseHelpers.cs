@@ -20,16 +20,16 @@ namespace FlyAwayPlus.Helpers
 
         public class ReportPost
         {
-            public string postContent { get; set; }
-            public int postID { get; set; }
-            public int numberReport { get; set; }
+            public string PostContent { get; set; }
+            public int PostId { get; set; }
+            public int NumberReport { get; set; }
         }
 
         public class ReportUser
         {
-            public string userReportedName { get; set; }
-            public int userReportedID { get; set; }
-            public int numberReport { get; set; }
+            public string UserReportedName { get; set; }
+            public int UserReportedId { get; set; }
+            public int NumberReport { get; set; }
         }
 
         public string GetEmailByUserId(int userId)
@@ -744,9 +744,9 @@ namespace FlyAwayPlus.Helpers
                 .OrderByDescending("numberReport")
                 .Return((postId, postContent, numberReport) => new ReportPost
                 {
-                    postContent = postContent.As<String>(),
-                    postID = postId.As<Int16>(),
-                    numberReport = numberReport.As<Int16>()
+                    PostContent = postContent.As<String>(),
+                    PostId = postId.As<Int16>(),
+                    NumberReport = numberReport.As<Int16>()
                 })
                 .Results.ToList();
             return listAllReportPosts;
@@ -769,9 +769,9 @@ namespace FlyAwayPlus.Helpers
                  .OrderByDescending("numberReport")
                  .Return((userReportedId, userReportedName, numberReport) => new ReportUser
                  {
-                     userReportedName = userReportedName.As<String>(),
-                     userReportedID = userReportedId.As<Int16>(),
-                     numberReport = numberReport.As<Int16>()
+                     UserReportedName = userReportedName.As<String>(),
+                     UserReportedId = userReportedId.As<Int16>(),
+                     NumberReport = numberReport.As<Int16>()
                  })
                  .Results.ToList();
             return listAllReportUsers;

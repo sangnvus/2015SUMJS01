@@ -18,8 +18,8 @@
     <body>
         <div class="container">
             <div class="user-info">
-                <img src="@user.avatar" alt="@String.Format("{0} {1}", user.firstName, user.lastName)" height="60" width="60" style="display: inline-block;" />
-                <p style="display: inline-block;">@user.firstName @user.lastName</p>
+                <img src="@user.Avatar" alt="@String.Format("{0} {1}", user.FirstName, user.LastName)" height="60" width="60" style="display: inline-block;" />
+                <p style="display: inline-block;">@user.FirstName @user.LastName</p>
             </div>
 
             <h3>Post</h3>
@@ -27,10 +27,10 @@
                 <div class="post-content">
                     @foreach (var x in photo)
                     {
-                        <img src="/Images/UserUpload/@x.url" style="max-height: 100%; margin: auto; display: inline-block;" />
+                        <img src="/Images/UserUpload/@x.Url" style="max-height: 100%; margin: auto; display: inline-block;" />
                     }
-                    <p><b>Date created:</b> @post.dateCreated<br /></p>
-                    <p><b>Content:</b> @post.content</p>
+                    <p><b>Date created:</b> @post.DateCreated<br /></p>
+                    <p><b>Content:</b> @post.Content</p>
                 </div>
                 
                 <div>
@@ -38,7 +38,7 @@
                     @foreach (var x in listComment)
                     {
                         var a = GraphDatabaseHelpers.Instance.FindUser(x);
-                        <p>@x.toRealtime() - @a.firstName @a.lastName : @x.content</p>
+                        <p>@x.ToRealtime() - @a.FirstName @a.LastName : @x.Content</p>
                     }
                 </div>
             </div>
