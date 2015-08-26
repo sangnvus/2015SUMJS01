@@ -272,8 +272,23 @@ namespace FlyAwayPlus.Controllers
             return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
         }
 
-        public JsonResult ExportEstimationData(int roomId)
+        public JsonResult GetEstimationData(int roomId)
         {
+            var estimationsList = GraphDatabaseHelpers.Instance.GetRoomEstimation(roomId);
+            List<object> estimationDataInTable = new List<object>();
+
+            for (int i = 0; i < estimationsList.Count(); i++)
+            {
+                estimationDataInTable.Add(
+                    new
+                    {
+                        id = i + 1,
+                        payment = estimationsList.ElementAt(i).Payment,
+                        price = estimationsList.ElementAt(i).Price,
+                        creator = GraphDatabaseHelpers.Instance.GetEstimationCreator(estimationsList.ElementAt(i).EstimationId);
+                    });
+            }
+
             var estimationList = new List<object>
             {
                 new

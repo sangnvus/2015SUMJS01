@@ -2583,5 +2583,26 @@ namespace FlyAwayPlus.Helpers
                 .Results
                 .FirstOrDefault();
         }
+
+        public List<Estimation> GetRoomEstimation(int roomId)
+        {
+            _client.Connect();
+            return _client.Cypher.Match("(:room{RoomId: " + roomId + "})-[:HAS]->(e:estimation)")
+                                 .Return<Estimation>("e")
+                                 .Results
+                                 .ToList();
+        }
+
+        public string GetEstimationCreator(int estimationId)
+        {
+            _client.Connect();
+            var estimationCreator = _client.Cypher.Match("(u:user)-[:CREATE]->(:estimation{EstimationId: " + estimationId + "})")
+                                                  .Return<User>("u")
+                                                  .Results
+                                                  .FirstOrDefault();
+            return estimationCreator != null
+                   ? estimationCreator.FirstName + " " + estimationCreator.LastName
+                   : string.Empty;
+        }
     }
 }
