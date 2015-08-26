@@ -143,7 +143,8 @@
 
                 $(".comment-list").append(value);
                 $("#idTextareaComment").text("").val("");
-
+                postDetailModule.deleteCommentEvent();
+                postDetailModule.editCommentEvent();
                 commentHubProxy.server.sendComment(value);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -227,7 +228,6 @@
                 else {
                     var obj = selector ? selector : $("#idTextareaComment");
                     var keyword = $(obj).val().substring($(obj).val().lastIndexOf("@") + 1, $(obj).val().length - 1);
-                    console.log(keyword)
                     createTagFriendUI(keyword, selector);
                 }
             }
@@ -235,7 +235,6 @@
             if (isTagging == true) {
                 var obj = selector ? selector : $("#idTextareaComment");
                 var keyword = $(obj).val().substring($(obj).val().lastIndexOf("@") + 1, $(obj).val().length) + String.fromCharCode((96 <= evt.keyCode && evt.keyCode <= 105) ? evt.keyCode - 48 : evt.keyCode);
-                console.log(keyword);
                 createTagFriendUI(keyword, selector);
             }
         }
@@ -249,28 +248,12 @@
 
     var editCommentEvent = function (selector) {
         var checkOutFocus = false;
-        //var checkMouse = false;
-        /*
-        $(".comment-content").find("textarea").focusout(function (evt) {
-            var content = $(this).closest(".comment-content").find("p");
-            if (!checkOutFocus && checkMouse) {
-                $(content).show();
-                $(this).hide();
-            }
-            evt.preventDefault();
-        });
 
-        $(document).mousedown(function (e) {
-            var container = $(".comment-content").find("textarea");
-            if (container.has(e.target).length === 0) {
-                checkMouse = true;
-            }
-            else {
-                checkMouse = false;
-            }
-        });
-        */
-        $(".commenter-edit").click(function (evt) {
+        var obj = $(".commenter-edit");
+        if (typeof (selector) != "undefined") {
+            obj = $(selector);
+        }
+        $(obj).click(function (evt) {
             if (evt.handled !== true) { // This will prevent event triggering more then once
                 checkOutFocus = true;
                 var content = $(this).closest(".comment-detail").find(".comment-content");
@@ -294,8 +277,12 @@
         });
     };
 
-    deleteCommentEvent = function () {
-        $(".commenter-delete").click(function (evt) {
+    deleteCommentEvent = function (selector) {
+        var obj = $(".commenter-delete");
+        if (typeof (selector) != "undefined") {
+            obj = $(selector);
+        }
+        $(obj).click(function (evt) {
             var cmtDeleteSouce = $(this);
 
             swal({
