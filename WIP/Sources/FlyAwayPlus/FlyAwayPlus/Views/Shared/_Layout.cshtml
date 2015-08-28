@@ -323,11 +323,11 @@
                         $("#idNotification").append(tmp);
                         lastActivityId = notification["lastActivityID"];
                     }
-                    if (content.length > 0) {
-                        $("#btn-notification").find(".notification-count").text(notification_count);
+                    if (notification_count > 0) {
+                        $("#btn-notification").find(".notification-count").text(notification_count).show();
                     }
                     else {
-                        $("#btn-notification").find(".notification-count").text("");
+                        $("#btn-notification").find(".notification-count").text("").hide();
                     }
                 }
 

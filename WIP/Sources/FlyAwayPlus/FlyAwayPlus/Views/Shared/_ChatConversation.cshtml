@@ -162,9 +162,17 @@
                 $(this).html(commonModule.decompileTagFriend($(this).text()));
             });
 
+            $(".comment-area .comment-list .comment-content .comment-content-word").each(function () {
+                $(this).html(commonModule.decompileTagFriend($(this).text()));
+            });
+
+            $("#id-chat-list li .messages p").each(function () {
+                $(this).html(commonModule.decompileTagFriend($(this).text()));
+            });
             if (typeof (postDetailModule) != "undefined") {
                 postDetailModule.setListFriend(listFriend);
 
+                /*
                 $(".comment-content-word").each(function () {
                     var value = $(this).text();
                     var pattern = /@@([0-9a-z A-Z]*):/g;
@@ -182,6 +190,7 @@
                         $(this).html("").append(value);
                     }
                 });
+                */
             }
 
             $("#idListFriend").empty();

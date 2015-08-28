@@ -1813,12 +1813,30 @@ namespace FlyAwayPlus.Helpers
                 }
                 else
                 {
-                    _client.Cypher.OptionalMatch("(c:conversation {ConversationId: " + conversationId + "})-[r:LATEST_MESSAGE]->(m1:message), (u:user {UserId:" + userId + "}), (m:message {MessageId:" + message.MessageId + "})")
-                                        .Delete("r")
-                                        .Create("c-[:LATEST_MESSAGE]->m")
-                                        .Create("m-[:PREV_MESSAGE]->m1")
-                                        .Create("u-[:CREATE]->m")
-                                        .ExecuteWithoutResults();
+                    // Check for Conversation has LATEST_MESSAGE??
+                    int numberOfMessage = _client.Cypher.OptionalMatch("(c:conversation {ConversationId: " + conversationId + "})-[r:LATEST_MESSAGE]->(m1:message)")
+                                                .Return<int>("COUNT(r)")
+                                                .Results
+                                                .FirstOrDefault();
+
+                    if (numberOfMessage == 0)
+                    {
+                        // Hasn't LATEST_MESSAGE
+                        _client.Cypher.OptionalMatch("(c:conversation {ConversationId: " + conversationId + "}), (u:user {UserId:" + userId + "}), (m:message {MessageId:" + message.MessageId + "})")
+                                       .Create("c-[:LATEST_MESSAGE]->m")
+                                       .Create("u-[:CREATE]->m")
+                                       .ExecuteWithoutResults();
+                    }
+                    else
+                    {
+                        // Has LATEST_MESSAGE
+                        _client.Cypher.OptionalMatch("(c:conversation {ConversationId: " + conversationId + "})-[r:LATEST_MESSAGE]->(m1:message), (u:user {UserId:" + userId + "}), (m:message {MessageId:" + message.MessageId + "})")
+                                       .Delete("r")
+                                       .Create("c-[:LATEST_MESSAGE]->m")
+                                       .Create("m-[:PREV_MESSAGE]->m1")
+                                       .Create("u-[:CREATE]->m")
+                                       .ExecuteWithoutResults();
+                    }
                 }
 
             }
@@ -2643,6 +2661,60 @@ namespace FlyAwayPlus.Helpers
             _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
                          .Create("(u)-[:IN_CHARGE]->(e)")
                          .ExecuteWithoutResults();
+        }
+
+        public bool RequestJoinRoom(int roomId, int userId)
+        {
+            bool success = true;
+            try
+            {
+                _client.Connect();
+                _client.Cypher.Match("(u:user {UserId:" + userId + "}), (r:room {RoomId: " + roomId + "})")
+                         .Create("(u)-[:JOIN {type: " + FapConstants.JoinRequest + "}]->(r)")
+                         .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                success = false;
+            }
+            return success;
+        }
+
+        public bool AcceptRequestJoinRoom(int roomId, int userId)
+        {
+            bool success = true;
+            try
+            {
+                _client.Connect();
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[m:JOIN]->(r:room {RoomId: " + roomId + "})")
+                        .Set("m.type = " + FapConstants.JoinMember)
+                        .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                success = false;
+            }
+            return success;
+        }
+
+        public bool DeclineRequestJoinRoom(int roomId, int userId)
+        {
+            bool success = true;
+            try
+            {
+                _client.Connect();
+                _client.Cypher.Match("(u:user {UserId:" + userId + "})-[m:JOIN]->(r:room {RoomId: " + roomId + "})")
+                        .Delete("m")
+                        .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                success = false;
+            }
+            return success;
         }
     }
 }

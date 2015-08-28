@@ -204,9 +204,21 @@
             <div class="room-detail-admin-avatar">
                 <img class="circle-image" height="50" src="@admin.Avatar" alt="Admin" />
             </div>
-            <div>
-                <a href="javascript:;" class="btn btn-primary room-detail-request-join">Request join</a>
-            </div>
+            @if (admin.UserId == userId)
+            {
+                <div>
+                    <a href="javascript:;" class="btn btn-primary room-detail-request-join">View Request join</a>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <a href="javascript:;" id="id-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request join</a>
+                </div>
+                <div style="display:none">
+                    <a href="javascript:;" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Sent request</a>
+                </div>
+            }
             <div class="input-group">
                 <input type="text" class="form-control" value="@roomId" readonly>
                 <span class="input-group-btn">
@@ -214,9 +226,9 @@
                 </span>
             </div>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="&#64;friend">
+                <input type="text" id="id-tag-friend-join-room" class="form-control" placeholder="&#64;friend">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-primary" id="id-invite-friend-btn" type="button"><i class="fa fa-plus"></i></button>
                 </span>
             </div>
         </div>
@@ -364,16 +376,16 @@
     <div>
         <div class="col-md-6 room-detail-left-area">
             <!--POSTING-->
-            <div class="share-post-box room-detail-posting-area">
+            <div id="id-posting-room" class="share-post-box room-detail-posting-area">
                 <div class="panel panel-default boder-radius">
                     <div class="panel-body">
                         <div class="">
                             <textarea class="form-control message"
                                       rows="10" cols="40"
-                                      id="status_message" name="message"
+                                      id="status_message_room" name="message"
                                       placeholder="What do you want to share?"
                                       style="height: 62px; overflow: hidden;"></textarea>
-                            <textarea id="status_message_post" name="message_post"
+                            <textarea id="status_message_post_room" name="message_post"
                                       style="display: none"></textarea>
                         </div>
                     </div>
@@ -382,12 +394,12 @@
                         <div class="row">
                             <div class="helper-elements-wrapper">
                                 <!-- IMAGES -->
-                                <div id="post-add-images-wrapper" class="hidden">
-                                    <div id="post-image-preview-wrapper">
+                                <div id="post-add-images-wrapper-room" class="hidden">
+                                    <div id="post-image-preview-wrapper-room">
                                         <!-- Preview for to-be-uploaded photos -->
                                     </div>
 
-                                    <div class="progress progress-striped active hidden" id="post-upload-images-progress">
+                                    <div class="progress progress-striped active hidden" id="post-upload-images-progress-room">
                                         <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Uploading...</div>
                                     </div>
 
@@ -395,13 +407,13 @@
                                         <label for="post-images-upload" class="custom-file-upload">
                                             <i class="fa fa-plus"></i>
                                         </label>
-                                        <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload" name="files[]" class="hidden" multiple>
+                                        <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload-room" name="files[]" class="hidden" multiple>
                                     </div>
                                     <input type="hidden" name="uploadedimages" />
                                 </div>
 
                                 <!-- VIDEOS -->
-                                <div id="post-add-videos-wrapper" class="hidden">
+                                <div id="post-add-videos-wrapper-room" class="hidden">
                                     <span id="signinButton" class="pre-sign-in">
                                         <span class="g-signin"
                                               data-callback="oauth2Callback"
@@ -412,7 +424,7 @@
                                     </span>
 
                                     <div class="post-sign-in">
-                                        <p id="post-video-file-name" style="text-align: center"></p>
+                                        <p id="post-video-file-name-room" style="text-align: center"></p>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="upload-media-preview">
@@ -423,14 +435,14 @@
                                             </div>
 
                                             <div class="col-md-7" style="margin: 0 20px 0 -20px">
-                                                <input class="form-control" id="video-upload-title" type="text" placeholder="Title for video">
-                                                <textarea class="form-control" id="video-upload-description" placeholder="Description for video"></textarea>
+                                                <input class="form-control" id="video-upload-title-room" type="text" placeholder="Title for video">
+                                                <textarea class="form-control" id="video-upload-description-room" placeholder="Description for video"></textarea>
                                             </div>
 
-                                            <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button">UPLOAD</a>
+                                            <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
                                         </div>
 
-                                        <div class="progress progress-striped active hidden" id="post-upload-video-progress">
+                                        <div class="progress progress-striped active hidden" id="post-upload-video-progress-room">
                                             <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
                                         </div>
 
@@ -439,7 +451,7 @@
                                                 <i class="fa fa-plus"></i>
                                             </label>
 
-                                            <input id="post-video-upload" type="file" class="hidden" accept="video/*">
+                                            <input id="post-video-upload-room" type="file" class="hidden" accept="video/*">
                                         </div>
 
                                         <input type="hidden" name="uploadedvideo" />
@@ -450,10 +462,10 @@
                             <div class="col-md-10">
                                 <div class="form-group">
                                     <div class="btn-group">
-                                        <a class="btn btn-default" id="id-picture-button">
+                                        <a class="btn btn-default" id="id-picture-button-room">
                                             <i class="fa fa-picture-o"></i> Photo
                                         </a>
-                                        <a class="btn btn-default" id="id-video-button">
+                                        <a class="btn btn-default" id="id-video-button-room">
                                             <i class="fa fa-video-camera"></i> Video
                                         </a>
                                     </div>
@@ -642,10 +654,54 @@
     });
 
     $(document).ready(function () {
+        $("#id-textarea-chat-room").keydown(function (evt) {
+            commonModule.handleTagging(evt, this);
+        });
+
+        $("#id-tag-friend-join-room").keydown(function (evt) {
+            commonModule.handleTagging(evt, this);
+        });
+
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             commonModule.setBlocksit($(".blog-landing"), 250);
         });
 
+        $("#id-invite-friend-btn").click(function(evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                var listId = commonModule.findListFriendIdTagging($("#id-tag-friend-join-room").val());
+                // send request
+
+
+                $("#id-tag-friend-join-room").val("").text("");
+                evt.handled = true;
+                evt.preventDefault();
+            }
+        });
+
+        $("#id-request-join-room-btn").click(function(evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                $(this).closest("div").hide();
+                $("#id-sent-request-join-room-btn").closest("div").show();
+
+                $.ajax({
+                    url: '/Room/RequestJoinRoom',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        roomId: parseInt('@roomId'),
+                        userId: parseInt('@userId')
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function () {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+                evt.handled = true;
+                evt.preventDefault();
+            }
+        });
         // Save general plan.
         $('#g-plan-btnPopupSave').click(function() {
             var dataPass = {
@@ -779,9 +835,8 @@
                 data: data,
                 success: function (data, textstatus) {
                     // send notification
-                    console.log(data);
                     var message = data;
-                    if (message == null) {
+                    if (message == null || message.length == 0) {
                         return;
                     }
                     var tmp = "";
@@ -790,7 +845,7 @@
                     tmp += "<img src='" + $("#id-avatar-current-user").attr("src") + "' />";
                     tmp += "</div>";
                     tmp += "<div class='messages' style='border-bottom: #19B5FF 3px solid'>";
-                    tmp += "<p>" + message["content"] + "</p>";
+                    tmp += "<p>" + message["Content"] + "</p>";
                     tmp += "<time datetime='" + message["DateCreated"] + "'><a href='/User/Index/@userId'>" + $("#id-avatar-current-user").attr("alt") + "</a>" + message["DateCreated"] + "</time>";
                     tmp += "</div>";
                     tmp += "</li>";
@@ -806,4 +861,120 @@
             });
         };
     });
+
+    $(function () {
+        $("#status_message_room").keydown(function (evt) {
+            commonModule.handleTagging(evt, this);
+        });
+        /*
+        $("#id-post-submit").click(function (evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+
+                evt.handled = true;
+            }
+        });*/
+
+        $("#id-picture-button-room").click(function () {
+            $("#post-add-images-wrapper-room").toggleClass("hidden");
+            $("#post-add-videos-wrapper-room").removeClass("hidden").addClass("hidden");
+        });
+
+        $("#id-video-button-room").click(function () {
+            $("#post-add-videos-wrapper-room").toggleClass("hidden");
+            $("#post-add-images-wrapper-room").removeClass("hidden").addClass("hidden");
+        });
+
+        $("#post-images-upload-room").change(function (e) {
+            previewImages(this.files);
+
+            uploadImages(this.files);
+        });
+
+        $("#post-video-upload-room").change(function (e) {
+            $("#post-video-file-name-room").text(e.target.files[0].name);
+        });
+
+        $("#id-posting-room img").each(function () {
+            var aspectRatio = $(this).width() / $(this).height();
+            $(this).data("aspect-ratio", aspectRatio);
+
+            if (aspectRatio > 1) {
+                $(this).css({
+                    height: "100%"
+                });
+            } else if (aspectRatio < 1) {
+                $(this).css({
+                    width: "100%"
+                });
+            }
+        });
+    });
+
+    function previewImages(files) {
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var imageType = /^image\//;
+
+            if (!imageType.test(file.type)) {
+                continue;
+            }
+
+            var previewWrapper = document.createElement("div");
+            previewWrapper.classList.add("upload-media-preview");
+
+            var cropWrapper = document.createElement("div");
+            cropWrapper.classList.add("crop");
+
+            var img = document.createElement("img");
+            img.file = file;
+
+            cropWrapper.appendChild(img);
+            previewWrapper.appendChild(cropWrapper);
+
+            var imagesWrapper = $("#post-image-preview-wrapper-room");
+            imagesWrapper.append(previewWrapper);
+
+            var reader = new FileReader();
+            reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function uploadImages(files) {
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("file" + x, files[x]);
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Upload/UploadPhoto',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    beforeSend: function () {
+                        $("#post-upload-images-progress-room").removeClass("hidden");
+                    },
+                    success: function (result) {
+                        $("#post-upload-images-progress-room").addClass("hidden");
+
+                        for (var i = 0; i < result.length; i++) {
+                            var imageNameInput = $("#post-add-images-wrapper-room").find('input[name="uploadedimages"]');
+                            imageNameInput.val(imageNameInput.val() + "#" + result[i]);
+                        }
+                    },
+                    error: function (xhr, status, p3, p4) {
+                        var err = "Error " + " " + status + " " + p3 + " " + p4;
+                        if (xhr.responseText && xhr.responseText[0] === "{")
+                            err = JSON.parse(xhr.responseText).Message;
+                        console.log(err);
+                    }
+                });
+            } else {
+                alert("This browser doesn't support HTML5 file uploads!");
+            }
+        }
+    }
 </script>

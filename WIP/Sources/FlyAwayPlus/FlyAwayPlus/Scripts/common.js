@@ -70,19 +70,25 @@
     var setBlocksit = function (objBlog, width) {
         objBlog = objBlog ? objBlog : $(".blog-landing");
         width = width ? width : 320;
+        if (typeof (objBlog) != "undefined" || objBlog != null || objBlog.length > 0) {
+            $(objBlog).each(function (evt) {
+                try {
+                    var conWidth = $(this).width();
+                    var gridwidth = width;
 
-        $(objBlog).each(function (evt) {
-            var conWidth = $(this).width();
-            var gridwidth = width;
+                    var col = conWidth / gridwidth;
 
-            var col = conWidth / gridwidth;
-
-            $(this).BlocksIt({
-                numOfCol: Math.floor(col),
-                offsetX: 8,
-                offsetY: 8
+                    $(this).BlocksIt({
+                        numOfCol: Math.floor(col),
+                        offsetX: 8,
+                        offsetY: 8
+                    });
+                }
+                catch (e) {
+                    console.log("Blocksit: " + e.message);
+                }
             });
-        });
+        }
     };
 
     var comnpileTagFriend = function (username) {
@@ -102,7 +108,6 @@
             for (var index = 0; index < _listFriend.length; index++) {
                 var username = _listFriend[index]["FirstName"].toUpperCase() + " " + _listFriend[index]["LastName"].toUpperCase();
                 if (username.toUpperCase() == keyword.toUpperCase()) {
-                    console.log(_listFriend[index]["UserId"]);
                     return _listFriend[index]["UserId"];
                 }
             }
@@ -164,9 +169,18 @@
             var offset = $(selector).offset();
             var top = offset.top;
             var left = offset.left;
-            top = top - 1 - $("#id-tag-friend-tab-ui").height();
-            $("#id-tag-friend-tab-ui").offset({ top: top, left: left }).width($(selector).width());
+            var width = 0;
+            width += parseInt($(selector).css("padding-left").split("px").join(""));
+            width += parseInt($(selector).css("margin-left").split("px").join(""));
+            width += parseInt($(selector).css("padding-right").split("px").join(""));
+            width += parseInt($(selector).css("border-right-width").split("px").join(""));
+            width += parseInt($(selector).css("border-left-width").split("px").join(""));
 
+            top = top - 1 - $("#id-tag-friend-tab-ui").height();
+            $("#id-tag-friend-tab-ui").offset({ top: top, left: left });
+            $("#id-tag-friend-tab-ui").width(parseInt($(selector).width()) + width);
+            
+            
             $(".tab_complete_ui_item").click(function (evt) {
                 if (evt.handled !== true) { // This will prevent event triggering more then once
                     // do anything?
@@ -212,6 +226,20 @@
         }
     };
 
+    var findListFriendIdTagging = function (value) {
+        var listFriendId = [];
+        var pattern = /@([0-9a-z A-Z]*):/g;
+        var tagFriend = value.match(pattern);
+        if (tagFriend != null) {
+            var username = "";
+            for (var index = 0; index < tagFriend.length; index++) {
+                username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                listFriendId.push(findUserId(username));
+            }
+        }
+        return listFriendId;
+    }
+
     return {
         convertTime: convertTime,
         callAjax: callAjax,
@@ -221,6 +249,7 @@
         getListFriend: getListFriend,
         decompileTagFriend: decompileTagFriend,
         createTagFriendUI: createTagFriendUI,
+        findListFriendIdTagging: findListFriendIdTagging,
         handleTagging: handleTagging
     }
 })();

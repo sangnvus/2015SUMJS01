@@ -45,7 +45,7 @@
     border-radius: 0.25rem;
     box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
     line-height: 1.4rem;
-    min-width: 300px;
+    min-width: 100px;
     padding: 0;
     position: absolute;
     z-index: 100000;

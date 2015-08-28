@@ -25,6 +25,13 @@ namespace FlyAwayPlus.Controllers
 
             if (id == -1)
             {
+                /*
+                string startPlace = Request.Form["startplace"];
+                string destinationPlace = Request.Form["targetplace"];
+                string startDate = Request.Form["startdate"];
+                string returnDate = Request.Form["returndate"];
+                string slot = Request.Form["slot"];
+                */
                 listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword("");   // search All room
                 foreach (var room in listRoom)
                 {
@@ -33,7 +40,7 @@ namespace FlyAwayPlus.Controllers
             }
             else
             {
-                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByUserId(user.UserId);   // search All room
+                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByUserId(user.UserId);   // search room of current User
                 for (int i = 0; i < listRoom.Count; i++)
                 {
                     listAdminRoom.Add(user);
@@ -358,6 +365,16 @@ namespace FlyAwayPlus.Controllers
             };
 
             return Json(estimationDataInTable, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult RequestJoinRoom(int roomId, int userId)
+        {
+            bool success = false;
+            if (Request.IsAjaxRequest())
+            {
+                success = GraphDatabaseHelpers.Instance.RequestJoinRoom(roomId, userId);
+            }
+            return Json(success);
         }
     }
 }
