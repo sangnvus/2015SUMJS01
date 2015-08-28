@@ -21,6 +21,8 @@
                               id="status_message" name="message"
                               placeholder="What do you want to share?"
                               style="height: 62px; overflow: hidden;"></textarea>
+                    <textarea id="status_message_post" name="message_post"
+                              style="display: none"></textarea>
                 </div>
             </div>
 
@@ -160,6 +162,10 @@
 
 <script>
     $(function () {
+        $("#status_message").keydown(function (evt) {
+            commonModule.handleTagging(evt, this);
+        });
+
         $("#id-post-submit").click(function (evt) {
             if (evt.handled !== true) { // This will prevent event triggering more then once
                 if ($("#status_message").val().trim().length == 0) {
