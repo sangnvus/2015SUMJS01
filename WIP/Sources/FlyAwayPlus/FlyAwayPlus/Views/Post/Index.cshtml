@@ -205,13 +205,13 @@
         });
 
         $('#closeBtn').click(function(e) {
-            if (parseInt('@Session["userID"]') == parseInt('@userPost.UserId')) {
+            if (parseInt('@Session["UserId"]') == parseInt('@userPost.UserId')) {
                 alert("You can not report yourself!");
             } else {
                 var controller = "/User/ReportPost/";
                 var data = {
                     postID: @Model.PostId,
-                    userReportID: parseInt('@Session["userID"]'),
+                    userReportID: parseInt('@Session["UserId"]'),
                     userReportedID: @userPost.UserId,
                     typeReport: $('input[name="optradio"]:checked').val()
                 };

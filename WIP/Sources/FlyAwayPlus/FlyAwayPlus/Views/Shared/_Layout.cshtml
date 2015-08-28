@@ -116,6 +116,11 @@
     @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
     {
         <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
+        @Html.Partial("_TagFriendPartial")
+        if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
+        {
+            @Html.Partial("_ChatConversation")
+        }
     }
     else
     {
@@ -128,11 +133,6 @@
     </div>
     @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
     {
-        @Html.Partial("_TagFriendPartial")
-        if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
-        {
-            @Html.Partial("_ChatConversation")
-        }
         @RenderSection("scripts", required: false)
         @Scripts.Render("~/bundles/js")
         <script src="/signalr/hubs"></script>

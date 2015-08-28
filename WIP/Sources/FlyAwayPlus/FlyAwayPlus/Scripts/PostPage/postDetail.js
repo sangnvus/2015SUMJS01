@@ -326,7 +326,7 @@
             return _listFriend;
         }
         for (var index = 0; index < _listFriend.length; index++) {
-            var username = _listFriend[index]["firstName"].toUpperCase() + " " + _listFriend[index]["lastName"].toUpperCase();
+            var username = _listFriend[index]["FirstName"].toUpperCase() + " " + _listFriend[index]["LastName"].toUpperCase();
             if (username.indexOf(keyword.toUpperCase()) == 0) {
                 list.push(_listFriend[index]);
             }
@@ -347,8 +347,8 @@
         */
         for (var index = 0; index < Math.min(listFriend.length, 10) ; index++) {
             tmp = "<li data-index='" + index + "' class='tab_complete_ui_item'>";
-            tmp += "<img class='lazy member_image thumb_24 member_preview_image' src='" + listFriend[index]["avatar"] + "'>";
-            tmp += "<span class='username'>" + listFriend[index]["firstName"] + " " + listFriend[index]["lastName"]; + "</span>";
+            tmp += "<img class='lazy member_image thumb_24 member_preview_image' src='" + listFriend[index]["Avatar"] + "'>";
+            tmp += "<span class='username'>" + listFriend[index]["FirstName"] + " " + listFriend[index]["LastName"]; + "</span>";
             tmp += "</li>";
             $("#id-tag-friend-list").append(tmp);
         }
@@ -378,7 +378,7 @@
 
     findUserID = function (keyword) {
         for (var index = 0; index < _listFriend.length; index++) {
-            var username = _listFriend[index]["firstName"].toUpperCase() + " " + _listFriend[index]["lastName"].toUpperCase();
+            var username = _listFriend[index]["FirstName"].toUpperCase() + " " + _listFriend[index]["LastName"].toUpperCase();
             if (username.toUpperCase() == keyword.toUpperCase()) {
                 return _listFriend[index]["UserId"];
             }

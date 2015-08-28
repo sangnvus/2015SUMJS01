@@ -151,6 +151,17 @@
 
             var listFriend = JSON.parse(listFriendJSON);
             var listMessage = JSON.parse(listMessageJSON);
+
+            // show all post tag friend
+            commonModule.setListFriend(listFriend);
+            $(".panel-content-wrapper .board-post-content").each(function () {
+                $(this).html(commonModule.decompileTagFriend($(this).text()));
+            });
+            // show post detail tag friend
+            $(".post-area .post-content:last").each(function () {
+                $(this).html(commonModule.decompileTagFriend($(this).text()));
+            });
+
             if (typeof (postDetailModule) != "undefined") {
                 postDetailModule.setListFriend(listFriend);
 
