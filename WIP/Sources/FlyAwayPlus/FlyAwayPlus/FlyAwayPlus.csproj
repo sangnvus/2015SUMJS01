@@ -293,13 +293,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\ASPSnippets.GoogleAPI.dll" />
-    <Content Include="common.js" />
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\chatConversation.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\datepicker.css" />
+    <Content Include="Content\Fancy\blank.gif" />
+    <Content Include="Content\Fancy\fancybox_overlay.png" />
+    <Content Include="Content\Fancy\fancybox_sprite.png" />
     <Content Include="Content\friendSuggest.css" />
     <Content Include="Content\bootstrap.dropdowns-enhancement.min.css" />
     <Content Include="Content\fullcalendar.css" />
@@ -317,7 +319,14 @@
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Content\tooltipster.css" />
     <Content Include="fonts\artill_clean_icons-webfont.svg" />
+    <Content Include="Images\background.jpg" />
+    <Content Include="Images\background\halong.jpg" />
+    <Content Include="Images\background\nhatrang.jpg" />
+    <Content Include="Images\background\nhatrang2.jpg" />
+    <Content Include="Images\background\sondoong.jpg" />
+    <Content Include="Images\current-marker.png" />
     <Content Include="Images\image.gif" />
+    <Content Include="Images\other-marker.png" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\icon-calendar.png" />
     <Content Include="Images\UIHelper\magnifier.svg" />
@@ -355,7 +364,6 @@
     <Content Include="Content\HomePage\carousel.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
-    <Content Include="data\img\img_chania.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -471,7 +479,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\background\" />
+    <Folder Include="data\img\" />
     <Folder Include="Images\UserUpload\UserAvatar\" />
     <Folder Include="Temp\" />
     <Folder Include="Views\Upload\" />
