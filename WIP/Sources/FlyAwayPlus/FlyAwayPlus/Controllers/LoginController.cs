@@ -239,11 +239,16 @@ namespace FlyAwayPlus.Controllers
 
             // Get the user's information
             dynamic me = fb.Get("/me");
+            string facebookId = me.id;
             string email = me.email;
+
+            if (String.IsNullOrEmpty(email))
+            {
+                email = facebookId + "@facebook.com";
+            }
 
             // select from DB
             User newUser = GraphDatabaseHelpers.Instance.GetUser(1, email); // Facebook account: TypeId = 1
-            string facebookId = me.id;
 
             /*
              *  Insert into Graph DB 
