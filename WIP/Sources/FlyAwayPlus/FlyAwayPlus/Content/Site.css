@@ -1883,15 +1883,14 @@ textarea {
     cursor: pointer;
 }
 
-.images-list-wrapper {
-    display: block;
+.am-wrapper {
     float: left;
+    position: relative;
+    overflow: hidden;
 }
 
-    .images-list-wrapper .image-element {
-        max-width: 200px;
+    .am-wrapper img {
+        position: absolute;
+        outline: none;
+        height: auto
     }
-
-        .images-list-wrapper .image-element img {
-            border-radius: 4px;
-        }

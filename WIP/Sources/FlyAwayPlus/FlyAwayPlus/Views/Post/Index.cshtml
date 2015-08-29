@@ -33,15 +33,16 @@
                         </span>
                     </div>
                 </div>
-                <div class="post-content" style="display:inline-block;">
-                    <div class="images-list-wrapper">
+                <div class="post-content">
+                    @Model.Content
+                </div>
+                <div class="post-content">
+                    <div class="am-container" id="am-container">
                         @foreach (var photo in listPhoto)
                         {
-                            <div class="image-element" style="margin-top:10px;">
-                                <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
-                                    <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" />
-                                </a>
-                            </div>
+                            <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
+                                <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" alt="@photo.Url"/>
+                            </a>
                         }
                     </div>
                     @if (@video != null)
@@ -53,9 +54,6 @@
                             </a>
                         </div>
                     }
-                </div>
-                <div class="post-content">
-                    @Model.Content
                 </div>
             </div>
 
@@ -148,19 +146,31 @@
     @Html.Partial("_PlaceSuggest", user)
     @Html.Partial("_FriendSuggest", user)
 </div>
-
+<script src="~/Scripts/jquery.montage.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        // Image list.
-        var conWidth = $(".images-wrapper").width();
-        //my container width
-        var gridwidth = 212;
-        //alert(conWidth);
-        var col = conWidth / gridwidth;
-        //alert(col);
-        $(".images-wrapper").BlocksIt({
-            numOfCol: Math.floor(col)
-        });
+        var $container 	= $('#am-container'),
+					$imgs		= $container.find('img').hide(),
+					totalImgs	= $imgs.length,
+					cnt			= 0;
+				
+        $imgs.each(function(i) {
+            var $img	= $(this);
+            $('<img/>').load(function() {
+                ++cnt;
+                if( cnt === totalImgs ) {
+                    $imgs.show();
+                    $container.montage({
+                        fillLastRow				: true,
+                        alternateHeight			: true,
+                        alternateHeightRange	: {
+                            min	: 150,
+                            max	: 240
+                        }
+                    });
+                }
+            }).attr('src',$img.attr('src'));
+        });	
 
         $(".fancybox").attr('rel', 'gallery').fancybox({
             openEffect: 'fade',

@@ -1963,7 +1963,8 @@ namespace FlyAwayPlus.Helpers
 
             try
             {
-                //TODO: Remove likes, dislike
+                DeleteLike(user.UserId, postId);
+                DeleteDislike(user.UserId, postId);
                 DeleteCommentsAndRelationship(postId);
                 RebuildPostsChainFlow(user.UserId, postId);
                 DeletePostAndRelationships(postId);
@@ -1977,7 +1978,6 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
         #region DELETE POST HELPERS
-
         private void DeleteCommentsAndRelationship(int postId)
         {
             _client.Cypher.Match("(post{PostId: " + postId + "})-[lcr:LATEST_COMMENT]->(lc:comment)-[pcrs:PREV_COMMENT*]->(pc:comment), ()-[ccrl:CREATE]->lc,()-[ccrp:CREATE]->pc")
