@@ -74,6 +74,16 @@ namespace FlyAwayPlus.Controllers
             List<User> listUserRequestJoinRoom = GraphDatabaseHelpers.Instance.FindUserRequestJoinRoom(roomId);
             List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomId, 0);
             List<User> listUserOwnMessage = listMessage.Select(message => GraphDatabaseHelpers.Instance.FindUser(message)).ToList();
+            string relationInRoom = "";
+            if (listUserInRoom.Any(u => u.UserId == user.UserId))
+            {
+                relationInRoom = "Member";
+            }
+            else if (listUserRequestJoinRoom.Any(u => u.UserId == user.UserId))
+            {
+                relationInRoom = "Request";
+            }
+
 
             var roomStartDate = DateTime.ParseExact(roomInfo.StartDate, FapConstants.DateFormat, CultureInfo.InvariantCulture);
             var roomEndDate = roomStartDate.AddDays(roomInfo.LengthInDays);
@@ -95,6 +105,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listMessage"] = listMessage;
             ViewData["listUserOwnMessage"] = listUserOwnMessage;
             ViewData["listGeneralPlan"] = listGeneralPlan;
+            ViewData["relationInRoom"] = relationInRoom;
             Session["roomID"] = ViewData["roomID"] = roomId;
             return View();
         }
@@ -373,6 +384,26 @@ namespace FlyAwayPlus.Controllers
             if (Request.IsAjaxRequest())
             {
                 success = GraphDatabaseHelpers.Instance.RequestJoinRoom(roomId, userId);
+            }
+            return Json(success);
+        }
+
+        public JsonResult AcceptRequestJoinRoom(int roomId, int userId)
+        {
+            bool success = false;
+            if (Request.IsAjaxRequest())
+            {
+                success = GraphDatabaseHelpers.Instance.AcceptRequestJoinRoom(roomId, userId);
+            }
+            return Json(success);
+        }
+
+        public JsonResult DeclineRequestJoinRoom(int roomId, int userId)
+        {
+            bool success = false;
+            if (Request.IsAjaxRequest())
+            {
+                success = GraphDatabaseHelpers.Instance.DeclineRequestJoinRoom(roomId, userId);
             }
             return Json(success);
         }
