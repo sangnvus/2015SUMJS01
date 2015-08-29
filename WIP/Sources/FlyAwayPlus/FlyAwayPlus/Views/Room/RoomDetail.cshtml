@@ -386,14 +386,16 @@
                            data-show-header="true"
                            data-show-columns="true"
                            data-show-refresh="true"
+                           data-height="500"
+                           data-pagination="true"
                            data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
                         <thead>
                             <tr>
-                                <th data-field="payment">Payment</th>
-                                <th data-field="price">Price</th>
-                                <th data-field="creator">Creator</th>
-                                <th data-field="payer">Payer</th>
-                                <th data-field="datecreated">Date created</th>
+                                <th data-field="payment" data-sortable="true">Payment</th>
+                                <th data-field="price" data-sortable="true">Price</th>
+                                <th data-field="creator" data-sortable="true">Creator</th>
+                                <th data-field="payer" data-sortable="true">Payer</th>
+                                <th data-field="datecreated" data-sortable="true">Date created</th>
                             </tr>
                         </thead>
                     </table>

@@ -330,7 +330,6 @@
     <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\icon-calendar.png" />
     <Content Include="Images\UIHelper\magnifier.svg" />
-    <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Images\UIHelper\youtube.png" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
@@ -370,12 +369,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\FAP logo.png" />
-    <Content Include="Images\UIHelper\WOW slider\arrows.png" />
-    <Content Include="Images\UIHelper\WOW slider\bullet.png" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.svg" />
-    <Content Include="Images\UIHelper\WOW slider\loading.gif" />
-    <Content Include="Images\UIHelper\WOW slider\pause.png" />
-    <Content Include="Images\UIHelper\WOW slider\play.png" />
     <Content Include="Images\upload.png" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
@@ -396,9 +389,6 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
     <Content Include="fonts\artill_clean_icons-webfont.eot" />
     <Content Include="fonts\artill_clean_icons-webfont.ttf" />
     <Content Include="fonts\artill_clean_icons-webfont.woff" />

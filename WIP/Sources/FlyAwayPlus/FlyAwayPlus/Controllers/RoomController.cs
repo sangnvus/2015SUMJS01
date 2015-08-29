@@ -290,13 +290,13 @@ namespace FlyAwayPlus.Controllers
             return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
         }
 
-        public void AddEstimation(string payment, double price, int payer, string datecreated)
+        public JsonResult AddEstimation(string payment, double price, int payer, string datecreated)
         {
             // TODO: Get list of payer.
             var payerid = 1;
 
-            var creatorId = int.Parse(@Session["UserId"] + string.Empty);
-            int roomid = (int)Session["roomID"];
+            var creatorId = int.Parse(Session["UserId"] + string.Empty);
+            int roomid = int.Parse(Session["roomID"] + string.Empty);
 
             var newEstimation = new Estimation
             {
@@ -305,7 +305,7 @@ namespace FlyAwayPlus.Controllers
                 DateCreated = datecreated
             };
 
-            GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid);
+            return Json(GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid));
         }
 
         public JsonResult GetEstimationData(int roomId)
