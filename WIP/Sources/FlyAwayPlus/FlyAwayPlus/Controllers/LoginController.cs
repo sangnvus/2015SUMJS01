@@ -242,7 +242,7 @@ namespace FlyAwayPlus.Controllers
             string facebookId = me.id;
             string email = me.email;
 
-            if (String.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
             {
                 email = facebookId + "@facebook.com";
             }
