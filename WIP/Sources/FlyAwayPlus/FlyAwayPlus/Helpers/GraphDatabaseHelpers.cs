@@ -2359,7 +2359,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN{type:" + FapConstants.JoinMember + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
