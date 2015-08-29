@@ -287,6 +287,7 @@ namespace FlyAwayPlus.Controllers
             Session["username"] = newUser.FirstName + " " + newUser.LastName;
             Session["userAva"] = newUser.Avatar;
             Session["UserId"] = newUser.UserId;
+            Session["loginMessageError"] = "";
             UserHelpers.SetCurrentUser(Session, newUser);
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -469,6 +470,7 @@ namespace FlyAwayPlus.Controllers
                 Session["username"] = newUser.FirstName + " " + newUser.LastName;
                 Session["userAva"] = newUser.Avatar;
                 Session["UserId"] = newUser.UserId;
+                Session["loginMessageError"] = "";
                 UserHelpers.SetCurrentUser(Session, newUser);
             }
 
