@@ -300,7 +300,7 @@ namespace FlyAwayPlus.Controllers
         public JsonResult GetEstimationData(int roomId)
         {
             var estimationsList = GraphDatabaseHelpers.Instance.GetRoomEstimation(roomId);
-            List<object> estimationDataInTable = new List<object>();
+            var estimationDataInTable = new List<object>();
 
             foreach (var est in estimationsList)
             {
