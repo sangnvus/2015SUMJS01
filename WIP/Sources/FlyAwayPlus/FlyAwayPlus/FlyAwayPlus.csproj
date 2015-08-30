@@ -262,6 +262,7 @@
     <Compile Include="Helpers\FAPConstants.cs" />
     <Compile Include="Helpers\DateHelpers.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
+    <Compile Include="Helpers\MailHelper.cs" />
     <Compile Include="Helpers\SingletonBase.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />

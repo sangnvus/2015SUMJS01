@@ -374,71 +374,40 @@ namespace FlyAwayPlus.Controllers
         }
         public JsonResult ReportPost(int postId, int userReportId, int userReportedId, int typeReport)
         {
-            bool success = false;
-
-            GraphDatabaseHelpers.Instance.InsertReportPost(postId, userReportId, typeReport);
-
-            //Send warning email to reported user
-            var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
-            string senderId = "flyawayplus.system@gmail.com"; // use sender’s email id here..
-            const string senderPassword = "doan2015"; // sender password here…
+            var checkReport = GraphDatabaseHelpers.Instance.FindReportPost(postId, userReportId);
+            if (checkReport != null)
+            {
+                return Json(false);
+            }
             try
             {
-                var smtp = new SmtpClient
-                {
-                    Host = "smtp.gmail.com", // smtp server address here…
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    Credentials = new NetworkCredential(senderId, senderPassword),
-                    Timeout = 30000,
-                };
-                var message = new MailMessage(senderId, email, "Report post",
-                    "Your post is reported");
-                smtp.Send(message);
+                GraphDatabaseHelpers.Instance.InsertReportPost(postId, userReportId, typeReport);
 
+                //Send warning email to reported user
+                var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
+                MailHelper.SendMailWarningReportPost(email);
+
+                return Json(true);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-
+                return Json(false);
             }
-
-            return Json(success);
         }
 
         public JsonResult ReportUser(int userReportId, int userReportedId, int typeReport)
         {
-            bool success = false;
-
+            var checkUser = GraphDatabaseHelpers.Instance.FindReportUser(userReportId, userReportedId);
+            if (checkUser != null)
+            {
+                return Json(false);
+            }
             GraphDatabaseHelpers.Instance.InsertReportUser(userReportId, userReportedId, typeReport);
             //Send warning email to reported user
             var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
-            string senderId = "flyawayplus.system@gmail.com"; // use sender’s email id here..
-            const string senderPassword = "doan2015"; // sender password here…
-            try
-            {
-                var smtp = new SmtpClient
-                {
-                    Host = "smtp.gmail.com", // smtp server address here…
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    Credentials = new NetworkCredential(senderId, senderPassword),
-                    Timeout = 30000,
-                };
-                var message = new MailMessage(senderId, email, "Report account",
-                    "Your account is reported");
-                smtp.Send(message);
+            MailHelper.SendMailWarningReportUser(email);
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-
-            }
-
-            return Json(success);
+            return Json(true);
         }
 
         public int CountMutualFriend(string thisUserId, string otherUserId)
