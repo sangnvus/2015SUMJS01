@@ -233,10 +233,12 @@ namespace FlyAwayPlus.Controllers
             var roomDesc = Request.Form["roomdesc"];
             var startdate = DateTime.ParseExact(Request.Form["startdate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
             var enddate = DateTime.ParseExact(Request.Form["enddate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
-            var startPlace = Request.Form["start_formatted_address"];
+            var startAddressName = Request.Form["start_name"];
+            var startAdress = Request.Form["start_formatted_address"];
             var startLng = Request.Form["start_lng"];
             var startLat = Request.Form["start_lat"];
-            var targetPlace = Request.Form["end_formatted_address"];
+            var targetAddressName = Request.Form["end_name"];
+            var targetAddress = Request.Form["end_formatted_address"];
             var endLng = Request.Form["end_lng"];
             var endLat = Request.Form["end_lat"];
             var privacy = Request.Form["privacy"];
@@ -252,10 +254,10 @@ namespace FlyAwayPlus.Controllers
                 MaxNoSlots = maxNoOfSlots,
                 StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,
-                StartLocation = startPlace,
+                StartLocation = startAddressName + " - " + startAdress,
                 StartLatitude = startLat,
                 StartLongitude = startLng,
-                DestinationLocation = targetPlace,
+                DestinationLocation = targetAddressName  + " - " + targetAddress,
                 DestinationLatitude = endLat,
                 DestinationLongitude = endLng,
                 Privacy = privacy,

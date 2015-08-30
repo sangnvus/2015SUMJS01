@@ -129,11 +129,12 @@
     .white-panel h1 {
         margin-top: 0;
         font-size: 100%;
-        font-weight: bold;
     }
 
         .white-panel h1 a {
-            color: #A92733;
+            color: #F32613;
+            text-transform: uppercase;
+            font-weight: normal;
         }
 
     .white-panel:hover {
