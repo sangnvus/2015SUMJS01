@@ -1,7 +1,6 @@
 ﻿<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script src="~/Scripts/prettymaps.js"></script>
 
-<script src="~/Scripts/jquery.geocomplete.js"></script>
 <script src="~/Scripts/LookAround/logger.js"></script>
 <form>
     <input id="geocomplete" type="text" placeholder="Type in an address" size="90" />
@@ -72,14 +71,14 @@
 
         $("#geocomplete").geocomplete(options)
             .bind("geocode:result", function (event, result) {
-                $.log("Result: " + result.formatted_address);
+                $.log("Result: " + result.name);
                 $('.map-canvas').prettyMaps({
-                    address: [result.formatted_address],
+                    address: [result.name],
                     image: '../Images/avatar/avatar-1.jpg',
                     saturation: -30,
                     hue: currentColor
                 });
-                currentLocation = result.formatted_address;
+                currentLocation = result.name;
             })
             .bind("geocode:error", function (event, status) {
                 $.log("ERROR: " + status);

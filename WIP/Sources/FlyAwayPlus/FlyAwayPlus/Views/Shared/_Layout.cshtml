@@ -115,7 +115,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
     {
-        <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&signed_in=true&libraries=places"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&sensor=true&libraries=places"></script>
+        
         @Html.Partial("_TagFriendPartial")
         if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
         {

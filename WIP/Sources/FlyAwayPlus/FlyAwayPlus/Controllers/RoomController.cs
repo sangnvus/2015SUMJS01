@@ -74,6 +74,16 @@ namespace FlyAwayPlus.Controllers
             List<User> listUserRequestJoinRoom = GraphDatabaseHelpers.Instance.FindUserRequestJoinRoom(roomId);
             List<Message> listMessage = GraphDatabaseHelpers.Instance.GetListMessageInRoom(roomId, 0);
             List<User> listUserOwnMessage = listMessage.Select(message => GraphDatabaseHelpers.Instance.FindUser(message)).ToList();
+            string relationInRoom = "";
+            if (listUserInRoom.Any(u => u.UserId == user.UserId))
+            {
+                relationInRoom = "Member";
+            }
+            else if (listUserRequestJoinRoom.Any(u => u.UserId == user.UserId))
+            {
+                relationInRoom = "Request";
+            }
+
 
             var roomStartDate = DateTime.ParseExact(roomInfo.StartDate, FapConstants.DateFormat, CultureInfo.InvariantCulture);
             var roomEndDate = roomStartDate.AddDays(roomInfo.LengthInDays);
@@ -95,6 +105,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listMessage"] = listMessage;
             ViewData["listUserOwnMessage"] = listUserOwnMessage;
             ViewData["listGeneralPlan"] = listGeneralPlan;
+            ViewData["relationInRoom"] = relationInRoom;
             Session["roomID"] = ViewData["roomID"] = roomId;
             return View();
         }
@@ -222,10 +233,12 @@ namespace FlyAwayPlus.Controllers
             var roomDesc = Request.Form["roomdesc"];
             var startdate = DateTime.ParseExact(Request.Form["startdate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
             var enddate = DateTime.ParseExact(Request.Form["enddate"], FapConstants.DateFormat, CultureInfo.InvariantCulture);
-            var startPlace = Request.Form["start_formatted_address"];
+            var startAddressName = Request.Form["start_name"];
+            var startAdress = Request.Form["start_formatted_address"];
             var startLng = Request.Form["start_lng"];
             var startLat = Request.Form["start_lat"];
-            var targetPlace = Request.Form["end_formatted_address"];
+            var targetAddressName = Request.Form["end_name"];
+            var targetAddress = Request.Form["end_formatted_address"];
             var endLng = Request.Form["end_lng"];
             var endLat = Request.Form["end_lat"];
             var privacy = Request.Form["privacy"];
@@ -241,10 +254,10 @@ namespace FlyAwayPlus.Controllers
                 MaxNoSlots = maxNoOfSlots,
                 StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,
-                StartLocation = startPlace,
+                StartLocation = startAddressName + " - " + startAdress,
                 StartLatitude = startLat,
                 StartLongitude = startLng,
-                DestinationLocation = targetPlace,
+                DestinationLocation = targetAddressName  + " - " + targetAddress,
                 DestinationLatitude = endLat,
                 DestinationLongitude = endLng,
                 Privacy = privacy,
@@ -279,13 +292,13 @@ namespace FlyAwayPlus.Controllers
             return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
         }
 
-        public void AddEstimation(string payment, double price, int payer, string datecreated)
+        public JsonResult AddEstimation(string payment, double price, int payer, string datecreated)
         {
             // TODO: Get list of payer.
             var payerid = 1;
 
-            var creatorId = int.Parse(@Session["UserId"] + string.Empty);
-            int roomid = (int)Session["roomID"];
+            var creatorId = int.Parse(Session["UserId"] + string.Empty);
+            int roomid = int.Parse(Session["roomID"] + string.Empty);
 
             var newEstimation = new Estimation
             {
@@ -294,13 +307,13 @@ namespace FlyAwayPlus.Controllers
                 DateCreated = datecreated
             };
 
-            GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid);
+            return Json(GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid));
         }
 
         public JsonResult GetEstimationData(int roomId)
         {
             var estimationsList = GraphDatabaseHelpers.Instance.GetRoomEstimation(roomId);
-            List<object> estimationDataInTable = new List<object>();
+            var estimationDataInTable = new List<object>();
 
             foreach (var est in estimationsList)
             {
@@ -373,6 +386,26 @@ namespace FlyAwayPlus.Controllers
             if (Request.IsAjaxRequest())
             {
                 success = GraphDatabaseHelpers.Instance.RequestJoinRoom(roomId, userId);
+            }
+            return Json(success);
+        }
+
+        public JsonResult AcceptRequestJoinRoom(int roomId, int userId)
+        {
+            bool success = false;
+            if (Request.IsAjaxRequest())
+            {
+                success = GraphDatabaseHelpers.Instance.AcceptRequestJoinRoom(roomId, userId);
+            }
+            return Json(success);
+        }
+
+        public JsonResult DeclineRequestJoinRoom(int roomId, int userId)
+        {
+            bool success = false;
+            if (Request.IsAjaxRequest())
+            {
+                success = GraphDatabaseHelpers.Instance.DeclineRequestJoinRoom(roomId, userId);
             }
             return Json(success);
         }

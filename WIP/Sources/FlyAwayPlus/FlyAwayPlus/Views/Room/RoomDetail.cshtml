@@ -153,6 +153,7 @@
     var listUserRequestJoinRoom = ViewData["listUserRequestJoinRoom"] as List<User>;
     var listMessage = ViewData["listMessage"] as List<Message>;
     var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
+    string relationInRoom = ViewData["relationInRoom"].ToString();
     int userId = Int16.Parse(@Session["UserId"].ToString());
 
     var listPost = ViewData["listPost"] as List<Post>;
@@ -171,6 +172,47 @@
     var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
 }
+<!--REQUEST JOIN MODAL-->
+<div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Request join</h4>
+            </div>
+
+            <div class="modal-body">
+                <table data-toggle="table" data-height="299">
+                    <thead>
+                        <tr>
+                            <th data-align="center">Avatar</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(int index = 0; index < listUserRequestJoinRoom.Count; index++)
+                        {
+                            <tr data-index="@index">
+                                <td style=""><img height="50" alt="User" src="@listUserRequestJoinRoom[index].Avatar" class="circle-image"></td>
+                                <td style=""><a href="/User/Index/@listUserRequestJoinRoom[index].UserId">@listUserRequestJoinRoom[index].FirstName @listUserRequestJoinRoom[index].LastName</a></td>
+                                <td style="">@listUserRequestJoinRoom[index].Email</td>
+                                <td style="">
+                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-success accept-request-join-btn'>Accept</button>
+                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-danger decline-request-join-btn' style='margin-left:5px;'>Decline</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button data-es="Close" data-dismiss="modal" class="btn btn-primary" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="room-detail-wrapper">
     <div>
         <!--INFO-->
@@ -207,7 +249,19 @@
             @if (admin.UserId == userId)
             {
                 <div>
-                    <a href="javascript:;" class="btn btn-primary room-detail-request-join">View Request join</a>
+                    <a href="javascript:;" data-target="#view-request-join-modal" data-toggle="modal" class="btn btn-primary room-detail-request-join">View Request join</a>
+                </div>
+            }
+            else if (relationInRoom.Equals("Request"))
+            {
+                <div>
+                    <a href="javascript:;" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request sent</a>
+                </div>
+            }
+            else if (relationInRoom.Equals("Member"))
+            {
+                <div style="display:none">
+                    <a href="javascript:;" id="id-member-in-room-btn" class="btn btn-primary room-detail-request-join">You are already a member</a>
                 </div>
             }
             else
@@ -216,7 +270,7 @@
                     <a href="javascript:;" id="id-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request join</a>
                 </div>
                 <div style="display:none">
-                    <a href="javascript:;" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Sent request</a>
+                    <a href="javascript:;" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request sent</a>
                 </div>
             }
             <div class="input-group">
@@ -332,15 +386,17 @@
                            data-show-header="true"
                            data-show-columns="true"
                            data-show-refresh="true"
+                           data-height="500"
+                           data-pagination="true"
                            data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
                         <thead>
-                        <tr>
-                            <th data-field="payment">Payment</th>
-                            <th data-field="price">Price</th>
-                            <th data-field="creator">Creator</th>
-                            <th data-field="payer">Payer</th>
-                            <th data-field="datecreated">Date created</th>
-                        </tr>
+                            <tr>
+                                <th data-field="payment" data-sortable="true">Payment</th>
+                                <th data-field="price" data-sortable="true">Price</th>
+                                <th data-field="creator" data-sortable="true">Creator</th>
+                                <th data-field="payer" data-sortable="true">Payer</th>
+                                <th data-field="datecreated" data-sortable="true">Date created</th>
+                            </tr>
                         </thead>
                     </table>
                 </div>
@@ -654,6 +710,71 @@
     });
 
     $(document).ready(function () {
+        $(".accept-request-join-btn").click(function(evt){
+            if(evt.handled !== true) {
+                evt.handled = true;
+                var tr = $(this).closest("tr");
+                var userId = parseInt($(this).attr("role"));
+
+                $.ajax({
+                    url: '/Room/AcceptRequestJoinRoom',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        roomId: parseInt('@roomId'),
+                        userId: userId
+                    },
+                    success: function (data) {
+                        if(typeof(data) == "undefined" || data == null || data == false) {
+                            swal("Oops...", "The room is already full of slots!", "error");
+                        }
+                        else {
+                            $(tr).remove();
+                        }
+                    },
+                    error: function () {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            }
+        });
+
+        $(".decline-request-join-btn").click(function(evt){
+            if(evt.handled !== true) {
+                evt.handled = true;
+                var tr = $(this).closest("tr");
+                var userId = parseInt($(this).attr("role"));
+
+                $.ajax({
+                    url: '/Room/DeclineRequestJoinRoom',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        roomId: parseInt('@roomId'),
+                        userId: userId
+                    },
+                    success: function (data) {
+                        if(typeof(data) == "undefined" || data == null || data == false) {
+                            swal("Oops...", "Something went wrong! Try again later!", "error");
+                        }
+                        else {
+                            $(tr).remove();
+                        }
+                    },
+                    error: function () {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            }
+        });
+
+        $("#id-close-modal").click(function(evt){
+            if(evt.handled !== true) {
+                evt.handled = true;
+                $('#view-request-join-modal').modal('hide');
+            }
+        });
+
         $("#id-textarea-chat-room").keydown(function (evt) {
             commonModule.handleTagging(evt, this);
         });

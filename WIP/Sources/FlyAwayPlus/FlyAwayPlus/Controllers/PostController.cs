@@ -112,7 +112,8 @@ namespace FlyAwayPlus.Controllers
             string message = Request.Form["message"];
             Double latitude = Double.Parse(Request.Form["lat"]);
             Double longitude = Double.Parse(Request.Form["lng"]);
-            string location = Request.Form["formatted_address"];
+            string location = Request.Form["name"];
+            string address = Request.Form["formatted_address"];
             List<string> images = Request.Form["uploadedimages"].Split('#').ToList();
             images.RemoveAt(0);
             string privacy = Request.Form["privacy"];
@@ -127,7 +128,7 @@ namespace FlyAwayPlus.Controllers
 
             Place newPlace = new Place
             {
-                Name = location,
+                Name = location  + " - " + address,
                 Latitude = latitude,
                 Longitude = longitude
             };

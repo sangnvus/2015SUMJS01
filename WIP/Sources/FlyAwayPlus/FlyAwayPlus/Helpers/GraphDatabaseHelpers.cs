@@ -1982,7 +1982,8 @@ namespace FlyAwayPlus.Helpers
 
             try
             {
-                //TODO: Remove likes, dislike
+                DeleteLike(user.UserId, postId);
+                DeleteDislike(user.UserId, postId);
                 DeleteCommentsAndRelationship(postId);
                 RebuildPostsChainFlow(user.UserId, postId);
                 DeletePostAndRelationships(postId);
@@ -1996,7 +1997,6 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
         #region DELETE POST HELPERS
-
         private void DeleteCommentsAndRelationship(int postId)
         {
             _client.Cypher.Match("(post{PostId: " + postId + "})-[lcr:LATEST_COMMENT]->(lc:comment)-[pcrs:PREV_COMMENT*]->(pc:comment), ()-[ccrl:CREATE]->lc,()-[ccrp:CREATE]->pc")
@@ -2378,7 +2378,7 @@ namespace FlyAwayPlus.Helpers
             List<User> listUser = new List<User>();
             try
             {
-                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN]-(u:user)")
+                listUser = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})<-[j:JOIN{type:" + FapConstants.JoinMember + "}]-(u:user)")
                     .ReturnDistinct<User>("u")
                     .Results.ToList();
 
@@ -2659,27 +2659,34 @@ namespace FlyAwayPlus.Helpers
                    : string.Empty;
         }
 
-        public void InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
+        public bool InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
         {
             newEstimation.EstimationId = GetActivityIncrementId();
             _client.Connect();
-
-            _client.Cypher
+            try
+            {
+                _client.Cypher
                    .Create("(estimation:estimation {newEstimation})")
                    .WithParam("newEstimation", newEstimation)
                    .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(r:room {RoomId:" + roomId + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
-                         .Create("(r)-[:HAS]->(e)")
-                         .ExecuteWithoutResults();
+                _client.Cypher.Match("(r:room {RoomId:" + roomId + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
+                             .Create("(r)-[:HAS]->(e)")
+                             .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(u:user {UserId: " + creatorId + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
-                         .Create("(u)-[:CREATE]->(e)")
-                         .ExecuteWithoutResults();
+                _client.Cypher.Match("(u:user {UserId: " + creatorId + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
+                             .Create("(u)-[:CREATE]->(e)")
+                             .ExecuteWithoutResults();
 
-            _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
-                         .Create("(u)-[:IN_CHARGE]->(e)")
-                         .ExecuteWithoutResults();
+                _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
+                             .Create("(u)-[:IN_CHARGE]->(e)")
+                             .ExecuteWithoutResults();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public bool RequestJoinRoom(int roomId, int userId)

@@ -294,13 +294,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\ASPSnippets.GoogleAPI.dll" />
-    <Content Include="common.js" />
     <Content Include="Content\bootflat.css" />
     <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\chatConversation.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\datepicker.css" />
+    <Content Include="Content\Fancy\blank.gif" />
+    <Content Include="Content\Fancy\fancybox_overlay.png" />
+    <Content Include="Content\Fancy\fancybox_sprite.png" />
     <Content Include="Content\friendSuggest.css" />
     <Content Include="Content\bootstrap.dropdowns-enhancement.min.css" />
     <Content Include="Content\fullcalendar.css" />
@@ -318,11 +320,17 @@
     <Content Include="Content\Site.avatar.css" />
     <Content Include="Content\tooltipster.css" />
     <Content Include="fonts\artill_clean_icons-webfont.svg" />
+    <Content Include="Images\background.jpg" />
+    <Content Include="Images\background\halong.jpg" />
+    <Content Include="Images\background\nhatrang.jpg" />
+    <Content Include="Images\background\nhatrang2.jpg" />
+    <Content Include="Images\background\sondoong.jpg" />
+    <Content Include="Images\current-marker.png" />
     <Content Include="Images\image.gif" />
+    <Content Include="Images\other-marker.png" />
     <Content Include="Images\UIHelper\default-avatar.jpg" />
     <Content Include="Images\UIHelper\icon-calendar.png" />
     <Content Include="Images\UIHelper\magnifier.svg" />
-    <Content Include="Images\UIHelper\WOW slider\spin.gif" />
     <Content Include="Images\UIHelper\youtube.png" />
     <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
@@ -336,6 +344,7 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\jquery.montage.min.js" />
     <Content Include="Scripts\jquery.tooltipster.js" />
     <Content Include="Scripts\markerWithLabel.js" />
     <Content Include="Scripts\md5.js" />
@@ -355,19 +364,12 @@
     <Content Include="Content\HomePage\carousel.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
-    <Content Include="data\img\img_chania.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\FAP logo.png" />
-    <Content Include="Images\UIHelper\WOW slider\arrows.png" />
-    <Content Include="Images\UIHelper\WOW slider\bullet.png" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.svg" />
-    <Content Include="Images\UIHelper\WOW slider\loading.gif" />
-    <Content Include="Images\UIHelper\WOW slider\pause.png" />
-    <Content Include="Images\UIHelper\WOW slider\play.png" />
     <Content Include="Images\upload.png" />
     <Content Include="Scripts\jquery.fs.stepper.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
@@ -388,9 +390,6 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.eot" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.ttf" />
-    <Content Include="Images\UIHelper\WOW slider\fullscreen.woff" />
     <Content Include="fonts\artill_clean_icons-webfont.eot" />
     <Content Include="fonts\artill_clean_icons-webfont.ttf" />
     <Content Include="fonts\artill_clean_icons-webfont.woff" />
@@ -471,7 +470,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\background\" />
+    <Folder Include="data\img\" />
     <Folder Include="Images\UserUpload\UserAvatar\" />
     <Folder Include="Temp\" />
     <Folder Include="Views\Upload\" />
