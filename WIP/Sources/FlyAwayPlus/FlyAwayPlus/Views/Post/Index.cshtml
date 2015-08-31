@@ -61,7 +61,12 @@
                 <a href="javascript:;" role="@Model.PostId" class="btn-like"><span>Like</span></a>
                 <a href="javascript:;" role="@Model.PostId" class="btn-dislike"><span>Dislike</span></a>
                 <a href="javascript:;" id="share_button" class="btn-share"><span>Share</span></a>
-                <a href="javascript:;" role="@Model.PostId" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
+                @{
+                    if ((Convert.ToInt32(Session["UserId"])) != userPost.UserId)
+                    {
+                        <a href="javascript:;" role="@Model.PostId" id="report_button" class="btn-report" data-toggle="modal" data-target="#myModal"><span>Report</span></a>
+                    }
+                }
 
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
@@ -215,21 +220,26 @@
         });
 
         $('#closeBtn').click(function(e) {
-            if (parseInt('@Session["UserId"]') == parseInt('@userPost.UserId')) {
-                alert("You can not report yourself!");
-            } else {
-                var controller = "/User/ReportPost/";
-                var data = {
-                    postID: @Model.PostId,
-                    userReportID: parseInt('@Session["UserId"]'),
-                    userReportedID: @userPost.UserId,
-                    typeReport: $('input[name="optradio"]:checked').val()
-                };
-
-                commonModule.callAjax(controller, data, null);
-
-                alert("This user has been reported!");
-            }
+                $.ajax({
+                    url: "/User/ReportPost/",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        postId: @Model.PostId,
+                        userReportId: parseInt('@Session["UserId"]'),
+                        userReportedId: parseInt('@userPost.UserId'),
+                        typeReport: $('input[name="optradio"]:checked').val()
+                    },
+                    success: function (data) {
+                        if (data == true) {
+                            alert("This post has been reported!");
+                        } else {
+                            alert("You have already report this post!");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    }
+                });
             e.preventDefault();
         });
     });

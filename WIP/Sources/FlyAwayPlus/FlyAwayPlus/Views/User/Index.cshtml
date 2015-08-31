@@ -466,19 +466,19 @@
                             <div class="col-md-5">
                                 <div class="row" style="margin-left: 20px">
                                     <div class="radio">
-                                        <label><input type="radio" name="optradio" value="1">This post annoying or unpleasant</label>
+                                        <label><input type="radio" name="optradio" value="1">This user annoying or unpleasant</label>
                                     </div>
                                 </div>
 
                                 <div class="row" style="margin-left: 20px">
                                     <div class="radio">
-                                        <label><input type="radio" name="optradio" value="2">I think this post should not appear on FlyAwayPlus</label>
+                                        <label><input type="radio" name="optradio" value="2">I think this user should not appear on FlyAwayPlus</label>
                                     </div>
                                 </div>
 
                                 <div class="row" style="margin-left: 20px">
                                     <div class="radio">
-                                        <label><input type="radio" name="optradio" value="3">This post is spam</label>
+                                        <label><input type="radio" name="optradio" value="3">This user is clone</label>
                                     </div>
                                 </div>
                             </div>
@@ -796,10 +796,31 @@
 
         $('#closeBtn').click(function (e) {
 
+            $.ajax({
+                url: "/User/ReportUser/",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    userReportId: parseInt('@Session["UserId"]'),
+                    userReportedId: parseInt('@Model.UserId'),
+                    typeReport: $('input[name="optradio"]:checked').val()
+                },
+                success: function (data) {
+                    if (data == true) {
+                        alert("This user has been reported!");
+                    } else {
+                        alert("You have already report this user!");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            });
+            e.preventDefault();
+
             var controller = "/User/ReportUser/";
             var data = {
                 userReportID: parseInt('@Session["UserId"]'),
-                userReportedID: @Model.UserId,
+                userReportedID: parseInt('@Model.UserId'),
                 typeReport: $('input[name="optradio"]:checked').val()
             };
 

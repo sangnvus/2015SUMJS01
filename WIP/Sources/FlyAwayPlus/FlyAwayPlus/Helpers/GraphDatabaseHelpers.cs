@@ -1245,6 +1245,25 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
+        public ReportPost FindReportPost(int postId, int userReportId)
+        {
+            _client.Connect();
+            var reportPost = _client.Cypher.OptionalMatch("(u:user{UserId:" + userReportId + "})-[r:REPORT_POST]->(p:post{PostId:" + postId + "})")
+                    .Return<ReportPost>("r")
+                    .Results.SingleOrDefault();
+            return reportPost;
+        }
+
+        public ReportUser FindReportUser(int userReportId, int userReportedId)
+        {
+            _client.Connect();
+            var reportUser = _client.Cypher.OptionalMatch("(u1:user{UserId:" + userReportId + "})-[r:REPORT_USER]->(u2:user{UserId:" + userReportedId + "})")
+                .Return<ReportUser>("r")
+                .Results.SingleOrDefault();
+            return reportUser;
+        }
+
+
         public List<Post> SearchAllPost()
         {
 
