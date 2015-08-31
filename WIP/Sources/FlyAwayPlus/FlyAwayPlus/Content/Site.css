@@ -1892,5 +1892,34 @@ textarea {
     .am-wrapper img {
         position: absolute;
         outline: none;
-        height: auto
+        height: auto;
     }
+
+.room-detail-plan-tab-estimation #custom-toolbar {
+    display: block;
+    float: left;
+    margin: 10px 0;
+}
+
+.ml10 {
+    margin-left: 10px
+}
+
+.edit-cover-dark-wrapper {
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    top: 0;
+    left: 0;
+    -ms-opacity: 0;
+    opacity: 0
+}
+
+.edit-cover-dark-wrapper:hover {
+    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: block;
+    opacity: 1
+}

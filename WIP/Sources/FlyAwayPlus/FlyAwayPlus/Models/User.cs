@@ -33,5 +33,6 @@ namespace FlyAwayPlus.Models
         public string Status { get; set; }
         public string DateJoined { get; set; }
         public string Avatar { get; set; }
+        public string CoverUrl { get; set; }
     }
 }

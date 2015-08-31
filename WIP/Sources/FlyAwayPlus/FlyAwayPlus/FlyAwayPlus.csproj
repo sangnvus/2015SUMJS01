@@ -343,6 +343,7 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
+    <Content Include="Scripts\jquery.cropit.js" />
     <Content Include="Scripts\jquery.montage.min.js" />
     <Content Include="Scripts\jquery.tooltipster.js" />
     <Content Include="Scripts\markerWithLabel.js" />

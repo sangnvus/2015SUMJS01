@@ -192,7 +192,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for(int index = 0; index < listUserRequestJoinRoom.Count; index++)
+                        @for (int index = 0; index < listUserRequestJoinRoom.Count; index++)
                         {
                             <tr data-index="@index">
                                 <td style=""><img height="50" alt="User" src="@listUserRequestJoinRoom[index].Avatar" class="circle-image"></td>
@@ -371,8 +371,8 @@
                 <!-- End timeline -->
                 <!-- estimation -->
                 <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
-                    <div style="margin-bottom: -10px">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#create-estimation-plan-modal" style="background-color: #2DCC70; position: absolute;">
+                    <div id="custom-toolbar">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#estimation-plan-modal" style="background-color: #2DCC70;">
                             Add an estimation item
                         </button>
                     </div>
@@ -384,18 +384,20 @@
                            data-search="true"
                            data-show-export="true"
                            data-show-header="true"
-                           data-show-columns="true"
+                           data-show-toggle="true"
                            data-show-refresh="true"
                            data-height="500"
                            data-pagination="true"
                            data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
                         <thead>
                             <tr>
+                                <th data-field="id" class="hidden"></th>
                                 <th data-field="payment" data-sortable="true">Payment</th>
                                 <th data-field="price" data-sortable="true">Price</th>
                                 <th data-field="creator" data-sortable="true">Creator</th>
                                 <th data-field="payer" data-sortable="true">Payer</th>
                                 <th data-field="datecreated" data-sortable="true">Date created</th>
+                                <th data-field="operate" data-formatter="estimationAction" data-events="estimationEvents" data-align="center">Action</th>
                             </tr>
                         </thead>
                     </table>
@@ -633,7 +635,7 @@
     </div>
 </div>
 
-
+<!-- CREATE TIMELINE PLAN MODAL -->
 <div id="popupEventForm" class="modal fade">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -658,6 +660,7 @@
     </div>
 </div>
 
+<!-- CREATE GENERAL PLAN MODAL -->
 <div id="create-general-plan-modal" class="modal fade">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -681,7 +684,8 @@
     </div>
 </div>
 
-<div id="create-estimation-plan-modal" class="modal fade">
+<!-- CREATE/EDIT ESTIMATION MODAL -->
+<div id="estimation-plan-modal" class="modal fade">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -690,6 +694,7 @@
             </div>
             <div class="modal-body">
                 <div id="estimation-plan-event-form">
+                    <input type="hidden" id="estimation-id" value="-1"><br />
                     <input type="text" id="estimation-payment" class="form-control" placeholder="Payment"><br />
                     <input type="text" id="estimation-price" class="form-control" placeholder="Price"><br />
                     <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name"><br />
@@ -701,9 +706,61 @@
             </div>
         </div>
     </div>
-</div>
+</div>|
 
 <script>
+    function estimationAction(value, row, index) {
+        return [
+            '<a class="edit" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-edit"></i>',
+            '</a>',
+            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    }
+
+    window.estimationEvents = {
+        'click .edit': function (e, value, row, index) {
+            var modal = $('#estimation-plan-modal');
+
+            modal.find('h4').text('Edit Estimation item');
+            modal.find('#estimation-id').val(row.id);
+            modal.find('#estimation-payment').val(row.payment);
+            modal.find('#estimation-price').val(row.price);
+            modal.find('#estimation-payer').val(row.payer);
+
+            $('#estimation-plan-modal').modal();
+        },
+        'click .remove': function (e, value, row, index) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this estimation!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: '/Room/DeleteEstimation',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: row.id},
+                    success: function() {
+                        $('#estimation-table').bootstrapTable('remove', {
+                            field: 'id',
+                            values: [row.id]
+                        });
+                    },
+                    error: function() {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            });
+        }
+    };
+
     //window resize
     $(window).resize(function () {
         commonModule.setBlocksit($(".blog-landing"), 250);
@@ -888,38 +945,66 @@
 
         // Add estimation item.
         $('#estimation-btnPopupSave').click(function() {
-            var dataPrepend = {
-                'payment': $('#estimation-payment').val(),
-                'price': $('#estimation-price').val(),
-                'creator': '@Session["username"]',
-                'payer': $('#estimation-payer').val(),
-                'datecreated': moment().format('YYYY-MM-DD')
-            };
-
-            $('#estimation-table').bootstrapTable('prepend', dataPrepend);
-
-            var dataPass = {
+            var dataPassAdd = {
                 payment: $('#estimation-payment').val(),
                 price: $('#estimation-price').val(),
                 payer: $('#estimation-payer').val(),
                 datecreated: moment().format('YYYY-MM-DD')
             };
 
-            $.ajax({
-                url: '/Room/AddEstimation',
-                type: 'POST',
-                dataType: 'json',
-                data: dataPass,
-                success: function () {
-                    // Clear values.
-                    $('#estimation-payment').val('');
-                    $('#estimation-price').val('');
-                    $('#estimation-payer').val('');
-                },
-                error: function () {
-                    swal("Oops...", "Something went wrong! Try again later!", "error");
-                }
-            });
+            var dataPassEdit = {
+                id: $('#estimation-id').val(),
+                payment: $('#estimation-payment').val(),
+                price: $('#estimation-price').val(),
+                payer: $('#estimation-payer').val(),
+            };
+
+            if (dataPassEdit.id != '-1') {
+                $.ajax({
+                    url: '/Room/EditEstimation',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: dataPassEdit,
+                    success: function() {
+                        // Clear values.
+                        $('#estimation-id').val('-1');
+                        $('#estimation-payment').val('');
+                        $('#estimation-price').val('');
+                        $('#estimation-payer').val('');
+                    },
+                    error: function() {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/Room/AddEstimation',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: dataPassAdd,
+                    success: function(data) {
+                        var dataPrepend = {
+                            'id': data,
+                            'payment': $('#estimation-payment').val(),
+                            'price': $('#estimation-price').val(),
+                            'creator': '@Session["username"]',
+                            'payer': $('#estimation-payer').val(),
+                            'datecreated': moment().format('YYYY-MM-DD')
+                        };
+
+                        $('#estimation-table').bootstrapTable('prepend', dataPrepend);
+
+                        // Clear values.
+                        $('#estimation-id').val('-1');
+                        $('#estimation-payment').val('');
+                        $('#estimation-price').val('');
+                        $('#estimation-payer').val('');
+                    },
+                    error: function() {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            }
         });
 
         if (typeof (chatHubProxy) === "undefined") {

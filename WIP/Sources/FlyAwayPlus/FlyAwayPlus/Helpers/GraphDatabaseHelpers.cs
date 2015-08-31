@@ -2640,7 +2640,7 @@ namespace FlyAwayPlus.Helpers
                    : string.Empty;
         }
 
-        public bool InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
+        public int InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
         {
             newEstimation.EstimationId = GetActivityIncrementId();
             _client.Connect();
@@ -2662,6 +2662,50 @@ namespace FlyAwayPlus.Helpers
                 _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
                              .Create("(u)-[:IN_CHARGE]->(e)")
                              .ExecuteWithoutResults();
+            }
+            catch
+            {
+                return -1;
+            }
+            return newEstimation.EstimationId;
+        }
+
+        public bool EditEstimation(Estimation estimation, int payerid)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(e:estimation {EstimationId: " + estimation.EstimationId + "})")
+                             .Set("e.Payment = {payment}, e.Price = {price}")
+                             .WithParam("payment", estimation.Payment)
+                             .WithParam("price", estimation.Price)
+                             .ExecuteWithoutResults();
+
+                _client.Cypher.Match("(:user)-[r:IN_CHARGE]->(:estimation {EstimationId: " + estimation.EstimationId + "})")
+                             .Delete("r")
+                             .ExecuteWithoutResults();
+
+
+                _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + estimation.EstimationId + "})")
+                             .Create("(u)-[:IN_CHARGE]->(e)")
+                             .ExecuteWithoutResults();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteEstimation(int estimationid)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(e:estimation {EstimationId: " + estimationid + "})")
+                              .OptionalMatch("(u:user)-[r:IN_CHARGE]->(e)")
+                              .Delete("r, e")
+                              .ExecuteWithoutResults();
             }
             catch
             {

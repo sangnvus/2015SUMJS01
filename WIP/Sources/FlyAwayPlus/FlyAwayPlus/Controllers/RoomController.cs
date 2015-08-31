@@ -310,6 +310,26 @@ namespace FlyAwayPlus.Controllers
             return Json(GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid));
         }
 
+        public JsonResult EditEstimation(int id, string payment, double price, int payer)
+        {
+            // TODO: Get list of payer.
+            var payerid = 1;
+
+            var newEstimation = new Estimation
+            {
+                EstimationId = id,
+                Payment = payment,
+                Price = price
+            };
+
+            return Json(GraphDatabaseHelpers.Instance.EditEstimation(newEstimation, payerid));
+        }
+
+        public JsonResult DeleteEstimation(int id)
+        {
+            return Json(GraphDatabaseHelpers.Instance.DeleteEstimation(id));
+        }
+
         public JsonResult GetEstimationData(int roomId)
         {
             var estimationsList = GraphDatabaseHelpers.Instance.GetRoomEstimation(roomId);
@@ -320,6 +340,7 @@ namespace FlyAwayPlus.Controllers
                 estimationDataInTable.Add(
                     new
                     {
+                        id = est.EstimationId,
                         payment = est.Payment,
                         price = est.Price,
                         creator = GraphDatabaseHelpers.Instance.GetEstimationCreator(est.EstimationId),
@@ -327,55 +348,6 @@ namespace FlyAwayPlus.Controllers
                         datecreated = est.DateCreated
                     });
             }
-
-            var estimationList = new List<object>
-            {
-                new
-                {
-                    id = 1,
-                    payment = "Mua vé tàu cho cả nhóm",
-                    price = 1200000,
-                    creator = "Duc Filan",
-                    payer = "Thuy Le",
-                    datecreated = "2015-08-24"
-                },
-                new
-                {
-                    id = 1,
-                    payment = "Tiền đặt phòng khách sạn",
-                    price = 1200000,
-                    creator = "Duc Filan",
-                    payer = "Thuy Le",
-                    datecreated = "2015-08-24"
-                },
-                new
-                {
-                    id = 1,
-                    payment = "Mua lều",
-                    price = 1200000,
-                    creator = "Duc Filan",
-                    payer = "Thuy Le",
-                    datecreated = "2015-08-24"
-                },
-                new
-                {
-                    id = 1,
-                    payment = "Mua đồ ăn",
-                    price = 1200000,
-                    creator = "Duc Filan",
-                    payer = "Thuy Le",
-                    datecreated = "2015-08-24"
-                },
-                new
-                {
-                    id = 1,
-                    payment = "Thuê xe máy",
-                    price = 1200000,
-                    creator = "Duc Filan",
-                    payer = "Thuy Le",
-                    datecreated = "2015-08-24"
-                }
-            };
 
             return Json(estimationDataInTable, JsonRequestBehavior.AllowGet);
         }
