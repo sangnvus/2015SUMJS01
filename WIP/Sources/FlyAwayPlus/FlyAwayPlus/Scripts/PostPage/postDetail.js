@@ -303,7 +303,7 @@
                     evt.preventDefault();
                 }
 
-                swal("Deleted!", "Your comment has been deleted.", "success");
+                swal({ title: "Deleted!", text: "Your comment has been deleted.", type: "success", timer: 1500, showConfirmButton: false });
             });
         });
     };

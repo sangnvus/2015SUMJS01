@@ -752,6 +752,7 @@
                             field: 'id',
                             values: [row.id]
                         });
+                        swal({ title: "Deleted!", text: "Your estimation has been deleted.", type: "success", timer: 1500, showConfirmButton: false });
                     },
                     error: function() {
                         swal("Oops...", "Something went wrong! Try again later!", "error");
