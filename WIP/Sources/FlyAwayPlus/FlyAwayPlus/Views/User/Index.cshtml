@@ -20,7 +20,18 @@
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
 <header>
     <figure class="profile-banner">
-        <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" class="img-responsive" />
+        <div id="image-cropper">
+            <div class="cropit-image-preview"></div>
+
+            <input type="range" class="cropit-image-zoom-input" />
+
+            <input type="file" class="cropit-image-input" />
+            <div class="edit-cover-dark-wrapper">
+                <button class="btn btn-primary" id="btn-edit-cover">Edit cover</button>
+            </div>
+        </div>
+
+        <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" class="img-responsive"/>
     </figure>
     <figure class="profile-picture"
             style="background-image: url('@Model.Avatar')">
@@ -62,7 +73,6 @@
             }
         </div>
     </div>
-    <h1>@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</h1>
 </header>
 
 <div class="vertical-space-15"></div>
@@ -752,6 +762,13 @@
 
         $('.edit-dob').datepicker({
             format: "yyyy-mm-dd"
+        });
+
+        // Edit cover.
+        $('.image-editor').cropit({
+            imageState: {
+                src: 'http://lorempixel.com/500/400/',
+            },
         });
 
         $("#id-view-all-friend").click(function(evt) {

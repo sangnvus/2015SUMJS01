@@ -33,6 +33,7 @@ namespace FlyAwayPlus.Controllers
             {
                 Session["loginMessageError"] = "";
                 user.TypeId = 0; // Fap Account
+                user.CoverUrl = "";
 
                 // select from DB
                 User newUser = GraphDatabaseHelpers.Instance.GetUser(user.TypeId, user.Email);
@@ -269,7 +270,8 @@ namespace FlyAwayPlus.Controllers
                     PhoneNumber = me.phone_number,
                     Status = FapConstants.USER_ACTIVE,
                     Avatar = "https://graph.facebook.com/" + facebookId + "/picture?type=large",
-                    Password = ""
+                    Password = "",
+                    CoverUrl = ""
                 };
                 // Facebook account
 
@@ -451,7 +453,8 @@ namespace FlyAwayPlus.Controllers
                         PhoneNumber = "",
                         Status = FapConstants.USER_ACTIVE,
                         Avatar = avatar,
-                        Password = ""
+                        Password = "",
+                        CoverUrl = ""
                     };
                     // Google account
 

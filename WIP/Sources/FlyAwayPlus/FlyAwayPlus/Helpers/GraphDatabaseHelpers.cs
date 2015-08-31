@@ -94,18 +94,18 @@ namespace FlyAwayPlus.Helpers
 
         public void InsertReportPost(int postId, int userReportId, int typeReport)
         {
-            string ContentReport = null;
-            if (typeReport == 1)
+            string contentReport = null;
+            switch (typeReport)
             {
-                ContentReport = "This post annoying or unpleasant";
-            }
-            else if (typeReport == 2)
-            {
-                ContentReport = "I think this post should not appear on FlyAwayPlus";
-            }
-            else if (typeReport == 3)
-            {
-                ContentReport = "This post is spam";
+                case 1:
+                    contentReport = "This post annoying or unpleasant";
+                    break;
+                case 2:
+                    contentReport = "I think this post should not appear on FlyAwayPlus";
+                    break;
+                case 3:
+                    contentReport = "This post is spam";
+                    break;
             }
             int count = _client.Cypher.Match("(u:user{UserId:" + userReportId + "})-[r:REPORT_POST]->(p:post{PostId:" + postId + "})")
                                    .Return<int>("COUNT(r)")
@@ -114,25 +114,25 @@ namespace FlyAwayPlus.Helpers
             {
                 _client.Cypher.Match("(a:user), (b:post)")
                                  .Where("a.UserId = " + userReportId + " AND b.PostId = " + postId)
-                                 .Create("(a)-[r:REPORT_POST {ContentReport: '" + ContentReport + "'}]->(b)")
+                                 .Create("(a)-[r:REPORT_POST {ContentReport: '" + contentReport + "'}]->(b)")
                                  .ExecuteWithoutResults();
             }
         }
 
         public void InsertReportUser(int userReportId, int userReportedId, int typeReport)
         {
-            string ContentReport = null;
-            if (typeReport == 1)
+            string contentReport = null;
+            switch (typeReport)
             {
-                ContentReport = "This user annoying or unpleasant";
-            }
-            else if (typeReport == 2)
-            {
-                ContentReport = "I think this user should not appear on FlyAwayPlus";
-            }
-            else if (typeReport == 3)
-            {
-                ContentReport = "This user is spam";
+                case 1:
+                    contentReport = "This user annoying or unpleasant";
+                    break;
+                case 2:
+                    contentReport = "I think this user should not appear on FlyAwayPlus";
+                    break;
+                case 3:
+                    contentReport = "This user is spam";
+                    break;
             }
             int count = _client.Cypher.Match("(u1:user{UserId:" + userReportId + "})-[r:REPORT_USER]->(u2:user{UserId:" + userReportedId + "})")
                                    .Return<int>("COUNT(r)")
@@ -141,7 +141,7 @@ namespace FlyAwayPlus.Helpers
             {
                 _client.Cypher.Match("(a:user), (b:user)")
                                  .Where("a.UserId = " + userReportId + " AND b.UserId = " + userReportedId)
-                                 .Create("(a)-[r:REPORT_USER {ContentReport: '" + ContentReport + "'}]->(b)")
+                                 .Create("(a)-[r:REPORT_USER {ContentReport: '" + contentReport + "'}]->(b)")
                                  .ExecuteWithoutResults();
             }
         }
@@ -1186,13 +1186,12 @@ namespace FlyAwayPlus.Helpers
                  * match (po:post {PostId:@PostId})-[:has]->(ph:photo)
                     return ph
                  */
-            List<Photo> listPhoto = new List<Photo>();
             _client.Connect();
-            listPhoto = _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
-                            .ReturnDistinct<Photo>("ph")
-                            .OrderBy("ph.PhotoId")
-                            .Results
-                            .ToList();
+            var listPhoto = _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
+                .ReturnDistinct<Photo>("ph")
+                .OrderBy("ph.PhotoId")
+                .Results
+                .ToList();
 
             listPhoto.RemoveAll(item => item == null);
 
@@ -2659,7 +2658,7 @@ namespace FlyAwayPlus.Helpers
                    : string.Empty;
         }
 
-        public bool InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
+        public int InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
         {
             newEstimation.EstimationId = GetActivityIncrementId();
             _client.Connect();
@@ -2681,6 +2680,49 @@ namespace FlyAwayPlus.Helpers
                 _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + newEstimation.EstimationId + "})")
                              .Create("(u)-[:IN_CHARGE]->(e)")
                              .ExecuteWithoutResults();
+            }
+            catch
+            {
+                return -1;
+            }
+            return newEstimation.EstimationId;
+        }
+
+        public bool EditEstimation(Estimation estimation, int payerid)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(e:estimation {EstimationId: " + estimation.EstimationId + "})")
+                             .Set("e.Payment = {payment}, e.Price = {price}")
+                             .WithParam("payment", estimation.Payment)
+                             .WithParam("price", estimation.Price)
+                             .ExecuteWithoutResults();
+
+                _client.Cypher.Match("(:user)-[r:IN_CHARGE]->(:estimation {EstimationId: " + estimation.EstimationId + "})")
+                             .Delete("r")
+                             .ExecuteWithoutResults();
+
+
+                _client.Cypher.Match("(u:user {UserId: " + payerid + "}), (e:estimation {EstimationId: " + estimation.EstimationId + "})")
+                             .Create("(u)-[:IN_CHARGE]->(e)")
+                             .ExecuteWithoutResults();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteEstimation(int estimationid)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(e:estimation {EstimationId: " + estimationid + "})-[r]-()")
+                              .Delete("r, e")
+                              .ExecuteWithoutResults();
             }
             catch
             {
