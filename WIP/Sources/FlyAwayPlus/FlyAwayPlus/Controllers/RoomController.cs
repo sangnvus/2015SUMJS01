@@ -409,5 +409,16 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(success);
         }
+
+        public RedirectToRouteResult AddPostInRoom()
+        {
+            User user = UserHelpers.GetCurrentUser(Session);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Index", "Room");
+        }
     }
 }

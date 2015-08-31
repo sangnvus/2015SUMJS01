@@ -419,3 +419,7 @@
     display: block;
     line-height: initial;
 }
+
+#post-add-videos-wrapper-room .post-sign-in .row .col-md-7 {
+    margin-right: 0px !important;
+}

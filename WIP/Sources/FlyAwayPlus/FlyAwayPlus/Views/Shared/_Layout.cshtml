@@ -143,6 +143,7 @@
         <script src="~/Scripts/jquery.tooltipster.js"></script>
         <script>
             $(function () {
+                $(".se-pre-con").fadeOut("slow");
                 // Hover card on username.
                 initializeTooltip();
 
@@ -204,8 +205,8 @@
                 });
 
                 var lastActivityId = 0;
-                var notificationHubProxy = $.connection.notificationHub;
-                var friendHubProxy = $.connection.friendHub;
+                var notificationHubProxy = notificationHubProxy || $.connection.notificationHub;
+                var friendHubProxy = friendHubProxy || $.connection.friendHub;
 
                 friendHubProxy.client.receiveListFriendRequest = function (content) {
                     /*
@@ -297,38 +298,38 @@
                     var notification_count = 0;
                     for (var index = 0; index < content.length; index++) {
                         var notification = content[index];
-                        if (notification == null || notification["post"] == null || notification["user"] == null) {
+                        if (notification == null || notification["Post"] == null || notification["User"] == null) {
                             break;
                         }
                         notification_count++;
                         var tmp = "";
                         tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
-                        tmp += "<a href='/Post/Index/" + notification["post"]["PostId"] + "' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                        tmp += "<a href='/Post/Index/" + notification["Post"]["PostId"] + "' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
                         tmp += "<div style='float:left'>";
-                        tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["user"]["Avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                        tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["User"]["Avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
                         tmp += "</div>";
 
-                        if (notification["activity"] == "COMMENTED") {
-                            tmp += "<div>" + notification["user"]["FirstName"] + " " + notification["user"]["LastName"] + " commented to your post</div>";
+                        if (notification["Activity"] == "COMMENTED") {
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " commented to your post</div>";
                         }
-                        else if (notification["activity"] == "LIKE") {
-                            tmp += "<div>" + notification["user"]["FirstName"] + " " + notification["user"]["LastName"] + " liked to your post</div>";
+                        else if (notification["Activity"] == "LIKE") {
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " liked to your post</div>";
                         }
-                        else if (notification["activity"] == "DISLIKE") {
-                            tmp += "<div>" + notification["user"]["FirstName"] + " " + notification["user"]["LastName"] + " disliked to your post</div>";
+                        else if (notification["Activity"] == "DISLIKE") {
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " disliked to your post</div>";
                         }
                         tmp += "<div style='margin-top:5px;'> " + notification["DateCreated"] + "</div>";
                         tmp += "</a>";
                         tmp += "</div>";
                         tmp += "<hr />";
                         $("#idNotification").append(tmp);
-                        lastActivityId = notification["lastActivityID"];
+                        lastActivityId = notification["LastActivityID"];
                     }
                     if (notification_count > 0) {
                         $("#btn-notification").find(".notification-count").text(notification_count).show();
                     }
                     else {
-                        $("#btn-notification").find(".notification-count").text("").hide();
+                        $("#btn-notification").find(".notification-count").text("0").hide();
                     }
                 }
 

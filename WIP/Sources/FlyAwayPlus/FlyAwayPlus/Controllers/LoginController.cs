@@ -13,6 +13,7 @@ using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -397,7 +398,6 @@ namespace FlyAwayPlus.Controllers
         }
         public ActionResult GoogleCallback()
         {
-
             if (!string.IsNullOrEmpty(Request.QueryString["code"]))
             {
                 string code = Request.QueryString["code"];
