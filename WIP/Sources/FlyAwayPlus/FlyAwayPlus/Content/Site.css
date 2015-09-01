@@ -1040,7 +1040,7 @@ figure.profile-banner {
     position: absolute;
     top: 0;
     z-index: 1;
-    max-width: 100%;
+    width: 100%;
     height: 100%;
 }
 
@@ -1902,24 +1902,19 @@ textarea {
 }
 
 .ml10 {
-    margin-left: 10px
+    margin-left: 10px;
 }
 
-.edit-cover-dark-wrapper {
-    height: 100%;
+#image-cropper {
     width: 100%;
-    background-color: #000000;
-    background-color: rgba(0, 0, 0, 0);
-    position: absolute;
-    top: 0;
-    left: 0;
-    -ms-opacity: 0;
-    opacity: 0
+    height: 100%;
 }
 
-.edit-cover-dark-wrapper:hover {
-    background-color: #000000;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: block;
-    opacity: 1
+.cropit-image-preview {
+    background-color: #f8f8f8;
+    -ms-background-size: cover;
+    background-size: cover;
+    width: 100%;
+    height: 300px;
+    cursor: default
 }

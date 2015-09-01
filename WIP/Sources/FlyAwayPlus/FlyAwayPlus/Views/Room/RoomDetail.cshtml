@@ -172,47 +172,6 @@
     var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
 }
-<!--REQUEST JOIN MODAL-->
-<div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Request join</h4>
-            </div>
-
-            <div class="modal-body">
-                <table data-toggle="table" data-height="299">
-                    <thead>
-                        <tr>
-                            <th data-align="center">Avatar</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int index = 0; index < listUserRequestJoinRoom.Count; index++)
-                        {
-                            <tr data-index="@index">
-                                <td style=""><img height="50" alt="User" src="@listUserRequestJoinRoom[index].Avatar" class="circle-image"></td>
-                                <td style=""><a href="/User/Index/@listUserRequestJoinRoom[index].UserId">@listUserRequestJoinRoom[index].FirstName @listUserRequestJoinRoom[index].LastName</a></td>
-                                <td style="">@listUserRequestJoinRoom[index].Email</td>
-                                <td style="">
-                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-success accept-request-join-btn'>Accept</button>
-                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-danger decline-request-join-btn' style='margin-left:5px;'>Decline</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button data-es="Close" data-dismiss="modal" class="btn btn-primary" type="button">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div id="room-detail-wrapper">
     <div>
         <!--INFO-->
@@ -229,7 +188,11 @@
                 <ul class="room-detail-infor-milestones">
                     <li>
                         <i class="fa fa-at"></i>
-                        <p>LOCATION:</p>&nbsp; <span>@roomInfo.DestinationLocation</span>
+                        <p>START PLACE:</p>&nbsp; <span>@roomInfo.StartLocation</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-at"></i>
+                        <p>DESTINATION:</p>&nbsp; <span>@roomInfo.DestinationLocation</span>
                     </li>
                     <li>
                         <i class="fa fa-calendar-o"></i>
@@ -249,28 +212,28 @@
             @if (admin.UserId == userId)
             {
                 <div>
-                    <a href="javascript:;" data-target="#view-request-join-modal" data-toggle="modal" class="btn btn-primary room-detail-request-join">View Request join</a>
+                    <a href="javascript:void(0)" data-target="#view-request-join-modal" data-toggle="modal" class="btn btn-primary room-detail-request-join">View Request join</a>
                 </div>
             }
             else if (relationInRoom.Equals("Request"))
             {
                 <div>
-                    <a href="javascript:;" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request sent</a>
+                    <a href="javascript:void(0)" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request sent</a>
                 </div>
             }
             else if (relationInRoom.Equals("Member"))
             {
                 <div style="display:none">
-                    <a href="javascript:;" id="id-member-in-room-btn" class="btn btn-primary room-detail-request-join">You are already a member</a>
+                    <a href="javascript:void(0)" id="id-member-in-room-btn" class="btn btn-primary room-detail-request-join">You are already a member</a>
                 </div>
             }
             else
             {
                 <div>
-                    <a href="javascript:;" id="id-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request join</a>
+                    <a href="javascript:void(0)" id="id-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request join</a>
                 </div>
                 <div style="display:none">
-                    <a href="javascript:;" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request sent</a>
+                    <a href="javascript:void(0)" id="id-sent-request-join-room-btn" class="btn btn-primary room-detail-request-join">Request sent</a>
                 </div>
             }
             <div class="input-group">
@@ -391,13 +354,15 @@
                            data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
                         <thead>
                             <tr>
-                                <th data-field="id" class="hidden"></th>
+                                <th data-field="id" data-visible="false" data-card-visible="false"></th>
+                                <th data-field="creatorid" data-visible="false" data-card-visible="false"></th>
+                                <th data-field="payerid" data-visible="false" data-card-visible="false"></th>
                                 <th data-field="payment" data-sortable="true">Payment</th>
-                                <th data-field="price" data-sortable="true">Price</th>
-                                <th data-field="creator" data-sortable="true">Creator</th>
-                                <th data-field="payer" data-sortable="true">Payer</th>
-                                <th data-field="datecreated" data-sortable="true">Date created</th>
-                                <th data-field="operate" data-formatter="estimationAction" data-events="estimationEvents" data-align="center">Action</th>
+                                <th data-field="price" data-sortable="true" data-formatter="priceFormatter" data-sorter="priceSorter">Price</th>
+                                <th data-field="creator" data-sortable="true" data-formatter="creatorFormatter" data-align="center">Creator</th>
+                                <th data-field="payer" data-sortable="true" data-formatter="payerFormatter" data-align="center">Payer</th>
+                                <th data-field="datecreated" data-sortable="true" data-width="100px" data-align="center">Date created</th>
+                                <th data-field="operate" data-formatter="estimationActionFormatter" data-events="estimationEvents" data-align="center">Action</th>
                             </tr>
                         </thead>
                     </table>
@@ -497,7 +462,7 @@
                                                 <textarea class="form-control" id="video-upload-description-room" placeholder="Description for video"></textarea>
                                             </div>
 
-                                            <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
+                                            <a href="javascript:void(0)" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
                                         </div>
 
                                         <div class="progress progress-striped active hidden" id="post-upload-video-progress-room">
@@ -573,17 +538,17 @@
                             </div>
 
                             <div class="interact-area">
-                                <a href="javascript:;" class="btn-like"><span>Like</span></a>
-                                <a href="javascript:;" class="btn-dislike"><span>Dislike</span></a>
-                                <a href="javascript:;" id="share_button" class="btn-share"><span>Share</span></a>
-                                <a href="javascript:;" id="report_button" class="btn-report"><span>Report</span></a>
+                                <a href="javascript:void(0)" class="btn-like"><span>Like</span></a>
+                                <a href="javascript:void(0)" class="btn-dislike"><span>Dislike</span></a>
+                                <a href="javascript:void(0)" id="share_button" class="btn-share"><span>Share</span></a>
+                                <a href="javascript:void(0)" id="report_button" class="btn-report"><span>Report</span></a>
                             </div>
                             <div class="divide-area"></div>
                             <div class="comment-area">
                                 <div style="margin: 0 20px 12px">
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[p.PostId]</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[p.PostId]</b>&nbsp;
-                                    <a href="javascript:;"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[p.PostId]</b>
+                                    <a href="javascript:void(0)"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[p.PostId]</b>&nbsp;
+                                    <a href="javascript:void(0)"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[p.PostId]</b>&nbsp;
+                                    <a href="javascript:void(0)"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[p.PostId]</b>
                                 </div>
                                 <div class="comment-stats">
                                     <span>@dictCommentCount[p.PostId] comments</span>
@@ -612,7 +577,7 @@
                     </div>
                     <div class="messages" style="border-bottom: #19B5FF 3px solid">
                         <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.UserId" class="hover-card-user">@String.Format("{0} {1}", @admin.FirstName, @admin.LastName)</a> on time</b></p>
-                        <time datetime=""><a href="javascript:;">Fly Away Plus System</a></time>
+                        <time datetime=""><a href="javascript:void(0)">Fly Away Plus System</a></time>
                     </div>
                 </li>
                 @for (int index = 0; index < listMessage.Count; index++)
@@ -708,8 +673,50 @@
     </div>
 </div>|
 
+<!--REQUEST JOIN MODAL-->
+<div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Request join</h4>
+            </div>
+
+            <div class="modal-body">
+                <table data-toggle="table" data-height="299">
+                    <thead>
+                        <tr>
+                            <th data-align="center">Avatar</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int index = 0; index < listUserRequestJoinRoom.Count; index++)
+                        {
+                            <tr data-index="@index">
+                                <td style=""><img height="50" alt="User" src="@listUserRequestJoinRoom[index].Avatar" class="circle-image"></td>
+                                <td style=""><a href="/User/Index/@listUserRequestJoinRoom[index].UserId">@listUserRequestJoinRoom[index].FirstName @listUserRequestJoinRoom[index].LastName</a></td>
+                                <td style="">@listUserRequestJoinRoom[index].Email</td>
+                                <td style="">
+                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-success accept-request-join-btn'>Accept</button>
+                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-danger decline-request-join-btn' style='margin-left: 5px;'>Decline</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button data-es="Close" data-dismiss="modal" class="btn btn-primary" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    function estimationAction(value, row, index) {
+    function estimationActionFormatter(value, row, index) {
         return [
             '<a class="edit" href="javascript:void(0)" title="Edit">',
                 '<i class="glyphicon glyphicon-edit"></i>',
@@ -720,11 +727,31 @@
         ].join('');
     }
 
+    function creatorFormatter(value, row, index) {
+        return '<a href="/User/Index/' + row.creatorid + '">' + value + '</a>';
+    }
+
+    function payerFormatter(value, row, index) {
+        return '<a href="/User/Index/' + row.payerid + '">' + value + '</a>';
+    }
+
+    function priceFormatter(value, row, index) {
+        value += '';
+        return value.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
+
+    function priceSorter(a, b) {
+        a = parseInt(a.replace(/,/g, '')); 
+        b = parseInt(b.replace(/,/g, '')); 
+        if (a > b) return 1; 
+        if (a < b) return -1; 
+        return 0;
+    }
+
     window.estimationEvents = {
         'click .edit': function (e, value, row, index) {
             var modal = $('#estimation-plan-modal');
 
-            modal.find('h4').text('Edit Estimation item');
             modal.find('#estimation-id').val(row.id);
             modal.find('#estimation-payment').val(row.payment);
             modal.find('#estimation-price').val(row.price);
@@ -961,6 +988,8 @@
             };
 
             if (dataPassEdit.id != '-1') {
+                $('#estimation-plan-modal').find('h4').text('Edit Estimation item');
+
                 $.ajax({
                     url: '/Room/EditEstimation',
                     type: 'POST',
@@ -978,6 +1007,8 @@
                     }
                 });
             } else {
+                $('#estimation-plan-modal').find('h4').text('Add Estimation item');
+
                 $.ajax({
                     url: '/Room/AddEstimation',
                     type: 'POST',

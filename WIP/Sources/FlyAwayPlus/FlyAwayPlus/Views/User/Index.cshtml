@@ -17,28 +17,23 @@
     var listPlace = ViewData["listPlace"] as List<Place>;
     var listVideo = ViewData["listVideo"] as List<Video>;
 }
+
+<script src="~/Scripts/jquery.cropit.js"></script>
 <link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
+
 <header>
     <figure class="profile-banner">
         <div id="image-cropper">
             <div class="cropit-image-preview"></div>
-
-            <input type="range" class="cropit-image-zoom-input" />
-
-            <input type="file" class="cropit-image-input" />
-            <div class="edit-cover-dark-wrapper">
-                <button class="btn btn-primary" id="btn-edit-cover">Edit cover</button>
-            </div>
+            <input type="file" class="cropit-image-input hidden" />
         </div>
-
-        <img src="/Images/background/nhatrang2.jpg" alt="Profile banner" class="img-responsive"/>
     </figure>
     <figure class="profile-picture"
             style="background-image: url('@Model.Avatar')">
     </figure>
     <div class="profile-stats">
         <ul role="tablist">
-            <li role="presentation"><a href="javascript:;">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a></li>
+            <li role="presentation"><a href="javascript:void(0)">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Post</span></a></li>
             <li role="presentation"><a id="btn-place-list" href="#place-list" aria-controls="place-list" role="tab" data-toggle="tab">@listPlaceDict.Count <span>Places</span></a></li>
             <li role="presentation"><a id="btn-photo-list" href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">@listPhoto.Count <span>Photos</span></a></li>
@@ -48,28 +43,30 @@
         <div class="interact-area">
             @if (Model.UserId == userSession.UserId)
             {
-                <a href="javascript:;" id="idEditProfile" data-toggle="modal" data-target="#id-profile-modal" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
+                <button class="btn btn-primary pull-right hidden" id="btn-edit-cover-done"><i class="fa fa-check"></i>Done</button>
+                <button class="btn btn-primary pull-right" id="btn-edit-cover">Edit cover</button>
+                <a href="javascript:void(0)" id="idEditProfile" data-toggle="modal" data-target="#id-profile-modal" class="btn btn-primary pull-right" style="margin-right: 10px">Profile <i class="glyphicon glyphicon-user"></i></a>
             }
             else if (friendType.Equals("friend"))
             {
-                <a href="javascript:;" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
-                <a href="javascript:;" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
-                <a href="javascript:;" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
-                <a href="javascript:;" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
+                <a href="javascript:void(0)" id="idUnfriend" class="btn btn-primary pull-right">Unfriend <i class="glyphicon"></i></a>
+                <a href="javascript:void(0)" id="idAddfriend" class="btn btn-primary pull-right" style="display: none">Request friend</a>
+                <a href="javascript:void(0)" id="idRequestFriend" class="btn btn-primary pull-right" style="display: none">Friend request sent</a>
+                <a href="javascript:void(0)" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
             }
             else if (friendType.Equals("request"))
             {
-                <a href="javascript:;" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
-                <a href="javascript:;" id="idAddfriend" class="btn btn-primary pull-right" style="display:none">Request friend</a>
-                <a href="javascript:;" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
-                <a href="javascript:;" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
+                <a href="javascript:void(0)" id="idUnfriend" class="btn btn-primary pull-right" style="display: none">Unfriend <i class="glyphicon"></i></a>
+                <a href="javascript:void(0)" id="idAddfriend" class="btn btn-primary pull-right" style="display: none">Request friend</a>
+                <a href="javascript:void(0)" id="idRequestFriend" class="btn btn-primary pull-right">Friend request sent</a>
+                <a href="javascript:void(0)" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
             }
             else
             {
-                <a href="javascript:;" id="idUnfriend" class="btn btn-primary pull-right" style="display:none">Unfriend <i class="glyphicon"></i></a>
-                <a href="javascript:;" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
-                <a href="javascript:;" id="idRequestFriend" class="btn btn-primary pull-right" style="display:none">Friend request sent</a>
-                <a href="javascript:;" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
+                <a href="javascript:void(0)" id="idUnfriend" class="btn btn-primary pull-right" style="display: none">Unfriend <i class="glyphicon"></i></a>
+                <a href="javascript:void(0)" id="idAddfriend" class="btn btn-primary pull-right">Request friend</a>
+                <a href="javascript:void(0)" id="idRequestFriend" class="btn btn-primary pull-right" style="display: none">Friend request sent</a>
+                <a href="javascript:void(0)" id="idReport" class="btn btn-primary pull-right" style="margin-right: 10px" data-toggle="modal" data-target="#myModal">Report</a>
             }
         </div>
     </div>
@@ -121,8 +118,8 @@
 <!-- Tab panes -->
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="timeline">
-        <div class="container">
-            <div class="col-md-12">
+        <div>
+            <div class="col-md-12" style="margin-left: 10px;">
 
                 <div class="blog-landing">
                     @Html.Partial("_ListPost")
@@ -132,7 +129,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="photos-gallery">
-        <div class="images-wrapper">
+        <div class="images-wrapper" style="margin-left: 10px;">
             @foreach (var image in listPhotoDict)
             {
                 <div class="image-element">
@@ -207,7 +204,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <a href="javascript:;" class="active">Profile</a>
+                                    <a href="javascript:void(0)" class="active">Profile</a>
                                 </div>
                             </div>
                             <hr>
@@ -227,12 +224,12 @@
                                                             <p style="color:red">First Name is required</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
-                                                        <span>First Name: </span><span><b>@Model.FirstName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span>First Name: </span><span><b>@Model.FirstName</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -247,12 +244,12 @@
                                                             <p style="color:red">Last Name is required</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
-                                                        <span>Last Name: </span><span><b>@Model.LastName</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span>Last Name: </span><span><b>@Model.LastName</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -268,19 +265,19 @@
                                                             <p style="color:red">Phone Number must be a number</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>Phone number: </span>
                                                         @if (Model.PhoneNumber.IsEmpty())
                                                         {
-                                                            <span><b>Please input your phonenumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>Please input your phonenumber</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.PhoneNumber</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.PhoneNumber</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                 </div>
@@ -293,19 +290,19 @@
                                                             <input name="DateOfBirth" style="width: 90%; float:left;" type="text" value="@Model.DateOfBirth" class="form-control edit-dob" placeholder="DOB" />
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>DOB: </span>
                                                         @if (Model.DateOfBirth.IsEmpty())
                                                         {
-                                                            <span><b>Please input your DOB</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>Please input your DOB</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.DateOfBirth</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.DateOfBirth</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                 </div>
@@ -365,11 +362,11 @@
                                                         <span>Address: </span>
                                                         @if (Model.Address.IsEmpty())
                                                         {
-                                                            <span><b>Please input your address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>Please input your address</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                         else
                                                         {
-                                                            <span><b>@Model.Address</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                            <span><b>@Model.Address</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                         }
                                                     </div>
                                                     <div class="cls-edit-info" style="width:100%; display:none">
@@ -377,8 +374,8 @@
                                                             <input name="Address" style="width: 90%; float:left;" type="text" value="@Model.Address" class="form-control text-box single-line" placeholder="address" />
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                            <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                            <a href="javascript:void(0)" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -399,7 +396,7 @@
                                                 <div class="form-group">
                                                     <div class="cls-display-info" style="width:100%;">
                                                         <span>Password: </span>
-                                                        <span><b>******</b><a href="javascript:;" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
+                                                        <span><b>******</b><a href="javascript:void(0)" style="float:right;"><i class="glyphicon glyphicon-edit"></i></a></span>
                                                     </div>
                                                     <div class="cls-edit-info" style="display:none; width:100%">
                                                         <div style="width:100%;">
@@ -412,8 +409,8 @@
                                                                 <p style="color:red"></p>
                                                             </div>
                                                             <div style="width:100%; margin-top: 5px; float:left;">
-                                                                <a href="javascript:;" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
-                                                                <a href="javascript:;" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
+                                                                <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
+                                                                <a href="javascript:void(0)" class="btn btn-primary cls-edit-cancel" style="margin-left: 10px; width: 70px;">Cancel <i class="glyphicon"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -458,7 +455,7 @@
 
                             <div class="col-md-1">
                                 <div>
-                                    <img src="@Model.Avatar" height="100px" width="70px">
+                                    <img src="@Model.Avatar" height="auto" width="100">
                                     <p>By @Model.FirstName @Model.LastName</p>
                                 </div>
                             </div>
@@ -496,6 +493,296 @@
 @Scripts.Render("~/bundles/datepicker")
 
 <script>
+    $(document).ready(function () {
+        // Datetime picker.
+        $('#id_register_dob').datepicker({
+            format: "yyyy-mm-dd"
+        });
+
+        $('.edit-dob').datepicker({
+            format: "yyyy-mm-dd"
+        });
+
+        // Edit cover.
+        $('#image-cropper').cropit({
+            imageState: {
+                src: '@(string.IsNullOrWhiteSpace(userSession.CoverUrl) ? "/Images/background/nhatrang.jpg" : userSession.CoverUrl)'
+            },
+            onImageError: function () {
+                swal("Oops...", "Your selected image is too small, select a big enough image!", "error");
+            }
+        });
+
+        $('#image-cropper').cropit('disable');
+
+        $('#btn-edit-cover').click(function () {
+            $('#btn-edit-cover').toggleClass('hidden');
+            $('#btn-edit-cover-done').toggleClass('hidden');
+
+            $('#image-cropper').cropit('reenable');
+
+            $('.cropit-image-input').click();
+
+            $('.cropit-image-preview').css('cursor', 'move');
+        });
+
+        $('#btn-edit-cover-done').click(function() {
+            $('#btn-edit-cover').toggleClass('hidden');
+            $('#btn-edit-cover-done').toggleClass('hidden');
+
+            $('#image-cropper').cropit('disable');
+            $('.cropit-image-preview').css('cursor', 'default');
+
+            saveImageToDb();
+        });
+
+        $("#id-view-all-friend").click(function(evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                //alert("x");
+                $("#myFriend").modal("show");
+                evt.handled = true;
+            }
+        });
+
+        $("#id-edit-profile-btn").click(function(evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                userDetailModule.editProfileAjax($("#id-edit-profile"));
+                $("#id-profile-modal").modal('hide');
+
+                evt.handled = true;
+            }
+        });
+
+        $('input:radio[name=optradio]').click(function () {
+            var checkval = $(this).val();
+            $('#closeBtn').prop('disabled', (checkval == null));
+        });
+
+        $('#closeBtn').click(function (e) {
+
+            $.ajax({
+                url: "/User/ReportUser/",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    userReportId: parseInt('@Session["UserId"]'),
+                    userReportedId: parseInt('@Model.UserId'),
+                    typeReport: $('input[name="optradio"]:checked').val()
+                },
+                success: function (data) {
+                    if (data == true) {
+                        alert("This user has been reported!");
+                    } else {
+                        alert("You have already report this user!");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            });
+            e.preventDefault();
+        });
+
+        $("#idAddfriend").click(function (evt) {
+            userDetailModule.sendRequestFriend();
+            $(this).hide();
+            $("#idRequestFriend").show();
+            evt.preventDefault();
+        });
+
+        $("#idUnfriend").click(function (evt) {
+            userDetailModule.unfriend();
+            $(this).hide();
+            $("#idAddfriend").show();
+            evt.preventDefault();
+        });
+
+        var editIcon = $("#id-edit-profile").find(".cls-display-info").find(".glyphicon-edit");
+        $(editIcon).click(function(evt) {
+            var parent = $(this).closest(".form-group");
+            $(parent).find(".cls-edit-info").show();
+            $(parent).find(".cls-display-info").hide();
+
+            $(editIcon).hide();
+            evt.preventDefault();
+        });
+
+        $("#id-edit-profile").find(".cls-edit-ok").click(function(evt) {
+            var parent = $(this).closest(".form-group");
+
+            if($(this).closest(".cls-edit-info").find("input").length > 1) {
+                // password
+                var input = $(this).closest(".cls-edit-info").find("input");
+                var password =$(input[0]).val();
+                var passwordConfirmed =$(input[1]).val();
+
+                if(password == "") {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password is required");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                if(passwordConfirmed == "") {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password Confirm is required");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                if(password.length < 5 || password.length > 50) {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password must be between 5 and 50 characters");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                if(password != passwordConfirmed) {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password must match");
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+
+                $("#id-password").val(password);
+                $(this).closest(".cls-edit-info").find("input").text("").val("");
+            }
+            else {
+                // other field
+                var input = $(this).closest(".cls-edit-info").find("input");
+                var value = $(input).val();
+
+                if(($(input).attr("name") == "phoneNumber" && isNaN(value)) || (value.trim() == "" && $(input).attr("name") != "phoneNumber")) {
+                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                    return;
+                }
+                $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
+                $(this).closest(".form-group").find(".cls-display-info").find("b").text(value);
+            }
+
+            $(parent).find(".cls-edit-info").hide();
+            $(parent).find(".cls-display-info").show();
+            $(editIcon).show();
+            evt.preventDefault();
+        });
+
+        $("#id-edit-profile").find(".cls-edit-cancel").click(function(evt) {
+            var parent = $(this).closest(".form-group");
+
+            if($(this).closest(".cls-edit-info").find("input").length > 1) {
+                $(this).closest(".cls-edit-info").find("input").text("").val("");
+            }
+            else {
+                var value = $(parent).find(".cls-display-info").find("b").text().trim();
+                if(value.split("Please input").length > 1) {
+                    value = "";
+                }
+                $(this).closest(".cls-edit-info").find("input").text(value).val(value);
+            }
+            $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
+            $(parent).find(".cls-edit-info").hide();
+            $(parent).find(".cls-display-info").show();
+            $(editIcon).show();
+            evt.preventDefault();
+        });
+    });
+
+    $(function () {
+        $('#btn-place-list').on('shown.bs.tab', function (e) {
+            initialize();
+        });
+        $('a.follow').click(function () {
+            $(this).toggleClass('followed');
+            /*
+            if ($(this).hasClass('followed')) {
+                $(this).text('Request sent');
+                $('.profile-stats ul li:last-child').html('325<span>Friends</span>');
+            }
+            else {
+                $(this).text('Add friend');
+                $('.profile-stats ul li:last-child').html('324<span>Friends</span>');
+            }
+            */
+        });
+        $('#btn-photo-list').on('shown.bs.tab', function (e) {
+            var conWidth = $("#photos-gallery").width();
+            //my container width
+            var gridwidth = 212;
+            //alert(conWidth);
+            var col = conWidth / gridwidth;
+            //alert(col);
+            $(".images-wrapper").BlocksIt({
+                numOfCol: Math.floor(col)
+            });
+        });
+
+        $(".image-element").hover(function () {
+            var postActions = $(this).find(".post-actions");
+
+            postActions.css("visibility", "visible");
+            postActions.css("opacity", "1");
+            postActions.stop().animate({ top: '20px' }, "slow");
+        }, function () {
+            var postActions = $(this).find(".post-actions");
+
+            postActions.stop().animate({ top: '0px' }, "slow");
+            postActions.css("visibility", "hidden");
+            postActions.css("opacity", "0");
+        });
+
+        $(".fancybox").attr('rel', 'gallery').fancybox({
+            openEffect: 'fade',
+            closeEffect: 'elastic',
+            padding: 2,
+            afterLoad: function () {
+                this.title = '<p class="text-center">' + this.title + '</p>';
+            },
+            helpers: {
+                title: {
+                    type: 'inside'
+                },
+                overlay: {
+                    css: {
+                        'background': 'rgba(58, 42, 45, 0.5)'
+                    }
+                }
+            }
+        });
+    });
+
+    function saveImageToDb() {
+        var imageData = $('#image-cropper').cropit('export', {
+            type: 'image/jpeg',
+            quality: .9,
+            originalSize: true
+        });
+
+        $.ajax({
+            url: "/User/SaveCover",
+            type: "POST",
+            data: {imageData: imageData, userId: @userSession.UserId},
+            sucess: function() {
+
+            },
+            error: function() {
+                swal("Oops...", "An error occured, please try again!", "error");
+            }
+        });
+    }
+
+    function fadeImage() {
+        $(".dark-wrapper").hover(function () {
+            $(this).find("img").stop().fadeTo(500, 0.5);
+
+            var postActions = $(this).find(".post-actions");
+
+            postActions.css("visibility", "visible");
+            postActions.css("opacity", "1");
+            postActions.stop().animate({ top: '20px' }, "slow");
+        }, function () {
+            $(this).find("img").stop().fadeTo(500, 1);
+
+            var postActions = $(this).find(".post-actions");
+
+            postActions.stop().animate({ top: '0px' }, "slow");
+            postActions.css("visibility", "hidden");
+            postActions.css("opacity", "0");
+        });
+    };
+
+
     var userDetailModule = (function () {
         var sendRequestFriend = function () {
             var controller = "/User/SendRequestFriend/";
@@ -517,7 +804,7 @@
             commonModule.callAjax(controller, data, null);
         };
 
-        var editProfileAjax = function(selector) {
+        var editProfileAjax = function (selector) {
             var controller = "/User/EditProfile";
             var firstName = $(selector).find("input[name='firstName']").closest(".form-group").find("b").text();
             var lastName = $(selector).find("input[name='lastName']").closest(".form-group").find("b").text();
@@ -527,13 +814,13 @@
             var dateOfBirth = $(selector).find("input[name='dateOfBirth']").closest(".form-group").find("b").text();
             var password = $("#id-password").val();
 
-            if(address.split("Please input").length > 1) {
+            if (address.split("Please input").length > 1) {
                 address = "";
             }
-            if(phoneNumber.split("Please input").length > 1) {
+            if (phoneNumber.split("Please input").length > 1) {
                 phoneNumber = "";
             }
-            if(dateOfBirth.split("Please input").length > 1) {
+            if (dateOfBirth.split("Please input").length > 1) {
                 dateOfBirth = "";
             }
 
@@ -560,8 +847,8 @@
     function initialize() {
         // Marker Place
         var listPlace = JSON.parse('@Newtonsoft.Json.JsonConvert.SerializeObject(listPlace)'.split('&quot;').join('"'));
-        if(listPlace.length > 0) {
-            var myCenter = new google.maps.LatLng(listPlace[0]["Latitude"], listPlace[0]["Longitude"]);
+        if (listPlace.length > 0) {
+            var myCenter = new window.google.maps.LatLng(listPlace[0]["Latitude"], listPlace[0]["Longitude"]);
             var myStyles = [
                 {
                     "featureType": "administrative.country",
@@ -720,33 +1007,33 @@
                 zoom: 3,
                 center: myCenter,
                 disableDefaultUI: true,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeId: window.google.maps.MapTypeId.ROADMAP,
                 styles: myStyles
             };
             var map = new window.google.maps.Map(document.getElementById('id-place-map'), mapOptions);
 
-            for(var index = 0; index < listPlace.length; index++) {
-                (function(index){
-                    var otherMaker = new google.maps.Marker({
-                        position: new google.maps.LatLng(listPlace[index]["Latitude"], listPlace[index]["Longitude"]),
+            for (var index = 0; index < listPlace.length; index++) {
+                (function (index) {
+                    var otherMaker = new window.google.maps.Marker({
+                        position: new window.google.maps.LatLng(listPlace[index]["Latitude"], listPlace[index]["Longitude"]),
                         icon: {
                             url: '/Images/other-marker.png'
                         },
                         map: map
                     });
-                    var infoOther = new google.maps.InfoWindow({
+                    var infoOther = new window.google.maps.InfoWindow({
                         content: '<div id="iw_container_' + index + '">' +
                          '<div class="iw_title">' + listPlace[index]["Name"] + '</div>' +
                          '</div>',
                         maxWidth: 200
                     });
-                    google.maps.event.addListener(otherMaker, 'mouseover', function () {
+                    window.google.maps.event.addListener(otherMaker, 'mouseover', function () {
                         infoOther.open(map, otherMaker);
                     });
-                    google.maps.event.addListener(otherMaker, 'mouseout', function () {
+                    window.google.maps.event.addListener(otherMaker, 'mouseout', function () {
                         infoOther.close();
                     });
-                    google.maps.event.addListener(otherMaker, 'click', function () {
+                    window.google.maps.event.addListener(otherMaker, 'click', function () {
                         document.location.href = document.location.origin + '/Search/SearchDetail/' + listPlace[index]["PlaceId"];
                     });
                 })(index);
@@ -754,256 +1041,13 @@
         }
     }
 
-    $(document).ready(function () {
-        // Datetime picker.
-        $('#id_register_dob').datepicker({
-            format: "yyyy-mm-dd"
-        });
-
-        $('.edit-dob').datepicker({
-            format: "yyyy-mm-dd"
-        });
-
-        // Edit cover.
-        $('.image-editor').cropit({
-            imageState: {
-                src: 'http://lorempixel.com/500/400/',
-            },
-        });
-
-        $("#id-view-all-friend").click(function(evt) {
-            if (evt.handled !== true) { // This will prevent event triggering more then once
-                //alert("x");
-                $("#myFriend").modal("show");
-                evt.handled = true;
-            }
-        });
-
-        $("#id-edit-profile-btn").click(function(evt) {
-            if (evt.handled !== true) { // This will prevent event triggering more then once
-                userDetailModule.editProfileAjax($("#id-edit-profile"));
-                $("#id-profile-modal").modal('hide');
-
-                evt.handled = true;
-            }
-        });
-
-        $('input:radio[name=optradio]').click(function () {
-            var checkval = $(this).val();
-            $('#closeBtn').prop('disabled', (checkval == null));
-        });
-
-        $('#closeBtn').click(function (e) {
-
-            $.ajax({
-                url: "/User/ReportUser/",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    userReportId: parseInt('@Session["UserId"]'),
-                    userReportedId: parseInt('@Model.UserId'),
-                    typeReport: $('input[name="optradio"]:checked').val()
-                },
-                success: function (data) {
-                    if (data == true) {
-                        alert("This user has been reported!");
-                    } else {
-                        alert("You have already report this user!");
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                }
-            });
-            e.preventDefault();
-        });
-
-        $("#idAddfriend").click(function (evt) {
-            userDetailModule.sendRequestFriend();
-            $(this).hide();
-            $("#idRequestFriend").show();
-            evt.preventDefault();
-        });
-
-        $("#idUnfriend").click(function (evt) {
-            userDetailModule.unfriend();
-            $(this).hide();
-            $("#idAddfriend").show();
-            evt.preventDefault();
-        });
-
-        var editIcon = $("#id-edit-profile").find(".cls-display-info").find(".glyphicon-edit");
-        $(editIcon).click(function(evt) {
-            var parent = $(this).closest(".form-group");
-            $(parent).find(".cls-edit-info").show();
-            $(parent).find(".cls-display-info").hide();
-
-            $(editIcon).hide();
-            evt.preventDefault();
-        });
-
-        $("#id-edit-profile").find(".cls-edit-ok").click(function(evt) {
-            var parent = $(this).closest(".form-group");
-
-            if($(this).closest(".cls-edit-info").find("input").length > 1) {
-                // password
-                var input = $(this).closest(".cls-edit-info").find("input");
-                var password =$(input[0]).val();
-                var passwordConfirmed =$(input[1]).val();
-
-                if(password == "") {
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password is required");
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
-                    return;
-                }
-                if(passwordConfirmed == "") {
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password Confirm is required");
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
-                    return;
-                }
-                if(password.length < 5 || password.length > 50) {
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password must be between 5 and 50 characters");
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
-                    return;
-                }
-                if(password != passwordConfirmed) {
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Password must match");
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
-                    return;
-                }
-
-                $("#id-password").val(password);
-                $(this).closest(".cls-edit-info").find("input").text("").val("");
-            }
-            else {
-                // other field
-                var input = $(this).closest(".cls-edit-info").find("input");
-                var value = $(input).val();
-
-                if(($(input).attr("name") == "phoneNumber" && isNaN(value)) || (value.trim() == "" && $(input).attr("name") != "phoneNumber")) {
-                    $(this).closest(".cls-edit-info").find(".cls-error-message").show();
-                    return;
-                }
-                $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
-                $(this).closest(".form-group").find(".cls-display-info").find("b").text(value);
-            }
-
-            $(parent).find(".cls-edit-info").hide();
-            $(parent).find(".cls-display-info").show();
-            $(editIcon).show();
-            evt.preventDefault();
-        });
-
-        $("#id-edit-profile").find(".cls-edit-cancel").click(function(evt) {
-            var parent = $(this).closest(".form-group");
-
-            if($(this).closest(".cls-edit-info").find("input").length > 1) {
-                $(this).closest(".cls-edit-info").find("input").text("").val("");
-            }
-            else {
-                var value = $(parent).find(".cls-display-info").find("b").text().trim();
-                if(value.split("Please input").length > 1) {
-                    value = "";
-                }
-                $(this).closest(".cls-edit-info").find("input").text(value).val(value);
-            }
-            $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
-            $(parent).find(".cls-edit-info").hide();
-            $(parent).find(".cls-display-info").show();
-            $(editIcon).show();
-            evt.preventDefault();
-        });
-    });
-
-    $(function () {
-        $('#btn-place-list').on('shown.bs.tab', function (e) {
-            initialize();
-        })
-        $('a.follow').click(function () {
-            $(this).toggleClass('followed');
-            /*
-            if ($(this).hasClass('followed')) {
-                $(this).text('Request sent');
-                $('.profile-stats ul li:last-child').html('325<span>Friends</span>');
-            }
-            else {
-                $(this).text('Add friend');
-                $('.profile-stats ul li:last-child').html('324<span>Friends</span>');
-            }
-            */
-        });
-        $('#btn-photo-list').on('shown.bs.tab', function (e) {
-            var conWidth = $("#photos-gallery").width();
-            //my container width
-            var gridwidth = 212;
-            //alert(conWidth);
-            var col = conWidth / gridwidth;
-            //alert(col);
-            $(".images-wrapper").BlocksIt({
-                numOfCol: Math.floor(col)
-            });
-        });
-
-        $(".image-element").hover(function () {
-            var postActions = $(this).find(".post-actions");
-
-            postActions.css("visibility", "visible");
-            postActions.css("opacity", "1");
-            postActions.stop().animate({ top: '20px' }, "slow");
-        }, function () {
-            var postActions = $(this).find(".post-actions");
-
-            postActions.stop().animate({ top: '0px' }, "slow");
-            postActions.css("visibility", "hidden");
-            postActions.css("opacity", "0");
-        });
-
-        $(".fancybox").attr('rel', 'gallery').fancybox({
-            openEffect: 'fade',
-            closeEffect: 'elastic',
-            padding: 2,
-            afterLoad: function () {
-                this.title = '<p class="text-center">' + this.title + '</p>';
-            },
-            helpers: {
-                title: {
-                    type: 'inside'
-                },
-                overlay: {
-                    css: {
-                        'background': 'rgba(58, 42, 45, 0.5)'
-                    }
-                }
-            }
-        });
-    });
-
-    function fadeImage() {
-        $(".dark-wrapper").hover(function () {
-            $(this).find("img").stop().fadeTo(500, 0.5);
-
-            var postActions = $(this).find(".post-actions");
-
-            postActions.css("visibility", "visible");
-            postActions.css("opacity", "1");
-            postActions.stop().animate({ top: '20px' }, "slow");
-        }, function () {
-            $(this).find("img").stop().fadeTo(500, 1);
-
-            var postActions = $(this).find(".post-actions");
-
-            postActions.stop().animate({ top: '0px' }, "slow");
-            postActions.css("visibility", "hidden");
-            postActions.css("opacity", "0");
-        });
-    };
-
     $(window).load(function () {
-        commonModule.setBlocksit($(".blog-landing"), 212);
+        commonModule.setBlocksit($(".blog-landing"), 215);
         fadeImage();
     });
 
     //window resize
     $(window).resize(function () {
-        commonModule.setBlocksit($(".blog-landing"), 212);
+        commonModule.setBlocksit($(".blog-landing"), 215);
     });
 </script>

@@ -151,7 +151,7 @@ function saveAvatar() {
                     $("#avatar-crop-box").addClass("hidden");
                 }
                 
-                $("#id-register-avatar-path").val(data.avatarFileLocation.replace(/\\/g, "//"));
+                $("#id-register-avatar-path").val(data.avatarFileLocation.replace(/\\/g, "/"));
                 $("#upload-avatar-preview").attr("src", data.avatarFileLocation);
                 $("#avatar-crop-box button").removeClass("disabled");
             } else {
