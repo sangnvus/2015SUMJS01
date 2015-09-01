@@ -1601,6 +1601,24 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
+        public bool EditUserAvatar(int userid, string avaPath)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(n:user { UserId: " + userid + "})")
+                              .Set("n.Avatar = {avaPath}")
+                              .WithParam("avaPath", avaPath)
+                              .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
         public bool EditComment(Comment comment)
         {
             _client.Connect();

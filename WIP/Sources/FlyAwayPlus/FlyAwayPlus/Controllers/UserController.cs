@@ -137,10 +137,9 @@ namespace FlyAwayPlus.Controllers
         public ActionResult Comment(int postId, string content)
         {
             User user = UserHelpers.GetCurrentUser(Session);
-            Dictionary<int, FlyAwayPlus.Models.User> dict = new Dictionary<int, Models.User>();
+            Dictionary<int, User> dict = new Dictionary<int, Models.User>();
             Comment comment = new Comment();
-            comment.Content = content;
-            comment.Content = comment.Content.Replace("\n", "\\n");
+            comment.Content = content.Replace("\n", "\\n");
             comment.DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
 
             bool success = GraphDatabaseHelpers.Instance.InsertComment(postId, comment, user.UserId);
@@ -442,15 +441,29 @@ namespace FlyAwayPlus.Controllers
                 : Json(GraphDatabaseHelpers.Instance.GetUser(thisId));
         }
 
-        public void SaveCover(string imageData, int userId)
+        public string SaveImageDataToFile(string imageData, int userId, string type)
         {
             var currentUser = GraphDatabaseHelpers.Instance.GetUser(userId);
-            currentUser.CoverUrl = "/Images/UserUpload/UserCover/" + "cover_uid_" + userId + ".jpg";
+            string pathToSaveImage;
+            string newAvaName = null;
+            if (type.Equals("cover"))
+            {
+                currentUser.CoverUrl = "/Images/UserUpload/UserCover/" + "cover_uid_" + userId + ".jpg";
+                GraphDatabaseHelpers.Instance.EditUserCover(userId, currentUser.CoverUrl);
+                var uploadPath = "~/Images/UserUpload/UserCover/";
+                pathToSaveImage = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), "cover_uid_" + userId + ".jpg");
+            }
+            else
+            {
+                var uploadPath = "~/Images/UserUpload/UserAvatar/";
 
-            GraphDatabaseHelpers.Instance.EditUserCover(userId, currentUser.CoverUrl);
+                newAvaName = currentUser.Avatar.StartsWith("http") || currentUser.Avatar.EndsWith("default-avatar.jpg")
+                                 ? "ava_uid_" + currentUser.UserId + ".jpg"
+                                 : currentUser.Avatar.Split('/').Last();
 
-            string uploadPath = "~/Images/UserUpload/UserCover/";
-            var path = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), "cover_uid_" + userId + ".jpg");
+                GraphDatabaseHelpers.Instance.EditUserAvatar(userId, "/Images/UserUpload/UserAvatar/" + newAvaName);
+                pathToSaveImage = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), newAvaName);
+            }
 
             byte[] bytes = Convert.FromBase64String(imageData.Split(',')[1]);
 
@@ -458,9 +471,11 @@ namespace FlyAwayPlus.Controllers
             {
                 using (var img = Image.FromStream(ms))
                 {
-                    img.Save(path);
+                    img.Save(pathToSaveImage);
                 }
             }
+
+            return "/Images/UserUpload/UserAvatar/" + newAvaName;
         }
     }
 }

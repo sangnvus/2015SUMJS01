@@ -1056,7 +1056,7 @@ figure.profile-banner {
     }
 }
 
-figure.profile-picture {
+figure.profile-picture, .profile-picture-wrapper {
     background-position: center center;
     -ms-background-size: cover;
     background-size: cover;
@@ -1916,5 +1916,27 @@ textarea {
     background-size: cover;
     width: 100%;
     height: 300px;
-    cursor: default
+    cursor: default;
+}
+
+.cropit-ava-preview {
+    background-color: #f8f8f8;
+    -ms-background-size: cover;
+    background-size: cover;
+    width: 200px;
+    height: 200px;
+    cursor: default;
+    margin-left: 45px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+    cursor: move;
+}
+
+.profile-picture:hover {
+    cursor: pointer;
+}
+
+.friend-list-avatar p {
+    height: 45px;
+    padding: 20px;
 }
