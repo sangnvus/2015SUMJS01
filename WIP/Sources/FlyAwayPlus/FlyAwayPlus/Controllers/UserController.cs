@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -7,6 +10,8 @@ using System.Web;
 using System.Web.Mvc;
 using FlyAwayPlus.Models;
 using FlyAwayPlus.Helpers;
+using FlyAwayPlus.Helpers.UploadImage;
+
 namespace FlyAwayPlus.Controllers
 {
     public class UserController : Controller
@@ -435,6 +440,27 @@ namespace FlyAwayPlus.Controllers
             return !int.TryParse(otherUserId, out thisId)
                 ? null
                 : Json(GraphDatabaseHelpers.Instance.GetUser(thisId));
+        }
+
+        public void SaveCover(string imageData, int userId)
+        {
+            var currentUser = GraphDatabaseHelpers.Instance.GetUser(userId);
+            currentUser.CoverUrl = "/Images/UserUpload/UserCover/" + "cover_uid_" + userId + ".jpg";
+
+            GraphDatabaseHelpers.Instance.EditUserCover(userId, currentUser.CoverUrl);
+
+            string uploadPath = "~/Images/UserUpload/UserCover/";
+            var path = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), "cover_uid_" + userId + ".jpg");
+
+            byte[] bytes = Convert.FromBase64String(imageData.Split(',')[1]);
+
+            using (var ms = new MemoryStream(bytes))
+            {
+                using (var img = Image.FromStream(ms))
+                {
+                    img.Save(path);
+                }
+            }
         }
     }
 }

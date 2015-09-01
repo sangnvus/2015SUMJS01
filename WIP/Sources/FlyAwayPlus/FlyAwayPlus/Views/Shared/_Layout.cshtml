@@ -43,7 +43,7 @@
                     else
                     {
                         <li class="friend-request-li">
-                            <a href="javascript:;" class="remove-background" id="id-btn-friend-request">
+                            <a href="javascript:void(0)" class="remove-background" id="id-btn-friend-request">
                                 <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
                                 <span class="friend-request-count badge badge-danger" style="display: none;"></span>
                             </a>
@@ -59,7 +59,7 @@
                             </div>
                         </li>
                         <li class="notification-li">
-                            <a href="javascript:;" class="remove-background" id="btn-notification">
+                            <a href="javascript:void(0)" class="remove-background" id="btn-notification">
                                 <i class="fa fa-fw fa-bell interact-item interact-button"></i>
                                 <span class="notification-count badge badge-danger"></span>
                             </a>
@@ -72,14 +72,14 @@
                                 <div id="idNotification" class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px!important;">
                                 </div>
                                 <div class="notification-footer">
-                                    <a href="javascript:;"></a>
+                                    <a href="javascript:void(0)"></a>
                                 </div>
                             </div>
                         </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
                                 <img id="id-avatar-current-user" 
-                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"].ToString().Replace("//","/"))"
+                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"].ToString())"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
@@ -211,7 +211,7 @@
                 friendHubProxy.client.receiveListFriendRequest = function (content) {
                     /*
                     <div style="width:100%; height: 65px;">
-                        <div href="javascript:;" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                        <div href="javascript:void(0)" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
                             <div style="float:left">
                                 <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                             </div>
@@ -285,7 +285,7 @@
                 notificationHubProxy.client.receiveNotification = function (content) {
                     /*
                     <div style="width:100%; height: 65px;">
-                        <a href="javascript:;" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
+                        <a href="javascript:void(0)" style="padding: 7px 7px 8px 10px; width:100%; height: 100%;">
                             <div style="float:left">
                                 <span class="avatar" style="margin-right: 8px; background-image: url('/Images/UIHelper/default-avatar.jpg'); background-repeat: no-repeat; height: 50px; width: 50px;"></span>
                             </div>

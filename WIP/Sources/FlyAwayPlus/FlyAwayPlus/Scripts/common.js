@@ -68,9 +68,9 @@
     };
 
     var setBlocksit = function (objBlog, width) {
-        objBlog = objBlog ? objBlog : $(".blog-landing");
+        objBlog = objBlog ? objBlog : $('.blog-landing');
         width = width ? width : 320;
-        if (typeof (objBlog) != "undefined" || objBlog != null || objBlog.length > 0) {
+        if (typeof (objBlog) != 'undefined' || objBlog != null || objBlog.length > 0) {
             $(objBlog).each(function (evt) {
                 try {
                     var conWidth = $(this).width();

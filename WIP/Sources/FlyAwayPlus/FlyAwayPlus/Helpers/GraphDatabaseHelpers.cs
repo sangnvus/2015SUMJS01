@@ -1583,6 +1583,24 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
+        public bool EditUserCover(int userid, string coverPath)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(n:user { UserId: " + userid + "})")
+                              .Set("n.CoverUrl = {coverPath}")
+                              .WithParam("coverPath", coverPath)
+                              .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
         public bool EditComment(Comment comment)
         {
             _client.Connect();
@@ -2634,28 +2652,24 @@ namespace FlyAwayPlus.Helpers
                                  .ToList();
         }
 
-        public string GetEstimationCreator(int estimationId)
+        public User GetEstimationCreator(int estimationId)
         {
             _client.Connect();
             var estimationCreator = _client.Cypher.Match("(u:user)-[:CREATE]->(:estimation{EstimationId: " + estimationId + "})")
                                                   .Return<User>("u")
                                                   .Results
                                                   .FirstOrDefault();
-            return estimationCreator != null
-                   ? estimationCreator.FirstName + " " + estimationCreator.LastName
-                   : string.Empty;
+            return estimationCreator;
         }
 
-        public string GetEstimationPayer(int estimationId)
+        public User GetEstimationPayer(int estimationId)
         {
             _client.Connect();
             var estimationPayer = _client.Cypher.Match("(u:user)-[:IN_CHARGE]->(:estimation{EstimationId: " + estimationId + "})")
                                                   .Return<User>("u")
                                                   .Results
                                                   .FirstOrDefault();
-            return estimationPayer != null
-                   ? estimationPayer.FirstName + " " + estimationPayer.LastName
-                   : string.Empty;
+            return estimationPayer;
         }
 
         public int InsertEstimation(Estimation newEstimation, int roomId, int creatorId, int payerid)
