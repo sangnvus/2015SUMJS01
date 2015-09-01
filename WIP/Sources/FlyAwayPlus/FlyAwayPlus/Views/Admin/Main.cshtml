@@ -1,5 +1,4 @@
-﻿@using FlyAwayPlus.Helpers
-@using PagedList
+﻿@using PagedList
 @using PagedList.Mvc
 
 @{
@@ -30,6 +29,7 @@
             <button>Log out</button>
             <p></p>
         }
+        
         <ul class="nav nav-tabs">
             <li><a data-toggle="tab" href="#user">User</a></li>
             <li><a data-toggle="tab" href="#reportPost">Reported post</a></li>
@@ -39,13 +39,58 @@
 
         <div class="tab-content">
             <div id="user" class="tab-pane fade">
+                @using (Html.BeginForm())
+                {
+                    <p>
+                        Find by
+                        <select name="searchBy">
+                            @if (ViewBag.SearchBy!=null && ViewBag.SearchBy.Equals("userId"))
+                            {
+                                <option value="userId" selected="selected">User ID</option>
+                            }
+                            else
+                            {
+                                <option value="userId">User ID</option>
+                            }
+                            
+                            @if (ViewBag.SearchBy != null && ViewBag.SearchBy.Equals("firstName"))
+                            {
+                                <option value="firstName" selected="selected">First Name</option>
+                            }
+                            else
+                            {
+                                <option value="firstName">First Name</option>
+                            }
+                            
+                            @if (ViewBag.SearchBy != null && ViewBag.SearchBy.Equals("lastName"))
+                            {
+                                <option value="lastName" selected="selected">Last Name</option>
+                            }
+                            else
+                            {
+                                <option value="lastName">Last Name</option>
+                            }
+                            
+                            @if (ViewBag.SearchBy != null && ViewBag.SearchBy.Equals("email"))
+                            {
+                                <option value="email" selected="selected">Email</option>
+                            }
+                            else
+                            {
+                                <option value="email">Email</option>
+                            }
+                        </select>
+                        : @Html.TextBox("SearchString")
+                        <input type="submit" value="Search" />
+                    </p>
+                }
                 <form>
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>User ID</th>
-                                <th>Firstname</th>
-                                <th>Lastname</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
                                 <th>Email</th>
                                 <th>Status</th>
                             </tr>
@@ -93,7 +138,7 @@
                             }
                         </tbody>
                     </table>
-                    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfUsers, page => Url.Action("Main", new { page, tab = "user" }))
+                    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfUsers, page => Url.Action("Main", new { page, tab = "user", searchString = ViewBag.SearchString, searchBy = ViewBag.SearchBy }))
                 </form>
             </div>
 
@@ -213,7 +258,7 @@
     $(document).ready(function () {
         var tab = '@ViewBag.Tab';
         if (tab.length == 0) {
-            $('.nav-tabs a[href="#reportPost"]').tab('show');
+            $('.nav-tabs a[href="#user"]').tab('show');
         }
         else {
             $('.nav-tabs a[href="#@ViewBag.Tab"]').tab('show');
