@@ -1,0 +1,354 @@
+﻿@model FlyAwayPlus.Models.Post
+@using FlyAwayPlus.Models;
+
+@{
+    var userPost = ViewData["userPost"] as User;
+    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
+    var listPhoto = listPhotoDict[Model.PostId];
+    var listVideoDict = ViewData["listVideoDict"] as Dictionary<int, Video>;
+    var video = listVideoDict[Model.PostId];
+    var placeName = ViewData["placeName"] as string;
+    var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
+    var listComment = dictListComment[Model.PostId];
+    string userId = (Session["UserId"] == null ? "" : Session["UserId"].ToString());
+    var dictLikeCount = ViewData["likeCount"] as Dictionary<int, int>;
+    var dictDislikeCount = ViewData["dislikeCount"] as Dictionary<int, int>;
+    var dictUserCommentCount = ViewData["userCommentCount"] as Dictionary<int, int>;
+    int roomId = int.Parse(ViewData["roomID"].ToString());
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="post-area">
+            <div class="post-info">
+                <div class="user-avatar">
+                    <img src="@userPost.Avatar" alt="@String.Format("{0} {1}", userPost.FirstName, userPost.LastName)" class="img-circle" />
+                </div>
+                <div class="post-info-area">
+                    <div class="user-name">
+                        <a href="/User/Index/@userPost.UserId" class="hover-card-user">@String.Format("{0} {1}", userPost.FirstName, userPost.LastName)</a>
+                    </div>
+                    <span class="post-time">
+                        <span>Shared with @Model.Privacy</span>
+                        &nbsp;-&nbsp;
+                        <span>@Model.ToRealtime()</span>
+                    </span>
+                </div>
+            </div>
+            <div class="post-content">
+                @Model.Content
+            </div>
+            <div class="post-content">
+                <div class="am-container" id="am-container-@Model.PostId">
+                    @if (listPhoto != null)
+                    {
+                        foreach (var photo in listPhoto)
+                        {
+                            <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
+                                <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" alt="@photo.Url" />
+                            </a>
+                        }
+                    }
+                </div>
+                @if (@video != null)
+                {
+                    <div class="video-overlay">
+                        <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video.Path?enablejsapi=1&wmode=opaque">
+                            <img src="http://img.youtube.com/vi/@video.Path/0.jpg" alt="@video.Path">
+                            <span class="video-thumbnail-button"></span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="interact-area">
+            <a href="javascript:;" role="@Model.PostId" class="btn-like"><span>Like</span></a>
+            <a href="javascript:;" role="@Model.PostId" class="btn-dislike"><span>Dislike</span></a>
+        </div>
+
+        <div class="divide-area"></div>
+        <div class="comment-area">
+            <div style="margin: 0 20px 12px">
+                <a href="javascript:;" role="@Model.PostId"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[Model.PostId]</b>&nbsp;
+                <a href="javascript:;" role="@Model.PostId"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[Model.PostId]</b>&nbsp;
+                <a href="javascript:;" role="@Model.PostId"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[Model.PostId]</b>
+            </div>
+            <div class="comment-stats">
+                <span>@listComment.Count comment</span>
+            </div>
+
+            <div class="comment-list">
+                @foreach (Comment comment in listComment)
+                {
+                    var dict = ViewData["dict"] as Dictionary<int, FlyAwayPlus.Models.User>;
+                    var u = @dict[comment.CommentId];
+                    <div class="comment-detail">
+                        <div class="commenter-avatar">
+                            <img src="@u.Avatar" alt="@String.Format("{0} {1}", u.FirstName, u.LastName)" />
+                        </div>
+                        <div class="commenter-content">
+                            <span class="commenter-name"><a href="/User/Index/@u.UserId" class="hover-card-user">@String.Format("{0} {1}", u.FirstName, u.LastName)</a></span>
+                            <span class="commenter-post-time" title="@comment.ToRealtime()">- @comment.ToRealtime()</span>
+                            @if (userId.Equals(u.UserId.ToString()))
+                            {
+                                <a role="@comment.CommentId" class="commenter-delete"><span class="glyphicon glyphicon-remove"></span></a>
+                                <a class="commenter-edit"><span class="glyphicon glyphicon-edit"></span></a>
+                            }
+                        </div>
+                        <div class="comment-content">
+                            <p class="comment-content-word" style="word-break:break-all;">
+                                @Html.Raw(Html.Encode(@comment.Content).Replace("\n", "<br />"))
+                            </p>
+                            <textarea role="@comment.CommentId" style="height: 30px; width:100%; resize: none; overflow: hidden; display:none;">@Html.Raw(Html.Encode(@comment.Content).Replace("\n", "<br />"))</textarea>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="comment-textbox-wrapper">
+                <textarea id="idTextareaComment_@Model.PostId" role="@Model.PostId" class="comment-textbox" style="height:30px;resize:none" placeholder="Input comment..."></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var roomHubProxy = null;
+    $(document).ready(function () {
+        roomHubProxy = roomHubProxy || $.connection.roomHub;
+    });
+
+    var isTaggingInRoom_@Model.PostId = false;
+    var commentAjaxSending_@Model.PostId = true;
+    var handleEnterComment_@Model.PostId = function (evt, selector, mode) {
+        if (evt.keyCode == 13 && evt.shiftKey) {
+            if (evt.type == "keydown") {
+                // create new line
+                $(this).val($(this).val() + "\n");
+            }
+            evt.preventDefault();
+        }
+        else if (evt.keyCode == 50 && evt.shiftKey) {
+            isTaggingInRoom_@Model.PostId = true;
+            // input @@ character
+            commonModule.createTagFriendUI("", selector);
+        }
+        else if (evt.keyCode == 13) {
+            if (mode) {
+                if ($(selector).val().trim().length > 0) {
+                    editCommentAjax($(selector));
+                    var parent = $(selector).closest(".comment-content");
+                    $(selector).hide();
+
+                    var value = $(selector).val().split("<br />").join("\n");
+                    var pattern = /@@([0-9a-z A-Z]*):/g;
+                    var tagFriend = value.match(pattern);
+                    var username = "";
+                    var replaceUser = "";
+
+                    if (tagFriend != null) {
+                        for (var index = 0; index < tagFriend.length; index++) {
+                            username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                            replaceUser = "<a href='/User/Index/" + findUserID(username) + "'>" + username + "</a>";
+                            value = value.split(tagFriend[index]).join(replaceUser);
+                        }
+                    }
+
+                    $(parent).find("p").text("").append(value);
+                    $(parent).find("p").show();
+                }
+                else {
+                    alert("comment's content must not empty!");
+                }
+            }
+            else {
+                if ($(selector).val() != "") {
+                    commentAjaxSending_@Model.PostId = true;
+                    commentAjax_@Model.PostId (selector);
+                }
+            }
+            evt.preventDefault();
+        }
+        else if (evt.keyCode == 8) {
+            var obj = selector;
+            if (isTaggingInRoom_@Model.PostId == true) {
+                if ($(obj).val().length > 0 && $(obj).val().slice(-1) == '@@') {
+                    isTaggingInRoom_@Model.PostId = false;
+                    $("#id-tag-friend-tab-ui").hide();
+                }
+                else {
+                    var keyword = $(obj).val().substring($(obj).val().lastIndexOf("@@") + 1, $(obj).val().length - 1);
+                    commonModule.createTagFriendUI(keyword, selector);
+                }
+            }
+        } else {
+            if (isTaggingInRoom_@Model.PostId == true) {
+                var obj = selector;
+                var keyword = $(obj).val().substring($(obj).val().lastIndexOf("@@") + 1, $(obj).val().length) + String.fromCharCode((96 <= evt.keyCode && evt.keyCode <= 105) ? evt.keyCode - 48 : evt.keyCode);
+                commonModule.createTagFriendUI(keyword, selector);
+            }
+        }
+    };
+
+    var commentAjax_@Model.PostId = function (post) {
+        if (commentAjaxSending_@Model.PostId == true) {
+            var controller = "/User/Comment";
+            var postId = parseInt($(post).attr("role"));
+            var content = $(post).val();
+            var data = {
+                postId: postId,
+                content: content
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: controller,
+                data: data,
+                success: function (data, textstatus) {
+                    var value = data;
+                    var pattern = /@@([0-9a-z A-Z]*):/g;
+                    var tagFriend = value.match(pattern);
+                    var username = "";
+                    var replaceUser = "";
+
+                    if (tagFriend != null) {
+                        for (var index = 0; index < tagFriend.length; index++) {
+                            username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                            replaceUser = "<a href='/User/Index/" + findUserID(username) + "'>" + username + "</a>";
+                            value = value.split(tagFriend[index]).join(replaceUser);
+                        }
+                    }
+
+                    $(post).closest(".comment-area").find(".comment-list").append(value);
+                    $(post).text("").val("");
+
+                    deleteCommentEvent_@Model.PostId ();
+                    editCommentEvent_@Model.PostId ();
+                    roomHubProxy.server.sendCommentInRoom(value, parseInt('@Model.PostId'), parseInt('@roomId'));
+
+                    commentAjaxSending_@Model.PostId = false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        }
+    }
+
+    var editCommentEvent_@Model.PostId = function (selector) {
+        var checkOutFocus = false;
+
+        var obj = $(".commenter-edit");
+        if (typeof (selector) != "undefined") {
+            obj = $(selector);
+        }
+        $(obj).click(function (evt) {
+            if (evt.handled !== true) { // This will prevent event triggering more then once
+                evt.handled = true;
+                checkOutFocus = true;
+
+                var content = $(this).closest(".comment-detail").find(".comment-content");
+                var textarea = $(content).find("textarea");
+
+                $(textarea).val($(textarea).val().split("<br />").join("\n"));
+                $(content).find("p").hide();
+                $(textarea).show();
+
+                $(textarea).keydown(function (e) {
+                    //checkMouse = false;
+                    handleEnterComment_@Model.PostId (e, textarea, 1);
+                });
+
+                $(textarea).elastic();
+                checkOutFocus = false;
+                evt.preventDefault();
+            }
+        });
+    };
+
+    deleteCommentEvent_@Model.PostId = function (selector) {
+        var obj = $(".commenter-delete");
+        if (typeof (selector) != "undefined") {
+            obj = $(selector);
+        }
+        $(obj).click(function (evt) {
+            var cmtDeleteSouce = $(this);
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this comment!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                if (evt.handled !== true) { // This will prevent event triggering more then once
+                    evt.handled = true;
+                    var commentId = cmtDeleteSouce.attr("role");
+                    cmtDeleteSouce.closest(".comment-detail").remove();
+                    deleteComment(commentId);
+                    evt.preventDefault();
+                }
+
+                swal({ title: "Deleted!", text: "Your comment has been deleted.", type: "success", timer: 1500, showConfirmButton: false });
+            });
+        });
+    };
+
+    $(document).ready(function () {
+        $.connection.hub.start().done(function () {
+            $("#idTextareaComment_@Model.PostId").keydown(function (e) {
+                handleEnterComment_@Model.PostId (e, this);
+            });
+        });
+
+        deleteCommentEvent_@Model.PostId ();
+        editCommentEvent_@Model.PostId ();
+
+        var $container = $('#am-container-@Model.PostId');
+        if (typeof ($container) != "undefined" && $container != null && $container.length > 0) {
+            var $imgs = $container.find('img').hide(),
+					totalImgs = $imgs.length,
+					cnt_@Model.PostId = 0;
+
+            $imgs.each(function (i) {
+                var $img = $(this);
+                $('<img/>').load(function () {
+                    ++cnt_@Model.PostId;
+                    if (cnt_@Model.PostId === totalImgs) {
+                        $imgs.show();
+                        $container.montage({
+                            fillLastRow: true,
+                            alternateHeight: true,
+                            alternateHeightRange: {
+                                min: 150,
+                                max: 240
+                            }
+                        });
+                    }
+                }).attr('src', $img.attr('src'));
+            });
+
+            $(".fancybox").attr('rel', 'gallery').fancybox({
+                openEffect: 'fade',
+                closeEffect: 'elastic',
+                padding: 2,
+                afterLoad: function () {
+                    this.title = '<p class="text-center">' + this.title + '</p>';
+                },
+                helpers: {
+                    title: {
+                        type: 'inside'
+                    },
+                    overlay: {
+                        css: {
+                            'background': 'rgba(58, 42, 45, 0.5)'
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+

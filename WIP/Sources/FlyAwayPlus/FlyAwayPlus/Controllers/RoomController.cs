@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FlyAwayPlus.Models;
+using Microsoft.Ajax.Utilities;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -107,6 +108,7 @@ namespace FlyAwayPlus.Controllers
             ViewData["listGeneralPlan"] = listGeneralPlan;
             ViewData["relationInRoom"] = relationInRoom;
             Session["roomID"] = ViewData["roomID"] = roomId;
+            ViewData["placeName"] = roomInfo.DestinationLocation;
             return View();
         }
 
@@ -152,7 +154,7 @@ namespace FlyAwayPlus.Controllers
                     isDislikeDict.Add(postId, false);
                 }
             }
-
+            ViewData["userPost"] = user;
             ViewData["listPost"] = listPost;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listVideoDict"] = listVideoDict;
@@ -391,6 +393,68 @@ namespace FlyAwayPlus.Controllers
             }
 
             return RedirectToAction("Index", "Room");
+        }
+
+        public ActionResult AddPost(string queryString, int roomId)
+        {
+            var user = UserHelpers.GetCurrentUser(Session);
+            var form = HttpUtility.ParseQueryString(queryString);
+
+            string message = form["message"];
+            List<string> images = form["uploadedimages"].Split('#').ToList();
+            images.RemoveAt(0);
+            string privacy = "room";
+            string uploadedVideoYoutubeId = form["uploadedvideo"];
+
+            Room room = GraphDatabaseHelpers.Instance.FindRoomById(roomId);
+
+            Post newPost = new Post
+            {
+                Content = message,
+                DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
+                Privacy = privacy
+            };
+
+            Video newVideo = null;
+            if (!uploadedVideoYoutubeId.IsNullOrWhiteSpace())
+            {
+                newVideo = new Video
+                {
+                    Path = uploadedVideoYoutubeId,
+                    DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat)
+                };
+            }
+
+            List<Photo> newPhotos = images.Select(img => new Photo { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), Url = img }).ToList();
+
+            // Insert to Database
+            GraphDatabaseHelpers.Instance.InsertPostInRoom(user, roomId, ref newPost,ref newPhotos,ref newVideo);
+
+            ViewData["userPost"] = user;
+            ViewData["listPhoto"] = newPhotos;
+            ViewData["video"] = newVideo;
+            ViewData["placeName"] = room.DestinationLocation;
+            ViewData["roomID"] = room.RoomId;
+
+            Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int,List<Photo>>();
+            Dictionary<int, List<Comment>> dictListComment = new Dictionary<int, List<Comment>>();
+            Dictionary<int, int> dictLikeCount = new Dictionary<int,int>();
+            Dictionary<int, int> dictDislikeCount = new Dictionary<int,int>();
+            Dictionary<int, int> dictUserCommentCount = new Dictionary<int,int>();
+            Dictionary<int, Video> listVideoDict = new Dictionary<int,Video>();
+            dictLikeCount.Add(newPost.PostId, 0);
+            dictDislikeCount.Add(newPost.PostId, 0);
+            dictUserCommentCount.Add(newPost.PostId, 0);
+            dictListComment.Add(newPost.PostId, new List<Comment>());
+            listPhotoDict.Add(newPost.PostId, new List<Photo>());
+            listVideoDict.Add(newPost.PostId, newVideo);
+            ViewData["likeCount"] = dictLikeCount;
+            ViewData["dislikeCount"] = dictDislikeCount;
+            ViewData["userCommentCount"] = dictUserCommentCount;
+            ViewData["dictListComment"] = dictListComment;
+            ViewData["listPhotoDict"] = listPhotoDict;
+            ViewData["listVideoDict"] = listVideoDict;
+            return PartialView("_PostDetailCommonPartial", newPost);
         }
     }
 }

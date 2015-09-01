@@ -270,6 +270,7 @@
     <Compile Include="Hubs\CommentHub.cs" />
     <Compile Include="Hubs\FriendHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
+    <Compile Include="Hubs\RoomHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Conversation.cs" />
@@ -344,7 +345,6 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\Home\home.js" />
     <Content Include="Scripts\images-loaded.min.js" />
-    <Content Include="Scripts\jquery.cropit.js" />
     <Content Include="Scripts\jquery.montage.min.js" />
     <Content Include="Scripts\jquery.tooltipster.js" />
     <Content Include="Scripts\markerWithLabel.js" />
@@ -468,6 +468,7 @@
     <Content Include="Views\Shared\_TagFriendPartial.cshtml" />
     <Content Include="Views\Admin\Main.cshtml" />
     <Content Include="Views\Admin\ViewPost.cshtml" />
+    <Content Include="Views\Shared\_PostDetailCommonPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

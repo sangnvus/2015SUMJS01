@@ -17,11 +17,19 @@ namespace FlyAwayPlus.Hubs
         {
             return base.OnDisconnected(stopCalled);
         }
-
-        public void AddPost(FormCollection form)
+        public void Connect(int roomId)
         {
-            string x = form["place"];
-            //Clients.All.hello();
+            Groups.Add(Context.ConnectionId, roomId.ToString());
+        }
+
+        public void AddPostInRoom(string data, int roomId)
+        {
+            Clients.OthersInGroup(roomId.ToString()).receiveNewPost(data);
+        }
+
+        public void SendCommentInRoom(string content, int postId, int roomId)
+        {
+            Clients.OthersInGroup(roomId.ToString()).addNewCommentInRoom(content, postId);
         }
     }
 }

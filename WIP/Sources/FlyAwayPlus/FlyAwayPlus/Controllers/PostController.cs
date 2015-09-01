@@ -146,7 +146,7 @@ namespace FlyAwayPlus.Controllers
 
             var user = (User)Session["user"];
 
-            GraphDatabaseHelpers.Instance.InsertPost(user, newPost, newPhotos, newPlace, newVideo);
+            GraphDatabaseHelpers.Instance.InsertPost(user, ref newPost, newPhotos, newPlace, newVideo);
 
             return RedirectToAction("Index", "Home");
         }
