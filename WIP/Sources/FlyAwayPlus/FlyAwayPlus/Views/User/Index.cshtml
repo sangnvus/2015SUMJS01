@@ -19,7 +19,7 @@
 }
 
 <script src="~/Scripts/jquery.cropit.js"></script>
-<link href="~/Content/HomePage/grid-layout.css" rel="stylesheet"/>
+<link href="~/Content/HomePage/grid-layout.css" rel="stylesheet" />
 
 <header>
     <figure class="profile-banner">
@@ -118,8 +118,8 @@
 <!-- Tab panes -->
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="timeline">
-        <div class="container">
-            <div class="col-md-12">
+        <div>
+            <div class="col-md-12" style="margin-left: 10px;">
 
                 <div class="blog-landing">
                     @Html.Partial("_ListPost")
@@ -129,7 +129,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="photos-gallery">
-        <div class="images-wrapper">
+        <div class="images-wrapper" style="margin-left: 10px;">
             @foreach (var image in listPhotoDict)
             {
                 <div class="image-element">
@@ -767,7 +767,7 @@
             type: "POST",
             data: {imageData: imageData, userId: @userSession.UserId},
             sucess: function() {
-                
+
             },
             error: function() {
                 swal("Oops...", "An error occured, please try again!", "error");
@@ -1055,12 +1055,12 @@
     }
 
     $(window).load(function () {
-        commonModule.setBlocksit($(".blog-landing"), 212);
+        commonModule.setBlocksit($(".blog-landing"), 215);
         fadeImage();
     });
 
     //window resize
     $(window).resize(function () {
-        commonModule.setBlocksit($(".blog-landing"), 212);
+        commonModule.setBlocksit($(".blog-landing"), 215);
     });
 </script>
