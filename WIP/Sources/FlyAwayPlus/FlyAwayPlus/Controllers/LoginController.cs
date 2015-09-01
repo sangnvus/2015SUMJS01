@@ -418,6 +418,8 @@ namespace FlyAwayPlus.Controllers
                 else if (!FapConstants.USER_ACTIVE.Equals(newUser.Status))
                 {
                     // user is Locked
+                    GoogleConnect.Clear();
+                
                     Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
                     return RedirectToAction("Index", "Home");
                 }
