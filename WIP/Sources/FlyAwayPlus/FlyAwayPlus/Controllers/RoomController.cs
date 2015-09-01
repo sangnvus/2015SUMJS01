@@ -259,7 +259,7 @@ namespace FlyAwayPlus.Controllers
                 StartLocation = startAddressName + " - " + startAdress,
                 StartLatitude = startLat,
                 StartLongitude = startLng,
-                DestinationLocation = targetAddressName  + " - " + targetAddress,
+                DestinationLocation = targetAddressName + " - " + targetAddress,
                 DestinationLatitude = endLat,
                 DestinationLongitude = endLng,
                 Privacy = privacy,
@@ -339,14 +339,19 @@ namespace FlyAwayPlus.Controllers
 
             foreach (var est in estimationsList)
             {
+                var creator = GraphDatabaseHelpers.Instance.GetEstimationCreator(est.EstimationId);
+                var payer = GraphDatabaseHelpers.Instance.GetEstimationPayer(est.EstimationId);
+
                 estimationDataInTable.Add(
                     new
                     {
-                        id = est.EstimationId,
-                        payment = est.Payment,
-                        price = est.Price,
-                        creator = GraphDatabaseHelpers.Instance.GetEstimationCreator(est.EstimationId),
-                        payer = GraphDatabaseHelpers.Instance.GetEstimationPayer(est.EstimationId),
+                        id          = est.EstimationId,
+                        payment     = est.Payment,
+                        price       = est.Price,
+                        creator     = creator.FirstName + " " + creator.LastName,
+                        creatorid   = creator.UserId,
+                        payer       = payer.FirstName + " " + payer.LastName,
+                        payerid     = payer.UserId,
                         datecreated = est.DateCreated
                     });
             }

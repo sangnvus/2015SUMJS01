@@ -262,8 +262,9 @@
     <Compile Include="Helpers\FAPConstants.cs" />
     <Compile Include="Helpers\DateHelpers.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
-    <Compile Include="Helpers\MailHelper.cs" />
+    <Compile Include="Helpers\MailHelpers.cs" />
     <Compile Include="Helpers\SingletonBase.cs" />
+    <Compile Include="Helpers\UploadImage\ImageHelper.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
@@ -310,6 +311,7 @@
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\Fancy\jquery.fancybox.css" />
+    <Content Include="Scripts\jquery.cropit.js" />
     <Content Include="Content\jquery.fs.stepper.css" />
     <Content Include="Content\jquery.Jcrop.min.css" />
     <Content Include="Content\PagedList.css" />
@@ -322,10 +324,7 @@
     <Content Include="Content\tooltipster.css" />
     <Content Include="fonts\artill_clean_icons-webfont.svg" />
     <Content Include="Images\background.jpg" />
-    <Content Include="Images\background\halong.jpg" />
     <Content Include="Images\background\nhatrang.jpg" />
-    <Content Include="Images\background\nhatrang2.jpg" />
-    <Content Include="Images\background\sondoong.jpg" />
     <Content Include="Images\current-marker.png" />
     <Content Include="Images\image.gif" />
     <Content Include="Images\other-marker.png" />
@@ -457,7 +456,6 @@
     <Content Include="Views\Shared\_Loading.cshtml" />
     <Content Include="Views\Shared\_ListPost.cshtml" />
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
-    <Content Include="Views\Login\ForgotPassword.cshtml" />
     <Content Include="Views\Login\UploadAvatar.cshtml" />
     <Content Include="Views\HelpCenter\Index.cshtml" />
     <Content Include="Views\Shared\_ChatConversation.cshtml" />
@@ -469,11 +467,13 @@
     <Content Include="Views\Admin\Main.cshtml" />
     <Content Include="Views\Admin\ViewPost.cshtml" />
     <Content Include="Views\Shared\_PostDetailCommonPartial.cshtml" />
+    <Content Include="Views\Login\ForgotPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="data\img\" />
     <Folder Include="Images\UserUpload\UserAvatar\" />
+    <Folder Include="Images\UserUpload\UserCover\" />
     <Folder Include="Temp\" />
     <Folder Include="Views\Upload\" />
   </ItemGroup>

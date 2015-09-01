@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -70,29 +72,7 @@ namespace FlyAwayPlus.Controllers
                 UserHelpers.SetCurrentUser(Session, user);
 
                 //Send email confirm
-                string senderId = "flyawayplus.system@gmail.com"; // use sender’s email id here..
-                const string senderPassword = "doan2015"; // sender password here…
-                try
-                {
-                    var smtp = new SmtpClient
-                    {
-                        Host = "smtp.gmail.com", // smtp server address here…
-                        Port = 587,
-                        EnableSsl = true,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        Credentials = new NetworkCredential(senderId, senderPassword),
-                        Timeout = 30000,
-                    };
-                    var message = new MailMessage(senderId, user.Email, "Getting started on FlyAwayPlus",
-                        "Welcome to FlyAwayPlus, " + user.FirstName + " " + user.LastName + "!");
-                    smtp.Send(message);
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-
-                }
+                MailHelpers.Instance.SendMailWelcome(user.Email, user.FirstName, user.LastName);
             }
 
             //FormsAuthentication.SetAuthCookie(email, false);
@@ -334,8 +314,7 @@ namespace FlyAwayPlus.Controllers
 
         public JsonResult SendMail(string email)
         {
-            User user;
-            user = GraphDatabaseHelpers.Instance.FindUser(email);
+            var user = GraphDatabaseHelpers.Instance.FindUser(email);
             if (user != null)
             {
                 var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -344,31 +323,9 @@ namespace FlyAwayPlus.Controllers
                     Enumerable.Repeat(chars, 8)
                               .Select(s => s[random.Next(s.Length)])
                               .ToArray());
-                GraphDatabaseHelpers.Instance.ResetPassword(email, newPassword);
 
-                string senderId = "flyawayplus.system@gmail.com"; // use sender’s email id here..
-                const string senderPassword = "doan2015"; // sender password here…
-                try
-                {
-                    var smtp = new SmtpClient
-                    {
-                        Host = "smtp.gmail.com", // smtp server address here…
-                        Port = 587,
-                        EnableSsl = true,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        Credentials = new NetworkCredential(senderId, senderPassword),
-                        Timeout = 30000,
-                    };
-                    var message = new MailMessage(senderId, email, "Reset password FlyAwayPlus",
-                        "Your new password: " + newPassword);
-                    smtp.Send(message);
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-
-                }
+                GraphDatabaseHelpers.Instance.ResetPassword(email, md5(newPassword));
+                MailHelpers.Instance.SendMailResetPassword(email, newPassword);
                 return Json(true);
             }
             else
@@ -617,6 +574,19 @@ namespace FlyAwayPlus.Controllers
             }
 
             return finalFileName;
+        }
+
+        public static byte[] encryptData(string data)
+        {
+            System.Security.Cryptography.MD5CryptoServiceProvider md5Hasher = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            byte[] hashedBytes;
+            System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+            hashedBytes = md5Hasher.ComputeHash(encoder.GetBytes(data));
+            return hashedBytes;
+        }
+        public static string md5(string data)
+        {
+            return BitConverter.ToString(encryptData(data)).Replace("-", "").ToLower();
         }
     }
 }
