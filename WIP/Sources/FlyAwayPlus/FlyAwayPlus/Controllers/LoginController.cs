@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.UI;
 using ASPSnippets.GoogleAPI;
 using Facebook;
 using FlyAwayPlus.Helpers;
 using FlyAwayPlus.Models;
 using Newtonsoft.Json.Linq;
-using System.Threading;
 
 namespace FlyAwayPlus.Controllers
 {
@@ -130,6 +126,7 @@ namespace FlyAwayPlus.Controllers
             Session["username"] = "";
             Session["userAva"] = "";
             Session["UserId"] = "";
+            Session["loginMessageError"] = "";
             UserHelpers.SetCurrentUser(Session, null);
             return RedirectToAction("Index", "Home");
         }
