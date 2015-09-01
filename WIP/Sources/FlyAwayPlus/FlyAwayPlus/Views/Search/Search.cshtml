@@ -13,6 +13,8 @@
     var numberOfPostDict = ViewData["numberOfPostDict"] as Dictionary<int, int>;
     var wishlist = ViewData["wishlist"] as Dictionary<int, bool>;
     var listRoom = ViewData["listRoom"] as List<Room>;
+    var listMutualFriend = ViewData["listMutualFriend"] as List<int>;
+    var listRelationUser = ViewData["listRelationUser"] as List<string>;
 }
 <link href="~/Content/HomePage/carousel.css" rel="stylesheet" />
 <link href="~/Content/HomePage/gridLayout.css" rel="stylesheet" />
@@ -87,29 +89,59 @@
             </div>
 
             <div role="tabpanel" class="tab-pane full-width" id="idSearchPeople">
-                @foreach (var user in listUser)
+                @for (int index = 0; index < listUser.Count; index++)
                 {
                     <div class="full-width">
-                        <li data-index="@user.UserId">
+                        <li data-index="@listUser[index].UserId">
                             <div class="Module User followFriendsItem small">
                                 <div class="content">
-                                    <a href="/User/Index/2/">
+                                    <a href="/User/Index/@listUser[index].UserId">
                                         <span class="thumbImageWrapper">
                                             <div class="Image Module">
                                                 <div class="heightContainer">
-                                                    <img data-src="@user.Avatar" alt="@string.Format("{0} {1}", user.FirstName, user.LastName)" style="" src="@user.Avatar">
+                                                    <img data-src="@listUser[index].Avatar" alt="@string.Format("{0} {1}", listUser[index].FirstName, listUser[index].LastName)" style="" src="@listUser[index].Avatar">
                                                 </div>
                                             </div>
                                         </span>
                                     </a>
                                     <div class="contactUser">
-                                        <a class="contactUsername hover-card-user" href="/User/Index/@user.UserId">@string.Format("{0} {1}", user.FirstName, user.LastName)</a>
+                                        <a class="contactUsername hover-card-user" href="/User/Index/@listUser[index].UserId">@string.Format("{0} {1}", listUser[index].FirstName, listUser[index].LastName)</a>
                                         <br />
-                                        <p style="margin:0px;">mutuals friends</p>
+                                        <p style="margin:0px;">@listMutualFriend[index] mutuals friends</p>
 
-                                        <button role="@user.UserId" type="button" class="Button FollowButton Module UserFollowButton borderless hasText notNavigatable">
-                                            <span class="buttonText">Waitting for accept</span>
-                                        </button>
+                                        @if (listRelationUser[index].Equals("request"))
+                                        {
+                                            <button role="@listUser[index].UserId" type="button" class="Button FollowButton Module UserFollowButton borderless">
+                                                <span class="buttonText">Waitting for accept</span>
+                                            </button>
+                                        }
+                                        else if (listRelationUser[index].Equals("friend"))
+                                        {
+                                            <button role="@listUser[index].UserId" type="button" class="Button FollowButton Module UserFollowButton borderless cls-unfriend">
+                                                <span class="buttonText">Unfriend</span>
+                                            </button>
+
+                                            <button style="display:none" role="@listUser[index].UserId" type="button" class="cls-waiting Button FollowButton Module UserFollowButton borderless">
+                                                <span class="buttonText">Waitting for accept</span>
+                                            </button>
+
+                                            <button style="display:none" role="@listUser[index].UserId" type="button" class="cls-friend-request Button FollowButton Module UserFollowButton borderless">
+                                                <span class="buttonText">Send Friend Request</span>
+                                            </button>
+
+                                            <button style="display:none" role="@listUser[index].UserId" type="button" class="cls-sent-request Button FollowButton Module UserFollowButton borderless">
+                                                <span class="buttonText">Waitting for accept</span>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button role="@listUser[index].UserId" type="button" class="cls-friend-request Button FollowButton Module UserFollowButton borderless">
+                                                <span class="buttonText">Send Friend Request</span>
+                                            </button>
+                                            <button style="display:none" role="@listUser[index].UserId" type="button" class="cls-sent-request Button FollowButton Module UserFollowButton borderless">
+                                                <span class="buttonText">Waitting for accept</span>
+                                            </button>
+                                        }
                                     </div>
                                     <i class="dismiss"></i>
                                 </div>
@@ -133,6 +165,38 @@
 <script>
     $(function () {
         commonModule.setBlocksit($(".blog-landing"), 250);
+
+        $(".cls-friend-request").click(function (evt) {
+            var otherId = parseInt($(this).attr("role"));
+
+            var controller = "/User/SendRequestFriend/";
+            var data = {
+                userId: parseInt('@Session["UserId"]'),
+                otherUserId: otherId
+            };
+
+            commonModule.callAjax(controller, data, null);
+
+            $(this).closest("li").find(".cls-sent-request").show();
+            $(this).hide();
+            evt.preventDefault();
+        });
+
+        $(".cls-unfriend").click(function (evt) {
+            var otherId = parseInt($(this).attr("role"));
+
+            var controller = "/User/Unfriend/";
+            var data = {
+                userId: parseInt('@Session["UserId"]'),
+                otherUserId: otherId
+            };
+
+            commonModule.callAjax(controller, data, null);
+
+            $(this).closest("li").find(".cls-friend-request").show();
+            $(this).hide();
+            evt.preventDefault();
+        });
 
         $(".cls-add-wishlist-btn").click(function (evt) {
             var controller = "/User/AddWishPlace/";

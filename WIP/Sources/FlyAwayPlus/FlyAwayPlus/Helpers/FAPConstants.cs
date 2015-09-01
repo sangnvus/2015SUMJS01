@@ -16,7 +16,11 @@
         public static int PlanGeneral    = 0;
         public static int PlanTimeline   = 1;
 
-        public static string USER_ACTIVE = "active";
-        public static string USER_LOCK = "lock";
+        public static string UserActive = "active";
+        public static string UserLock = "lock";
+
+        public static string Friendship = "friend";
+        public static string RequestFriend = "request";
+        public static string NotFriend = "none";
     }
 }

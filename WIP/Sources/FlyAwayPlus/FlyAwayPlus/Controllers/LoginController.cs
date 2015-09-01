@@ -44,7 +44,7 @@ namespace FlyAwayPlus.Controllers
                     user.TypeId = 0; // Fap account
                     user.DateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat);
                     //user.dateOfBirth = DateTime.Now.ToString();
-                    user.Status = FapConstants.USER_ACTIVE;
+                    user.Status = FapConstants.UserActive;
                     if (string.IsNullOrWhiteSpace(user.Avatar))
                     {
                         user.Avatar = "/Images/UIHelper/default-avatar.jpg";
@@ -92,7 +92,7 @@ namespace FlyAwayPlus.Controllers
                 }
                 else if (user.Password.Equals(newUser.Password))
                 {
-                    if (!FapConstants.USER_ACTIVE.Equals(newUser.Status))
+                    if (!FapConstants.UserActive.Equals(newUser.Status))
                     {
                         // user is Locked
                         Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
@@ -245,7 +245,7 @@ namespace FlyAwayPlus.Controllers
                     LastName = me.last_name,
                     Gender = me.gender,
                     PhoneNumber = me.phone_number,
-                    Status = FapConstants.USER_ACTIVE,
+                    Status = FapConstants.UserActive,
                     Avatar = "https://graph.facebook.com/" + facebookId + "/picture?type=large",
                     Password = "",
                     CoverUrl = ""
@@ -255,7 +255,7 @@ namespace FlyAwayPlus.Controllers
                 // insert user to Database
                 GraphDatabaseHelpers.Instance.InsertUser(ref newUser);
             }
-            else if (!FapConstants.USER_ACTIVE.Equals(newUser.Status))
+            else if (!FapConstants.UserActive.Equals(newUser.Status))
             {
                 // user is Locked
                 Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
@@ -405,7 +405,7 @@ namespace FlyAwayPlus.Controllers
                         LastName = google.name.givenName.Value,
                         Gender = google.gender == null ? "" : google.gender.Value,
                         PhoneNumber = "",
-                        Status = FapConstants.USER_ACTIVE,
+                        Status = FapConstants.UserActive,
                         Avatar = avatar,
                         Password = "",
                         CoverUrl = ""
@@ -415,7 +415,7 @@ namespace FlyAwayPlus.Controllers
                     // insert user to Database
                     GraphDatabaseHelpers.Instance.InsertUser(ref newUser);
                 }
-                else if (!FapConstants.USER_ACTIVE.Equals(newUser.Status))
+                else if (!FapConstants.UserActive.Equals(newUser.Status))
                 {
                     // user is Locked
                     GoogleConnect.Clear();
