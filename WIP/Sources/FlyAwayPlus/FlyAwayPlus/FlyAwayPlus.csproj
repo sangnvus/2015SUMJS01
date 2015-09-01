@@ -262,7 +262,7 @@
     <Compile Include="Helpers\FAPConstants.cs" />
     <Compile Include="Helpers\DateHelpers.cs" />
     <Compile Include="Helpers\GraphDatabaseHelpers.cs" />
-    <Compile Include="Helpers\MailHelper.cs" />
+    <Compile Include="Helpers\MailHelpers.cs" />
     <Compile Include="Helpers\SingletonBase.cs" />
     <Compile Include="Helpers\UserHelpers.cs" />
     <Compile Include="Helpers\UploadImage\ImageUpload.cs" />
@@ -457,7 +457,6 @@
     <Content Include="Views\Shared\_Loading.cshtml" />
     <Content Include="Views\Shared\_ListPost.cshtml" />
     <Content Include="Views\Shared\_PostDetailPartial.cshtml" />
-    <Content Include="Views\Login\ForgotPassword.cshtml" />
     <Content Include="Views\Login\UploadAvatar.cshtml" />
     <Content Include="Views\HelpCenter\Index.cshtml" />
     <Content Include="Views\Shared\_ChatConversation.cshtml" />
@@ -468,6 +467,7 @@
     <Content Include="Views\Shared\_TagFriendPartial.cshtml" />
     <Content Include="Views\Admin\Main.cshtml" />
     <Content Include="Views\Admin\ViewPost.cshtml" />
+    <Content Include="Views\Login\ForgotPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

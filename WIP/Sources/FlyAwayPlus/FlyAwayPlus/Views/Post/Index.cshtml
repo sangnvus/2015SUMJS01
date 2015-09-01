@@ -219,13 +219,15 @@
             $('#closeBtn').prop('disabled', (checkval == null));
         });
 
-        $('#closeBtn').click(function(e) {
+        $('#closeBtn').click(function (e) {
+                var url = window.location.href;
                 $.ajax({
                     url: "/User/ReportPost/",
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        postId: @Model.PostId,
+                        url: url,
+                        postId: parseInt(@Model.PostId),
                         userReportId: parseInt('@Session["UserId"]'),
                         userReportedId: parseInt('@userPost.UserId'),
                         typeReport: $('input[name="optradio"]:checked').val()

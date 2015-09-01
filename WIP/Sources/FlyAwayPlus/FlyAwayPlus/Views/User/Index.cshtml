@@ -791,7 +791,6 @@
         $('input:radio[name=optradio]').click(function () {
             var checkval = $(this).val();
             $('#closeBtn').prop('disabled', (checkval == null));
-
         });
 
         $('#closeBtn').click(function (e) {
@@ -815,18 +814,6 @@
                 error: function (jqXHR, textStatus, errorThrown) {
                 }
             });
-            e.preventDefault();
-
-            var controller = "/User/ReportUser/";
-            var data = {
-                userReportID: parseInt('@Session["UserId"]'),
-                userReportedID: parseInt('@Model.UserId'),
-                typeReport: $('input[name="optradio"]:checked').val()
-            };
-
-            commonModule.callAjax(controller, data, null);
-
-            alert("This user has been reported!");
             e.preventDefault();
         });
 
