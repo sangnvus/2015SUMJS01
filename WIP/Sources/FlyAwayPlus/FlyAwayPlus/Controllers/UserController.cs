@@ -376,7 +376,7 @@ namespace FlyAwayPlus.Controllers
             }
             return Json(success);
         }
-        public JsonResult ReportPost(int postId, int userReportId, int userReportedId, int typeReport)
+        public JsonResult ReportPost(string url, int postId, int userReportId, int userReportedId, int typeReport)
         {
             var checkReport = GraphDatabaseHelpers.Instance.FindReportPost(postId, userReportId);
             if (checkReport != null)
@@ -389,7 +389,7 @@ namespace FlyAwayPlus.Controllers
 
                 //Send warning email to reported user
                 var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
-                MailHelper.SendMailWarningReportPost(email);
+                MailHelpers.Instance.SendMailWarningReportPost(url,email);
 
                 return Json(true);
             }
@@ -409,7 +409,7 @@ namespace FlyAwayPlus.Controllers
             GraphDatabaseHelpers.Instance.InsertReportUser(userReportId, userReportedId, typeReport);
             //Send warning email to reported user
             var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
-            MailHelper.SendMailWarningReportUser(email);
+            MailHelpers.Instance.SendMailWarningReportUser(email);
 
             return Json(true);
         }

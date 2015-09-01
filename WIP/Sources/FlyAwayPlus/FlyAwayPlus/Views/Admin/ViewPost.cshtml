@@ -1,6 +1,4 @@
-﻿@using System
-@using System.Collections.Generic
-@using FlyAwayPlus.Helpers
+﻿@using FlyAwayPlus.Helpers
 @using FlyAwayPlus.Models
 
 @{
@@ -9,6 +7,7 @@
     var user = ViewData["user"] as User;
     var photo = ViewData["photo"] as List<Photo>;
     var listComment = ViewData["listComment"] as List<Comment>;
+    var video = ViewData["video"] as Video;
 }
 <!DOCTYPE html>
 
@@ -27,10 +26,18 @@
             <h3>Post</h3>
             <div class="post-area">
                 <div class="post-content">
-                    @foreach (var x in photo)
+                    @if (photo != null)
                     {
-                        <img src="/Images/UserUpload/@x.Url" style="max-height: 100%; margin: auto; display: inline-block;" />
+                        foreach (var x in photo)
+                        {
+                            <img src="/Images/UserUpload/@x.Url" style="height: 300px; width: 300px; margin: auto; display: inline-block;" alt=""/>
+                        }
                     }
+                    @if (video != null)
+                    {
+                        <a href="@video.Path" target="_blank"></a>
+                    }
+                    
                     <p><b>Date created:</b> @post.DateCreated<br /></p>
                     <p><b>Content:</b> @post.Content</p>
                 </div>

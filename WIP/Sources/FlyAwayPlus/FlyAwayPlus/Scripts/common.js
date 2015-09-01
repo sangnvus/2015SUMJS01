@@ -68,9 +68,9 @@
     };
 
     var setBlocksit = function (objBlog, width) {
-        objBlog = objBlog ? objBlog : $('.blog-landing');
+        objBlog = objBlog ? objBlog : $(".blog-landing");
         width = width ? width : 320;
-        if (typeof (objBlog) != 'undefined' || objBlog != null || objBlog.length > 0) {
+        if (typeof (objBlog) != "undefined" || objBlog != null || objBlog.length > 0) {
             $(objBlog).each(function (evt) {
                 try {
                     var conWidth = $(this).width();
@@ -240,6 +240,100 @@
         return listFriendId;
     }
 
+    var likePost = function () {
+        $(".room-detail-post-list .btn-like").each(function (e) {
+            $(this).click(function (evt) {
+                if (evt.handled !== true) { // This will prevent event triggering more then once
+                    evt.handled = true;
+                    var likeIcon = $(this).closest(".panel-body").find(".fa-thumbs-o-up");
+
+                    likeIcon.toggleClass("interacted")
+                            .toggleClass("fa-thumbs-up");
+
+                    var likeCountElement = $(this).closest(".panel-body").find(".like-count");
+
+                    if (likeIcon.hasClass("interacted")) {
+                        likeCountElement.text(parseInt(likeCountElement.text()) + 1);
+                    } else {
+                        likeCountElement.text(parseInt(likeCountElement.text()) - 1);
+                    }
+
+                    unDislikePost(this);
+                    likeAjax(this);
+                }
+            });
+        })
+    };
+
+    var dislikePost = function () {
+        $(".room-detail-post-list .btn-dislike").each(function (e) {
+            $(this).click(function (evt) {
+                if (evt.handled !== true) { // This will prevent event triggering more then once
+                    evt.handled = true;
+                    var dislikeIcon = $(this).closest(".panel-body").find(".fa-thumbs-o-down");
+
+                    dislikeIcon.toggleClass("interacted")
+                            .toggleClass("fa-thumbs-down");
+
+                    var dislikeCountElement = $(this).closest(".panel-body").find(".dislike-count");
+
+                    if (dislikeIcon.hasClass("interacted")) {
+                        dislikeCountElement.text(parseInt(dislikeCountElement.text()) + 1);
+                    } else {
+                        dislikeCountElement.text(parseInt(dislikeCountElement.text()) - 1);
+                    }
+
+                    unLikePost(this);
+                    dislikeAjax(this);
+                }
+            });
+        });
+    };
+
+    var unLikePost = function (selector) {
+        var likeIcon = $(selector).closest(".panel-body").find(".fa-thumbs-o-up");
+
+        var likeCountElement = $(selector).closest(".panel-body").find(".like-count");
+
+        if (likeIcon.hasClass("interacted")) {
+            likeIcon.toggleClass("interacted")
+                    .toggleClass("fa-thumbs-up");
+            likeCountElement.text(parseInt(likeCountElement.text()) - 1);
+        }
+    };
+
+    var unDislikePost = function (selector) {
+        var dislikeIcon = $(selector).closest(".panel-body").find(".fa-thumbs-o-down");
+
+        var dislikeCountElement = $(selector).closest(".panel-body").find(".dislike-count");
+
+        if (dislikeIcon.hasClass("interacted")) {
+            dislikeIcon.toggleClass("interacted")
+                    .toggleClass("fa-thumbs-down");
+            dislikeCountElement.text(parseInt(dislikeCountElement.text()) - 1);
+        }
+    };
+
+    var likeAjax = function (post) {
+        var controller = "/User/Like";
+        var postId = parseInt($(post).attr("role"));
+        var data = {
+            postId: postId
+        }
+
+        commonModule.callAjax(controller, data, null);
+    };
+
+    var dislikeAjax = function (post) {
+        var controller = "/User/Dislike";
+        var postId = parseInt($(post).attr("role"));
+        var data = {
+            postId: postId
+        }
+
+        commonModule.callAjax(controller, data, null);
+    };
+
     return {
         convertTime: convertTime,
         callAjax: callAjax,
@@ -250,7 +344,9 @@
         decompileTagFriend: decompileTagFriend,
         createTagFriendUI: createTagFriendUI,
         findListFriendIdTagging: findListFriendIdTagging,
-        handleTagging: handleTagging
+        handleTagging: handleTagging,
+        likePost: likePost,
+        dislikePost: dislikePost
     }
 })();
 

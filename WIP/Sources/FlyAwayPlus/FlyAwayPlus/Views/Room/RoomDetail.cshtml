@@ -158,16 +158,10 @@
 
     var listPost = ViewData["listPost"] as List<Post>;
     var listGeneralPlan = ViewData["listGeneralPlan"] as List<Plan>;
-    var listPhotoDict = ViewData["listPhotoDict"] as Dictionary<int, List<Photo>>;
-    var listVideoDict = ViewData["listVideoDict"] as Dictionary<int, Video>;
     var listUserDict = ViewData["listUserDict"] as Dictionary<int, User>;
-    var dictDislikeCount = ViewData["dislikeCount"] as Dictionary<int, int>;
-    var dictLikeCount = ViewData["likeCount"] as Dictionary<int, int>;
-    var dictCommentCount = ViewData["commentCount"] as Dictionary<int, int>;
     var dictUserCommentCount = ViewData["userCommentCount"] as Dictionary<int, int>;
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
-    var dictListComment = ViewData["dictListComment"] as Dictionary<int, List<Comment>>;
     var dictPlanIdPiCs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
     var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
@@ -380,6 +374,11 @@
             </div>
 
             <div class="friend-list-avatar">
+                <div class="padding-5 col-md-2">
+                    <a href="/User/Index/@admin.UserId" class="hover-card-user tooltipstered">
+                        <img class="circle-image" height="50" src="@admin.Avatar" alt="Avatar" />
+                    </a>
+                </div>
                 @foreach (User user in listUserInRoom)
                 {
                     <div class="padding-5 col-md-2">
@@ -399,173 +398,122 @@
     <div>
         <div class="col-md-6 room-detail-left-area">
             <!--POSTING-->
-            <div id="id-posting-room" class="share-post-box room-detail-posting-area">
-                <div class="panel panel-default boder-radius">
-                    <div class="panel-body">
-                        <div class="">
-                            <textarea class="form-control message"
-                                      rows="10" cols="40"
-                                      id="status_message_room" name="message"
-                                      placeholder="What do you want to share?"
-                                      style="height: 62px; overflow: hidden;"></textarea>
-                            <textarea id="status_message_post_room" name="message_post"
-                                      style="display: none"></textarea>
+            @using (Html.BeginForm("AddPost", "Room", FormMethod.Post, new { @id = "form-post-room", @name = "form-post-room", @class = "", @enctype = "multipart/form-data" }))
+            {
+                <div id="id-posting-room" class="share-post-box room-detail-posting-area">
+                    <div class="panel panel-default boder-radius">
+                        <div class="panel-body">
+                            <div class="">
+                                <textarea class="form-control message"
+                                          rows="10" cols="40"
+                                          id="status_message_room" name="message"
+                                          placeholder="What do you want to share?"
+                                          style="height: 62px; overflow: hidden;"></textarea>
+                                <textarea id="status_message_post_room" name="message_post_room"
+                                          style="display: none"></textarea>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="panel-footer border-radius-bottom-left border-radius-bottom-right">
-                        <div class="row">
-                            <div class="helper-elements-wrapper">
-                                <!-- IMAGES -->
-                                <div id="post-add-images-wrapper-room" class="hidden">
-                                    <div id="post-image-preview-wrapper-room">
-                                        <!-- Preview for to-be-uploaded photos -->
-                                    </div>
-
-                                    <div class="progress progress-striped active hidden" id="post-upload-images-progress-room">
-                                        <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Uploading...</div>
-                                    </div>
-
-                                    <div class="add-media-wrapper">
-                                        <label for="post-images-upload" class="custom-file-upload">
-                                            <i class="fa fa-plus"></i>
-                                        </label>
-                                        <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload-room" name="files[]" class="hidden" multiple>
-                                    </div>
-                                    <input type="hidden" name="uploadedimages" />
-                                </div>
-
-                                <!-- VIDEOS -->
-                                <div id="post-add-videos-wrapper-room" class="hidden">
-                                    <span id="signinButton" class="pre-sign-in">
-                                        <span class="g-signin"
-                                              data-callback="oauth2Callback"
-                                              data-clientid="802653758880-3ufqkq2gkpo7hqrimk0pr07isen9r8qu.apps.googleusercontent.com"
-                                              data-cookiepolicy="single_host_origin"
-                                              data-scope="https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload">
-                                        </span>
-                                    </span>
-
-                                    <div class="post-sign-in">
-                                        <p id="post-video-file-name-room" style="text-align: center"></p>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <div class="upload-media-preview">
-                                                    <div class="crop">
-                                                        <img src="/Images/UIHelper/youtube.png" alt="Youtube preview" />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-7" style="margin: 0 20px 0 -20px">
-                                                <input class="form-control" id="video-upload-title-room" type="text" placeholder="Title for video">
-                                                <textarea class="form-control" id="video-upload-description-room" placeholder="Description for video"></textarea>
-                                            </div>
-
-                                            <a href="javascript:void(0)" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
+                        <div class="panel-footer border-radius-bottom-left border-radius-bottom-right">
+                            <div class="row">
+                                <div class="helper-elements-wrapper">
+                                    <!-- IMAGES -->
+                                    <div id="post-add-images-wrapper-room" class="hidden">
+                                        <div id="post-image-preview-wrapper-room">
+                                            <!-- Preview for to-be-uploaded photos -->
                                         </div>
 
-                                        <div class="progress progress-striped active hidden" id="post-upload-video-progress-room">
-                                            <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                        <div class="progress progress-striped active hidden" id="post-upload-images-progress-room">
+                                            <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Uploading...</div>
                                         </div>
 
                                         <div class="add-media-wrapper">
-                                            <label for="post-video-upload" class="custom-file-upload">
+                                            <label for="post-images-upload" class="custom-file-upload">
                                                 <i class="fa fa-plus"></i>
                                             </label>
-
-                                            <input id="post-video-upload-room" type="file" class="hidden" accept="video/*">
+                                            <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload-room" name="files[]" class="hidden" multiple>
                                         </div>
+                                        <input type="hidden" name="uploadedimages" />
+                                    </div>
 
-                                        <input type="hidden" name="uploadedvideo" />
+                                    <!-- VIDEOS -->
+                                    <div id="post-add-videos-wrapper-room" class="hidden">
+                                        <span id="signinButton" class="pre-sign-in">
+                                            <span class="g-signin"
+                                                  data-callback="oauth2Callback"
+                                                  data-clientid="802653758880-3ufqkq2gkpo7hqrimk0pr07isen9r8qu.apps.googleusercontent.com"
+                                                  data-cookiepolicy="single_host_origin"
+                                                  data-scope="https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload">
+                                            </span>
+                                        </span>
+
+                                        <div class="post-sign-in">
+                                            <p id="post-video-file-name-room" style="text-align: center"></p>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="upload-media-preview">
+                                                        <div class="crop">
+                                                            <img src="/Images/UIHelper/youtube.png" alt="Youtube preview" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-7" style="margin: 0 20px 0 -20px">
+                                                    <input class="form-control" id="video-upload-title-room" type="text" placeholder="Title for video">
+                                                    <textarea class="form-control" id="video-upload-description-room" placeholder="Description for video"></textarea>
+                                                </div>
+
+                                                <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
+                                            </div>
+
+                                            <div class="progress progress-striped active hidden" id="post-upload-video-progress-room">
+                                                <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                            </div>
+
+                                            <div class="add-media-wrapper">
+                                                <label for="post-video-upload" class="custom-file-upload">
+                                                    <i class="fa fa-plus"></i>
+                                                </label>
+
+                                                <input id="post-video-upload-room" type="file" class="hidden" accept="video/*">
+                                            </div>
+
+                                            <input type="hidden" name="uploadedvideo" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <div class="btn-group">
-                                        <a class="btn btn-default" id="id-picture-button-room">
-                                            <i class="fa fa-picture-o"></i> Photo
-                                        </a>
-                                        <a class="btn btn-default" id="id-video-button-room">
-                                            <i class="fa fa-video-camera"></i> Video
-                                        </a>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <div class="btn-group">
+                                            <a class="btn btn-default" id="id-picture-button-room">
+                                                <i class="fa fa-picture-o"></i> Photo
+                                            </a>
+                                            <a class="btn btn-default" id="id-video-button-room">
+                                                <i class="fa fa-video-camera"></i> Video
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <input class="btn btn-primary" name="submit" type="submit" value="Post">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input id="id-btn-submit-post-in-room" class="btn btn-primary" name="submit" type="submit" value="Post">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
             <!--POSTING ENDS-->
             <!--POST LIST-->
             <div class="room-detail-post-list">
                 @foreach (Post p in listPost)
                 {
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="post-area">
-                                <div class="post-info">
-                                    <div class="user-avatar">
-                                        <img src="@listUserDict[p.PostId].Avatar" alt="@String.Format("{0} {1}", @listUserDict[p.PostId].FirstName, @listUserDict[p.PostId].LastName)'s avatar" class="img-circle" />
-                                    </div>
-                                    <div class="post-info-area">
-                                        <div class="user-name">
-                                            <a href="/User/Index/@listUserDict[p.PostId].UserId" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[p.PostId].FirstName, @listUserDict[p.PostId].LastName)</a>
-                                        </div>
-                                        <span class="post-time">
-                                            <span>@p.ToRealtime()</span>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="post-content" style="display:flex;">
-                                    @foreach (var photo in listPhotoDict[p.PostId])
-                                    {
-                                        <img src="/Images/UserUpload/@photo.Url" style="max-height: 100%; margin:auto;" />
-                                    }
-                                </div>
-                                <div class="post-content">
-                                    @p.Content
-                                </div>
-                            </div>
-
-                            <div class="interact-area">
-                                <a href="javascript:void(0)" class="btn-like"><span>Like</span></a>
-                                <a href="javascript:void(0)" class="btn-dislike"><span>Dislike</span></a>
-                                <a href="javascript:void(0)" id="share_button" class="btn-share"><span>Share</span></a>
-                                <a href="javascript:void(0)" id="report_button" class="btn-report"><span>Report</span></a>
-                            </div>
-                            <div class="divide-area"></div>
-                            <div class="comment-area">
-                                <div style="margin: 0 20px 12px">
-                                    <a href="javascript:void(0)"><i class="fa fa-thumbs-o-up"></i></a>&nbsp;<b class="like-count">@dictLikeCount[p.PostId]</b>&nbsp;
-                                    <a href="javascript:void(0)"><i class="fa fa-thumbs-o-down"></i></a>&nbsp;<b class="dislike-count">@dictDislikeCount[p.PostId]</b>&nbsp;
-                                    <a href="javascript:void(0)"><i class="fa fa-group"></i></a>&nbsp;<b class="people-count">@dictUserCommentCount[p.PostId]</b>
-                                </div>
-                                <div class="comment-stats">
-                                    <span>@dictCommentCount[p.PostId] comments</span>
-                                </div>
-                                <div class="comment-list">
-                                    @foreach (var comment in dictListComment[p.PostId])
-                                    {
-                                        @Html.Partial("_PostDetailPartial", comment)
-                                    }
-                                </div>
-                                <div class="comment-textbox-wrapper">
-                                    <textarea id="idTextareaComment" class="comment-textbox comment-box" placeholder="Input comment..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
+                    
+                    @Html.Partial("_PostDetailCommonPartial", p)
+}
             </div>
             <!--POST LIST ENDS-->
         </div>
@@ -672,7 +620,7 @@
         </div>
     </div>
 </div>|
-
+<script src="~/Scripts/jquery.montage.min.js"></script>
 <!--REQUEST JOIN MODAL-->
 <div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
     <div class="modal-dialog">
@@ -789,12 +737,123 @@
         }
     };
 
+    var editCommentAjax = function (comment) {
+        var controller = "/User/EditComment";
+        var commentId = parseInt($(comment).attr("role"));
+        var content = $(comment).val();
+        var data = {
+            CommentId: commentId,
+            content: content
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: controller,
+            data: data,
+            success: function (data, textstatus) {
+                // send notification
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    var deleteComment = function (commentId) {
+        var controller = "/User/DeleteComment";
+        var data = {
+            CommentId: commentId
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: controller,
+            data: data,
+            success: function (data, textstatus) {
+                // send notification
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            }
+        });
+    }
+
     //window resize
     $(window).resize(function () {
         commonModule.setBlocksit($(".blog-landing"), 250);
     });
 
     $(document).ready(function () {
+        commonModule.likePost();
+        commonModule.dislikePost();
+
+        var roomHubProxy = roomHubProxy || $.connection.roomHub;
+        $.connection.hub.start().done(function () {
+            roomHubProxy.server.connect(parseInt('@roomId'));
+        });
+        roomHubProxy.client.addNewCommentInRoom = function (content, postId) {
+            try {
+                $("#idTextareaComment_" + postId).closest(".comment-area").find(".comment-list").append(content);
+                eval("deleteCommentEvent_" + postId + "()");
+                eval("editCommentEvent_" + postId + "()");
+                $("#idTextareaComment_" + postId).closest(".comment-area").find(".comment-list .comment-detail").last().find(".commenter-delete").remove();
+                $("#idTextareaComment_" + postId).closest(".comment-area").find(".comment-list .comment-detail").last().find(".commenter-edit").remove();
+            }
+            catch(e) {
+                console.log(e.message);
+            }
+        };
+        $("#id-btn-submit-post-in-room").click(function(evt) {
+
+            if(evt.handled !== true) {
+                evt.handled = true;
+
+                $.ajax({
+                    url: '/Room/AddPost',
+                    type: 'POST',
+                    data: {
+                        queryString: $("#form-post-room").serialize(),
+                        roomId: parseInt('@roomId')
+                    },
+                    success: function (data) {
+                        if(typeof(data) == "undefined" || data == null || data == false) {
+                            swal("Oops...", "The room is already full of slots!", "error");
+                        }
+                        else {
+                            //console.log(data);
+                            $(".room-detail-post-list").prepend(data);
+                            $("#status_message_room").text("").val("");
+                            $('input[name="uploadedimages"]').text("").val("");
+                            $('input[name="uploadedvideo"]').text("").val("");
+                            $("#post-image-preview-wrapper-room").remove().hide();
+                            if(!$("#post-add-images-wrapper-room").hasClass("hidden")) {
+                                $("#post-add-images-wrapper-room").toggleClass("hidden");
+                            }
+                            if(!$("#post-add-videos-wrapper-room").hasClass("hidden")) {
+                                $("#post-add-videos-wrapper-room").toggleClass("hidden");
+                            }
+                            commonModule.likePost();
+                            commonModule.dislikePost();
+
+                            $.connection.hub.start().done(function () {
+                                roomHubProxy.server.addPostInRoom(data, parseInt('@roomId'));
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
+                    }
+                });
+            }
+            evt.stopPropagation();
+            evt.preventDefault();
+            return false;
+        });
+
+        roomHubProxy.client.receiveNewPost = function(data) {
+            $(".room-detail-post-list").prepend(data);
+            commonModule.likePost();
+            commonModule.dislikePost();
+        }
+
         $(".accept-request-join-btn").click(function(evt){
             if(evt.handled !== true) {
                 evt.handled = true;

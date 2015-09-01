@@ -993,7 +993,7 @@ namespace FlyAwayPlus.Helpers
             return listPost;
         }
 
-        public void InsertPost(User user, Post post, List<Photo> photos, Place place, Video video)
+        public void InsertPost(User user, ref Post post, List<Photo> photos, Place place, Video video)
         {
             // Auto increment Id.
             SpecifyIds(ref post, ref photos, ref place, ref video);
@@ -1187,7 +1187,7 @@ namespace FlyAwayPlus.Helpers
                     return ph
                  */
             _client.Connect();
-            var listPhoto = _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
+            var listPhoto = _client.Cypher.OptionalMatch("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
                 .ReturnDistinct<Photo>("ph")
                 .OrderBy("ph.PhotoId")
                 .Results
@@ -2573,7 +2573,8 @@ namespace FlyAwayPlus.Helpers
             Place place;
             try
             {
-                place = _client.Cypher.OptionalMatch("(pl:place {Longitude:" + longitude + ", Latitude: " + latitude + "})")
+                place = _client.Cypher.OptionalMatch("(pl:place)")
+                    .Where("abs(pl.Longitude - " + longitude + ") < 0.000000001  and abs(pl.Latitude - " + latitude + ") < 0.000000001")
                     .Return<Place>("pl")
                     .Results
                     .FirstOrDefault();
@@ -2814,6 +2815,114 @@ namespace FlyAwayPlus.Helpers
                 Console.WriteLine(e.Message);
                 success = false;
             }
+            return success;
+        }
+
+        public Room FindRoomById(int roomId)
+        {
+            Room room = null;
+            try
+            {
+                _client.Connect();
+                room = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})")
+                        .Return<Room>("r")
+                        .Results.FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                room = null;
+            }
+            return room;
+        }
+
+        public bool InsertPostInRoom(User user, int roomId,ref Post post,ref List<Photo> photos,ref Video video)
+        {
+            bool success = true;
+            try
+            {
+                post.PostId = GetGlobalIncrementId();
+                foreach (var photo in photos)
+                {
+                    photo.PhotoId = GetGlobalIncrementId();
+                }
+
+                if (video != null)
+                {
+                    video.VideoId = GetGlobalIncrementId();
+                }
+
+                _client.Connect();
+                _client.Cypher.Create("(p:post {newPost})")
+                         .WithParam("newPost", post)
+                         .ExecuteWithoutResults();
+
+                foreach (var photo in photos)
+                {
+                    _client.Cypher.Create("(p:photo {newPhoto})")
+                                 .WithParam("newPhoto", photo)
+                                 .ExecuteWithoutResults();
+                }
+
+                if (video != null)
+                {
+                    _client.Cypher.Create("(v:video {newVideo})")
+                             .WithParam("newVideo", video)
+                             .ExecuteWithoutResults();
+                }
+
+                Node<User> userNode = GetNodeUser(user.UserId);
+                if (userNode != null)
+                {
+                    if (video != null)
+                    {
+                        _client.Cypher.Match("(po:post {PostId:" + post.PostId + "}), (vi:video {VideoId: " + video.VideoId + "})")
+                                 .Create("(po)-[r:HAS]->(vi)")
+                                 .ExecuteWithoutResults();
+                    }
+
+                    foreach (var photo in photos)
+                    {
+                        _client.Cypher.Match("(po:post {PostId:" + post.PostId + "}), (pt:photo {PhotoId: " + photo.PhotoId + "})")
+                                     .Create("(po)-[r:HAS]->(pt)")
+                                     .ExecuteWithoutResults();
+
+                        _client.Cypher.Match("(u:user {UserId:" + user.UserId + "}), (p:photo {PhotoId: " + photo.PhotoId + "})")
+                                     .Create("(u)-[r:HAS]->(p)")
+                                     .ExecuteWithoutResults();
+                    }
+                    // Create Relationship User - Post
+                    _client.Cypher.Match("(u:user {UserId:" + user.UserId + "}), (p:post{PostId:" + post.PostId + "})")
+                                     .Create("(u)-[:CREATE]->(p)")
+                                     .ExecuteWithoutResults();
+
+                    // Create Relationship Room - Post
+                    var oldPost = _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[LATEST_POST]->(p1:post)")
+                            .Return<Post>("p1")
+                            .Results.FirstOrDefault();
+
+                    if (oldPost == null)
+                    {
+                        _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "}), (p:post{PostId:" + post.PostId + "})")
+                            .Create("(r)-[:LATEST_POST]->(p)")
+                            .ExecuteWithoutResults();
+                    }
+                    else
+                    {
+                        _client.Cypher.OptionalMatch("(r:room {RoomId:" + roomId + "})-[la:LATEST_POST]->(p1:post), (p:post{PostId:" + post.PostId + "})")
+                            .Delete("la")
+                            .Create("(r)-[:LATEST_POST]->(p)")
+                            .Create("(p)-[:PREV_POST]->(p1)")
+                            .ExecuteWithoutResults();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                success = false;
+            }
+
             return success;
         }
     }

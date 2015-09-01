@@ -41,7 +41,7 @@
                         @foreach (var photo in listPhoto)
                         {
                             <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
-                                <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" alt="@photo.Url"/>
+                                <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" alt="@photo.Url" />
                             </a>
                         }
                     </div>
@@ -154,28 +154,28 @@
 <script src="~/Scripts/jquery.montage.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        var $container 	= $('#am-container'),
-					$imgs		= $container.find('img').hide(),
-					totalImgs	= $imgs.length,
-					cnt			= 0;
-				
-        $imgs.each(function(i) {
-            var $img	= $(this);
-            $('<img/>').load(function() {
+        var $container = $('#am-container'),
+					$imgs = $container.find('img').hide(),
+					totalImgs = $imgs.length,
+					cnt = 0;
+
+        $imgs.each(function (i) {
+            var $img = $(this);
+            $('<img/>').load(function () {
                 ++cnt;
-                if( cnt === totalImgs ) {
+                if (cnt === totalImgs) {
                     $imgs.show();
                     $container.montage({
-                        fillLastRow				: true,
-                        alternateHeight			: true,
-                        alternateHeightRange	: {
-                            min	: 150,
-                            max	: 240
+                        fillLastRow: true,
+                        alternateHeight: true,
+                        alternateHeightRange: {
+                            min: 150,
+                            max: 240
                         }
                     });
                 }
-            }).attr('src',$img.attr('src'));
-        });	
+            }).attr('src', $img.attr('src'));
+        });
 
         $(".fancybox").attr('rel', 'gallery').fancybox({
             openEffect: 'fade',
@@ -197,6 +197,20 @@
         });
 
         $('#share_button').click(function (e) {
+            @{
+                string picture = "";
+            }
+
+            @if(listPhoto == null || listPhoto.Count == 0)
+            {
+                 picture = "/Images/FAP logo.png";
+            }
+            else
+            {
+                picture = "/Images/UserUpload/" + listPhoto[0].Url;
+            }
+            var picture = "@picture";
+            picture = document.location.origin + picture;
             FB.init({
                 appId: '@ConfigurationManager.AppSettings["clientId"]',
                 status: true,
@@ -205,41 +219,43 @@
             FB.ui(
             {
                 method: 'feed',
-                name: '@userPost.FirstName' + ' @userPost.LastName',
+                name: '@userPost.FirstName' + ' ' + ' @userPost.LastName',
                 link: document.location.origin + '/Post/Index/@Model.PostId',
-                picture: document.location.origin + '/Images/UserUpload/'+'@listPhoto[0].Url',
+                picture: picture,
                 caption: 'FlyAwayPlus.com',
                 description: '@Model.Content'
             });
             e.preventDefault();
         });
 
-        $('input:radio[name=optradio]').click(function() {
+        $('input:radio[name=optradio]').click(function () {
             var checkval = $(this).val();
             $('#closeBtn').prop('disabled', (checkval == null));
         });
 
-        $('#closeBtn').click(function(e) {
-                $.ajax({
-                    url: "/User/ReportPost/",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        postId: @Model.PostId,
-                        userReportId: parseInt('@Session["UserId"]'),
-                        userReportedId: parseInt('@userPost.UserId'),
-                        typeReport: $('input[name="optradio"]:checked').val()
-                    },
-                    success: function (data) {
-                        if (data == true) {
-                            alert("This post has been reported!");
-                        } else {
-                            alert("You have already report this post!");
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
+        $('#closeBtn').click(function (e) {
+            var url = window.location.href;
+            $.ajax({
+                url: "/User/ReportPost/",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    url: url,
+                    postId: parseInt(@Model.PostId),
+                    userReportId: parseInt('@Session["UserId"]'),
+                    userReportedId: parseInt('@userPost.UserId'),
+                    typeReport: $('input[name="optradio"]:checked').val()
+                },
+                success: function (data) {
+                    if (data == true) {
+                        alert("This post has been reported!");
+                    } else {
+                        alert("You have already report this post!");
                     }
-                });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            });
             e.preventDefault();
         });
     });

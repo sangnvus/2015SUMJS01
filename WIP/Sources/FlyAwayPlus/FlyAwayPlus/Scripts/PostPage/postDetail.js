@@ -5,6 +5,7 @@
     var likePost = function () {
         $(".btn-like").click(function (evt) {
             if (evt.handled !== true) { // This will prevent event triggering more then once
+                evt.handled = true;
                 var likeIcon = $(".fa-thumbs-o-up");
 
                 likeIcon.toggleClass("interacted")
@@ -20,7 +21,6 @@
 
                 unDislikePost();
                 likeAjax(this);
-                evt.handled = true;
             }
         });
     };
@@ -52,6 +52,7 @@
     var dislikePost = function () {
         $(".btn-dislike").click(function (evt) {
             if (evt.handled !== true) { // This will prevent event triggering more then once
+                evt.handled = true;
                 var dislikeIcon = $(".fa-thumbs-o-down");
 
                 dislikeIcon.toggleClass("interacted")
@@ -67,7 +68,6 @@
 
                 unLikePost();
                 dislikeAjax(this);
-                evt.handled = true;
             }
         });
     };
@@ -363,6 +363,7 @@
 
         $(".tab_complete_ui_item").click(function (evt) {
             if (evt.handled !== true) { // This will prevent event triggering more then once
+                evt.handled = true;
                 var username = $(this).find(".username").text();
                 var currentText = $(obj).val().slice(0, $(obj).val().lastIndexOf('@') + 1);
                 $(obj).val(currentText + username + ": ");
@@ -370,7 +371,6 @@
                 $("#id-tag-friend-tab-ui").hide();
                 isTagging = false;
 
-                evt.handled = true;
                 evt.preventDefault();
             }
         });

@@ -115,7 +115,7 @@
             }
             if (friend.Count == 0)
             {
-                <p>@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</p>
+                <p style="height: 25px;margin-left: 10px;margin-top: 15px;">@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</p>
             }
         }
     </div>
@@ -616,7 +616,6 @@ else
         $('input:radio[name=optradio]').click(function () {
             var checkval = $(this).val();
             $('#closeBtn').prop('disabled', (checkval == null));
-
         });
 
         $('#closeBtn').click(function (e) {
@@ -640,18 +639,6 @@ else
                 error: function (jqXHR, textStatus, errorThrown) {
                 }
             });
-            e.preventDefault();
-
-            var controller = "/User/ReportUser/";
-            var data = {
-                userReportID: parseInt('@Session["UserId"]'),
-                userReportedID: parseInt('@Model.UserId'),
-                typeReport: $('input[name="optradio"]:checked').val()
-            };
-
-            commonModule.callAjax(controller, data, null);
-
-            alert("This user has been reported!");
             e.preventDefault();
         });
 
