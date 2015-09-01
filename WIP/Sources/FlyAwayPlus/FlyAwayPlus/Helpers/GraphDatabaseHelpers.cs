@@ -1187,7 +1187,7 @@ namespace FlyAwayPlus.Helpers
                     return ph
                  */
             _client.Connect();
-            var listPhoto = _client.Cypher.Match("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
+            var listPhoto = _client.Cypher.OptionalMatch("(po:post {PostId:" + postId + "})-[:HAS]->(ph:photo)")
                 .ReturnDistinct<Photo>("ph")
                 .OrderBy("ph.PhotoId")
                 .Results

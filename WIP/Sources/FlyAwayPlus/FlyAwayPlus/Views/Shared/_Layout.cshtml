@@ -78,7 +78,7 @@
                         </li>
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
-                                <img id="id-avatar-current-user" 
+                                <img id="id-avatar-current-user"
                                      src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"].ToString())"
                                      alt="@Session["username"]"
                                      class="avatar" />
@@ -101,8 +101,8 @@
                                 <input type="text"
                                        name="keyword"
                                        id="id-search-input"
-                                       value="Search for places, tour rooms, people..." onfocus="this.value = '';" onblur="    if (this.value === '') { this.value = 'Search for places, tour rooms, people...'; }">
-                                <input type="submit" value="Search" />
+                                       placeholder="Search for places, tour rooms, people..." />
+                                <input id="id-search-input-btn" type="submit" value="Search" />
                             </div>
                         </div>
                     }
@@ -116,7 +116,7 @@
     @if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
     {
         <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&sensor=true&libraries=places"></script>
-        
+
         @Html.Partial("_TagFriendPartial")
         if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
         {
@@ -189,6 +189,11 @@
                             $(this).val($(this).val().trim());
                             $(this).closest("form").submit();
                         }
+                        evt.preventDefault();
+                    }
+                });
+                $("#id-search-input-btn").click(function (evt) {
+                    if ($("#id-search-input").val().trim().length == 0) {
                         evt.preventDefault();
                     }
                 });
