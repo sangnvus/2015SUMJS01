@@ -85,7 +85,7 @@
 
 <!-- Friend list -->
 <div class="col-md-12 frame-container">
-    <div class="friend-list-header friend-title-header" style="overflow:hidden">
+    <div class="friend-list-header friend-title-header" style="overflow: hidden; padding-top: 25px;">
         <span class="text-capitalize">MY FRIENDS</span>
     </div>
 
@@ -115,12 +115,12 @@
             }
             if (friend.Count == 0)
             {
-                <p style="height: 25px;margin-left: 10px;margin-top: 15px;">@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</p>
+                <p>@String.Format("{0} {1} has no friends", @Model.FirstName, @Model.LastName)</p>
             }
         }
     </div>
-    <div class="friend-list-header view-more-friend-title" style="overflow:hidden">
-        <span id="id-view-all-friend" class="text-capitalize" style="display: block; margin-top: 18px;">VIEW ALL</span>
+    <div class="friend-list-header view-more-friend-title" style="overflow:hidden; padding-top: 25px;">
+        <span id="id-view-all-friend" class="text-capitalize" style="display: block;">VIEW ALL</span>
     </div>
 </div>
 
@@ -538,8 +538,9 @@ else
                 src: '@(string.IsNullOrWhiteSpace(userSession.CoverUrl) ? "/Images/background/nhatrang.jpg" : userSession.CoverUrl)'
             },
             onImageError: function () {
-                swal("Oops...", "Your selected image is too small, select a big enough image!", "error");
-            }
+                swal("Oops...", "An error occured. Please try again or contact admin for help.", "error");
+            },
+            smallImage: 'stretch'
         });
         $('#image-cropper').cropit('disable');
 
@@ -581,8 +582,9 @@ else
                 src: '@Model.Avatar'
             },
             onImageError: function () {
-                swal("Oops...", "Your selected image is too small, select a big enough image!", "error");
-            }
+                swal("Oops...", "An error occured. Please try again or contact admin for help.", "error");
+            },
+            smallImage: 'stretch'
         });
 
         $('#edit-ava-select-btn').click(function () {
