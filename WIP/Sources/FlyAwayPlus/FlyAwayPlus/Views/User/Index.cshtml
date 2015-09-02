@@ -28,7 +28,7 @@
             <input type="file" class="cropit-image-input hidden" />
         </div>
     </figure>
-    <figure class="profile-picture" style="background-image: url('@Model.Avatar?@DateTime.Now.TimeOfDay.TotalMilliseconds')">
+    <figure class="profile-picture" style="background-image: url('@(Model.Avatar + (Model.Avatar.StartsWith("http") ? "": "?" + DateTime.Now.TimeOfDay.TotalMilliseconds))')">
         @if (Model.UserId == userSession.UserId)
         {
             <button class="btn btn-primary hidden"
@@ -41,12 +41,12 @@
         }
     </figure>
     <div class="profile-stats">
-        <ul role="tablist">
-            <li role="presentation"><a href="javascript:void(0)">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a></li>
+        <ul role="tablist" style="margin-left: 10px;">
+            <li role="presentation"><a href="javascript:void(0)" style="margin-top: -40px;">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a></li>
             <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Post</span></a></li>
             <li role="presentation"><a id="btn-place-list" href="#place-list" aria-controls="place-list" role="tab" data-toggle="tab">@listPlaceDict.Count <span>Places</span></a></li>
             <li role="presentation"><a id="btn-photo-list" href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">@listPhoto.Count <span>Photos</span></a></li>
-            <li role="presentation"><a href="#video-list" style="margin-right:10px;" aria-controls="video-list" role="tab" data-toggle="tab">@listVideo.Count <span>Videos</span></a></li>
+            <li role="presentation"><a href="#video-list" style="margin-right: 10px;" aria-controls="video-list" role="tab" data-toggle="tab">@listVideo.Count <span>Videos</span></a></li>
         </ul>
 
         <div class="interact-area">
@@ -79,6 +79,7 @@
             }
         </div>
     </div>
+    <a href="javascript:void(0)">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a>
 </header>
 
 <div class="vertical-space-15"></div>
