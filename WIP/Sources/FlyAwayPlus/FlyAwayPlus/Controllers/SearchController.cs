@@ -28,31 +28,29 @@ namespace FlyAwayPlus.Controllers
 
             List<User> listUser = GraphDatabaseHelpers.Instance.SearchUserByKeyword(keyword.ToUpper());
             List<Place> listPlace = GraphDatabaseHelpers.Instance.SearchPlaceByKeyword(keyword.ToUpper());
+            List<int> listMutualFriend = new List<int>();
+            List<string> listRelationUser = new List<string>();
             List<Room> listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword(keyword.ToUpper());
-            List<User> listAdminRoom = new List<User>();
 
             Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
             Dictionary<int, int> numberOfPostDict = new Dictionary<int, int>();
             Dictionary<int, bool> wishlist = new Dictionary<int, bool>();
 
-            
-            foreach (var room in listRoom)
+
+            List<User> listAdminRoom = listRoom.Select(room => GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId)).ToList();
+
+            listUser.RemoveAll(u => u.UserId == user.UserId);
+            foreach (var u in listUser)
             {
-                listAdminRoom.Add(GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId));
+                listMutualFriend.Add(GraphDatabaseHelpers.Instance.CountMutualFriend(user.UserId, u.UserId));
+                listRelationUser.Add(GraphDatabaseHelpers.Instance.GetFriendType(user.UserId, u.UserId));
             }
 
             foreach (var place in listPlace)
             {
                 listPhotoDict.Add(place.PlaceId, GraphDatabaseHelpers.Instance.SearchPhotoInPlace(place.PlaceId));
                 numberOfPostDict.Add(place.PlaceId, GraphDatabaseHelpers.Instance.CountPostAtPlace(place.PlaceId));
-                if (user == null)
-                {
-                    wishlist.Add(place.PlaceId, false);
-                }
-                else
-                {
-                    wishlist.Add(place.PlaceId, GraphDatabaseHelpers.Instance.IsInWishist(place.PlaceId, user.UserId));
-                }
+                wishlist.Add(place.PlaceId, GraphDatabaseHelpers.Instance.IsInWishist(place.PlaceId, user.UserId));
             }
 
             ViewData["listRoom"] = listRoom;
@@ -63,6 +61,8 @@ namespace FlyAwayPlus.Controllers
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["numberOfPostDict"] = numberOfPostDict;
             ViewData["wishlist"] = wishlist;
+            ViewData["listMutualFriend"] = listMutualFriend;
+            ViewData["listRelationUser"] = listRelationUser;
             return View();
         }
 
@@ -100,10 +100,7 @@ namespace FlyAwayPlus.Controllers
                 listPlace.Remove(currentPlace);
                 listPlace.RemoveAll(item => (CalculateDistance(currentPlace, item) - 50.0) > 1E-6);
 
-                foreach (var p in listPlace)
-                {
-                    distance.Add(CalculateDistance(currentPlace, p));
-                }
+                distance.AddRange(listPlace.Select(p => CalculateDistance(currentPlace, p)));
                 FindRelatedInformationPost(listPost, currentPlace);
             }
 
@@ -137,10 +134,7 @@ namespace FlyAwayPlus.Controllers
                 listPlace.Remove(currentPlace);
                 listPlace.RemoveAll(item => (CalculateDistance(currentPlace, item) - 50.0) > 1E-6);
 
-                foreach (var p in listPlace)
-                {
-                    distance.Add(CalculateDistance(currentPlace, p));
-                }
+                distance.AddRange(listPlace.Select(p => CalculateDistance(currentPlace, p)));
                 FindRelatedInformationPost(listPost, currentPlace);
             }
 
@@ -159,8 +153,7 @@ namespace FlyAwayPlus.Controllers
                 {
                     return null;
                 }
-                List<Post> listPost = new List<Post>();
-                listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(placeId);
+                List<Post> listPost = GraphDatabaseHelpers.Instance.FindPostInPlace(placeId);
                 FindRelatedInformationPost(listPost, currentPlace);
                 return PartialView("_ListPost");
             }

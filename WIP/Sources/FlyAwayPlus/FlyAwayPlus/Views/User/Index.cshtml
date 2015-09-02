@@ -28,8 +28,17 @@
             <input type="file" class="cropit-image-input hidden" />
         </div>
     </figure>
-    <figure class="profile-picture"
-            style="background-image: url('@Model.Avatar')">
+    <figure class="profile-picture" style="background-image: url('@Model.Avatar')">
+        @if (Model.UserId == userSession.UserId)
+        {
+            <button class="btn btn-primary hidden"
+                    id="btn-edit-avatar"
+                    data-toggle="modal"
+                    data-target="#edit-avatar-modal" 
+                    style="position: absolute;top: 55px;left: 50px;">
+                Edit
+            </button>
+        }
     </figure>
     <div class="profile-stats">
         <ul role="tablist">
@@ -77,7 +86,7 @@
 <!-- Friend list -->
 <div class="col-md-12 frame-container">
     <div class="friend-list-header friend-title-header" style="overflow:hidden">
-        <span class="text-capitalize" style="display: block; margin-top: 18px;">MY FRIENDS</span>
+        <span class="text-capitalize">MY FRIENDS</span>
     </div>
 
     <div class="friend-list-avatar">
@@ -490,6 +499,26 @@
         </div>
     </div>
 }
+else
+{
+    <div class="modal fade" id="edit-avatar-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="text-align: center; padding: 10px">
+                <div id="avatar-editor">
+                    <input type="file" class="hidden cropit-ava-input">
+                    <div class="cropit-ava-preview"></div>
+                    <button class="btn btn-default" id="edit-ava-select-btn" style="margin-top: 10px">Choose image</button>
+                    <div class="ava-size-label">
+                        Resize avatar
+                    </div>
+                    <input type="range" class="cropit-ava-zoom-input">
+                    <button class="btn btn-primary" id="edit-ava-save-btn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @Scripts.Render("~/bundles/datepicker")
 
 <script>
@@ -512,7 +541,6 @@
                 swal("Oops...", "Your selected image is too small, select a big enough image!", "error");
             }
         });
-
         $('#image-cropper').cropit('disable');
 
         $('#btn-edit-cover').click(function () {
@@ -533,7 +561,39 @@
             $('#image-cropper').cropit('disable');
             $('.cropit-image-preview').css('cursor', 'default');
 
-            saveImageToDb();
+            saveImageToDb('#image-cropper', 'cover');
+        });
+
+        // Edit avatar.
+        $('.profile-picture').hover(function() {
+            $('#btn-edit-avatar').toggleClass('hidden');
+        },function() {
+            $('#btn-edit-avatar').toggleClass('hidden');
+        });
+
+        var avaEditorWrapper = $('#avatar-editor');
+
+        $('#avatar-editor').cropit({
+            $preview: avaEditorWrapper.find('.cropit-ava-preview'),
+            $fileInput: avaEditorWrapper.find('.cropit-ava-input'),
+            $zoomSlider: avaEditorWrapper.find('.cropit-ava-zoom-input'),
+            imageState: {
+                src: '@Model.Avatar'
+            },
+            onImageError: function () {
+                swal("Oops...", "Your selected image is too small, select a big enough image!", "error");
+            }
+        });
+
+        $('#edit-ava-select-btn').click(function () {
+            avaEditorWrapper.cropit('reenable');
+
+            $('.cropit-ava-input').click();
+        });
+
+        $('#edit-ava-save-btn').click(function () {
+            saveImageToDb('#avatar-editor', 'avatar');
+            $('#edit-avatar-modal').modal('hide');
         });
 
         $("#id-view-all-friend").click(function(evt) {
@@ -742,19 +802,25 @@
         });
     });
 
-    function saveImageToDb() {
-        var imageData = $('#image-cropper').cropit('export', {
+    function saveImageToDb(selector, type) {
+        var imageData = $(selector).cropit('export', {
             type: 'image/jpeg',
             quality: .9,
-            originalSize: true
+            originalSize: false
         });
 
         $.ajax({
-            url: "/User/SaveCover",
+            url: "/User/SaveImageDataToFile",
             type: "POST",
-            data: {imageData: imageData, userId: @userSession.UserId},
-            sucess: function() {
+            data: {imageData: imageData, userId: @userSession.UserId, type: type},
+            success: function(data) {
+                if (type === 'avatar') {
 
+                    // Prevent caching image.
+                    var param = new Date().getTime();
+                    $('.profile-picture').css("background-image", "url('" + data + "?" + param + "')");
+                    $('#id-avatar-current-user').attr("src", data + "?" + param);
+                }
             },
             error: function() {
                 swal("Oops...", "An error occured, please try again!", "error");

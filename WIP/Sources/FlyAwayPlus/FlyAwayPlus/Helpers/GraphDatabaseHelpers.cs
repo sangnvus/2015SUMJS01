@@ -159,7 +159,7 @@ namespace FlyAwayPlus.Helpers
         public bool IsFriend(int userId, int otherUserId)
         {
             _client.Connect();
-            int friend = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:FRIEND]->(u1: user{UserId: " + otherUserId + "})")
+            int friend = _client.Cypher.Match("(u:user {UserId:" + userId + "})-[r:FRIEND]-(u1: user{UserId: " + otherUserId + "})")
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
@@ -171,7 +171,7 @@ namespace FlyAwayPlus.Helpers
             // Auto increment Id
             if (IsFriend(userId, otherUserId))
             {
-                return "friend";
+                return FapConstants.Friendship;
             }
 
             _client.Connect();
@@ -179,7 +179,7 @@ namespace FlyAwayPlus.Helpers
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
-            return friend != 0 ? "request" : "none";
+            return friend != 0 ? FapConstants.RequestFriend : FapConstants.NotFriend;
         }
 
         public bool IsDislike(int postId, int userId)
@@ -1601,6 +1601,24 @@ namespace FlyAwayPlus.Helpers
             return true;
         }
 
+        public bool EditUserAvatar(int userid, string avaPath)
+        {
+            _client.Connect();
+            try
+            {
+                _client.Cypher.Match("(n:user { UserId: " + userid + "})")
+                              .Set("n.Avatar = {avaPath}")
+                              .WithParam("avaPath", avaPath)
+                              .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+
         public bool EditComment(Comment comment)
         {
             _client.Connect();
@@ -2113,7 +2131,7 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listUser = _client.Cypher
-                       .Match("(u:user)")
+                       .OptionalMatch("(u:user)")
                        .Where("upper(u.FirstName + ' ' + u.LastName) =~ '.*" + keyword + ".*'")
                        .ReturnDistinct<User>("u")
                        .Results.ToList();
