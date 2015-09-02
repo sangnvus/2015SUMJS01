@@ -78,8 +78,9 @@ namespace FlyAwayPlus.Controllers
 
             foreach (Post po in listPost)
             {
-                listPhotoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPhoto(po.PostId));
-                listPhoto.AddRange(listPhotoDict[po.PostId]);
+                List<Photo> p = GraphDatabaseHelpers.Instance.FindPhoto(po.PostId);
+                listPhotoDict.Add(po.PostId, p);
+                listPhoto.AddRange(p);
                 listVideoDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindVideo(po.PostId));
                 listVideo.Add(listVideoDict[po.PostId]);
                 listPlaceDict.Add(po.PostId, GraphDatabaseHelpers.Instance.FindPlace(po));

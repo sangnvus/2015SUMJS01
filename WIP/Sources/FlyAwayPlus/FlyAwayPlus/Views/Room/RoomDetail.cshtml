@@ -297,7 +297,7 @@
                                         <ul>
                                             <li><b>Complete on:</b> @gp.DatePlanStart.Remove(10)</li>
                                             <li>
-                                                <b>Person in charge:</b>
+                                                <b>Person in charge:&nbsp;</b>
                                                 @foreach (var pic in dictPlanIdPiCs[gp.PlanId])
                                                 {
                                                     <a href="/User/Index/@pic.UserId" class="hover-card-user">@(pic.FirstName + " " + pic.LastName + "; ")</a>
@@ -511,9 +511,9 @@
             <div class="room-detail-post-list">
                 @foreach (Post p in listPost)
                 {
-                    
+
                     @Html.Partial("_PostDetailCommonPartial", p)
-}
+                }
             </div>
             <!--POST LIST ENDS-->
         </div>
@@ -586,6 +586,7 @@
                     <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion"><br />
                     <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea><br />
                     <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name"><br />
+                    <input type="hidden" id="g-plan-assignee-hidden" class="form-control" placeholder="Assgin by tagging a &#64;member-name"><br />
                     <input type="text" id="g-plan-start" class="form-control" placeholder="Start time"><br />
                 </div>
             </div>
@@ -611,6 +612,7 @@
                     <input type="text" id="estimation-payment" class="form-control" placeholder="Payment"><br />
                     <input type="text" id="estimation-price" class="form-control" placeholder="Price"><br />
                     <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name"><br />
+                    <input type="hidden" id="estimation-payer-hidden" class="form-control" placeholder="&#64;payer-name"><br />
                 </div>
             </div>
             <div class="modal-footer">
@@ -689,10 +691,10 @@
     }
 
     function priceSorter(a, b) {
-        a = parseInt(a.replace(/,/g, '')); 
-        b = parseInt(b.replace(/,/g, '')); 
-        if (a > b) return 1; 
-        if (a < b) return -1; 
+        a = parseInt(a.replace(/,/g, ''));
+        b = parseInt(b.replace(/,/g, ''));
+        if (a > b) return 1;
+        if (a < b) return -1;
         return 0;
     }
 
@@ -781,6 +783,51 @@
         commonModule.setBlocksit($(".blog-landing"), 250);
     });
 
+    var listUserinRoom = JSON.parse('@Newtonsoft.Json.JsonConvert.SerializeObject(@listUserInRoom)'.split('&quot;').join('"'));
+    var adminRoom = JSON.parse('@Newtonsoft.Json.JsonConvert.SerializeObject(@admin)'.split('&quot;').join('"'));
+    var listTagging = null;
+    var createListTagging = function() {
+        listTagging = [];
+        listTagging.push(adminRoom);
+        for (var index = 0; index < listUserinRoom.length; index++) {
+            listTagging.push(listUserinRoom[index]);
+        }
+        return listTagging;
+    };
+
+    var findUserId = function(value) {
+        listTagging = listTagging || createListTagging();
+        for (var index = 0; index < listTagging.length; index++) {
+            var username = listTagging[index]["FirstName"].toUpperCase() + " " + listTagging[index]["LastName"].toUpperCase();
+            if (username.toUpperCase() == value.toUpperCase()) {
+                return listTagging[index]["UserId"];
+            }
+        }
+        return 0;
+    };
+
+    var findUserById = function(value) {
+        listTagging = listTagging || createListTagging();
+        for (var index = 0; index < listTagging.length; index++) {
+            if (value == listTagging[index]["UserId"]) {
+                return listTagging[index]["FirstName"] + ' ' + listTagging[index]["LastName"];
+            }
+        }
+        return "";
+    };
+    var findIdListTagging = function(value) {
+        var listFriendId = [];
+        var pattern = /@@([0-9a-z A-Z]*):/g;
+        var tagFriend = value.match(pattern);
+        if (tagFriend != null) {
+            var username = "";
+            for (var index = 0; index < tagFriend.length; index++) {
+                username = tagFriend[index].substring(1, tagFriend[index].length - 1);
+                listFriendId.push(findUserId(username));
+            }
+        }
+        return listFriendId;
+    }
     $(document).ready(function () {
         commonModule.likePost();
         commonModule.dislikePost();
@@ -935,12 +982,17 @@
             if (evt.handled !== true) { // This will prevent event triggering more then once
                 var listId = commonModule.findListFriendIdTagging($("#id-tag-friend-join-room").val());
                 // send request
-
-
                 $("#id-tag-friend-join-room").val("").text("");
                 evt.handled = true;
                 evt.preventDefault();
             }
+        });
+
+        $("#g-plan-assignee").keydown(function(evt) {
+            commonModule.handleTagging(evt, this, createListTagging());
+        });
+        $("#estimation-payer").keydown(function(evt) {
+            commonModule.handleTagging(evt, this, createListTagging());
         });
 
         $("#id-request-join-room-btn").click(function(evt) {
@@ -972,7 +1024,7 @@
             var dataPass = {
                 workportion: $('#g-plan-work-portion').val(),
                 note: $('#g-plan-note').val(),
-                assignee: $('#g-plan-assignee').val(),
+                assignee: findIdListTagging($('#g-plan-assignee').val()).join(";"),
                 startdate: $('#g-plan-start').val()
             };
 
@@ -994,7 +1046,7 @@
                     planContent += '<ul>';
                     planContent += '<li><b>Complete on:</b> ' + dataPass.startdate + '</li>';
                     planContent += '<li>';
-                    planContent += '<b>Person in charge:</b>';
+                    planContent += '<b>Person in charge: </b>';
 
                     for (var i = 0; i < data.length; i++) {
                         planContent += '<a href="/User/Index/' + data[i].UserId + '" class="hover-card-user">' + data[i].FirstName + ' ' + data[i].LastName + '</a>; ';
@@ -1022,6 +1074,7 @@
                     $('#g-plan-work-portion').val('');
                     $('#g-plan-note').val('');
                     $('#g-plan-assignee').val('');
+                    $('#g-plan-assignee-hidden').val('');
                     $('#g-plan-start').val('');
                 },
                 error: function () {
@@ -1032,10 +1085,11 @@
 
         // Add estimation item.
         $('#estimation-btnPopupSave').click(function() {
+            var payerid = findIdListTagging($('#estimation-payer').val())[0];
             var dataPassAdd = {
                 payment: $('#estimation-payment').val(),
                 price: $('#estimation-price').val(),
-                payer: $('#estimation-payer').val(),
+                payerid: payerid,
                 datecreated: moment().format('YYYY-MM-DD')
             };
 
@@ -1043,7 +1097,7 @@
                 id: $('#estimation-id').val(),
                 payment: $('#estimation-payment').val(),
                 price: $('#estimation-price').val(),
-                payer: $('#estimation-payer').val(),
+                payerid: payerid,
             };
 
             if (dataPassEdit.id != '-1') {
@@ -1060,6 +1114,7 @@
                         $('#estimation-payment').val('');
                         $('#estimation-price').val('');
                         $('#estimation-payer').val('');
+                        $('#estimation-payer-hidden').val('');
                     },
                     error: function() {
                         swal("Oops...", "Something went wrong! Try again later!", "error");
@@ -1076,10 +1131,12 @@
                     success: function(data) {
                         var dataPrepend = {
                             'id': data,
+                            'creatorid': parseInt('@Session["UserId"]'),
+                            'payerid': payerid,
                             'payment': $('#estimation-payment').val(),
                             'price': $('#estimation-price').val(),
                             'creator': '@Session["username"]',
-                            'payer': $('#estimation-payer').val(),
+                            'payer': findUserById(payerid),
                             'datecreated': moment().format('YYYY-MM-DD')
                         };
 
@@ -1090,6 +1147,7 @@
                         $('#estimation-payment').val('');
                         $('#estimation-price').val('');
                         $('#estimation-payer').val('');
+                        $('#estimation-payer-hidden').val('');
                     },
                     error: function() {
                         swal("Oops...", "Something went wrong! Try again later!", "error");

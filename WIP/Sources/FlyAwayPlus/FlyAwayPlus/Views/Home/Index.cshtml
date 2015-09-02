@@ -54,8 +54,7 @@
         </div>
     </div>
     <script>
-        $(function () {
-            // Sidebar - load weather.
+        var shareLocation = function () {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var loadWeather = function (location, woeid) {
                     $.simpleWeather({
@@ -78,6 +77,28 @@
                 loadWeather(position.coords.latitude + ',' + position.coords.longitude);
                 $("#id-lookaround-btn").attr("href", $("#id-lookaround-btn").attr("href") + "longitude=" + position.coords.longitude + "&latitude=" + position.coords.latitude + "&");
             });
+        }
+        $(function () {
+            $("#id-lookaround-btn").click(function (evt) {
+                if ($(this).attr("href").slice(-1) == '?') {
+                    swal({
+                        title: "Oops...",
+                        text: "You are not allowing getting location! Please allow us to get current location.",
+                        type: "warning",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "OK!",
+                        closeOnConfirm: true,
+                        closeOnCancel: false
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            shareLocation();
+                        }
+                    });
+                    return false;
+                }
+            });
+            shareLocation();
 
             var editPostContentWrapper;
             $("#edit-post-modal").on("show.bs.modal", function (event) {

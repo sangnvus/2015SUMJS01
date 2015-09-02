@@ -38,11 +38,14 @@
                 </div>
                 <div class="post-content">
                     <div class="am-container" id="am-container">
-                        @foreach (var photo in listPhoto)
+                        @if (listPhoto != null && listPhoto.Any())
                         {
-                            <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
-                                <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" alt="@photo.Url" />
-                            </a>
+                            foreach (var photo in listPhoto)
+                            {
+                                <a class="fancybox" title="@placeName" href="@("/Images/UserUpload/" + photo.Url)">
+                                    <img src="@("/Images/UserUpload/" + photo.Url)" class="img-zoom" alt="@photo.Url" />
+                                </a>
+                            }
                         }
                     </div>
                     @if (@video != null)

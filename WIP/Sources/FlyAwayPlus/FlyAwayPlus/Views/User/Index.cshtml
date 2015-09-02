@@ -139,24 +139,30 @@
 
     <div role="tabpanel" class="tab-pane" id="photos-gallery">
         <div class="images-wrapper" style="margin-left: 10px;">
-            @foreach (var image in listPhotoDict)
+            @if (listPhotoDict != null)
             {
-                <div class="image-element">
-                    <img src="/Images/UserUpload/@image.Value.First().Url" class="img-zoom" alt="" />
-                    <div class="dark-wrapper">
-                        <ul class="post-actions" style="padding-left: 0;">
-                            <li>
-                                <a href="@(image.Value.FirstOrDefault() == null ? "/Image/UIHelper/default-avatar.jpg" : "/Images/UserUpload/" + image.Value.First().Url)" rel="group"
-                                   class="btn btn-primary fancybox"
-                                   title="@listPlaceDict.First(p => p.Key == @image.Key).Value.Name"
-                                   style="width: 90px">Enlarge</a>
-                            </li>
-                            <li>
-                                <a href="/Post/Index/@image.Key" class="btn btn-primary" style="width: 90px">View post</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                foreach (var image in listPhotoDict)
+                {
+                    if (image.Value != null && image.Value.Any())
+                    {
+                        <div class="image-element">
+                            <img src="@(image.Value.FirstOrDefault() == null ? "/Image/UIHelper/default-avatar.jpg" : "/Images/UserUpload/" + image.Value.First().Url)" class="img-zoom" alt="" />
+                            <div class="dark-wrapper">
+                                <ul class="post-actions" style="padding-left: 0;">
+                                    <li>
+                                        <a href="@(image.Value.FirstOrDefault() == null ? "/Image/UIHelper/default-avatar.jpg" : "/Images/UserUpload/" + image.Value.First().Url)" rel="group"
+                                           class="btn btn-primary fancybox"
+                                           title="@listPlaceDict.First(p => p.Key == @image.Key).Value.Name"
+                                           style="width: 90px">Enlarge</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Post/Index/@image.Key" class="btn btn-primary" style="width: 90px">View post</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                }
             }
         </div>
     </div>
