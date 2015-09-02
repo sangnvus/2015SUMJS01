@@ -390,7 +390,7 @@ namespace FlyAwayPlus.Controllers
 
                 //Send warning email to reported user
                 var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
-                MailHelpers.Instance.SendMailWarningReportPost(url,email);
+                MailHelpers.Instance.SendMailWarningReportPost(url, email, userReportedId);
 
                 return Json(true);
             }
@@ -410,7 +410,7 @@ namespace FlyAwayPlus.Controllers
             GraphDatabaseHelpers.Instance.InsertReportUser(userReportId, userReportedId, typeReport);
             //Send warning email to reported user
             var email = GraphDatabaseHelpers.Instance.GetEmailByUserId(userReportedId);
-            MailHelpers.Instance.SendMailWarningReportUser(email);
+            MailHelpers.Instance.SendMailWarningReportUser(email, userReportedId);
 
             return Json(true);
         }
