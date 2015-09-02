@@ -89,7 +89,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Type of user</th>
                                 <th>User ID</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
@@ -103,18 +102,6 @@
                                 foreach (var user in ViewBag.OnePageOfUsers)
                                 {
                                     <tr>
-                                        @if (user.TypeId == 1)
-                                        {
-                                            <td>Facebook</td>
-                                        }
-                                        else if (user.TypeId == 2)
-                                        {
-                                            <td>Google</td>
-                                        }
-                                        else if (user.TypeId == 0)
-                                        {
-                                            <td>FAP</td>
-                                        }
                                         <td>@user.UserId</td>
                                         <td>@user.FirstName</td>
                                         <td>@user.LastName</td>

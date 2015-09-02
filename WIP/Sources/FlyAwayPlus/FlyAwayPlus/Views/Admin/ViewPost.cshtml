@@ -35,7 +35,12 @@
                     }
                     @if (video != null)
                     {
-                        <a href="@video.Path" target="_blank"></a>
+                        <div class="video-overlay">
+                            <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video.Path?enablejsapi=1&wmode=opaque">
+                                <img src="http://img.youtube.com/vi/@video.Path/0.jpg" alt="@video.Path">
+                                <span class="video-thumbnail-button"></span>
+                            </a>
+                        </div>
                     }
                     
                     <p><b>Date created:</b> @post.DateCreated<br /></p>
