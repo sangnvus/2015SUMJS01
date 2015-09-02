@@ -3,6 +3,8 @@
 @using FlyAwayPlus.Models;
 
 @{
+    ViewBag.Title = "Post Detail";
+    
     var userPost = ViewData["userPost"] as User;
     var user = ViewData["user"] as User;
     var listComment = ViewData["listComment"] as List<Comment>;
