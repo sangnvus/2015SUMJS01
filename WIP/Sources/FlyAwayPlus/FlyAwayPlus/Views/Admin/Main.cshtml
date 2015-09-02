@@ -193,7 +193,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Type of user</th>
                                 <th>User Reported ID</th>
                                 <th>User Reported Name</th>
                                 <th>Numer report</th>
@@ -209,18 +208,6 @@
                                     foreach (var reportUser in ViewBag.OnePageOfReportUsers)
                                     {
                                         <tr>
-                                            @if (GraphDatabaseHelpers.Instance.FindUser(reportUser.UserReportedId).TypeId == 1)
-                                            {
-                                                <td>Facebook</td>
-                                            }
-                                            else if (GraphDatabaseHelpers.Instance.FindUser(reportUser.UserReportedId).TypeId == 2)
-                                            {
-                                                <td>Google</td>
-                                            }
-                                            else if (GraphDatabaseHelpers.Instance.FindUser(reportUser.UserReportedId).TypeId == 0)
-                                            {
-                                                <td>FAP</td>
-                                            }
                                             <td>@reportUser.UserReportedId</td>
                                             <td>@reportUser.UserReportedName</td>
                                             <td>@reportUser.NumberReport</td>
