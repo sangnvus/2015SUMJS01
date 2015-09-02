@@ -79,7 +79,9 @@
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
                                 <img id="id-avatar-current-user"
-                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"] + "?" + DateTime.Now.TimeOfDay.TotalMilliseconds)"
+                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty)
+                                            ? "/Images/UIHelper/default-avatar.jpg"
+                                            : @Session["userAva"] + (@Session["userAva"].ToString().StartsWith("http") ? string.Empty: "?" + DateTime.Now.TimeOfDay.TotalMilliseconds))"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
@@ -136,7 +138,8 @@
         @RenderSection("scripts", required: false)
         @Scripts.Render("~/bundles/js")
         <script src="/signalr/hubs"></script>
-        <script src="http://www.youtube.com/player_api"></script>
+        
+        <script src="~/Scripts/player_api.js"></script>
 
         <link href="~/Content/tooltipster.css" rel="stylesheet" />
         <script src="~/Scripts/jquery.tooltipster.js"></script>

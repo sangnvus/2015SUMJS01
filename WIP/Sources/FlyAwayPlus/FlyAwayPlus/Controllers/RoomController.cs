@@ -14,7 +14,7 @@ namespace FlyAwayPlus.Controllers
     {
         //
         // GET: /Room/
-        public ActionResult Index(int id = -1)
+        public ActionResult Index(string startplace, string targetplace, string startdate, string returndate, int? slotOption, int id = -1)
         {
             User user = UserHelpers.GetCurrentUser(Session);
             if (user == null)
@@ -26,18 +26,16 @@ namespace FlyAwayPlus.Controllers
 
             if (id == -1)
             {
-                /*
-                string startPlace = Request.Form["startplace"];
-                string destinationPlace = Request.Form["targetplace"];
-                string startDate = Request.Form["startdate"];
-                string returnDate = Request.Form["returndate"];
-                string slot = Request.Form["slot"];
-                */
-                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword("");   // search All room
-                foreach (var room in listRoom)
-                {
-                    listAdminRoom.Add(GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId));
-                }
+                // Search all room.
+                listRoom = GraphDatabaseHelpers.Instance.SearchRoomByKeyword();
+
+                FilterByStartPlace(ref listRoom, startplace);
+                FilterByTargetPlace(ref listRoom, targetplace);
+                FilterByStartDate(ref listRoom, startdate);
+                FilterByReturnDate(ref listRoom, returndate);
+                FilterBySlot(ref listRoom, slotOption);
+
+                listAdminRoom.AddRange(listRoom.Select(room => GraphDatabaseHelpers.Instance.FindAdminInRoom(room.RoomId)));
             }
             else
             {
@@ -53,6 +51,43 @@ namespace FlyAwayPlus.Controllers
             return View();
         }
 
+        private void FilterBySlot(ref List<Room> listRoom, int? slotOption)
+        {
+            if (slotOption == null || slotOption.Value == 0) return;
+
+            listRoom = listRoom.Where(r => 5 * (slotOption - 1) <= (r.MaxNoSlots - r.JoinedSlotCount) 
+                                            && (r.MaxNoSlots - r.JoinedSlotCount) <= 5 * slotOption).ToList();
+        }
+
+        private void FilterByStartDate(ref List<Room> listRoom, string startdate)
+        {
+            if (string.IsNullOrWhiteSpace(startdate)) return;
+
+            listRoom = listRoom.Where(r => DateTime.ParseExact(r.StartDate, FapConstants.DateFormat, CultureInfo.InvariantCulture) ==
+                                           DateTime.ParseExact(startdate, FapConstants.DateFormat, CultureInfo.InvariantCulture)).ToList();
+        }
+
+        private void FilterByReturnDate(ref List<Room> listRoom, string returndate)
+        {
+            if (string.IsNullOrWhiteSpace(returndate)) return;
+
+            listRoom = listRoom.Where(r => DateTime.ParseExact(r.StartDate, FapConstants.DateFormat, CultureInfo.InvariantCulture).AddDays(r.LengthInDays) ==
+                                           DateTime.ParseExact(returndate, FapConstants.DateFormat, CultureInfo.InvariantCulture)).ToList();
+        }
+
+        private void FilterByTargetPlace(ref List<Room> listRoom, string targetplace)
+        {
+            if(string.IsNullOrWhiteSpace(targetplace)) return;
+
+            listRoom = listRoom.Where(r => r.DestinationLocation.ToLower().Contains(targetplace.ToLower())).ToList();
+        }
+
+        private void FilterByStartPlace(ref List<Room> listRoom, string startplace)
+        {
+            if (string.IsNullOrWhiteSpace(startplace)) return;
+            
+            listRoom = listRoom.Where(r => r.StartLocation.ToLower().Contains(startplace.ToLower())).ToList();
+        }
 
         public ActionResult RoomDetail(string id)
         {
@@ -253,6 +288,7 @@ namespace FlyAwayPlus.Controllers
             {
                 RoomName = roomName,
                 Description = roomDesc,
+                JoinedSlotCount = 0,
                 MaxNoSlots = maxNoOfSlots,
                 StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,
@@ -336,13 +372,13 @@ namespace FlyAwayPlus.Controllers
                 estimationDataInTable.Add(
                     new
                     {
-                        id          = est.EstimationId,
-                        payment     = est.Payment,
-                        price       = est.Price,
-                        creator     = creator.FirstName + " " + creator.LastName,
-                        creatorid   = creator.UserId,
-                        payer       = payer.FirstName + " " + payer.LastName,
-                        payerid     = payer.UserId,
+                        id = est.EstimationId,
+                        payment = est.Payment,
+                        price = est.Price,
+                        creator = creator.FirstName + " " + creator.LastName,
+                        creatorid = creator.UserId,
+                        payer = payer.FirstName + " " + payer.LastName,
+                        payerid = payer.UserId,
                         datecreated = est.DateCreated
                     });
             }
@@ -424,7 +460,7 @@ namespace FlyAwayPlus.Controllers
             List<Photo> newPhotos = images.Select(img => new Photo { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), Url = img }).ToList();
 
             // Insert to Database
-            GraphDatabaseHelpers.Instance.InsertPostInRoom(user, roomId, ref newPost,ref newPhotos,ref newVideo);
+            GraphDatabaseHelpers.Instance.InsertPostInRoom(user, roomId, ref newPost, ref newPhotos, ref newVideo);
 
             ViewData["userPost"] = user;
             ViewData["listPhoto"] = newPhotos;
@@ -432,12 +468,12 @@ namespace FlyAwayPlus.Controllers
             ViewData["placeName"] = room.DestinationLocation;
             ViewData["roomID"] = room.RoomId;
 
-            Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int,List<Photo>>();
+            Dictionary<int, List<Photo>> listPhotoDict = new Dictionary<int, List<Photo>>();
             Dictionary<int, List<Comment>> dictListComment = new Dictionary<int, List<Comment>>();
-            Dictionary<int, int> dictLikeCount = new Dictionary<int,int>();
-            Dictionary<int, int> dictDislikeCount = new Dictionary<int,int>();
-            Dictionary<int, int> dictUserCommentCount = new Dictionary<int,int>();
-            Dictionary<int, Video> listVideoDict = new Dictionary<int,Video>();
+            Dictionary<int, int> dictLikeCount = new Dictionary<int, int>();
+            Dictionary<int, int> dictDislikeCount = new Dictionary<int, int>();
+            Dictionary<int, int> dictUserCommentCount = new Dictionary<int, int>();
+            Dictionary<int, Video> listVideoDict = new Dictionary<int, Video>();
             dictLikeCount.Add(newPost.PostId, 0);
             dictDislikeCount.Add(newPost.PostId, 0);
             dictUserCommentCount.Add(newPost.PostId, 0);

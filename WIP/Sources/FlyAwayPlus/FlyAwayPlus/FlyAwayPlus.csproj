@@ -349,7 +349,9 @@
     <Content Include="Scripts\markerWithLabel.js" />
     <Content Include="Scripts\md5.js" />
     <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\player_api.js" />
     <Content Include="Scripts\sweetalert.min.js" />
+    <Content Include="Scripts\www-widgetapi.js" />
     <Content Include="Scripts\youtube-upload.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />
     <Content Include="Scripts\jquery.form.min.js" />
