@@ -18,6 +18,7 @@
 
         public static string UserActive = "active";
         public static string UserLock = "lock";
+        public static string PostLock = "lock";
 
         public static string Friendship = "friend";
         public static string RequestFriend = "request";

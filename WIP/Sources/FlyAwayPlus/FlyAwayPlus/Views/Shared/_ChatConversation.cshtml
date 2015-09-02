@@ -140,7 +140,15 @@
                         $("#idChatConversationFriend" + friendId).find(".headWrapper").trigger("click");
                     }
                     $("#idMessageList" + friendId).append(content);
-                    $("#idMessageList" + friendId).closest("ul").scrollTop($("#idMessageList" + friendId).closest("ul").scrollTopMax);
+
+                    var ul = $("#idMessageList" + friendId).closest("ul");
+
+                    if ($(ul).scrollTopMax == undefined || $(ul).scrollTopMax == null || $(ul).scrollTopMax < 0) {
+                        var height = $(ul).find(".messagesContent").first().height();
+                        $(ul).scrollTop(height);
+                    } else {
+                        $(ul).scrollTop($(ul).scrollTopMax);
+                    }
                 }
             }
             catch (e) {
@@ -399,6 +407,15 @@
 
                     $(selector).append(tmp);
 
+                    var ul = $(selector).closest("ul");
+
+                    if ($(ul).scrollTopMax == undefined || $(ul).scrollTopMax == null || $(ul).scrollTopMax < 0) {
+                        var height = $(ul).find(".messagesContent").first().height();
+                        $(ul).scrollTop(height);
+                    } else {
+                        $(ul).scrollTop($(ul).scrollTopMax);
+                    }
+
                     $.connection.hub.start().done(function () {
                         //getChatMessage
                         chatHubProxy.server.sendChatMessage(tmp.split("isOwnMessage").join(""), parseInt('@Session["UserId"]'), friendId);
@@ -444,7 +461,14 @@
 
                             $(selector).append(tmp);
 
-                            $(selector).closest("ul").scrollTop($(selector).closest("ul").scrollTopMax);
+                            var ul = $(selector).closest("ul");
+
+                            if ($(ul).scrollTopMax == undefined || $(ul).scrollTopMax == null || $(ul).scrollTopMax < 0) {
+                                var height = $(ul).find(".messagesContent").first().height();
+                                $(ul).scrollTop(height);
+                            } else {
+                                $(ul).scrollTop($(ul).scrollTopMax);
+                            }
                         }
                     }
                 },

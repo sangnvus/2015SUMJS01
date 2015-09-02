@@ -44,7 +44,7 @@ namespace FlyAwayPlus.Controllers
             try
             {
                 post = GraphDatabaseHelpers.Instance.FindPost(id, user);
-                if (post == null)
+                if (post == null || post.Privacy == FapConstants.PostLock)
                 {
                     return RedirectToAction("Index", "Home");
                 }

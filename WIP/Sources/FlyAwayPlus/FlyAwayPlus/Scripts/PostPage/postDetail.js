@@ -433,6 +433,12 @@ $(document).ready(function () {
 
     commentHubProxy.client.addNewComment = function (content) {
         $(".comment-list").append(content);
+        $(".comment-list .comment-detail").last().find(".commenter-delete").remove();
+        $(".comment-list .comment-detail").last().find(".commenter-edit").remove();
+
+        var text = $(".comment-stats").find("span").text().split(" ");
+        text[0] = parseInt(text[0]) + 1;
+        $(".comment-stats").find("span").text(text.join(" "));
         postDetailModule.deleteCommentEvent();
         postDetailModule.editCommentEvent();
     }

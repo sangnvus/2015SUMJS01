@@ -2185,7 +2185,7 @@ namespace FlyAwayPlus.Helpers
             return listPlace;
         }
 
-        public List<Room> SearchRoomByKeyword(string keyword)
+        public List<Room> SearchRoomByKeyword(string keyword = "")
         {
             List<Room> listRoom;
             /*
