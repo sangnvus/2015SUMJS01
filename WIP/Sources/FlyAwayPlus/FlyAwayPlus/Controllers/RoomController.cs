@@ -273,9 +273,6 @@ namespace FlyAwayPlus.Controllers
 
         public JsonResult AddGeneralPlan(string workportion, string note, string assignee, string startdate)
         {
-            // TODO: Get list of assignees.
-            assignee = "10000;10001";
-
             var assignerId = int.Parse(@Session["UserId"] + string.Empty);
             int roomid = (int)Session["roomID"];
             List<int> assigneesInt = assignee.Split(';').Select(int.Parse).ToList();
@@ -294,11 +291,8 @@ namespace FlyAwayPlus.Controllers
             return Json(assigneesInt.Select(a => GraphDatabaseHelpers.Instance.FindUser(a)));
         }
 
-        public JsonResult AddEstimation(string payment, double price, int payer, string datecreated)
+        public JsonResult AddEstimation(string payment, double price, int payerid, string datecreated)
         {
-            // TODO: Get list of payer.
-            var payerid = 1;
-
             var creatorId = int.Parse(Session["UserId"] + string.Empty);
             int roomid = int.Parse(Session["roomID"] + string.Empty);
 
@@ -312,11 +306,8 @@ namespace FlyAwayPlus.Controllers
             return Json(GraphDatabaseHelpers.Instance.InsertEstimation(newEstimation, roomid, creatorId, payerid));
         }
 
-        public JsonResult EditEstimation(int id, string payment, double price, int payer)
+        public JsonResult EditEstimation(int id, string payment, double price, int payerid)
         {
-            // TODO: Get list of payer.
-            var payerid = 1;
-
             var newEstimation = new Estimation
             {
                 EstimationId = id,

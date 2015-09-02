@@ -24,35 +24,38 @@
     string btnDislikeIconClass = isDislikeDict[post.PostId] ? "interacted fa-thumbs-down" : "";
 
     <div class="white-panel">
-        <div class="dark-wrapper">
-            @foreach (var p in photo[post.PostId])
+    <div class="dark-wrapper">
+        @if (photo[post.PostId] != null && photo.Any())
+        {
+            foreach (var p in photo[post.PostId])
             {
                 <img src="@(p.Url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.Url" alt="@p.Url">
             }
+        }
 
-            @if (@video[post.PostId] != null)
-            {
-                <div class="video-overlay">
-                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.PostId].Path?enablejsapi=1&wmode=opaque">
-                        <img src="http://img.youtube.com/vi/@video[post.PostId].Path/0.jpg" alt="@video[post.PostId]">
-                        <span class="video-thumbnail-button"></span>
-                    </a>
-                </div>
-            }
-            <ul class="post-actions" style="padding-left: 0px;">
-                <!--
+        @if (@video[post.PostId] != null)
+        {
+            <div class="video-overlay">
+                <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.PostId].Path?enablejsapi=1&wmode=opaque">
+                    <img src="http://img.youtube.com/vi/@video[post.PostId].Path/0.jpg" alt="@video[post.PostId]">
+                    <span class="video-thumbnail-button"></span>
+                </a>
+            </div>
+        }
+        <ul class="post-actions" style="padding-left: 0px;">
+            <!--
                 <li>
                     <a href="javascript:void(0)" role="@post.PostId" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
                 </li>
                 -->
-                <li style="width:50%">
-                    <a href="javascript:void(0)" role="@post.PostId" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
-                </li>
-                <li style="width:50%">
-                    <a href="javascript:void(0)" role="@post.PostId" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
-                </li>
-            </ul>
-        </div>
+            <li style="width:50%">
+                <a href="javascript:void(0)" role="@post.PostId" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+            </li>
+            <li style="width:50%">
+                <a href="javascript:void(0)" role="@post.PostId" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+            </li>
+        </ul>
+    </div>
         <div class="panel-content-wrapper">
             <h1>
                 <a href="/Post/Index/@post.PostId">

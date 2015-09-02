@@ -40,7 +40,7 @@
             </div>
             <div class="post-content">
                 <div class="am-container" id="am-container-@Model.PostId">
-                    @if (listPhoto != null)
+                    @if (listPhoto != null && listPhoto.Any())
                     {
                         foreach (var photo in listPhoto)
                         {

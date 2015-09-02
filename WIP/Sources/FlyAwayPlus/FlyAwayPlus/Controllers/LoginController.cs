@@ -34,8 +34,8 @@ namespace FlyAwayPlus.Controllers
                 user.CoverUrl = "";
 
                 // select from DB
-                User newUser = GraphDatabaseHelpers.Instance.GetUser(user.TypeId, user.Email);
-
+                User newUser = GraphDatabaseHelpers.Instance.GetUser(user.TypeId, user.Email) ??
+                               GraphDatabaseHelpers.Instance.FindUserByEmail(user.Email);
                 /*
                  *  Insert into Graph DB 
                  */
@@ -55,7 +55,6 @@ namespace FlyAwayPlus.Controllers
                 }
                 else
                 {
-                    // TODO
                     Session["registerMessageError"] = "User with the email you provided is already exist.";
                     return RedirectToAction("Index", "Home");
                 }

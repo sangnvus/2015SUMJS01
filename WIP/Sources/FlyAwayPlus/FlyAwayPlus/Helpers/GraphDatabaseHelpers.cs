@@ -607,6 +607,15 @@ namespace FlyAwayPlus.Helpers
             return user;
         }
 
+        public User FindUserByEmail(string email)
+        {
+            _client.Connect();
+            var user = _client.Cypher.OptionalMatch("(u:user {Email: '" + email + "'})")
+                .Return<User>("u")
+                .Results.FirstOrDefault();
+            return user;
+        }
+
         public User GetUser(int userId)
         {
             _client.Connect();

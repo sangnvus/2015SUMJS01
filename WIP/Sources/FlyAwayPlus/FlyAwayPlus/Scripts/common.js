@@ -131,22 +131,31 @@
         return value;
     };
 
-    var createTagFriendList = function (keyword) {
-        var list = [];
+    var createTagFriendList = function (keyword, list) {
+        var listTagging = [];
         if (keyword == "") {
-            return _listFriend;
+            return list ? list : _listFriend;
         }
-        for (var index = 0; index < _listFriend.length; index++) {
-            var username = _listFriend[index]["FirstName"].toUpperCase() + " " + _listFriend[index]["LastName"].toUpperCase();
-            if (username.indexOf(keyword.toUpperCase()) == 0) {
-                list.push(_listFriend[index]);
+        if (list) {
+            for (var index = 0; index < list.length; index++) {
+                var username = list[index]["FirstName"].toUpperCase() + " " + list[index]["LastName"].toUpperCase();
+                if (username.indexOf(keyword.toUpperCase()) == 0) {
+                    listTagging.push(list[index]);
+                }
+            }
+        } else {
+            for (var index = 0; index < _listFriend.length; index++) {
+                var username = _listFriend[index]["FirstName"].toUpperCase() + " " + _listFriend[index]["LastName"].toUpperCase();
+                if (username.indexOf(keyword.toUpperCase()) == 0) {
+                    listTagging.push(_listFriend[index]);
+                }
             }
         }
-        return list;
+        return listTagging;
     };
 
-    var createTagFriendUI = function (keyword, selector) {
-        var listFriend = createTagFriendList(keyword);
+    var createTagFriendUI = function (keyword, selector, list) {
+        var listFriend = createTagFriendList(keyword, list);
         var tmp = "";
         $("#id-tag-friend-list").html("");
 
@@ -197,12 +206,12 @@
         }
     };
 
-    var handleTagging = function (evt, selector) {
+    var handleTagging = function (evt, selector, list) {
         if (evt.keyCode == 50 && evt.shiftKey) {
             // input @ character
             if (_isTagging == false) {
                 _isTagging = true;
-                createTagFriendUI("", selector);
+                createTagFriendUI("", selector, list);
             }
         }
         else if (evt.keyCode == 8) {
@@ -214,14 +223,14 @@
                 }
                 else {
                     var keyword = $(selector).val().substring($(selector).val().lastIndexOf("@") + 1, $(selector).val().length - 1);
-                    createTagFriendUI(keyword, selector);
+                    createTagFriendUI(keyword, selector, list);
                 }
             }
         }
         else {
             if (_isTagging == true) {
                 var keyword = $(selector).val().substring($(selector).val().lastIndexOf("@") + 1, $(selector).val().length) + String.fromCharCode((96 <= evt.keyCode && evt.keyCode <= 105) ? evt.keyCode - 48 : evt.keyCode);
-                createTagFriendUI(keyword, selector);
+                createTagFriendUI(keyword, selector, list);
             }
         }
     };
