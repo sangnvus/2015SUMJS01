@@ -28,7 +28,7 @@
             <input type="file" class="cropit-image-input hidden" />
         </div>
     </figure>
-    <figure class="profile-picture" style="background-image: url('@Model.Avatar')">
+    <figure class="profile-picture" style="background-image: url('@Model.Avatar?@DateTime.Now.TimeOfDay.TotalMilliseconds')">
         @if (Model.UserId == userSession.UserId)
         {
             <button class="btn btn-primary hidden"
@@ -535,7 +535,7 @@ else
         // Edit cover.
         $('#image-cropper').cropit({
             imageState: {
-                src: '@(string.IsNullOrWhiteSpace(userSession.CoverUrl) ? "/Images/background/nhatrang.jpg" : userSession.CoverUrl)'
+                src: '@(string.IsNullOrWhiteSpace(userSession.CoverUrl) ? "/Images/background/nhatrang.jpg" : userSession.CoverUrl + "?" + @DateTime.Now.TimeOfDay.TotalMilliseconds)'
             },
             onImageError: function () {
                 swal("Oops...", "An error occured. Please try again or contact admin for help.", "error");

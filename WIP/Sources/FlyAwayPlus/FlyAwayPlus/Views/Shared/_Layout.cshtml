@@ -79,7 +79,7 @@
                         <li style="height: 53px">
                             <a data-toggle="dropdown" class="dropdown-toggle interact-item remove-background">
                                 <img id="id-avatar-current-user"
-                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"].ToString())"
+                                     src="@(string.IsNullOrEmpty(Session["userAva"] + string.Empty) ? "/Images/UIHelper/default-avatar.jpg" : @Session["userAva"] + "?" + DateTime.Now.TimeOfDay.TotalMilliseconds)"
                                      alt="@Session["username"]"
                                      class="avatar" />
                                 <b class="caret"></b>
