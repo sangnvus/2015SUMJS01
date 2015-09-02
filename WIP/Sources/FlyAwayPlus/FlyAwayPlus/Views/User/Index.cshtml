@@ -237,7 +237,7 @@
                                                             <input name="FirstName" style="width: 90%; float:left;" type="text" value="@Model.FirstName" class="form-control" placeholder="First Name" />
                                                         </div>
                                                         <div class="cls-error-message" style="width:100%; float:left; display:none">
-                                                            <p style="color:red">First Name is required</p>
+                                                            <p style="color:red">First name is required!</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
                                                             <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
@@ -304,6 +304,9 @@
                                                     <div class="cls-edit-info" style="width:100%; margin-top:5px; display: none;">
                                                         <div style="width:100%; float:left;">
                                                             <input name="DateOfBirth" style="width: 90%; float:left;" type="text" value="@Model.DateOfBirth" class="form-control edit-dob" placeholder="DOB" />
+                                                        </div>
+                                                        <div class="cls-error-message" style="width:100%; float:left; display:none">
+                                                            <p style="color:red">Date of birth is format YYYY-MM-DD</p>
                                                         </div>
                                                         <div style="width:100%; margin-top: 5px; float:left;">
                                                             <a href="javascript:void(0)" class="btn btn-primary cls-edit-ok" style="margin-left: 20%; width: 70px;">OK <i class="glyphicon"></i></a>
@@ -525,7 +528,7 @@ else
         </div>
     </div>
 }
-
+@Scripts.Render("~/bundles/md5")
 @Scripts.Render("~/bundles/datepicker")
 
 <script>
@@ -705,7 +708,7 @@ else
                     return;
                 }
 
-                $("#id-password").val(password);
+                $("#id-password").val(hex_md5(password));
                 $(this).closest(".cls-edit-info").find("input").text("").val("");
             }
             else {
@@ -713,10 +716,42 @@ else
                 var input = $(this).closest(".cls-edit-info").find("input");
                 var value = $(input).val();
 
-                if(($(input).attr("name") == "phoneNumber" && isNaN(value)) || (value.trim() == "" && $(input).attr("name") != "phoneNumber")) {
+                if(($(input).attr("name") == "PhoneNumber" && isNaN(value)) || (value.trim() == "" && $(input).attr("name") != "phoneNumber")) {
                     $(this).closest(".cls-edit-info").find(".cls-error-message").show();
                     return;
                 }
+                if (($(input).attr("name") == "DateOfBirth")) {
+                    if (!commonModule.isDate(value)) {
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                        return;
+                    }
+                }
+                if (($(input).attr("name") == "FirstName")) {
+                    if(value.trim().length == 0) {
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("First name is required!");
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                        return;
+                    }
+                    else if (value.length > 50) {
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("First name must not greater than 50 characters!");
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                        return;
+                    }
+                }
+                if (($(input).attr("name") == "LastName")) {
+                    if(value.trim().length == 0) {
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Last name is required!");
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                        return;
+                    }
+                    else if (value.length > 50) {
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").find("p").text("Last name must not greater than 50 characters!");
+                        $(this).closest(".cls-edit-info").find(".cls-error-message").show();
+                        return;
+                    }
+                }
+
+
                 $(this).closest(".cls-edit-info").find(".cls-error-message").hide();
                 $(this).closest(".form-group").find(".cls-display-info").find("b").text(value);
             }
@@ -881,12 +916,12 @@ else
 
         var editProfileAjax = function (selector) {
             var controller = "/User/EditProfile";
-            var firstName = $(selector).find("input[name='firstName']").closest(".form-group").find("b").text();
-            var lastName = $(selector).find("input[name='lastName']").closest(".form-group").find("b").text();
-            var address = $(selector).find("input[name='address']").closest(".form-group").find("b").text();
-            var gender = $(selector).find("input[name='gender']:checked").val();
-            var phoneNumber = $(selector).find("input[name='phoneNumber']").closest(".form-group").find("b").text();
-            var dateOfBirth = $(selector).find("input[name='dateOfBirth']").closest(".form-group").find("b").text();
+            var firstName = $(selector).find("input[name='FirstName']").closest(".form-group").find("b").text();
+            var lastName = $(selector).find("input[name='LastName']").closest(".form-group").find("b").text();
+            var address = $(selector).find("input[name='Address']").closest(".form-group").find("b").text();
+            var gender = $(selector).find("input[name='Gender']:checked").val();
+            var phoneNumber = $(selector).find("input[name='PhoneNumber']").closest(".form-group").find("b").text();
+            var dateOfBirth = $(selector).find("input[name='DateOfBirth']").closest(".form-group").find("b").text();
             var password = $("#id-password").val();
 
             if (address.split("Please input").length > 1) {

@@ -1,11 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using FlyAwayPlus.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Configuration;
 
 namespace FlyAwayPlus.Helpers
 {
@@ -14,9 +9,11 @@ namespace FlyAwayPlus.Helpers
         private const string SenderId = "flyawayplus.system@gmail.com";
         private const string SenderPassword = "doan2015";
         private readonly SmtpClient _smtp;
+        private readonly MailMessage _mail;
 
         private MailHelpers()
         {
+            _mail = new MailMessage();
             _smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com", // smtp server address here…
@@ -26,16 +23,23 @@ namespace FlyAwayPlus.Helpers
                 Credentials = new NetworkCredential(SenderId, SenderPassword),
                 Timeout = 30000,
             };
+            _mail.From = new MailAddress(SenderId);
+            _mail.IsBodyHtml = true;
         }
 
         public void SendMailWelcome(string email, string firstName, string lastName)
         {
             try
             {
-                var message = new MailMessage(SenderId, email, "Getting started on FlyAwayPlus",
-                    "Welcome to FlyAwayPlus, " + firstName + " " + lastName + "!" + "\nJoin us now at: http://flyaway.ga");
-                _smtp.Send(message);
-
+                _mail.To.Add(email);
+                _mail.Subject = "An account has been created for you";
+                _mail.Body = "Welcome " + firstName + " " + lastName + " to FlyAwayPlus. " +
+                            "<br/> You'll be excited to know a user account was just created for you at <a href='http://flyaway.ga/'>FlyAwayPlus website</a>." +
+                            "<br/> <br/> Get Started Now" +
+                            "<br/> <br/> If you have any technical difficulties,  just click the Contact Us link at the bottom of the Help page to contact your Program Administrator to get additional support." +
+                            "<br/> If you have any questions, please mail us at: <a href='mailto:flyawayplus.system@gmail.com' target='_top'>flyawayplus.system@gmail.com</a> " +
+                            "<br/> <br/> Thank you, <br/> <a href='http://flyaway.ga/'>FAP - FlyAwayPlus</a>";
+                _smtp.Send(_mail);
             }
             catch (Exception ex)
             {
@@ -44,14 +48,20 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public void SendMailWarningReportPost(String url, String email)
+        public void SendMailWarningReportPost(String url, String email, int userReportedId)
         {
             try
             {
-                var message = new MailMessage(SenderId, email, "Report post",
-                    "Your post is reported\nLink: "+url);
-                _smtp.Send(message);
-
+                var user = GraphDatabaseHelpers.Instance.FindUser(userReportedId);
+                _mail.To.Add(email);
+                _mail.Subject = "Your post at FlyAwayPlus has been reported";
+                _mail.Body = "Hello " + user.FirstName + " " + user.LastName + "," +
+                            "<br/> We are administrator of <a href='http://flyaway.ga/'>FlyAwayPlus website</a>." +
+                            "<br/> <br/> We would like to inform you that" +
+                            "<br/> <br/> Your post at <a href='" + url + "'>this</a> has been reported by another user." +
+                            "<br/> If you have any questions, please mail us at: <a href='mailto:flyawayplus.system@gmail.com' target='_top'>flyawayplus.system@gmail.com</a> " +
+                            "<br/> <br/> Thank you, <br/> <a href='http://flyaway.ga/'>FAP - FlyAwayPlus</a>";
+                _smtp.Send(_mail);
             }
             catch (Exception ex)
             {
@@ -60,14 +70,20 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public void SendMailWarningReportUser(string email)
+        public void SendMailWarningReportUser(string email, int userReportedId)
         {
             try
             {
-                var message = new MailMessage(SenderId, email, "Report account",
-                    "Your account is reported");
-                _smtp.Send(message);
-
+                var user = GraphDatabaseHelpers.Instance.FindUser(userReportedId);
+                _mail.To.Add(email);
+                _mail.Subject = "Your account at FlyAwayPlus has been reported";
+                _mail.Body = "Hello " + user.FirstName + " " + user.LastName + "," +
+                            "<br/> We are administrator of <a href='http://flyaway.ga/'>FlyAwayPlus website</a>." +
+                            "<br/> <br/> We would like to inform you that" +
+                            "<br/> <br/> Your account has been reported by another user." +
+                            "<br/> If you have any questions, please reply this email." +
+                            "<br/> <br/> Thank you, <br/> <a href='http://flyaway.ga/'>FAP - FlyAwayPlus</a>";
+                _smtp.Send(_mail);
             }
             catch (Exception ex)
             {
