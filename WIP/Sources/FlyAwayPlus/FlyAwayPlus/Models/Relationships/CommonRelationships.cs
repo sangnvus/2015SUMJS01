@@ -70,7 +70,8 @@ namespace FlyAwayPlus.Models.Relationships
         public static readonly string TypeKey = "LIKE";
         public string DateCreated { get; set; }
         public int ActivityId { get; set; }
-        /*public bool isSeen { get; set; }*/
+
+        public int IsViewed { get; set; }
 
         public UserLikePostRelationship(NodeReference targetNode)
             : base(targetNode)
@@ -117,6 +118,7 @@ namespace FlyAwayPlus.Models.Relationships
         public static readonly string TypeKey = "DISLIKE";
         public string DateCreated { get; set; }
         public int ActivityId { get; set; }
+        public int IsViewed { get; set; }
         public UserDislikePostRelationship(NodeReference targetNode)
             : base(targetNode)
         {

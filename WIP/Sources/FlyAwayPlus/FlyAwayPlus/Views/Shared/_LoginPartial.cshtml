@@ -60,7 +60,7 @@
                                         @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", id = "id_login_email", placeholder = "Email Address", tabindex = "1", type = "email" } })
                                         @Html.ValidationMessageFor(model => model.Email, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" style="margin-top:5px;">
                                         @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", id = "id_login_password", placeholder = "Password", tabindex = "2", type = "password" } })
                                         @Html.ValidationMessageFor(model => model.Password, String.Empty, new { @class = "help-inline", @style = "color:red" })
                                     </div>

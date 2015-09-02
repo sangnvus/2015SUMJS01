@@ -61,13 +61,14 @@
                         <li class="notification-li">
                             <a href="javascript:void(0)" class="remove-background" id="btn-notification">
                                 <i class="fa fa-fw fa-bell interact-item interact-button"></i>
-                                <span class="notification-count badge badge-danger"></span>
+                                <span style="display:none;" class="notification-count badge badge-danger">0</span>
                             </a>
 
                             <div class="notification-container">
-                                <div class="notification-title">
+                                <div class="notification-title" style="width:50% !important; float:left;">
                                     Notifications
                                 </div>
+                                <div style="width:45%; float:right"><a id="id-clear-all-noti-btn" href="javascript:void(0)" class="pull-right" style="margin: 7px;">Mark all as read</a></div>
                                 <hr />
                                 <div id="idNotification" class="notifications notifications-body" style="min-height:200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding-top: 5px!important;">
                                 </div>
@@ -136,16 +137,66 @@
         @RenderSection("scripts", required: false)
         @Scripts.Render("~/bundles/js")
         <script src="/signalr/hubs"></script>
-        <script src="http://www.youtube.com/player_api"></script>
 
         <link href="~/Content/tooltipster.css" rel="stylesheet" />
         <script src="~/Scripts/jquery.tooltipster.js"></script>
         <script>
+            var notSeenActivityEvent = function() {
+                $(".cls-not-view").each(function () {
+                    $(this).click(function(evt) {
+                        if (evt.handled !== true) {
+                            evt.handled = true;
+                            //$(this).removeClass("cls-not-view").addClass("cls-view");
+                            var value = $(this).closest(".divNotification").find("input");
+
+                            var form = $(document.createElement('form'));
+                            $(form).attr("action", "/Post/Index/" + value[0].value);
+                            $(form).attr("method", "POST");
+                            var inputuserId = $("<input>").attr("type", "hidden").attr("name", "userId").val(parseInt(value[1].value));
+                            $(form).append($(inputuserId));
+                            var inputActivity = $("<input>").attr("type", "hidden").attr("name", "activity").val(value[2].value);
+                            $(form).append($(inputActivity));
+                            $(form).appendTo(document.body);
+                            $(form).submit();
+                        }
+                        return false;
+                    });
+                });
+            };
             $(function () {
                 $(".se-pre-con").fadeOut("slow");
                 // Hover card on username.
                 initializeTooltip();
 
+                // clear all notification
+                $("#id-clear-all-noti-btn").click(function(evt) {
+                    if (evt.handled !== true) {
+                        evt.handled = true;
+
+                        $(".cls-not-view").each(function () {
+                            $(this).addClass("cls-view").removeClass("cls-not-view");
+                            $(this).closest(".divNotification").css("background-color", "white");
+                            $(".notification-count").text("0").hide();
+                            var value = $(this).closest(".divNotification").find("input");
+                            var data = {
+                                postId: parseInt(value[0].value),
+                                userId: parseInt(value[1].value),
+                                activity: value[2].value
+                            };
+
+                            $.ajax({
+                                type: "POST",
+                                async: "false",
+                                url: "/User/ViewNotification/",
+                                data: data,
+                                success: function(success) {
+                                    //console.log(success);
+                                }
+                            });
+                        });
+                        $(this).off("click");
+                    }
+                })
                 $(document).on('click', '.add-friend-btn', function () {
                     var currentUserId = $('#curent-user-id').attr('href');
                     currentUserId = currentUserId.substr(12, currentUserId.length - 12);
@@ -177,14 +228,15 @@
                 });
                 $("#btn-notification").click(function () {
                     $(".notification-container").fadeToggle(300);
-                    $(".notification-count").fadeOut("slow");
+                    $(".friend-request-container").hide();
+                    //$(".notification-count").fadeOut("slow");
                     return false;
                 });
 
                 $("#id-search-input").keydown(function (evt) {
                     if (evt.keyCode == 13) {
                         if ($(this).val().trim().length != 0) {
-                            //alert("y");
+                            //alert("y");notification-title
                             $(this).val($(this).val().trim());
                             $(this).closest("form").submit();
                         }
@@ -200,17 +252,77 @@
                 $("#id-btn-friend-request").click(function () {
                     $(".friend-request-container").fadeToggle(300);
                     $(".friend-request-count").fadeOut("slow");
+
+                    $(".notification-container").hide();
                     return false;
                 });
 
-                $(document).click(function (e) {
-                    $(".notification-container").hide();
-                    $(".friend-request-container").hide();
+                $(document).click(function (event) {
+                    if ($(event.target).parents('.notification-container').length == 0) {
+                        $(".notification-container").hide();
+                    }
+                    if ($(event.target).parents('.friend-request-container').length == 0) {
+                        $(".friend-request-container").hide();
+                    }
                 });
 
                 var lastActivityId = 0;
                 var notificationHubProxy = notificationHubProxy || $.connection.notificationHub;
                 var friendHubProxy = friendHubProxy || $.connection.friendHub;
+
+                notificationHubProxy.client.receiveNewNotification = function (content, userId) {
+                    if (parseInt(userId) == parseInt('@Session["UserId"]')) {
+                        var notification = JSON.parse(content);
+                        var notificationCount = 0;
+                        if (notification == null || notification["Post"] == null || notification["User"] == null) {
+                            return;
+                        }
+                        var tmp = "";
+                        if (notification["IsViewed"] == null || notification["IsViewed"] == 0) {
+                            tmp += "<div class='divNotification' style='width:100%; height: 65px; background-color: #F5F5F5;'>";
+                        } else {
+                            tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
+                        }
+                        tmp += "<input style='display:none' type='hidden' name='postId' value='" + notification["Post"]["PostId"] + "'/>";
+                        tmp += "<input style='display:none' type='hidden' name='userId' value='" + notification["User"]["UserId"] + "'/>";
+                        tmp += "<input style='display:none' type='hidden' name='activity' value='" + notification["Activity"] + "'/>";
+                        if (notification["IsViewed"] == null || notification["IsViewed"] == 0) {
+                            tmp += "<a href='javascript:void(0)' role='" + notification["Post"]["PostId"] + "' class='cls-not-view' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                            notificationCount++;
+                        } else {
+                            tmp += "<a href='/Post/Index/" + notification["Post"]["PostId"] + "' class='cls-view' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                        }
+                        tmp += "<div style='float:left'>";
+                        tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["User"]["Avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                        tmp += "</div>";
+
+                        if (notification["Activity"] == "COMMENTED") {
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " commented to your post</div>";
+                        }
+                        else if (notification["Activity"] == "LIKE") {
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " liked your post</div>";
+                        }
+                        else if (notification["Activity"] == "DISLIKE") {
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " disliked your post</div>";
+                        }
+                        tmp += "<div style='margin-top: 5px; color: rgb(153, 153, 153); font-size: 12px;'> " + notification["DateCreated"] + "</div>";
+                        tmp += "</a>";
+                        tmp += "</div>";
+                        tmp += "<hr />";
+                        $("#idNotification").prepend(tmp);
+                        var oldNotiCount = 0;
+                        try {
+                            oldNotiCount = parseInt($("#btn-notification").find(".notification-count").text().trim());
+                        } catch (e) {
+                        }
+                        if (oldNotiCount + notificationCount == 0) {
+                            $("#btn-notification").find(".notification-count").text("0").hide();
+                        } else {
+                            $("#btn-notification").find(".notification-count").text(oldNotiCount + notificationCount).show();
+                        }
+                    }
+                    notSeenActivityEvent();
+                }
 
                 friendHubProxy.client.receiveListFriendRequest = function (content) {
                     /*
@@ -305,10 +417,21 @@
                         if (notification == null || notification["Post"] == null || notification["User"] == null) {
                             break;
                         }
-                        notification_count++;
                         var tmp = "";
-                        tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
-                        tmp += "<a href='/Post/Index/" + notification["Post"]["PostId"] + "' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                        if (notification["IsViewed"] == null || notification["IsViewed"] == 0) {
+                            tmp += "<div class='divNotification' style='width:100%; height: 65px; background-color: #F5F5F5;'>";
+                        } else {
+                            tmp += "<div class='divNotification' style='width:100%; height: 65px;'>";
+                        }
+                        tmp += "<input style='display:none' type='hidden' name='postId' value='" + notification["Post"]["PostId"] + "'/>";
+                        tmp += "<input style='display:none' type='hidden' name='userId' value='" + notification["User"]["UserId"] + "'/>";
+                        tmp += "<input style='display:none' type='hidden' name='activity' value='" + notification["Activity"] + "'/>";
+                        if (notification["IsViewed"] == null || notification["IsViewed"] == 0) {
+                            tmp += "<a href='javascript:void(0)' role='" + notification["Post"]["PostId"] + "' class='cls-not-view' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                            notification_count++;
+                        } else {
+                            tmp += "<a href='/Post/Index/" + notification["Post"]["PostId"] + "' class='cls-view' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                        }
                         tmp += "<div style='float:left'>";
                         tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + notification["User"]["Avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
                         tmp += "</div>";
@@ -317,24 +440,29 @@
                             tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " commented to your post</div>";
                         }
                         else if (notification["Activity"] == "LIKE") {
-                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " liked to your post</div>";
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " liked your post</div>";
                         }
                         else if (notification["Activity"] == "DISLIKE") {
-                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " disliked to your post</div>";
+                            tmp += "<div>" + notification["User"]["FirstName"] + " " + notification["User"]["LastName"] + " disliked your post</div>";
                         }
-                        tmp += "<div style='margin-top:5px;'> " + notification["DateCreated"] + "</div>";
+                        tmp += "<div style='margin-top: 5px; color: rgb(153, 153, 153); font-size: 12px;'> " + notification["DateCreated"] + "</div>";
                         tmp += "</a>";
                         tmp += "</div>";
                         tmp += "<hr />";
-                        $("#idNotification").append(tmp);
+                        $("#idNotification").prepend(tmp);
                         lastActivityId = notification["LastActivityID"];
                     }
-                    if (notification_count > 0) {
-                        $("#btn-notification").find(".notification-count").text(notification_count).show();
+                    var oldNotiCount = 0;
+                    try {
+                        oldNotiCount = parseInt($("#btn-notification").find(".notification-count").text().trim());
+                    } catch (e) {
                     }
-                    else {
+                    if (oldNotiCount + notification_count == 0) {
                         $("#btn-notification").find(".notification-count").text("0").hide();
+                    } else {
+                        $("#btn-notification").find(".notification-count").text(oldNotiCount + notification_count).show();
                     }
+                    notSeenActivityEvent();
                 }
 
                 $.connection.hub.start().done(function () {

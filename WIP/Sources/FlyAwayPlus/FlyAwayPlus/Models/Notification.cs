@@ -11,6 +11,7 @@ namespace FlyAwayPlus.Models
         public String DateCreated { get; set; }
         public User User { get; set; }
         public Post Post { get; set; }
-        public Int16 LastActivityId { get; set; }
+        public Int32 LastActivityId { get; set; }
+        public int IsViewed { get; set; }
     }
 }

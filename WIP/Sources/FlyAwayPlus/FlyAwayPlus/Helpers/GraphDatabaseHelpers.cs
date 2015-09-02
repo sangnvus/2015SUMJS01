@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Web.WebPages;
 using FlyAwayPlus.Models;
 using FlyAwayPlus.Models.Relationships;
 using Neo4jClient;
@@ -563,7 +564,7 @@ namespace FlyAwayPlus.Helpers
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                _client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), ActivtyId = GetActivityIncrementId() }));
+                _client.CreateRelationship(userRef, new UserDislikePostRelationship(postRef, new { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), ActivtyId = GetActivityIncrementId(), IsViewed = FapConstants.NotViewed }));
                 return true;
             }
             return false;
@@ -580,7 +581,7 @@ namespace FlyAwayPlus.Helpers
             if (userNode != null)
             {
                 var userRef = userNode.Reference;
-                _client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), ActivtyId = GetActivityIncrementId() }));
+                _client.CreateRelationship(userRef, new UserLikePostRelationship(postRef, new { DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat), ActivtyId = GetActivityIncrementId(), IsViewed = FapConstants.NotViewed }));
                 return true;
             }
             return false;
@@ -1406,6 +1407,7 @@ namespace FlyAwayPlus.Helpers
             if (p == null || !p.Privacy.Equals("public"))
             {
                 int path = _client.Cypher.Match("(u:user {UserId:" + user.UserId + "}),(p:post { PostId: " + postId + "}), c = shortestPath((u)-[:LATEST_POST|:PREV_POST|:FRIEND*..]-(p))")
+                            .Where("p.Privacy <> 'block'")
                             .ReturnDistinct<int>("COUNT(c)")
                             .Results.Single();
                 if (path != 0)
@@ -1474,7 +1476,7 @@ namespace FlyAwayPlus.Helpers
                             ExecuteWithoutResults();
 
                 _client.Cypher.Match("(u:user{UserId:" + otherUser.UserId + "}), (p:post{PostId:" + postId + "})")
-                            .Create("(u)-[r1:COMMENTED {DateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', ActivtyId : " + GetActivityIncrementId() + "}]->(p)")
+                            .Create("(u)-[r1:COMMENTED {DateCreated: '" + DateTime.Now.ToString(FapConstants.DatetimeFormat) + "', ActivtyId : " + GetActivityIncrementId() + ", IsViewed: " + FapConstants.NotViewed + "}]->(p)")
                             .ExecuteWithoutResults();
 
                 //Client.CreateRelationship(postRef, new PostHasCommentRelationship(comRef));
@@ -1539,17 +1541,18 @@ namespace FlyAwayPlus.Helpers
                 .With("p, u")
                 .OptionalMatch("(p)<-[m:COMMENTED|:LIKE|:DISLIKE]-(u1:user)")
                 .Where("u1.UserId <> u.UserId " + limitActivity)
-                .With("m.DateCreated as dateCreated, p, u1, type(m) as activity, m.ActivtyId as lastActivityId")
-                .Return((dateCreated, u1, p, activity, lastActivityId) => new Notification
+                .With("m.DateCreated as dateCreated, p, u1, type(m) as activity, m.ActivtyId as lastActivityId, CASE m.IsViewed WHEN 1 THEN 1 ELSE 0 END as isViewed")
+                .Return((dateCreated, u1, p, activity, lastActivityId, isViewed) => new Notification
                 {
                     DateCreated = dateCreated.As<String>(),
                     Activity = activity.As<String>(),
-                    LastActivityId = lastActivityId.As<Int16>(),
+                    LastActivityId = lastActivityId.As<Int32>(),
                     User = u1.As<User>(),
-                    Post = p.As<Post>()
+                    Post = p.As<Post>(),
+                    IsViewed = isViewed.As<int>()
                 })
                 //.Return<Notification>("distinct m.DateCreated as DateCreated, u1 as user, p as post")
-                .OrderByDescending("dateCreated, lastActivityId")
+                .OrderBy("dateCreated, lastActivityId")
                 .Limit(limit)
                 .Results.ToList();
             listNotification.RemoveAll(item => item == null);
@@ -2525,6 +2528,8 @@ namespace FlyAwayPlus.Helpers
             try
             {
                 listPost = _client.Cypher.OptionalMatch("(pl:place {PlaceId:" + placeId + "})<-[:AT]-(p:post)")
+                                        .Where("p.Privacy <> 'lock' and p.Privacy <> 'private'")
+                                        .With("p")
                                         .OptionalMatch("(p)<-[:LIKE]-(ul:user)")
                                         .OptionalMatch("(p)<-[:DISLIKE]-(udl:user)")
                                         .OptionalMatch("(p)-[:LATEST_COMMENT]->(c:comment)-[PREV_COMMENT*0..]->(c1:comment)")
@@ -2845,7 +2850,7 @@ namespace FlyAwayPlus.Helpers
             return room;
         }
 
-        public bool InsertPostInRoom(User user, int roomId,ref Post post,ref List<Photo> photos,ref Video video)
+        public bool InsertPostInRoom(User user, int roomId, ref Post post, ref List<Photo> photos, ref Video video)
         {
             bool success = true;
             try
@@ -2932,6 +2937,47 @@ namespace FlyAwayPlus.Helpers
                 success = false;
             }
 
+            return success;
+        }
+
+        public Notification FindNotificationByUser(string activity, int userId, int postId)
+        {
+            /*
+                * Query:
+                * Find:
+                *     - Search limit post with privacy public
+                * 
+            */
+
+            _client.Connect();
+            var notification = _client.Cypher.OptionalMatch("(u:user{UserId:" + userId + "})-[r:" + activity + "]->(p:post{PostId:" + postId + "})")
+                                            .With("r.DateCreated as dateCreated, r.ActivityId as activityId")
+                                            .Return((dateCreated, activityId) => new Notification
+                                            {
+                                                DateCreated = dateCreated.As<String>(),
+                                                //Activity = activity.As<String>(),
+                                                LastActivityId = activityId.As<Int32>()
+                                            })
+                                            .Results.FirstOrDefault();
+            notification.Activity = activity;
+            notification.IsViewed = FapConstants.NotViewed;
+            return notification;
+        }
+        public bool ViewNotification(int postId, int userId, string activity)
+        {
+            bool success = true;
+            try
+            {
+                _client.Connect();
+                _client.Cypher.OptionalMatch("(u:user{UserId:" + userId + "})-[r:" + activity + "]->(p:post{PostId:" + postId + "})")
+                                        .Set("r.IsViewed = " + FapConstants.Viewed)
+                                        .ExecuteWithoutResults();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                success = false;
+            }
             return success;
         }
     }

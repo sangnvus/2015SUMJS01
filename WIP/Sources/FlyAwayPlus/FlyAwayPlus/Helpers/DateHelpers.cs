@@ -15,43 +15,6 @@ namespace FlyAwayPlus.Helpers
                                             "Sep", "Oct", "Nov", "Dec"
                                         };
 
-        public List<String> ToTimeLineDate(List<Post> listPost, Dictionary<String, List<Post>> listPostDict)
-        {
-            List<String> listDate = new List<string>();
-            DateTime date = new DateTime();
-            int year, month;
-            string timeline = "";
-
-            foreach (var post in listPost)
-            {
-                date = DateTime.Parse(post.DateCreated);
-                year = date.Year;
-                month = date.Month;
-
-                timeline = _listMonth[month - 1] + " " + year;
-
-                List<Post> listPostTimeline = null;
-
-                if (!listPostDict.ContainsKey(timeline))
-                {
-                    listPostTimeline = new List<Post>();
-                    listPostTimeline.Add(post);
-
-                    listDate.Add(timeline);
-                    listPostDict.Add(timeline, listPostTimeline);
-                }
-                else
-                {
-                    listPostTimeline = listPostDict[timeline];
-                    listPostTimeline.Add(post);
-
-                    listPostDict[timeline] = listPostTimeline;
-                }
-            }
-
-            return listDate.ToList();
-        }
-
         public string DisplayRealtime(string time)
         {
             string result = "";
@@ -66,11 +29,11 @@ namespace FlyAwayPlus.Helpers
             }
             else if (date.AddHours(1).CompareTo(now) > 0)
             {
-                result = String.Format("{0} minutes ago", diffMinutes < 0 ? (diffMinutes + 60) : diffMinutes);
+                result = String.Format("{0} minutes ago", diffMinutes <= 0 ? (diffMinutes + 60) : diffMinutes);
             }
             else if (date.AddDays(1).CompareTo(now) > 0)
             {
-                result = String.Format("{0} hours ago", diffHours < 0 ? (diffHours + 24) : diffHours);
+                result = String.Format("{0} hours ago", diffHours <= 0 ? (diffHours + 24) : diffHours);
             }
             else if (date.AddDays(1).Year == now.Year && date.AddDays(1).Month == now.Month && date.AddDays(1).Day == now.Day)
             {

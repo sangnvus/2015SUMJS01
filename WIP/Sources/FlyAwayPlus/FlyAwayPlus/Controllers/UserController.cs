@@ -478,5 +478,11 @@ namespace FlyAwayPlus.Controllers
 
             return "/Images/UserUpload/UserAvatar/" + newAvaName;
         }
+
+        public JsonResult ViewNotification(int postId, int userId, string activity)
+        {
+            bool success = GraphDatabaseHelpers.Instance.ViewNotification(postId, userId, activity);
+            return Json(success);
+        }
     }
 }

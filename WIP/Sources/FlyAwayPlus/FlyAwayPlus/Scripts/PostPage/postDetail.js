@@ -1,6 +1,7 @@
 ﻿var postDetailModule = (function () {
     var isTagging = false;
     var _listFriend = [];
+    var userId = 0;
 
     var likePost = function () {
         $(".btn-like").click(function (evt) {
@@ -80,6 +81,9 @@
         }
 
         commonModule.callAjax(controller, data, null);
+        $.connection.hub.start().done(function () {
+            sendNewNotification("LIKE");
+        });
     };
 
     var dislikeAjax = function (post) {
@@ -90,6 +94,9 @@
         }
 
         commonModule.callAjax(controller, data, null);
+        $.connection.hub.start().done(function () {
+            sendNewNotification("DISLIKE");
+        });
     };
 
     var editCommentAjax = function (comment) {
@@ -214,6 +221,17 @@
             else {
                 if ($("#idTextareaComment").val() != "") {
                     commentAjax($("#idTextareaComment"));
+                    try {
+                        var commentCountArea = $("#idTextareaComment").closest(".comment-area").find(".comment-stats").find("span");
+                        var list = $(commentCountArea).text().split(" ");
+                        list[0] = parseInt(list[0]) + 1;
+                        $(commentCountArea).text(list.join(" "));
+                    } catch (e) {
+                        console.log("Post Detail: Add comment " + e.message);
+                    }
+                    $.connection.hub.start().done(function () {
+                        sendNewNotification("COMMENTED");
+                    });
                 }
             }
             evt.preventDefault();
@@ -247,6 +265,7 @@
     };
 
     var editCommentEvent = function (selector) {
+        // aaaa
         var checkOutFocus = false;
 
         var obj = $(".commenter-edit");
@@ -295,11 +314,20 @@
                 closeOnConfirm: false
             }, function () {
                 if (evt.handled !== true) { // This will prevent event triggering more then once
-                    var commentId = cmtDeleteSouce.attr("role");
-                    cmtDeleteSouce.closest(".comment-detail").remove();
-                    postDetailModule.deleteComment(commentId);
-
                     evt.handled = true;
+                    var commentId = cmtDeleteSouce.attr("role");
+                    var commentDetailArea = cmtDeleteSouce.closest(".comment-detail");
+                    var commentCountArea = $(commentDetailArea).closest(".comment-area").find(".comment-stats").find("span");
+                    commentDetailArea.remove();
+
+                    postDetailModule.deleteComment(commentId);
+                    try {
+                        var list = $(commentCountArea).text().split(" ");
+                        list[0] = parseInt(list[0]) - 1;
+                        $(commentCountArea).text(list.join(" "));
+                    } catch (e) {
+                        console.log("Post Detail: Delete comment " + e.message);
+                    }
                     evt.preventDefault();
                 }
 

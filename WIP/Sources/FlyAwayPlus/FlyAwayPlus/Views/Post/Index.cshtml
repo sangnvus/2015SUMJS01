@@ -156,11 +156,17 @@
 </div>
 <script src="~/Scripts/jquery.montage.min.js"></script>
 <script type="text/javascript">
+    var sendNewNotification = function (activity) {
+        if (!(parseInt('@userPost.UserId') == parseInt('@Session["UserId"]'))) {
+            $.connection.notificationHub.server.sendNotification(activity, parseInt('@Session["UserId"]'), parseInt('@Model.PostId'));
+        }
+    };
+
     $(document).ready(function () {
         var $container = $('#am-container'),
-					$imgs = $container.find('img').hide(),
-					totalImgs = $imgs.length,
-					cnt = 0;
+            $imgs = $container.find('img').hide(),
+            totalImgs = $imgs.length,
+            cnt = 0;
 
         $imgs.each(function (i) {
             var $img = $(this);

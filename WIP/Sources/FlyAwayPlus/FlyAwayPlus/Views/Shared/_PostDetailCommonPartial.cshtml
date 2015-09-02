@@ -165,7 +165,15 @@
             else {
                 if ($(selector).val() != "") {
                     commentAjaxSending_@Model.PostId = true;
-                    commentAjax_@Model.PostId (selector);
+                    commentAjax_@Model.PostId(selector);
+                    try {
+                        var commentCountArea = $(selector).closest(".comment-area").find(".comment-stats").find("span");
+                        var list = $(commentCountArea).text().split(" ");
+                        list[0] = parseInt(list[0]) + 1;
+                        $(commentCountArea).text(list.join(" "));
+                    } catch (e) {
+                        console.log("Room Detail: Add comment " + e.message);
+                    }
                 }
             }
             evt.preventDefault();
@@ -286,8 +294,18 @@
                 if (evt.handled !== true) { // This will prevent event triggering more then once
                     evt.handled = true;
                     var commentId = cmtDeleteSouce.attr("role");
-                    cmtDeleteSouce.closest(".comment-detail").remove();
+                    var commentDetailArea = cmtDeleteSouce.closest(".comment-detail");
+                    var commentCountArea = $(commentDetailArea).closest(".comment-area").find(".comment-stats").find("span");
+                    commentDetailArea.remove();
                     deleteComment(commentId);
+
+                    try {
+                        var list = $(commentCountArea).text().split(" ");
+                        list[0] = parseInt(list[0]) - 1;
+                        $(commentCountArea).text(list.join(" "));
+                    } catch (e) {
+                        console.log("Room Detail: Delete comment " + e.message);
+                    }
                     evt.preventDefault();
                 }
 

@@ -12,7 +12,7 @@ namespace FlyAwayPlus.Controllers
     {
         //
         // GET: /PostDetail/
-        public ActionResult Index(int id = 0)
+        public ActionResult Index(int id = 0, int userId = 0, string activity = "" )
         {
             Post post;
             User user = UserHelpers.GetCurrentUser(Session);
@@ -48,6 +48,12 @@ namespace FlyAwayPlus.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
+
+                if (userId != 0 && !activity.Equals(String.Empty))
+                {
+                    GraphDatabaseHelpers.Instance.ViewNotification(id, userId, activity);
+                }
+
                 placeName = GraphDatabaseHelpers.Instance.FindPlace(post).Name;
                 userPost = GraphDatabaseHelpers.Instance.SearchUser(id);
                 listFriend = GraphDatabaseHelpers.Instance.GetListFriend(user.UserId);

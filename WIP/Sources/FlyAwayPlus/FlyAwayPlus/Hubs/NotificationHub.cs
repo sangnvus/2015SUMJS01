@@ -15,5 +15,18 @@ namespace FlyAwayPlus.Hubs
             var listNotification = GraphDatabaseHelpers.Instance.GetNotification(userId, lastActivityId, 5);
             Clients.Caller.receiveNotification(JsonConvert.SerializeObject(listNotification));
         }
+
+        public void SendNotification(string activity, int userId, int postId)
+        {
+            var notification = GraphDatabaseHelpers.Instance.FindNotificationByUser(activity, userId, postId);
+            notification.User = GraphDatabaseHelpers.Instance.FindUser(userId);
+            notification.Post = GraphDatabaseHelpers.Instance.FindPostById(postId);
+            int otherUserId = GraphDatabaseHelpers.Instance.SearchUser(postId).UserId;
+            if (notification.DateCreated == null || notification.DateCreated.Equals(String.Empty))
+            {
+                notification.DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat);
+            }
+            Clients.Others.receiveNewNotification(JsonConvert.SerializeObject(notification), otherUserId);
+        }
     }
 }

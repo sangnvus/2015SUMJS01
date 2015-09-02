@@ -128,6 +128,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -249,7 +250,6 @@
     <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\LookAroundController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\PostController.cs" />
@@ -446,7 +446,6 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
     <Content Include="Views\Search\SearchDetail.cshtml" />
-    <Content Include="Views\LookAround\Index.cshtml" />
     <Content Include="Views\Room\RoomDetail.cshtml" />
     <Content Include="Views\Post\Index.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />

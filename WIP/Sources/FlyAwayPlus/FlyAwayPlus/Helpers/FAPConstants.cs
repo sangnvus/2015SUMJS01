@@ -22,5 +22,8 @@
         public static string Friendship = "friend";
         public static string RequestFriend = "request";
         public static string NotFriend = "none";
+
+        public static int Viewed = 1;
+        public static int NotViewed = 0;
     }
 }

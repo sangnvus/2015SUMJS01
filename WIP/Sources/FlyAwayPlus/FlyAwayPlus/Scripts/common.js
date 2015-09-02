@@ -3,7 +3,7 @@
     var _listFriend = [];
     var _isTagging = false;
 
-    convertTime = function (time) {
+    var convertTime = function (time) {
         // time format: YYYY/MM/DD HH:mm:ss
         var timeList = time.split(" ");
         var now = new Date();
@@ -59,9 +59,9 @@
             return false;
 
         //Checks for mm/dd/yyyy format.
-        dtMonth = dtArray[3];
-        dtDay = dtArray[5];
-        dtYear = dtArray[1];
+        var dtMonth = dtArray[3];
+        var dtDay = dtArray[5];
+        var dtYear = dtArray[1];
 
         if (dtMonth < 1 || dtMonth > 12)
             return false;
