@@ -454,6 +454,7 @@ namespace FlyAwayPlus.Controllers
                 var uploadPath = "~/Images/UserUpload/UserCover/";
 
                 ViewData["userSession"] = currentUser;
+                UserHelpers.SetCurrentUser(Session, currentUser);
                 pathToSaveImage = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), "cover_uid_" + userId + ".jpg");
             }
             else
@@ -464,7 +465,9 @@ namespace FlyAwayPlus.Controllers
                                  ? "ava_uid_" + currentUser.UserId + ".jpg"
                                  : currentUser.Avatar.Split('/').Last();
 
-                GraphDatabaseHelpers.Instance.EditUserAvatar(userId, "/Images/UserUpload/UserAvatar/" + newAvaName);
+                currentUser.Avatar = "/Images/UserUpload/UserAvatar/" + newAvaName;
+                UserHelpers.SetCurrentUser(Session, currentUser);
+                GraphDatabaseHelpers.Instance.EditUserAvatar(userId, currentUser.Avatar);
                 pathToSaveImage = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), newAvaName);
             }
 

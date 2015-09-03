@@ -1379,7 +1379,7 @@ namespace FlyAwayPlus.Helpers
                 .OptionalMatch("(u1)-[:FRIEND]-(u2:user)-[:LATEST_POST]-(b:post)-[:PREV_POST*0..]-(p2:post)")
                 .With("collect(distinct p1) as list1, collect(distinct p2) as list2")
                 .Match("(p3:post)")
-                .Where("p3.Privacy = 'public' or (p3 in list1) or (p3 in list2 and p3.Privacy='friend')")
+                .Where("p3.Privacy = 'public' or (p3 in list1 and p3.Privacy <> 'lock') or (p3 in list2 and p3.Privacy='friend')")
                 .ReturnDistinct<Post>("p3")
                 .OrderByDescending("p3.DateCreated")
                 .Skip(skip)
