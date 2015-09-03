@@ -452,6 +452,8 @@ namespace FlyAwayPlus.Controllers
                 currentUser.CoverUrl = "/Images/UserUpload/UserCover/" + "cover_uid_" + userId + ".jpg";
                 GraphDatabaseHelpers.Instance.EditUserCover(userId, currentUser.CoverUrl);
                 var uploadPath = "~/Images/UserUpload/UserCover/";
+
+                ViewData["userSession"] = currentUser;
                 pathToSaveImage = Path.Combine(System.Web.HttpContext.Current.Request.MapPath(uploadPath), "cover_uid_" + userId + ".jpg");
             }
             else

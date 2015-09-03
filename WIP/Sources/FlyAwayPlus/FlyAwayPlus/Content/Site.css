@@ -1940,3 +1940,9 @@ textarea {
     height: 45px;
     padding: 20px;
 }
+
+.board-post-content {
+    -moz-word-break: break-all;
+    -o-word-break: break-all;
+    word-break: break-all
+}

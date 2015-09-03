@@ -231,8 +231,19 @@ namespace FlyAwayPlus.Controllers
             /*
              *  Insert into Graph DB 
              */
+
             if (newUser == null)
             {
+                var nameArray = ((string)me.name).Split(' ').ToList();
+                var firstNameBackup = nameArray.First();
+                
+                if (nameArray.Count > 1)
+                {
+                    nameArray.RemoveAt(0);
+                }
+
+                var lastNameBackup = string.Join(" ", nameArray);
+
                 newUser = new User
                 {
                     TypeId = 1,
@@ -240,9 +251,9 @@ namespace FlyAwayPlus.Controllers
                     Address = me.adress,
                     DateJoined = DateTime.Now.ToString(FapConstants.DatetimeFormat),
                     DateOfBirth = me.date_of_birth,
-                    FirstName = me.first_name,
-                    LastName = me.last_name,
-                    Gender = me.gender,
+                    FirstName = me.first_name ?? firstNameBackup,
+                    LastName = me.last_name ?? lastNameBackup,
+                    Gender = me.gender ?? "other",
                     PhoneNumber = me.phone_number,
                     Status = FapConstants.UserActive,
                     Avatar = "https://graph.facebook.com/" + facebookId + "/picture?type=large",
@@ -418,7 +429,7 @@ namespace FlyAwayPlus.Controllers
                 {
                     // user is Locked
                     GoogleConnect.Clear();
-                
+
                     Session["loginMessageError"] = "Your account has been locked! Please contact us follow email: flyawayplus.system@gmail.com";
                     return RedirectToAction("Index", "Home");
                 }

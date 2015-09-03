@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Web;
 using System.Web.WebPages;
 using FlyAwayPlus.Models;
 using FlyAwayPlus.Models.Relationships;
@@ -2107,10 +2108,31 @@ namespace FlyAwayPlus.Helpers
 
         private void DeleteRelatedPhotosAndRelationships(int postId, int userId)
         {
+            var photo = _client.Cypher.Match("(p:post)-[:HAS]->(pt:photo)")
+                                      .Where("p.PostId = {postIdParam}")
+                                      .WithParam("postIdParam", postId)
+                                      .Return<Photo>("pt")
+                                      .Results
+                                      .FirstOrDefault();
+
+            if (photo == null) return;
+
+            DeletePhysicalPhoto("~/Images/UserUpload/", photo.Url);
+
             _client.Cypher.OptionalMatch("(p:Post {PostId: " + postId + "})-[r1:HAS]-(pt:Photo)<-[r2:HAS]-(u:User {UserId: " + userId + "})")
                 .Delete("r1, r2, pt")
                 .ExecuteWithoutResults();
         }
+
+        private void DeletePhysicalPhoto(string path, string url)
+        {
+            string fullPath = HttpContext.Current.Server.MapPath(path + url);
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
+        }
+
         #endregion
 
         public bool EditPost(int postId, string newContent)
