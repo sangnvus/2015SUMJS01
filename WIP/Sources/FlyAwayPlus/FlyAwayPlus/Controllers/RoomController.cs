@@ -474,18 +474,24 @@ namespace FlyAwayPlus.Controllers
             Dictionary<int, int> dictDislikeCount = new Dictionary<int, int>();
             Dictionary<int, int> dictUserCommentCount = new Dictionary<int, int>();
             Dictionary<int, Video> listVideoDict = new Dictionary<int, Video>();
+            Dictionary<int, User> listUserDict = new Dictionary<int, User>();
+
             dictLikeCount.Add(newPost.PostId, 0);
             dictDislikeCount.Add(newPost.PostId, 0);
             dictUserCommentCount.Add(newPost.PostId, 0);
             dictListComment.Add(newPost.PostId, new List<Comment>());
             listPhotoDict.Add(newPost.PostId, new List<Photo>());
             listVideoDict.Add(newPost.PostId, newVideo);
+            listUserDict.Add(newPost.PostId, user);
+
             ViewData["likeCount"] = dictLikeCount;
             ViewData["dislikeCount"] = dictDislikeCount;
             ViewData["userCommentCount"] = dictUserCommentCount;
             ViewData["dictListComment"] = dictListComment;
             ViewData["listPhotoDict"] = listPhotoDict;
             ViewData["listVideoDict"] = listVideoDict;
+            ViewData["listUserDict"] = listUserDict;
+
             return PartialView("_PostDetailCommonPartial", newPost);
         }
     }

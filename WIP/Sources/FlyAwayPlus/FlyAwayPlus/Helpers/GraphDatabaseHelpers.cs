@@ -1551,7 +1551,6 @@ namespace FlyAwayPlus.Helpers
                     Post = p.As<Post>(),
                     IsViewed = isViewed.As<int>()
                 })
-                //.Return<Notification>("distinct m.DateCreated as DateCreated, u1 as user, p as post")
                 .OrderBy("dateCreated, lastActivityId")
                 .Limit(limit)
                 .Results.ToList();

@@ -892,6 +892,7 @@
                         roomId: parseInt('@roomId')
                     },
                     success: function (data) {
+                        console.log(data);
                         if(typeof(data) == "undefined" || data == null || data == false) {
                             swal("Oops...", "The room is already full of slots!", "error");
                         }
