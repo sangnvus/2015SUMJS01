@@ -1701,7 +1701,9 @@ textarea {
 .user-info .name-user, .hover-card .information .name-user {
     -moz-text-overflow: ellipsis;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    -moz-word-break: break-word;
+    -o-word-break: break-word;
+    word-wrap: break-word;
     overflow: hidden;
     font-weight: bold;
 }
