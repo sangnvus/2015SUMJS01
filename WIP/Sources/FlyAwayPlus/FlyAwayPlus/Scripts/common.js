@@ -373,6 +373,14 @@
         commonModule.callAjax(controller, data, null);
     };
 
+    var isDouble = function(value) {
+        var number = new Number(value);
+        if (/^[0-9]{0,10}(\.[0-9]{0,5})?$/.test(value) && number > 0) {
+            return true;
+        }
+        return false;
+    };
+
     return {
         convertTime: convertTime,
         callAjax: callAjax,
@@ -386,7 +394,8 @@
         handleTagging: handleTagging,
         likePost: likePost,
         dislikePost: dislikePost,
-        isDate: isDate
+        isDate: isDate,
+        isDouble: isDouble
     }
 })();
 

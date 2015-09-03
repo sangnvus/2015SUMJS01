@@ -15,6 +15,7 @@
     var dictDislikeCount = ViewData["dislikeCount"] as Dictionary<int, int>;
     var dictUserCommentCount = ViewData["userCommentCount"] as Dictionary<int, int>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
+    var listUserDict = ViewData["listUserDict"] as Dictionary<int, User>;
 }
 
 <div class="panel panel-default">
@@ -22,11 +23,11 @@
         <div class="post-area">
             <div class="post-info">
                 <div class="user-avatar">
-                    <img src="@userPost.Avatar" alt="@String.Format("{0} {1}", userPost.FirstName, userPost.LastName)" class="img-circle" />
+                    <img src="@listUserDict[@Model.PostId].Avatar" alt="@String.Format("{0} {1}", @listUserDict[@Model.PostId].FirstName, @listUserDict[@Model.PostId].LastName)" class="img-circle" />
                 </div>
                 <div class="post-info-area">
                     <div class="user-name">
-                        <a href="/User/Index/@userPost.UserId" class="hover-card-user">@String.Format("{0} {1}", userPost.FirstName, userPost.LastName)</a>
+                        <a href="/User/Index/@listUserDict[@Model.PostId].UserId" class="hover-card-user">@String.Format("{0} {1}", @listUserDict[@Model.PostId].FirstName, @listUserDict[@Model.PostId].LastName)</a>
                     </div>
                     <span class="post-time">
                         <span>Shared with @Model.Privacy</span>
@@ -165,7 +166,7 @@
             else {
                 if ($(selector).val() != "") {
                     commentAjaxSending_@Model.PostId = true;
-                    commentAjax_@Model.PostId(selector);
+                    commentAjax_@Model.PostId (selector);
                     try {
                         var commentCountArea = $(selector).closest(".comment-area").find(".comment-stats").find("span");
                         var list = $(commentCountArea).text().split(" ");

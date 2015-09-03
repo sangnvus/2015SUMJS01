@@ -155,13 +155,10 @@
     var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
     string relationInRoom = ViewData["relationInRoom"].ToString();
     int userId = Int16.Parse(@Session["UserId"].ToString());
-
     var listPost = ViewData["listPost"] as List<Post>;
     var listGeneralPlan = ViewData["listGeneralPlan"] as List<Plan>;
-    var listUserDict = ViewData["listUserDict"] as Dictionary<int, User>;
-    var dictUserCommentCount = ViewData["userCommentCount"] as Dictionary<int, int>;
-    var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
-    var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
+    
+    
     var dictPlanIdPiCs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
     var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
@@ -609,9 +606,12 @@
             <div class="modal-body">
                 <div id="estimation-plan-event-form">
                     <input type="hidden" id="estimation-id" value="-1"><br />
-                    <input type="text" id="estimation-payment" class="form-control" placeholder="Payment"><br />
-                    <input type="text" id="estimation-price" class="form-control" placeholder="Price"><br />
-                    <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name"><br />
+                    <input type="text" id="estimation-payment" class="form-control" placeholder="Payment">
+                    <span id="estimation-payment-error" style="color:red; display:none"></span><br />
+                    <input type="text" id="estimation-price" class="form-control" placeholder="Price">
+                    <span id="estimation-price-error" style="color:red; display:none"></span><br />
+                    <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name">
+                    <span id="estimation-payer-error" style="color:red; display:none"></span><br />
                     <input type="hidden" id="estimation-payer-hidden" class="form-control" placeholder="&#64;payer-name"><br />
                 </div>
             </div>
@@ -705,7 +705,7 @@
             modal.find('#estimation-id').val(row.id);
             modal.find('#estimation-payment').val(row.payment);
             modal.find('#estimation-price').val(row.price);
-            modal.find('#estimation-payer').val(row.payer);
+            modal.find('#estimation-payer').val("@@" + row.payer + ":");
 
             $('#estimation-plan-modal').modal();
         },
@@ -803,7 +803,7 @@
                 return listTagging[index]["UserId"];
             }
         }
-        return 0;
+        return -1;
     };
 
     var findUserById = function(value) {
@@ -848,6 +848,20 @@
                 console.log(e.message);
             }
         };
+
+        // Clear when click Btn Cancel
+        $("#estimation-plan-modal").on('hide.bs.modal', function () {
+            $('#estimation-id').val('-1');
+            $('#estimation-payment').val('');
+            $('#estimation-price').val('');
+            $('#estimation-payer').val('');
+            $('#estimation-payer-hidden').val('');
+
+            $("#estimation-price-error").hide();
+            $("#estimation-payer-error").hide();
+            $("#estimation-payment-error").hide();
+        });
+
         $("#id-btn-submit-post-in-room").click(function(evt) {
 
             if(evt.handled !== true) {
@@ -1084,8 +1098,53 @@
         });
 
         // Add estimation item.
-        $('#estimation-btnPopupSave').click(function() {
+        $('#estimation-btnPopupSave').click(function(evt) {
+            $("#estimation-price-error").hide();
+            $("#estimation-payer-error").hide();
+            $("#estimation-payment-error").hide();
             var payerid = findIdListTagging($('#estimation-payer').val())[0];
+            $(this).attr("data-dismiss", "a");
+            // validate
+            // check empty
+            if ($("#estimation-payment").val().trim().length == 0) {
+                $("#estimation-payment-error").text("Payment must not be empty!");
+                $("#estimation-payment-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            // check empty
+            if ($("#estimation-price").val().trim().length == 0) {
+                $("#estimation-price-error").text("Price must not be empty!");
+                $("#estimation-price-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            // check format
+            if (!commonModule.isDouble($("#estimation-price").val())) {
+                $("#estimation-price-error").text("Price must be a number!");
+                $("#estimation-price-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            // check empty
+            if ($("#estimation-payer").val().trim().length == 0) {
+                $("#estimation-payer-error").text("Payer must not be empty!");
+                $("#estimation-payer-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            // check format
+            if (payerid == -1) {
+                $("#estimation-payer-error").html("User is tagged not exist or wrong format. The right's format are <b>@@username: </b>");
+                $("#estimation-payer-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            $(this).attr("data-dismiss", "modal");
+            // pass validate
+            $("#estimation-price-error").hide();
+            $("#estimation-payer-error").hide();
+            $("#estimation-payment-error").hide();
             var dataPassAdd = {
                 payment: $('#estimation-payment').val(),
                 price: $('#estimation-price').val(),

@@ -1248,9 +1248,9 @@ namespace FlyAwayPlus.Helpers
                     return u
                  */
             _client.Connect();
-            var user = _client.Cypher.Match("(p:post{PostId:" + postId + "})<-[:CREATE]-(u:user)")
+            var user = _client.Cypher.OptionalMatch("(p:post{PostId:" + postId + "})<-[:CREATE]-(u:user)")
                 .Return<User>("u")
-                .Results.Single();
+                .Results.SingleOrDefault();
             return user;
         }
 
