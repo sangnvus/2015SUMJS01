@@ -7,6 +7,11 @@
 <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
 <script src="~/Scripts/bootstrap-table.min.js"></script>
 <script src="~/Scripts/bootstrap-table-export.min.js"></script>
+<script src="~/Scripts/tableExport.min.js"></script>
+<script src="~/Scripts/FileSaver/FileSaver.min.js"></script>
+<script src="~/Scripts/html2canvas/html2canvas.min.js"></script>
+<script src="~/Scripts/jsPDF/jspdf.min.js"></script>
+<script src="~/Scripts/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
 
 @{
     ViewBag.Title = "Room Detail";
@@ -28,11 +33,7 @@
     var dictPlanIdPiCs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
     var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
     int roomId = int.Parse(ViewData["roomID"].ToString());
-    bool renderPage = true;
-    if (admin.UserId != userId && !relationInRoom.Equals("Member"))
-    {
-        renderPage = false;
-    }
+    bool renderPage = !(admin.UserId != userId && !relationInRoom.Equals("Member"));
 }
 
 <link href="~/Content/RoomPage/room-detail.css" rel="stylesheet" />
@@ -353,6 +354,7 @@
                                data-show-refresh="true"
                                data-height="500"
                                data-pagination="true"
+                               data-export-types="['doc', 'excel', 'pdf', 'csv', 'txt']"
                                data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
                             <thead>
                                 <tr>
@@ -702,6 +704,7 @@
         </div>
     </div>
 }
+
 <script>
     function estimationActionFormatter(value, row, index) {
         return [
