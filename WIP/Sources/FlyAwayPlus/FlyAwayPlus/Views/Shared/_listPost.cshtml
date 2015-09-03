@@ -24,38 +24,38 @@
     string btnDislikeIconClass = isDislikeDict[post.PostId] ? "interacted fa-thumbs-down" : "";
 
     <div class="white-panel">
-    <div class="dark-wrapper">
-        @if (photo[post.PostId] != null && photo.Any())
-        {
-            foreach (var p in photo[post.PostId])
+        <div class="dark-wrapper">
+            @if (photo[post.PostId] != null && photo.Any())
             {
-                <img src="@(p.Url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.Url" alt="@p.Url">
+                foreach (var p in photo[post.PostId])
+                {
+                    <img src="@(p.Url.StartsWith("http") ? "" : "/Images/UserUpload/")@p.Url" alt="@p.Url">
+                }
             }
-        }
 
-        @if (@video[post.PostId] != null)
-        {
-            <div class="video-overlay">
-                <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.PostId].Path?enablejsapi=1&wmode=opaque">
-                    <img src="http://img.youtube.com/vi/@video[post.PostId].Path/0.jpg" alt="@video[post.PostId]">
-                    <span class="video-thumbnail-button"></span>
-                </a>
-            </div>
-        }
-        <ul class="post-actions" style="padding-left: 0px;">
-            <!--
-                <li>
-                    <a href="javascript:void(0)" role="@post.PostId" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
+            @if (@video[post.PostId] != null)
+            {
+                <div class="video-overlay">
+                    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/@video[post.PostId].Path?enablejsapi=1&wmode=opaque">
+                        <img src="http://img.youtube.com/vi/@video[post.PostId].Path/0.jpg" alt="@video[post.PostId]">
+                        <span class="video-thumbnail-button"></span>
+                    </a>
+                </div>
+            }
+            <ul class="post-actions" style="padding-left: 0px;">
+                <!--
+                    <li>
+                        <a href="javascript:void(0)" role="@post.PostId" class="btn @btnWishClass btn-circle btn-lg btn-plus" style="margin-right: 20px;"><i class="glyphicon glyphicon-plus"></i></a>
+                    </li>
+                    -->
+                <li style="width:50%">
+                    <a href="javascript:void(0)" role="@post.PostId" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                 </li>
-                -->
-            <li style="width:50%">
-                <a href="javascript:void(0)" role="@post.PostId" class="btn @btnLikeClass btn-circle btn-lg btn-like" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-up"></i></a>
-            </li>
-            <li style="width:50%">
-                <a href="javascript:void(0)" role="@post.PostId" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
-            </li>
-        </ul>
-    </div>
+                <li style="width:50%">
+                    <a href="javascript:void(0)" role="@post.PostId" class="btn @btnDislikeClass btn-circle btn-lg btn-dislike" style="margin-right: 20px; margin-left: 30%;"><i class="glyphicon glyphicon-thumbs-down"></i></a>
+                </li>
+            </ul>
+        </div>
         <div class="panel-content-wrapper">
             <h1>
                 <a href="/Post/Index/@post.PostId">
@@ -109,6 +109,8 @@
         commonModule.setBlocksit($(".blog-landing"), 212);
         // Delete post warning.
         $(".post-post-list-post-option-delete").click(function () {
+            var deleteBtn = $(this);
+
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this post!",
@@ -118,19 +120,20 @@
                 confirmButtonText: "Yes, delete it!",
                 closeOnConfirm: false
             }, function () {
-                $(this).parentsUntil(".white-panel").parent().remove();
+                deleteBtn.parentsUntil(".white-panel").parent().remove();
                 commonModule.setBlocksit($(".blog-landing"), 212);
 
                 $.ajax({
                     type: "POST",
                     url: "/Post/DeletePost",
-                    data: { postId: $(this).attr("value") },
+                    data: { postId: deleteBtn.attr("value") },
+                    success: function () {
+                        swal({ title: "Deleted!", text: "Your post has been deleted.", type: "success", timer: 1500, showConfirmButton: false });
+                    },
                     error: function () {
                         swal("Oops...", "Something went wrong! Try again later!", "error");
                     }
                 });
-
-                swal({ title: "Deleted!", text: "Your post has been deleted.", type: "success", timer: 1500, showConfirmButton: false });
             });
         });
 
@@ -226,7 +229,7 @@
             dislikeIcon.toggleClass("interacted")
                 .toggleClass("fa-thumbs-down");
             dislikeCountElement.text(parseInt(dislikeCountElement.text()) - 1);
-            
+
 
             var buttonDislike = $(post).parentsUntil(".white-panel")
                 .parent()
@@ -261,18 +264,18 @@
 
     function likeAjax(post) {
         var controller = "/User/Like";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var data = {
-            postId: postID
+            postId: postId
         }
 
         commonModule.callAjax(controller, data, null);
     };
     function dislikeAjax(post) {
         var controller = "/User/Dislike";
-        var postID = parseInt($(post).attr("role"));
+        var postId = parseInt($(post).attr("role"));
         var data = {
-            postId: postID
+            postId: postId
         }
 
         commonModule.callAjax(controller, data, null);
