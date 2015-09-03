@@ -50,7 +50,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="post-content">
+                <div class="post-content" id="post-content-text">
                     @Model.Content
                 </div>
                 <div class="post-content">
@@ -223,6 +223,8 @@
                     data: { postId: deleteBtn.attr("value") },
                     success: function () {
                         swal({ title: "Deleted!", text: "Your post has been deleted.", type: "success", timer: 1500, showConfirmButton: false });
+
+                        window.location.href = "/Home";
                     },
                     error: function () {
                         swal("Oops...", "Something went wrong! Try again later!", "error");
@@ -238,8 +240,8 @@
             var editButton = $(event.relatedTarget);
 
             var postId = editButton.attr("value");
-            editPostContentWrapper = editButton.parentsUntil(".panel-content-wrapper").parent().find(".board-post-content");
-            var oldMessage = editPostContentWrapper.text();
+            editPostContentWrapper = editButton.parentsUntil(".post-area").parent().find("#post-content-text");
+            var oldMessage = editPostContentWrapper.text().trim();
 
             var modal = $(this);
             modal.find(".modal-body textarea").val(oldMessage);
@@ -268,7 +270,6 @@
                         success: function () {
                             editPostContentWrapper.text($("#edit-post-modal").find(".modal-body textarea").val());
                             $("#edit-post-modal").modal('hide');
-                            commonModule.setBlocksit($(".blog-landing"), 212);
                         }
                     });
                 }

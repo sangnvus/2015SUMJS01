@@ -1490,26 +1490,6 @@ textarea {
             background-position: right 10px center;
         }
 
-.room-list-filter-tab .field-from {
-    width: 263px;
-}
-
-.room-list-filter-tab .field-to {
-    width: 262px;
-}
-
-.room-list-filter-tab .field-date {
-    width: 150px;
-}
-
-.room-list-filter-tab .field-adult {
-    width: 115px;
-}
-
-.room-list-filter-tab .form-submit {
-    width: 170px;
-}
-
 .form-cn .select {
     position: relative;
 }

@@ -30,6 +30,29 @@
     <!--Html.Partial("_ListChatFriend")-->
     @Html.Partial("_Loading")
 
+    <div class="modal fade" id="edit-post-modal" tabindex="-1" role="dialog" aria-labelledby="edit-post-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="edit-post-modal-label">Edit post</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="edit-post-message-text" class="control-label">Post content:</label>
+                            <textarea class="form-control" id="edit-post-message-text"></textarea>
+                        </div>
+                    </form>
+                    <span id="id-err-msg-edit-post" style="color: red; display: none;">Post's content must not be empty</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="edit-post-modal-save-button" value="">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         var shareLocation = function () {
             navigator.geolocation.getCurrentPosition(function (position) {

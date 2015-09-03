@@ -719,12 +719,16 @@ blockquote {
         margin: -3px 0 -4px !important;
     }
 
-.form-search .search-query, .form-search .search-query:first-child, .form-search .search-query:last-child {
-    padding: 0 17px;
-    border-radius: 17px;
-    -webkit-border-radius: 17px;
-    -moz-border-radius: 17px;
+.form-search {
+    margin-bottom: 10px;
 }
+
+    .form-search .search-query, .form-search .search-query:first-child, .form-search .search-query:last-child {
+        padding: 0 17px;
+        border-radius: 17px;
+        -webkit-border-radius: 17px;
+        -moz-border-radius: 17px;
+    }
 
 .input-group .form-control:last-child {
     border-top-left-radius: 0;
@@ -2700,7 +2704,7 @@ a.list-group-item-danger {
         border-radius: 4px;
     }
 
-.timeline dl dd {
+    .timeline dl dd {
         position: relative;
         z-index: 200;
     }
@@ -2721,7 +2725,7 @@ a.list-group-item-danger {
             border-radius: 50%;
         }
 
-.timeline dl dd .time {
+        .timeline dl dd .time {
             position: absolute;
             top: 31px;
             left: 50%;
