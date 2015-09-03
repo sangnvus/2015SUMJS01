@@ -580,11 +580,20 @@
             </div>
             <div class="modal-body">
                 <div id="general-plan-event-form">
-                    <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion"><br />
-                    <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea><br />
-                    <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name"><br />
-                    <input type="hidden" id="g-plan-assignee-hidden" class="form-control" placeholder="Assgin by tagging a &#64;member-name"><br />
-                    <input type="text" id="g-plan-start" class="form-control" placeholder="Start time"><br />
+                    <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion">
+                    <span id="g-plan-work-portion-error" style="color:red; display:none"></span>
+                    <br />
+                    <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea>
+                    <span id="g-plan-note-error" style="color:red; display:none"></span>
+                    <br />
+                    <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
+                    <span id="g-plan-assignee-error" style="color:red; display:none"></span>
+                    <br />
+                    <input type="hidden" id="g-plan-assignee-hidden" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
+                    <br />
+                    <input type="text" id="g-plan-start" class="form-control" placeholder="Start time">
+                    <span id="g-plan-start-error" style="color:red; display:none"></span>
+                    <br />
                 </div>
             </div>
             <div class="modal-footer">
@@ -796,14 +805,15 @@
     };
 
     var findUserId = function(value) {
+        /*
         listTagging = listTagging || createListTagging();
         for (var index = 0; index < listTagging.length; index++) {
             var username = listTagging[index]["FirstName"].toUpperCase() + " " + listTagging[index]["LastName"].toUpperCase();
             if (username.toUpperCase() == value.toUpperCase()) {
                 return listTagging[index]["UserId"];
             }
-        }
-        return -1;
+        }*/
+        return commonModule.findListFriendIdTagging(value);
     };
 
     var findUserById = function(value) {
@@ -817,7 +827,7 @@
     };
     var findIdListTagging = function(value) {
         var listFriendId = [];
-        var pattern = /@@([0-9a-z A-Z]*):/g;
+        var pattern = /@@([ \S]*?):/g;
         var tagFriend = value.match(pattern);
         if (tagFriend != null) {
             var username = "";
@@ -851,15 +861,22 @@
 
         // Clear when click Btn Cancel
         $("#estimation-plan-modal").on('hide.bs.modal', function () {
-            $('#estimation-id').val('-1');
-            $('#estimation-payment').val('');
-            $('#estimation-price').val('');
-            $('#estimation-payer').val('');
-            $('#estimation-payer-hidden').val('');
+            
 
             $("#estimation-price-error").hide();
             $("#estimation-payer-error").hide();
             $("#estimation-payment-error").hide();
+        });
+
+        $("#estimation-btnPopupCancel").click(function(evt) {
+            if (evt.handled !== true) {
+                evt.handled = true;
+                $('#estimation-id').val('-1');
+                $('#estimation-payment').val('');
+                $('#estimation-price').val('');
+                $('#estimation-payer').val('');
+                $('#estimation-payer-hidden').val('');
+            }
         });
 
         $("#id-btn-submit-post-in-room").click(function(evt) {
@@ -1033,13 +1050,70 @@
                 evt.preventDefault();
             }
         });
+
+        $("#create-general-plan-modal").on('hide.bs.modal', function () {
+            $("#g-plan-work-portion-error").hide();
+            $("#g-plan-assignee-error").hide();
+            $("#g-plan-start-error").hide();
+        });
+
+        $("#g-plan-btnPopupCancel").click(function(evt) {
+            if (evt.handled !== true) {
+                evt.handled = true;
+                $('#g-plan-work-portion').val('');
+                $('#g-plan-note').val('');
+                $('#g-plan-assignee').val('');
+                $('#g-plan-assignee-hidden').val('');
+                $('#g-plan-start').val('');
+            }
+        });
         // Save general plan.
-        $('#g-plan-btnPopupSave').click(function() {
+        $('#g-plan-btnPopupSave').click(function(evt) {
+            // TODO
+            $(this).attr("data-dismiss", "a");
+            var workportion = $('#g-plan-work-portion').val();
+            var note = $('#g-plan-note').val();
+            var assignee = findIdListTagging($('#g-plan-assignee').val()).join(";");
+            var startdate = $('#g-plan-start').val();
+
+            // validate
+            // check empty workportion
+            if (workportion.trim().length == 0) {
+                $("#g-plan-work-portion-error").text("Plan work portion must not be empty!");
+                $("#g-plan-work-portion-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            $("#g-plan-work-portion-error").hide();
+            // check empty assignee
+            if ($('#g-plan-assignee').val().trim().length == 0) {
+                $("#g-plan-assignee-error").text("Plan assignee must not be empty!");
+                $("#g-plan-assignee-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            // check format
+            if (assignee == null || assignee.length == 0) {
+                $("#g-plan-assignee-error").html("User is tagged not exist or wrong format. The right's format are <b>@@username: </b>");
+                $("#g-plan-assignee-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            $("#g-plan-assignee-error").hide();
+            // check empty
+            if (startdate.trim().length == 0) {
+                $("#g-plan-start-error").text("Plan start must not be empty!");
+                $("#g-plan-start-error").show();
+                evt.stopPropagation();
+                return;
+            }
+            $("#g-plan-start-error").hide();
+            $(this).attr("data-dismiss", "modal");
             var dataPass = {
-                workportion: $('#g-plan-work-portion').val(),
-                note: $('#g-plan-note').val(),
-                assignee: findIdListTagging($('#g-plan-assignee').val()).join(";"),
-                startdate: $('#g-plan-start').val()
+                workportion: workportion,
+                note: note,
+                assignee: assignee,
+                startdate: startdate
             };
 
             $.ajax({

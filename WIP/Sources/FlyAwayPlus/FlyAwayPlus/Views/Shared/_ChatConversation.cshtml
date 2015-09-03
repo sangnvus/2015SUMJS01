@@ -183,7 +183,7 @@
                 /*
                 $(".comment-content-word").each(function () {
                     var value = $(this).text();
-                    var pattern = /@@([0-9a-z A-Z]*):/g;
+                    var pattern = /@@([ \S]*?):/g;
                     var tagFriend = value.match(pattern);
                     if (tagFriend) {
                         var username = "";

@@ -2,6 +2,8 @@
     // Object: User in model
     var _listFriend = [];
     var _isTagging = false;
+    var mapping = {};
+
 
     var convertTime = function (time) {
         // time format: YYYY/MM/DD HH:mm:ss
@@ -146,7 +148,7 @@
     };
 
     var decompileTagFriend = function (value) {
-        var pattern = /@([0-9a-z A-Z]*):/g;
+        var pattern = /@([ \S]*?):/g;
         var tagFriend = value.match(pattern);
         if (tagFriend != null) {
             var username = "";
@@ -196,7 +198,7 @@
             </li>
         */
         for (var index = 0; index < Math.min(listFriend.length, 10) ; index++) {
-            tmp = "<li data-index='" + index + "' class='tab_complete_ui_item'>";
+            tmp = "<li data-index='" + index + "' class='tab_complete_ui_item' role='" + listFriend[index]["UserId"] + "'>";
             tmp += "<img class='lazy member_image thumb_24 member_preview_image' src='" + listFriend[index]["Avatar"] + "'>";
             tmp += "<span class='username'>" + listFriend[index]["FirstName"] + " " + listFriend[index]["LastName"]; + "</span>";
             tmp += "</li>";
@@ -224,6 +226,9 @@
                 if (evt.handled !== true) { // This will prevent event triggering more then once
                     // do anything?
                     var username = $(this).find(".username").text();
+                    var userId = parseInt($(this).attr("role"));
+                    mapping[username] = userId;
+                    console.log(userId);
                     var currentText = $(selector).val().slice(0, $(selector).val().lastIndexOf('@') + 1);
                     $(selector).val(currentText + username + ": ");
                     $(selector).focus();
@@ -267,14 +272,17 @@
 
     var findListFriendIdTagging = function (value) {
         var listFriendId = [];
-        var pattern = /@([0-9a-z A-Z]*):/g;
+        var pattern = /@([ \S]*?):/g;
         var tagFriend = value.match(pattern);
         if (tagFriend != null) {
             var username = "";
             for (var index = 0; index < tagFriend.length; index++) {
                 username = tagFriend[index].substring(1, tagFriend[index].length - 1);
-                listFriendId.push(findUserId(username));
+                //listFriendId.push(findUserId(username));
+                listFriendId.push(mapping[username]);
             }
+        } else {
+            listFriendId.push(mapping[value]);
         }
         return listFriendId;
     }
