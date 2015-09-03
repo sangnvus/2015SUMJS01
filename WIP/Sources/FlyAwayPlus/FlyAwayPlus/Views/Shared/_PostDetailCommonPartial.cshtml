@@ -143,7 +143,7 @@
                     $(selector).hide();
 
                     var value = $(selector).val().split("<br />").join("\n");
-                    var pattern = /@@([0-9a-z A-Z]*):/g;
+                    var pattern = /@@([ \S]*?):/g;
                     var tagFriend = value.match(pattern);
                     var username = "";
                     var replaceUser = "";
@@ -216,7 +216,7 @@
                 data: data,
                 success: function (data, textstatus) {
                     var value = data;
-                    var pattern = /@@([0-9a-z A-Z]*):/g;
+                    var pattern = /@@([ \S]*?):/g;
                     var tagFriend = value.match(pattern);
                     var username = "";
                     var replaceUser = "";

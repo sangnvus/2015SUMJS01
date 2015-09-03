@@ -270,7 +270,12 @@
         }
 
         commonModule.callAjax(controller, data, null);
+
+        $.connection.hub.start().done(function () {
+            $.connection.notificationHub.server.sendNotification("LIKE", parseInt('@Session["UserId"]'), parseInt(postID));
+        });
     };
+
     function dislikeAjax(post) {
         var controller = "/User/Dislike";
         var postId = parseInt($(post).attr("role"));
@@ -279,6 +284,10 @@
         }
 
         commonModule.callAjax(controller, data, null);
+
+        $.connection.hub.start().done(function () {
+            $.connection.notificationHub.server.sendNotification("DISLIKE", parseInt('@Session["UserId"]'), postID);
+        });
     };
 
     // The API will call this function when the page has finished downloading the JavaScript for the player API

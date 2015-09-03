@@ -1,8 +1,8 @@
 ﻿var postDetailModule = (function () {
     var isTagging = false;
     var _listFriend = [];
-    var userId = 0;
-
+    var mapping = {};
+    
     var likePost = function () {
         $(".btn-like").click(function (evt) {
             if (evt.handled !== true) { // This will prevent event triggering more then once
@@ -135,7 +135,7 @@
             data: data,
             success: function (data, textstatus) {
                 var value = data;
-                var pattern = /@([0-9a-z A-Z]*):/g;
+                var pattern = /@([ \S]*?):/g;
                 var tagFriend = value.match(pattern);
                 var username = "";
                 var replaceUser = "";
@@ -198,7 +198,7 @@
                     $(selector).hide();
 
                     var value = $(selector).val().split("<br />").join("\n");
-                    var pattern = /@([0-9a-z A-Z]*):/g;
+                    var pattern = /@([ \S]*?):/g;
                     var tagFriend = value.match(pattern);
                     var username = "";
                     var replaceUser = "";
@@ -374,9 +374,9 @@
             </li>
         */
         for (var index = 0; index < Math.min(listFriend.length, 10) ; index++) {
-            tmp = "<li data-index='" + index + "' class='tab_complete_ui_item'>";
+            tmp = "<li data-index='" + index + "' class='tab_complete_ui_item' role='" + listFriend[index]["UserId"] + "'>";
             tmp += "<img class='lazy member_image thumb_24 member_preview_image' src='" + listFriend[index]["Avatar"] + "'>";
-            tmp += "<span class='username'>" + listFriend[index]["FirstName"] + " " + listFriend[index]["LastName"]; + "</span>";
+            tmp += "<span class='username'>" + listFriend[index]["FirstName"] + " " + listFriend[index]["LastName"] + "</span>";
             tmp += "</li>";
             $("#id-tag-friend-list").append(tmp);
         }
@@ -393,6 +393,8 @@
             if (evt.handled !== true) { // This will prevent event triggering more then once
                 evt.handled = true;
                 var username = $(this).find(".username").text();
+                var userId = parseInt($(this).attr("role"));
+                mapping[username] = userId;
                 var currentText = $(obj).val().slice(0, $(obj).val().lastIndexOf('@') + 1);
                 $(obj).val(currentText + username + ": ");
                 $(obj).focus();
@@ -404,13 +406,16 @@
         });
     };
 
-    findUserID = function (keyword) {
+    var findUserID = function (keyword) {
+        return mapping[keyword];
+        /*
         for (var index = 0; index < _listFriend.length; index++) {
             var username = _listFriend[index]["FirstName"].toUpperCase() + " " + _listFriend[index]["LastName"].toUpperCase();
             if (username.toUpperCase() == keyword.toUpperCase()) {
                 return _listFriend[index]["UserId"];
             }
         }
+        */
     };
 
     return {
