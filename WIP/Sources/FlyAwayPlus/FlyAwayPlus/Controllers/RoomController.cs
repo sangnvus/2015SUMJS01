@@ -288,7 +288,7 @@ namespace FlyAwayPlus.Controllers
             {
                 RoomName = roomName,
                 Description = roomDesc,
-                JoinedSlotCount = 0,
+                JoinedSlotCount = 1,
                 MaxNoSlots = maxNoOfSlots,
                 StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,
