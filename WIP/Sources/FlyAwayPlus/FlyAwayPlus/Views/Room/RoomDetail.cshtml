@@ -107,10 +107,49 @@
             ClearPopupFormValues();
             $('#popupEventForm').modal(false);
         });
+        
+        function isInt(value) {
+            return !isNaN(value) && 
+                   parseInt(Number(value)) == value && 
+                   !isNaN(parseInt(value, 10));
+        }
 
         $('#btnPopupSave').click(function () {
+            var eventTitle = $('#eventTitle').val();
+            var eventDuration = $('#eventDuration').val();
 
-            $('#popupEventForm').modal(false);
+            $(this).attr("data-dismiss", "a");
+
+            // check Empty.
+            if (eventTitle.trim().length == 0) {
+                $("#eventTitle-error").text("Title must not be empty!");
+                $("#eventTitle-error").show();
+                evt.stopPropagation();
+                return;
+            } else {
+                $("#eventTitle-error").hide();
+            }
+
+            if (eventDuration.trim().length == 0) {
+                $("#eventDuration-error").text("Duration must not be empty!");
+                $("#eventDuration-error").show();
+                evt.stopPropagation();
+                return;
+            } else {
+                $("#eventDuration-error").hide();
+            }
+
+            // Check Duration.
+            if (!isInt(eventDuration.trim())) {
+                $("#eventDuration-error").text("Duration must be integer!");
+                $("#eventDuration-error").show();
+                evt.stopPropagation();
+                return;
+            } else {
+                $("#eventDuration-error").hide();
+            }
+
+            $(this).attr("data-dismiss", "modal");
 
             var dataRow = {
                 'Title': $('#eventTitle').val(),
@@ -128,10 +167,10 @@
                 success: function (response) {
                     if (response == 'True') {
                         $('#calendar').fullCalendar('refetchEvents');
-                        alert('New event saved!');
+                        swal({ title: "Added!", text: "New plan saved sucessfully.", type: "success", timer: 1500, showConfirmButton: false });
                     }
                     else {
-                        alert('Error, could not save event!');
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
                     }
                 }
             });
@@ -252,6 +291,16 @@
         </div>
     </div>
     <!--INFO ENDS-->
+
+    <div class="vertical-space-30"></div>
+
+    @if (!renderPage)
+    {
+        <div class="not-join-room-noti">
+            <h1>Join room to see members' contents</h1>
+        </div>
+    }
+
     @if (renderPage)
     {
         <!--PLANNING-->
@@ -581,10 +630,14 @@
                 <div class="modal-body">
                     <form id="EventForm">
                         <input type="hidden" id="eventID">
-                        <input type="text" id="eventTitle" class="form-control" placeholder="Title"><br />
-                        <input type="text" id="eventDate" class="form-control" placeholder="Start date" readonly><br />
-                        <input type="text" id="eventTime" class="form-control" placeholder="Start time" readonly><br />
-                        <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)"><br />
+                        <input type="text" id="eventTitle" class="form-control" placeholder="Title">
+                        <span id="eventTitle-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="eventDate" class="form-control" placeholder="Start date" readonly>
+                        <span id="eventDate-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="eventTime" class="form-control" placeholder="Start time" readonly>
+                        <span id="eventTime-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)">
+                        <span id="eventDuration-error" style="color:red; display:none"></span><br />
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -616,7 +669,7 @@
                         <br />
                         <input type="hidden" id="g-plan-assignee-hidden" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
                         <br />
-                        <input type="text" id="g-plan-start" class="form-control" placeholder="Start time">
+                        <input type="text" id="g-plan-start" class="form-control" placeholder="Start time" readonly>
                         <span id="g-plan-start-error" style="color:red; display:none"></span>
                         <br />
                     </div>
@@ -660,8 +713,6 @@
 <script src="~/Scripts/jquery.montage.min.js"></script>
 @if (renderPage)
 {
-
-
     <!--REQUEST JOIN MODAL-->
     <div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
         <div class="modal-dialog">
@@ -704,7 +755,7 @@
         </div>
     </div>
 }
-
+@Scripts.Render("~/bundles/datepicker")
 <script>
     function estimationActionFormatter(value, row, index) {
         return [
@@ -870,6 +921,11 @@
         return listFriendId;
     }
     $(document).ready(function () {
+        
+        $('#g-plan-start').datepicker({
+            format: "yyyy-mm-dd"
+        });
+
         commonModule.likePost();
         commonModule.dislikePost();
 
@@ -892,11 +948,14 @@
 
         // Clear when click Btn Cancel
         $("#estimation-plan-modal").on('hide.bs.modal', function () {
-
-
             $("#estimation-price-error").hide();
             $("#estimation-payer-error").hide();
             $("#estimation-payment-error").hide();
+        });
+
+        // Clear when click Btn Cancel
+        $("#popupEventForm").on('hide.bs.modal', function () {
+            $("#eventDuration-error").hide();
         });
 
         $("#estimation-btnPopupCancel").click(function(evt) {
@@ -1126,7 +1185,7 @@
             }
             // check format
             if (assignee == null || assignee.length == 0) {
-                $("#g-plan-assignee-error").html("User is tagged not exist or wrong format. The right's format are <b>@@username: </b>");
+                $("#g-plan-assignee-error").html("Tagged user does not exist or in wrong format. The right's format are <b>@@username: </b>");
                 $("#g-plan-assignee-error").show();
                 evt.stopPropagation();
                 return;
@@ -1211,37 +1270,37 @@
             var payerid = findIdListTagging($('#estimation-payer').val())[0];
             $(this).attr("data-dismiss", "a");
             // validate
-            // check empty
+            // check empty payment
             if ($("#estimation-payment").val().trim().length == 0) {
                 $("#estimation-payment-error").text("Payment must not be empty!");
                 $("#estimation-payment-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check empty
+            // check empty price
             if ($("#estimation-price").val().trim().length == 0) {
                 $("#estimation-price-error").text("Price must not be empty!");
                 $("#estimation-price-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check format
+            // check format price
             if (!commonModule.isDouble($("#estimation-price").val())) {
                 $("#estimation-price-error").text("Price must be a number!");
                 $("#estimation-price-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check empty
+            // check empty payer
             if ($("#estimation-payer").val().trim().length == 0) {
                 $("#estimation-payer-error").text("Payer must not be empty!");
                 $("#estimation-payer-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check format
+            // check format payer
             if (payerid == -1) {
-                $("#estimation-payer-error").html("User is tagged not exist or wrong format. The right's format are <b>@@username: </b>");
+                $("#estimation-payer-error").html("Tagged user does not exist or in wrong format. The right's format are <b>@@username: </b>");
                 $("#estimation-payer-error").show();
                 evt.stopPropagation();
                 return;

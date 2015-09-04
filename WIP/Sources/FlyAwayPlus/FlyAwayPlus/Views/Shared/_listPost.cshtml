@@ -12,9 +12,10 @@
     var isLikeDict = ViewData["isLikeDict"] as Dictionary<int, bool>;
     var isDislikeDict = ViewData["isDislikeDict"] as Dictionary<int, bool>;
     var isWishDict = ViewData["isWishDict"] as Dictionary<int, bool>;
+    var listPost = ViewData["listPost"] as List<Post>;
 }
 
-@foreach (var post in ViewData["listPost"] as List<Post>)
+@foreach (var post in listPost)
 {
     string btnWishClass = isWishDict[post.PostId] ? "btn-warning" : "btn-primary";
     string btnLikeClass = isLikeDict[post.PostId] ? "btn-warning" : "btn-primary";
@@ -98,6 +99,13 @@
                 }
             </div>
         </div>
+    </div>
+}
+
+@if (listPost.Count == 0)
+{
+    <div class="profile-no-content">
+        <h4 style="margin-top: -40px;">No contents</h4>
     </div>
 }
 

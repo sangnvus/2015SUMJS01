@@ -140,7 +140,7 @@
 
     <div role="tabpanel" class="tab-pane" id="photos-gallery">
         <div class="images-wrapper" style="margin-left: 10px;">
-            @if (listPhotoDict != null)
+            @if (listPhotoDict != null && listPhotoDict.Count > 0)
             {
                 foreach (var image in listPhotoDict)
                 {
@@ -165,6 +165,12 @@
                     }
                 }
             }
+            else
+            {
+                <div class="profile-no-content">
+                    <h4>No contents</h4>
+                </div>
+            }
         </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="place-list">
@@ -181,6 +187,13 @@
                         <img src="http://img.youtube.com/vi/@video.Path/0.jpg" alt="@video.Path">
                         <span class="video-thumbnail-button"></span>
                     </a>
+                </div>
+            }
+
+            @if (listVideo.Count == 0)
+            {
+                <div class="profile-no-content">
+                    <h4 style="margin-top: -22px; margin-left: -30px;">No contents</h4>
                 </div>
             }
         </div>
