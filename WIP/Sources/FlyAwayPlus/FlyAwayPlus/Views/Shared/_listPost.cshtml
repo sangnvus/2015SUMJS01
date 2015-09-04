@@ -102,13 +102,6 @@
     </div>
 }
 
-@if (listPost.Count == 0)
-{
-    <div class="profile-no-content">
-        <h4 style="margin-top: -40px;">No contents</h4>
-    </div>
-}
-
 <script>
     var isLoadMore = '@ViewData["isLoadMore"].ToString()';
     var typePost = '@ViewData["typePost"].ToString()';
