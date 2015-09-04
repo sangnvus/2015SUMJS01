@@ -278,7 +278,6 @@ namespace FlyAwayPlus.Controllers
             var targetAddress = Request.Form["end_formatted_address"];
             var endLng = Request.Form["end_lng"];
             var endLat = Request.Form["end_lat"];
-            var privacy = Request.Form["privacy"];
             int maxNoOfSlots;
             int.TryParse(Request.Form["maxnoslots"], out maxNoOfSlots);
 
@@ -298,7 +297,7 @@ namespace FlyAwayPlus.Controllers
                 DestinationLocation = targetAddressName + " - " + targetAddress,
                 DestinationLatitude = endLat,
                 DestinationLongitude = endLng,
-                Privacy = privacy,
+                Privacy = "public",
                 DateCreated = DateTime.Now.ToString(FapConstants.DatetimeFormat),
                 PhotoCoverUrl = string.Empty
             };
