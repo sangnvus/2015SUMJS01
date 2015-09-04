@@ -3,7 +3,7 @@
     ViewBag.Title = "Room List";
 }
 
-<div class="filer-wrapper">
+<div class="filer-wrapper col-md-12">
     <ul class="tabs-cat text-center row">
         <li class="cate-item col-xs-6 active">
             <a data-toggle="tab" href="#room-list-filter-tab" title="" aria-expanded="true">
@@ -25,32 +25,37 @@
         <div class="form-cn room-list-filter-tab tab-pane active" id="room-list-filter-tab">
             @using (Html.BeginForm("Index", "Room", FormMethod.Get))
             {
-                <div class="form-search clearfix">
-                    <div class="form-field field-from">
-                        <input type="text" name="startplace" id="flight-from" class="field-input" placeholder="Start place" value="@Request["startplace"]">
-                    </div>
-                    <div class="form-field field-to">
-                        <input type="text" name="targetplace" id="flight-to" class="field-input" placeholder="Target place" value="@Request["targetplace"]">
-                    </div>
-                    <div class="form-field field-date">
-                        <input type="text" name="startdate" class="field-input cal-select-start" readonly placeholder="Start date" value="@Request["startdate"]">
-                    </div>
-                    <div class="form-field field-date">
-                        <input type="text" name="returndate" class="field-input cal-select-end" readonly placeholder="Return date" value="@Request["returndate"]">
-                    </div>
-                    <div class="form-field field-select field-adult">
-                        <div class="select">
-                            <span>Slots</span>
-                            <select name="slotOption">
-                                <option value="0">Slots</option>
-                                <option value="1" @(Request["slotOption"] == "1" ? "selected" : "")>1-5</option>
-                                <option value="2" @(Request["slotOption"] == "2" ? "selected" : "")>5-10</option>
-                                <option value="3" @(Request["slotOption"] == "3" ? "selected" : "")>More than 10</option>
-                            </select>
+                <div class="form-search col-md-12 clearfix">
+                    <div class="row">
+                        <div class="form-field col-md-6">
+                            <input type="text" name="startplace" class="field-input" placeholder="Start place" value="@Request["startplace"]">
+                        </div>
+                        <div class="form-field col-md-6">
+                            <input type="text" name="targetplace" class="field-input" placeholder="Target place" value="@Request["targetplace"]">
                         </div>
                     </div>
-                    <div class="form-submit">
-                        <button type="submit" class="btn btn-primary" style="width: 100%;height: 50px; -ms-border-radius: 4px; border-radius: 4px;">Search</button>
+
+                    <div class="row">
+                        <div class="form-field field-date col-md-3">
+                            <input type="text" name="startdate" class="field-input cal-select-start" readonly placeholder="Start date" value="@Request["startdate"]">
+                        </div>
+                        <div class="form-field field-date col-md-3">
+                            <input type="text" name="returndate" class="field-input cal-select-end" readonly placeholder="Return date" value="@Request["returndate"]">
+                        </div>
+                        <div class="form-field field-select col-md-3">
+                            <div class="select">
+                                <span>Slots</span>
+                                <select name="slotOption">
+                                    <option value="0">Slots</option>
+                                    <option value="1" @(Request["slotOption"] == "1" ? "selected" : "")>1-5</option>
+                                    <option value="2" @(Request["slotOption"] == "2" ? "selected" : "")>5-10</option>
+                                    <option value="3" @(Request["slotOption"] == "3" ? "selected" : "")>More than 10</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-submit col-md-3">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; height: 50px; -ms-border-radius: 4px; border-radius: 4px;">Search</button>
+                        </div>
                     </div>
                 </div>
             }
@@ -140,6 +145,12 @@
     var nowTemp = new Date();
     var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
+    var checkin = $('#g-plan-start').datepicker({
+        format: "yyyy-mm-dd",
+        onRender: function(date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+        }
+    });
     var checkin = $('.cal-select-start').datepicker({
         format: "yyyy-mm-dd",
         onRender: function (date) {

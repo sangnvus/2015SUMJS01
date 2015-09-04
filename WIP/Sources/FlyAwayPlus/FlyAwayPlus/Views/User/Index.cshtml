@@ -43,7 +43,7 @@
     <div class="profile-stats">
         <ul role="tablist" style="margin-left: 10px;">
             <li role="presentation"><a href="javascript:void(0)" style="margin-top: -40px;">@String.Format("{0} {1}", Model.FirstName, Model.LastName)</a></li>
-            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Post</span></a></li>
+            <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">@listPost.Count<span>Posts</span></a></li>
             <li role="presentation"><a id="btn-place-list" href="#place-list" aria-controls="place-list" role="tab" data-toggle="tab">@listPlaceDict.Count <span>Places</span></a></li>
             <li role="presentation"><a id="btn-photo-list" href="#photos-gallery" aria-controls="photos-gallery" role="tab" data-toggle="tab">@listPhoto.Count <span>Photos</span></a></li>
             <li role="presentation"><a href="#video-list" style="margin-right: 10px;" aria-controls="video-list" role="tab" data-toggle="tab">@listVideo.Count <span>Videos</span></a></li>
@@ -140,7 +140,7 @@
 
     <div role="tabpanel" class="tab-pane" id="photos-gallery">
         <div class="images-wrapper" style="margin-left: 10px;">
-            @if (listPhotoDict != null)
+            @if (listPhotoDict != null && listPhotoDict.Count > 0)
             {
                 foreach (var image in listPhotoDict)
                 {
@@ -165,6 +165,12 @@
                     }
                 }
             }
+            else
+            {
+                <div class="profile-no-content">
+                    <h4>No contents</h4>
+                </div>
+            }
         </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="place-list">
@@ -181,6 +187,13 @@
                         <img src="http://img.youtube.com/vi/@video.Path/0.jpg" alt="@video.Path">
                         <span class="video-thumbnail-button"></span>
                     </a>
+                </div>
+            }
+
+            @if (listVideo.Count == 0)
+            {
+                <div class="profile-no-content">
+                    <h4 style="margin-top: -22px; margin-left: -30px;">No contents</h4>
                 </div>
             }
         </div>
@@ -902,6 +915,7 @@ else
             };
 
             commonModule.callAjax(controller, data, null);
+            commonModule.sentFriendRequestNow(parseInt('@userSession.UserId'), parseInt('@Model.UserId'));
         };
 
         var unfriend = function () {

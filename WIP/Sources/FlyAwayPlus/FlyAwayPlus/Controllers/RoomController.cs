@@ -124,7 +124,7 @@ namespace FlyAwayPlus.Controllers
             var roomStartDate = DateTime.ParseExact(roomInfo.StartDate, FapConstants.DateFormat, CultureInfo.InvariantCulture);
             var roomEndDate = roomStartDate.AddDays(roomInfo.LengthInDays);
 
-            List<Plan> listGeneralPlan = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(roomStartDate, roomEndDate, FapConstants.PlanGeneral, roomId);
+            List<Plan> listGeneralPlan = GraphDatabaseHelpers.Instance.LoadAllPlansInDateRange(DateTime.MinValue, DateTime.MaxValue, FapConstants.PlanGeneral, roomId);
             ViewData["dictPlanIdPICs"] = listGeneralPlan
                                         .Select(p => p.PlanId)
                                         .ToDictionary(pid => pid, pid => GraphDatabaseHelpers.Instance.GetPersonInCharge(pid));
@@ -288,7 +288,7 @@ namespace FlyAwayPlus.Controllers
             {
                 RoomName = roomName,
                 Description = roomDesc,
-                JoinedSlotCount = 0,
+                JoinedSlotCount = 1,
                 MaxNoSlots = maxNoOfSlots,
                 StartDate = startdate.ToString(FapConstants.DateFormat, CultureInfo.InvariantCulture),
                 LengthInDays = (int)(enddate - startdate).TotalDays,

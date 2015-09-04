@@ -69,7 +69,7 @@
             };
 
             commonModule.callAjax(controller, data, null);
-
+            commonModule.sentFriendRequestNow(@Model.UserId, otherId);
             $(".UserFollowButton[role=" + otherId + "]").show();
             $(this).hide();
             evt.preventDefault();

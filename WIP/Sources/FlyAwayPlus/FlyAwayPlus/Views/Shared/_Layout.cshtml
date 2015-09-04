@@ -45,7 +45,7 @@
                         <li class="friend-request-li">
                             <a href="javascript:void(0)" class="remove-background" id="id-btn-friend-request">
                                 <i class="fa fa-fw fa-user-plus interact-item interact-button"></i>
-                                <span class="friend-request-count badge badge-danger" style="display: none;"></span>
+                                <span class="friend-request-count badge badge-danger" style="display: none;">0</span>
                             </a>
                             <div class="friend-request-container">
                                 <div class="friend-request-title">
@@ -99,15 +99,15 @@
                 {
                     using (Html.BeginForm("Search", "Search", FormMethod.Get, new { @class = "nav nav-bar navbar-left" }))
                     {
-                        <div class="nav-search-wrapper">
-                            <div class="search-bar">
-                                <input type="text"
-                                       name="keyword"
-                                       id="id-search-input"
-                                       placeholder="Search for places, tour rooms, people..." />
-                                <input id="id-search-input-btn" type="submit" value="Search" />
-                            </div>
+                    <div class="nav-search-wrapper">
+                        <div class="search-bar">
+                            <input type="text"
+                                   name="keyword"
+                                   id="id-search-input"
+                                   placeholder="Search for places, tour rooms, people..." />
+                            <input id="id-search-input-btn" type="submit" value="Search" />
                         </div>
+                    </div>
                     }
 
                     @Html.Partial("_PostPartial")
@@ -123,7 +123,7 @@
         @Html.Partial("_TagFriendPartial")
         if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
         {
-            @Html.Partial("_ChatConversation")
+        @Html.Partial("_ChatConversation")
         }
     }
     else
@@ -139,7 +139,7 @@
         @RenderSection("scripts", required: false)
         @Scripts.Render("~/bundles/js")
         <script src="/signalr/hubs"></script>
-        
+
         <script src="~/Scripts/player_api.js"></script>
 
         <link href="~/Content/tooltipster.css" rel="stylesheet" />
@@ -225,6 +225,7 @@
 
                         if ($(this).text() === 'Friend request sent') {
                             commonModule.callAjax("/User/SendRequestFriend/", data, null);
+                            commonModule.sentFriendRequestNow(parseInt(currentUserId), parseInt(otherUserId));
                         } else if ($(this).text() === 'Unfriend') {
                             commonModule.callAjax("/User/Unfriend/", data, null);
                         }
@@ -273,6 +274,58 @@
                 var lastActivityId = 0;
                 var notificationHubProxy = notificationHubProxy || $.connection.notificationHub;
                 var friendHubProxy = friendHubProxy || $.connection.friendHub;
+
+                friendHubProxy.client.receiveFriendRequest = function(fromUser) {
+                    friend = JSON.parse(fromUser);
+                    var count = parseInt($("#id-btn-friend-request").find("span").text());
+
+                    if (friend == null) {
+                        return;
+                    }
+                    var tmp = "";
+                    tmp += "<div class='cls-friend-request' style='width:100%; height: 65px;'>";
+                    tmp += "<div href='#' style='padding: 7px 7px 8px 10px; width:100%; height: 100%;'>";
+                    tmp += "<div style='float:left'>";
+                    tmp += "<span class='avatar' style='margin-right: 8px; background-image: url(\"" + friend["Avatar"] + "\"); background-repeat: no-repeat; height: 50px; width: 50px;'></span>";
+                    tmp += "</div>";
+                    tmp += "<div style=''>" + friend["FirstName"] + " " + friend["LastName"] + " sent request friend to you</div>";
+                    tmp += "<div class=''>";
+                    tmp += "<button type='button' id='id-btn-friend-accept" + friend["UserId"] + "' class='btn btn-success'>Accept</button>";
+                    tmp += "<button type='button' id='id-btn-friend-decline" + friend["UserId"] + "' class='btn btn-danger' style='margin-left:5px;'>Decline</button>";
+                    tmp += "</div>";
+                    tmp += "</div>";
+                    tmp += "</div>";
+                    tmp += "<hr />";
+                    $("#idFriendRequest").prepend(tmp);
+
+                    $("#id-btn-friend-accept" + friend["UserId"]).click(function(evt) {
+                        var controller = "/User/AddFriend";
+                        var data = {
+                            userID: parseInt('@Session["UserId"]'),
+                            otherUserID: friend["UserId"]
+                        };
+
+                        commonModule.callAjax(controller, data, null);
+
+                        $(this).closest(".cls-friend-request").remove();
+                        evt.preventDefault();
+                    });
+
+                    $("#id-btn-friend-decline" + friend["UserId"]).click(function(evt) {
+                        var controller = "/User/DeclineRequestFriend";
+                        var data = {
+                            userId: friend["UserId"],
+                            otherUserId: parseInt('@Session["UserId"]')
+                        };
+
+                        commonModule.callAjax(controller, data, null);
+                        $(this).closest(".cls-friend-request").remove();
+                        evt.preventDefault();
+                    });
+
+                    $("#id-btn-friend-request").find("span").text(count + 1);
+                    $("#id-btn-friend-request").find("span").show();
+                };
 
                 notificationHubProxy.client.receiveNewNotification = function (content, userId) {
                     if (parseInt(userId) == parseInt('@Session["UserId"]')) {
@@ -378,6 +431,8 @@
                             commonModule.callAjax(controller, data, null);
 
                             $(this).closest(".cls-friend-request").remove();
+                            var countRequest = parseInt($("#id-btn-friend-request").find("span").text());
+                            $("#id-btn-friend-request").find("span").text(countRequest - 1);
                             evt.preventDefault();
                         });
 
@@ -390,6 +445,8 @@
 
                             commonModule.callAjax(controller, data, null);
                             $(this).closest(".cls-friend-request").remove();
+                            var countRequest = parseInt($("#id-btn-friend-request").find("span").text());
+                            $("#id-btn-friend-request").find("span").text(countRequest - 1);
                             evt.preventDefault();
                         });
                     }
@@ -398,6 +455,7 @@
                         $("#id-btn-friend-request").find("span").show();
                     }
                     else {
+                        $("#id-btn-friend-request").find("span").text(count);
                         $("#id-btn-friend-request").find("span").hide();
                     }
                 }

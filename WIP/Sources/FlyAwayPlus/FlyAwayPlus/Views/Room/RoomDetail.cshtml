@@ -7,10 +7,33 @@
 <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
 <script src="~/Scripts/bootstrap-table.min.js"></script>
 <script src="~/Scripts/bootstrap-table-export.min.js"></script>
+<script src="~/Scripts/tableExport.min.js"></script>
+<script src="~/Scripts/FileSaver/FileSaver.min.js"></script>
+<script src="~/Scripts/html2canvas/html2canvas.min.js"></script>
+<script src="~/Scripts/jsPDF/jspdf.min.js"></script>
+<script src="~/Scripts/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
 
 @{
     ViewBag.Title = "Room Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var roomInfo = ViewData["roomInfo"] as Room;
+    var admin = ViewData["admin"] as User;
+    var listUserInRoom = ViewData["listUserInRoom"] as List<User>;
+    var listUserRequestJoinRoom = ViewData["listUserRequestJoinRoom"] as List<User>;
+    var listMessage = ViewData["listMessage"] as List<Message>;
+    var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
+    string relationInRoom = ViewData["relationInRoom"].ToString();
+    int userId = Int16.Parse(@Session["UserId"].ToString());
+    var listPost = ViewData["listPost"] as List<Post>;
+    var listGeneralPlan = ViewData["listGeneralPlan"] as List<Plan>;
+
+    var dictPlanIdPiCs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
+    var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
+    int roomId = int.Parse(ViewData["roomID"].ToString());
+    bool renderPage = !(admin.UserId != userId && !relationInRoom.Equals("Member"));
 }
 
 <link href="~/Content/RoomPage/room-detail.css" rel="stylesheet" />
@@ -84,10 +107,49 @@
             ClearPopupFormValues();
             $('#popupEventForm').modal(false);
         });
+        
+        function isInt(value) {
+            return !isNaN(value) && 
+                   parseInt(Number(value)) == value && 
+                   !isNaN(parseInt(value, 10));
+        }
 
         $('#btnPopupSave').click(function () {
+            var eventTitle = $('#eventTitle').val();
+            var eventDuration = $('#eventDuration').val();
 
-            $('#popupEventForm').modal(false);
+            $(this).attr("data-dismiss", "a");
+
+            // check Empty.
+            if (eventTitle.trim().length == 0) {
+                $("#eventTitle-error").text("Title must not be empty!");
+                $("#eventTitle-error").show();
+                evt.stopPropagation();
+                return;
+            } else {
+                $("#eventTitle-error").hide();
+            }
+
+            if (eventDuration.trim().length == 0) {
+                $("#eventDuration-error").text("Duration must not be empty!");
+                $("#eventDuration-error").show();
+                evt.stopPropagation();
+                return;
+            } else {
+                $("#eventDuration-error").hide();
+            }
+
+            // Check Duration.
+            if (!isInt(eventDuration.trim())) {
+                $("#eventDuration-error").text("Duration must be integer!");
+                $("#eventDuration-error").show();
+                evt.stopPropagation();
+                return;
+            } else {
+                $("#eventDuration-error").hide();
+            }
+
+            $(this).attr("data-dismiss", "modal");
 
             var dataRow = {
                 'Title': $('#eventTitle').val(),
@@ -105,10 +167,10 @@
                 success: function (response) {
                     if (response == 'True') {
                         $('#calendar').fullCalendar('refetchEvents');
-                        alert('New event saved!');
+                        swal({ title: "Added!", text: "New plan saved sucessfully.", type: "success", timer: 1500, showConfirmButton: false });
                     }
                     else {
-                        alert('Error, could not save event!');
+                        swal("Oops...", "Something went wrong! Try again later!", "error");
                     }
                 }
             });
@@ -146,23 +208,6 @@
     </script>
 }
 
-@{
-    var roomInfo = ViewData["roomInfo"] as Room;
-    var admin = ViewData["admin"] as User;
-    var listUserInRoom = ViewData["listUserInRoom"] as List<User>;
-    var listUserRequestJoinRoom = ViewData["listUserRequestJoinRoom"] as List<User>;
-    var listMessage = ViewData["listMessage"] as List<Message>;
-    var listUserOwnMessage = ViewData["listUserOwnMessage"] as List<User>;
-    string relationInRoom = ViewData["relationInRoom"].ToString();
-    int userId = Int16.Parse(@Session["UserId"].ToString());
-    var listPost = ViewData["listPost"] as List<Post>;
-    var listGeneralPlan = ViewData["listGeneralPlan"] as List<Plan>;
-    
-    
-    var dictPlanIdPiCs = ViewData["dictPlanIdPICs"] as Dictionary<int, IEnumerable<User>>;
-    var dictPlanIdCreator = ViewData["dictPlanIdCreator"] as Dictionary<int, User>;
-    int roomId = int.Parse(ViewData["roomID"].ToString());
-}
 <div id="room-detail-wrapper">
     <div>
         <!--INFO-->
@@ -196,6 +241,7 @@
                 </ul>
             </div>
         </div>
+
         <div class="col-md-2 room-detail-interact-area">
             <div class="room-detail-admin-avatar">
                 <img class="circle-image" height="50" src="@admin.Avatar" alt="Admin" />
@@ -233,447 +279,483 @@
                     <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i></button>
                 </span>
             </div>
-            <div class="input-group">
-                <input type="text" id="id-tag-friend-join-room" class="form-control" placeholder="&#64;friend">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" id="id-invite-friend-btn" type="button"><i class="fa fa-plus"></i></button>
-                </span>
-            </div>
+            @if (renderPage)
+            {
+                <div class="input-group">
+                    <input type="text" id="id-tag-friend-join-room" class="form-control" placeholder="&#64;friend">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" id="id-invite-friend-btn" type="button"><i class="fa fa-plus"></i></button>
+                    </span>
+                </div>
+            }
         </div>
     </div>
     <!--INFO ENDS-->
-    <!--PLANNING-->
-    <div class="col-md-12 room-detail-plan-area">
-        <div>
-            <!-- Nav tabs -->
+
+    <div class="vertical-space-30"></div>
+
+    @if (!renderPage)
+    {
+        <div class="not-join-room-noti">
+            <h1>Join room to see members' contents</h1>
+        </div>
+    }
+
+    @if (renderPage)
+    {
+        <!--PLANNING-->
+        <div class="col-md-12 room-detail-plan-area">
             <div>
-                <ul class="tabs-cat text-center row">
-                    <li class="cate-item col-xs-4">
-                        <a data-toggle="tab" href="#room-detail-plan-tab-general" title="" aria-expanded="true">
-                            <span>General</span>
-                            <i class="fa fa-bars"></i>
-                        </a>
-                    </li>
-                    <li class="cate-item col-xs-4 active">
-                        <a data-toggle="tab" href="#room-detail-plan-tab-timeline" title="" aria-expanded="false">
-                            <span>Timeline</span>
-                            <i class="fa fa-calendar"></i>
-                        </a>
-                    </li>
-                    <li class="cate-item col-xs-4">
-                        <a data-toggle="tab" href="#room-detail-plan-tab-estimation" title="" aria-expanded="false">
-                            <span>Estimation</span>
-                            <i class="fa fa-dollar"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                <!-- Nav tabs -->
+                <div>
+                    <ul class="tabs-cat text-center row">
+                        <li class="cate-item col-xs-4">
+                            <a data-toggle="tab" href="#room-detail-plan-tab-general" title="" aria-expanded="true">
+                                <span>General</span>
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                        <li class="cate-item col-xs-4 active">
+                            <a data-toggle="tab" href="#room-detail-plan-tab-timeline" title="" aria-expanded="false">
+                                <span>Timeline</span>
+                                <i class="fa fa-calendar"></i>
+                            </a>
+                        </li>
+                        <li class="cate-item col-xs-4">
+                            <a data-toggle="tab" href="#room-detail-plan-tab-estimation" title="" aria-expanded="false">
+                                <span>Estimation</span>
+                                <i class="fa fa-dollar"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <!-- general -->
-                <div class="form-cn room-detail-plan-tab-general tab-pane" id="room-detail-plan-tab-general">
-                    <div style="text-align: center; margin-bottom: 10px">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#create-general-plan-modal" style="background-color: #2DCC70">
-                            Add a work portion
-                        </button>
-                    </div>
-                    <div class="blog-landing">
-                        @foreach (var gp in listGeneralPlan)
-                        {
-                            <div>
-                                <div class="general-plan-list-container">
-                                    <div class="general-plan-label border-radius-top-left border-radius-top-right">
-                                        <p>@gp.WorkItem</p>
-                                    </div>
-                                    <div class="general-plan-content">
-                                        @gp.WorkItemDetail
-                                    </div>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <!-- general -->
+                    <div class="form-cn room-detail-plan-tab-general tab-pane" id="room-detail-plan-tab-general">
+                        <div style="text-align: center; margin-bottom: 10px">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#create-general-plan-modal" style="background-color: #2DCC70">
+                                Add a work portion
+                            </button>
+                        </div>
+                        <div class="blog-landing">
+                            @foreach (var gp in listGeneralPlan)
+                            {
+                                <div>
+                                    <div class="general-plan-list-container">
+                                        <div class="general-plan-label border-radius-top-left border-radius-top-right">
+                                            <p>@gp.WorkItem</p>
+                                        </div>
+                                        <div class="general-plan-content">
+                                            @gp.WorkItemDetail
+                                        </div>
 
-                                    <div>
-                                        <ul>
-                                            <li><b>Complete on:</b> @gp.DatePlanStart.Remove(10)</li>
-                                            <li>
-                                                <b>Person in charge:&nbsp;</b>
-                                                @foreach (var pic in dictPlanIdPiCs[gp.PlanId])
-                                                {
-                                                    <a href="/User/Index/@pic.UserId" class="hover-card-user">@(pic.FirstName + " " + pic.LastName + "; ")</a>
-                                                }
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="dark-divider"><!--DIVIDER--></div>
-                                    <div class="user-info">
-                                        <img src="@dictPlanIdCreator[gp.PlanId].Avatar" alt="Avatar" class="avatar" />
-                                        <div style="width: 100%">
-                                            <a href="/User/Index/@dictPlanIdCreator[gp.PlanId].UserId" class="hover-card-user">
-                                                <div class="name-user">@(dictPlanIdCreator[gp.PlanId].FirstName + " " + dictPlanIdCreator[gp.PlanId].LastName)</div>
-                                            </a>
-                                            <div class="post-time">@gp.DatePlanCreated</div>
+                                        <div>
+                                            <ul>
+                                                <li><b>Complete on:</b> @gp.DatePlanStart.Remove(10)</li>
+                                                <li>
+                                                    <b>Person in charge:&nbsp;</b>
+                                                    @foreach (var pic in dictPlanIdPiCs[gp.PlanId])
+                                                    {
+                                                        <a href="/User/Index/@pic.UserId" class="hover-card-user">@(pic.FirstName + " " + pic.LastName + "; ")</a>
+                                                    }
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="dark-divider"><!--DIVIDER--></div>
+                                        <div class="user-info">
+                                            <img src="@dictPlanIdCreator[gp.PlanId].Avatar" alt="Avatar" class="avatar" />
+                                            <div style="width: 100%">
+                                                <a href="/User/Index/@dictPlanIdCreator[gp.PlanId].UserId" class="hover-card-user">
+                                                    <div class="name-user">@(dictPlanIdCreator[gp.PlanId].FirstName + " " + dictPlanIdCreator[gp.PlanId].LastName)</div>
+                                                </a>
+                                                <div class="post-time">@gp.DatePlanCreated</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
-                </div>
-                <!-- End general -->
-                <!-- timeline -->
-                <div class="form-cn room-detail-plan-tab-timeline tab-pane active" id="room-detail-plan-tab-timeline">
-                    <div id="calendar"></div>
-                </div>
-                <!-- End timeline -->
-                <!-- estimation -->
-                <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
-                    <div id="custom-toolbar">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#estimation-plan-modal" style="background-color: #2DCC70;">
-                            Add an estimation item
-                        </button>
+                    <!-- End general -->
+                    <!-- timeline -->
+                    <div class="form-cn room-detail-plan-tab-timeline tab-pane active" id="room-detail-plan-tab-timeline">
+                        <div id="calendar"></div>
                     </div>
-
-                    <table id="estimation-table"
-                           data-toggle="table"
-                           data-striped="true"
-                           data-sort-name="name"
-                           data-search="true"
-                           data-show-export="true"
-                           data-show-header="true"
-                           data-show-toggle="true"
-                           data-show-refresh="true"
-                           data-height="500"
-                           data-pagination="true"
-                           data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
-                        <thead>
-                            <tr>
-                                <th data-field="id" data-visible="false" data-card-visible="false"></th>
-                                <th data-field="creatorid" data-visible="false" data-card-visible="false"></th>
-                                <th data-field="payerid" data-visible="false" data-card-visible="false"></th>
-                                <th data-field="payment" data-sortable="true">Payment</th>
-                                <th data-field="price" data-sortable="true" data-formatter="priceFormatter" data-sorter="priceSorter">Price</th>
-                                <th data-field="creator" data-sortable="true" data-formatter="creatorFormatter" data-align="center">Creator</th>
-                                <th data-field="payer" data-sortable="true" data-formatter="payerFormatter" data-align="center">Payer</th>
-                                <th data-field="datecreated" data-sortable="true" data-width="100px" data-align="center">Date created</th>
-                                <th data-field="operate" data-formatter="estimationActionFormatter" data-events="estimationEvents" data-align="center">Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                <!-- End estimation -->
-            </div>
-        </div>
-    </div>
-    <!--PLANNING ENDS-->
-    <!--USER LIST-->
-    <div class="col-md-12 room-detail-user-list">
-        <div class="col-md-12 frame-container">
-            <div class="friend-list-header friend-title-header">
-                <h6 class="text-capitalize">MEMBERS</h6>
-            </div>
-
-            <div class="friend-list-avatar">
-                <div class="padding-5 col-md-2">
-                    <a href="/User/Index/@admin.UserId" class="hover-card-user tooltipstered">
-                        <img class="circle-image" height="50" src="@admin.Avatar" alt="Avatar" />
-                    </a>
-                </div>
-                @foreach (User user in listUserInRoom)
-                {
-                    <div class="padding-5 col-md-2">
-                        <a href="/User/Index/@user.UserId" class="hover-card-user tooltipstered">
-                            <img class="circle-image" height="50" src="@user.Avatar" alt="Avatar" />
-                        </a>
-                    </div>
-                }
-            </div>
-            <div class="friend-list-header view-more-friend-title">
-                <h6 class="text-capitalize">VIEW ALL</h6>
-            </div>
-        </div>
-    </div>
-    <!--USER LIST ENDS-->
-
-    <div>
-        <div class="col-md-6 room-detail-left-area">
-            <!--POSTING-->
-            @using (Html.BeginForm("AddPost", "Room", FormMethod.Post, new { @id = "form-post-room", @name = "form-post-room", @class = "", @enctype = "multipart/form-data" }))
-            {
-                <div id="id-posting-room" class="share-post-box room-detail-posting-area">
-                    <div class="panel panel-default boder-radius">
-                        <div class="panel-body">
-                            <div class="">
-                                <textarea class="form-control message"
-                                          rows="10" cols="40"
-                                          id="status_message_room" name="message"
-                                          placeholder="What do you want to share?"
-                                          style="height: 62px; overflow: hidden;"></textarea>
-                                <textarea id="status_message_post_room" name="message_post_room"
-                                          style="display: none"></textarea>
-                            </div>
+                    <!-- End timeline -->
+                    <!-- estimation -->
+                    <div class="form-cn room-detail-plan-tab-estimation tab-pane" id="room-detail-plan-tab-estimation">
+                        <div id="custom-toolbar">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#estimation-plan-modal" style="background-color: #2DCC70;">
+                                Add an estimation item
+                            </button>
                         </div>
 
-                        <div class="panel-footer border-radius-bottom-left border-radius-bottom-right">
-                            <div class="row">
-                                <div class="helper-elements-wrapper">
-                                    <!-- IMAGES -->
-                                    <div id="post-add-images-wrapper-room" class="hidden">
-                                        <div id="post-image-preview-wrapper-room">
-                                            <!-- Preview for to-be-uploaded photos -->
-                                        </div>
+                        <table id="estimation-table"
+                               data-toggle="table"
+                               data-striped="true"
+                               data-sort-name="name"
+                               data-search="true"
+                               data-show-export="true"
+                               data-show-header="true"
+                               data-show-toggle="true"
+                               data-show-refresh="true"
+                               data-height="500"
+                               data-pagination="true"
+                               data-export-types="['doc', 'excel', 'pdf', 'csv', 'txt']"
+                               data-url="/Room/GetEstimationData?roomId=@ViewData["roomID"]">
+                            <thead>
+                                <tr>
+                                    <th data-field="id" data-visible="false" data-card-visible="false"></th>
+                                    <th data-field="creatorid" data-visible="false" data-card-visible="false"></th>
+                                    <th data-field="payerid" data-visible="false" data-card-visible="false"></th>
+                                    <th data-field="payment" data-sortable="true">Payment</th>
+                                    <th data-field="price" data-sortable="true" data-formatter="priceFormatter" data-sorter="priceSorter">Price</th>
+                                    <th data-field="creator" data-sortable="true" data-formatter="creatorFormatter" data-align="center">Creator</th>
+                                    <th data-field="payer" data-sortable="true" data-formatter="payerFormatter" data-align="center">Payer</th>
+                                    <th data-field="datecreated" data-sortable="true" data-width="100px" data-align="center">Date created</th>
+                                    <th data-field="operate" data-formatter="estimationActionFormatter" data-events="estimationEvents" data-align="center">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- End estimation -->
+                </div>
+            </div>
+        </div>
+        <!--PLANNING ENDS-->
+    }
 
-                                        <div class="progress progress-striped active hidden" id="post-upload-images-progress-room">
-                                            <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Uploading...</div>
-                                        </div>
+    @if (renderPage)
+    {
+    <!--USER LIST-->
+        <div class="col-md-12 room-detail-user-list">
+            <div class="col-md-12 frame-container">
+                <div class="friend-list-header friend-title-header">
+                    <h6 class="text-capitalize">MEMBERS</h6>
+                </div>
 
-                                        <div class="add-media-wrapper">
-                                            <label for="post-images-upload" class="custom-file-upload">
-                                                <i class="fa fa-plus"></i>
-                                            </label>
-                                            <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload-room" name="files[]" class="hidden" multiple>
-                                        </div>
-                                        <input type="hidden" name="uploadedimages" />
-                                    </div>
+                <div class="friend-list-avatar">
+                    <div class="padding-5 col-md-2">
+                        <a href="/User/Index/@admin.UserId" class="hover-card-user tooltipstered">
+                            <img class="circle-image" height="50" src="@admin.Avatar" alt="Avatar" />
+                        </a>
+                    </div>
+                    @foreach (User user in listUserInRoom)
+                    {
+                        <div class="padding-5 col-md-2">
+                            <a href="/User/Index/@user.UserId" class="hover-card-user tooltipstered">
+                                <img class="circle-image" height="50" src="@user.Avatar" alt="Avatar" />
+                            </a>
+                        </div>
+                    }
+                </div>
+                <div class="friend-list-header view-more-friend-title">
+                    <h6 class="text-capitalize">VIEW ALL</h6>
+                </div>
+            </div>
+        </div>
+    <!--USER LIST ENDS-->
+    }
 
-                                    <!-- VIDEOS -->
-                                    <div id="post-add-videos-wrapper-room" class="hidden">
-                                        <span id="signinButton" class="pre-sign-in">
-                                            <span class="g-signin"
-                                                  data-callback="oauth2Callback"
-                                                  data-clientid="802653758880-3ufqkq2gkpo7hqrimk0pr07isen9r8qu.apps.googleusercontent.com"
-                                                  data-cookiepolicy="single_host_origin"
-                                                  data-scope="https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload">
-                                            </span>
-                                        </span>
+    @if (renderPage)
+    {
+        <div>
+            <div class="col-md-6 room-detail-left-area">
+                <!--POSTING-->
+                @using (Html.BeginForm("AddPost", "Room", FormMethod.Post, new { @id = "form-post-room", @name = "form-post-room", @class = "", @enctype = "multipart/form-data" }))
+                {
+                    <div id="id-posting-room" class="share-post-box room-detail-posting-area">
+                        <div class="panel panel-default boder-radius">
+                            <div class="panel-body">
+                                <div class="">
+                                    <textarea class="form-control message"
+                                              rows="10" cols="40"
+                                              id="status_message_room" name="message"
+                                              placeholder="What do you want to share?"
+                                              style="height: 62px; overflow: hidden;"></textarea>
+                                    <textarea id="status_message_post_room" name="message_post_room"
+                                              style="display: none"></textarea>
+                                </div>
+                            </div>
 
-                                        <div class="post-sign-in">
-                                            <p id="post-video-file-name-room" style="text-align: center"></p>
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <div class="upload-media-preview">
-                                                        <div class="crop">
-                                                            <img src="/Images/UIHelper/youtube.png" alt="Youtube preview" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-7" style="margin: 0 20px 0 -20px">
-                                                    <input class="form-control" id="video-upload-title-room" type="text" placeholder="Title for video">
-                                                    <textarea class="form-control" id="video-upload-description-room" placeholder="Description for video"></textarea>
-                                                </div>
-
-                                                <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
+                            <div class="panel-footer border-radius-bottom-left border-radius-bottom-right">
+                                <div class="row">
+                                    <div class="helper-elements-wrapper">
+                                        <!-- IMAGES -->
+                                        <div id="post-add-images-wrapper-room" class="hidden">
+                                            <div id="post-image-preview-wrapper-room">
+                                                <!-- Preview for to-be-uploaded photos -->
                                             </div>
 
-                                            <div class="progress progress-striped active hidden" id="post-upload-video-progress-room">
-                                                <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                            <div class="progress progress-striped active hidden" id="post-upload-images-progress-room">
+                                                <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Uploading...</div>
                                             </div>
 
                                             <div class="add-media-wrapper">
-                                                <label for="post-video-upload" class="custom-file-upload">
+                                                <label for="post-images-upload" class="custom-file-upload">
                                                     <i class="fa fa-plus"></i>
                                                 </label>
-
-                                                <input id="post-video-upload-room" type="file" class="hidden" accept="video/*">
+                                                <input type="file" accept=".jpg,.png,.jpeg,.bmp" id="post-images-upload-room" name="files[]" class="hidden" multiple>
                                             </div>
+                                            <input type="hidden" name="uploadedimages" />
+                                        </div>
 
-                                            <input type="hidden" name="uploadedvideo" />
+                                        <!-- VIDEOS -->
+                                        <div id="post-add-videos-wrapper-room" class="hidden">
+                                            <span id="signinButton" class="pre-sign-in">
+                                                <span class="g-signin"
+                                                      data-callback="oauth2Callback"
+                                                      data-clientid="802653758880-3ufqkq2gkpo7hqrimk0pr07isen9r8qu.apps.googleusercontent.com"
+                                                      data-cookiepolicy="single_host_origin"
+                                                      data-scope="https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload">
+                                                </span>
+                                            </span>
+
+                                            <div class="post-sign-in">
+                                                <p id="post-video-file-name-room" style="text-align: center"></p>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="upload-media-preview">
+                                                            <div class="crop">
+                                                                <img src="/Images/UIHelper/youtube.png" alt="Youtube preview" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-7" style="margin: 0 20px 0 -20px">
+                                                        <input class="form-control" id="video-upload-title-room" type="text" placeholder="Title for video">
+                                                        <textarea class="form-control" id="video-upload-description-room" placeholder="Description for video"></textarea>
+                                                    </div>
+
+                                                    <a href="javascript:;" class="btn btn-success col-md-2 upload-button" id="post-upload-video-button-room">UPLOAD</a>
+                                                </div>
+
+                                                <div class="progress progress-striped active hidden" id="post-upload-video-progress-room">
+                                                    <div class="progress-bar upload-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                                </div>
+
+                                                <div class="add-media-wrapper">
+                                                    <label for="post-video-upload" class="custom-file-upload">
+                                                        <i class="fa fa-plus"></i>
+                                                    </label>
+
+                                                    <input id="post-video-upload-room" type="file" class="hidden" accept="video/*">
+                                                </div>
+
+                                                <input type="hidden" name="uploadedvideo" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <div class="btn-group">
-                                            <a class="btn btn-default" id="id-picture-button-room">
-                                                <i class="fa fa-picture-o"></i> Photo
-                                            </a>
-                                            <a class="btn btn-default" id="id-video-button-room">
-                                                <i class="fa fa-video-camera"></i> Video
-                                            </a>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default" id="id-picture-button-room">
+                                                    <i class="fa fa-picture-o"></i> Photo
+                                                </a>
+                                                <a class="btn btn-default" id="id-video-button-room">
+                                                    <i class="fa fa-video-camera"></i> Video
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <input id="id-btn-submit-post-in-room" class="btn btn-primary" name="submit" type="submit" value="Post">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <input id="id-btn-submit-post-in-room" class="btn btn-primary" name="submit" type="submit" value="Post">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-            <!--POSTING ENDS-->
-            <!--POST LIST-->
-            <div class="room-detail-post-list">
-                @foreach (Post p in listPost)
-                {
-
-                    @Html.Partial("_PostDetailCommonPartial", p)
                 }
+                <!--POSTING ENDS-->
+                <!--POST LIST-->
+                <div class="room-detail-post-list">
+                    @foreach (Post p in listPost)
+                    {
+
+                        @Html.Partial("_PostDetailCommonPartial", p)
+                    }
+                </div>
+                <!--POST LIST ENDS-->
             </div>
-            <!--POST LIST ENDS-->
-        </div>
-        <div class="col-md-6 room-detail-right-area">
-            <ol id="id-chat-list" class="discussion">
-                <li class="other">
-                    <div class="avatar">
-                        <img src="~/Images/FAP logo.png" />
-                    </div>
-                    <div class="messages" style="border-bottom: #19B5FF 3px solid">
-                        <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.UserId" class="hover-card-user">@String.Format("{0} {1}", @admin.FirstName, @admin.LastName)</a> on time</b></p>
-                        <time datetime=""><a href="javascript:void(0)">Fly Away Plus System</a></time>
-                    </div>
-                </li>
-                @for (int index = 0; index < listMessage.Count; index++)
-                {
-                    <li class="@String.Format("{0}", userId == listUserOwnMessage[index].UserId ? "self" : "other")">
+            <div class="col-md-6 room-detail-right-area">
+                <ol id="id-chat-list" class="discussion">
+                    <li class="other">
                         <div class="avatar">
-                            <img src="@listUserOwnMessage[index].Avatar" />
+                            <img src="~/Images/FAP logo.png" />
                         </div>
                         <div class="messages" style="border-bottom: #19B5FF 3px solid">
-                            <p>@listMessage[index].Content</p>
-                            <time datetime="@listMessage[index].DateCreated"><a href="/User/Index/@listUserOwnMessage[index].UserId" class="hover-card-user">@String.Format("{0} {1}", @listUserOwnMessage[index].FirstName, @listUserOwnMessage[index].LastName)</a> @listMessage[index].DateCreated</time>
+                            <p><b>This is the very beginning of the room, which created by <a href="/User/Index/@admin.UserId" class="hover-card-user">@String.Format("{0} {1}", @admin.FirstName, @admin.LastName)</a> on time</b></p>
+                            <time datetime=""><a href="javascript:void(0)">Fly Away Plus System</a></time>
                         </div>
                     </li>
-                }
-            </ol>
-            <div class="room-detail-chat-type comment-textbox-wrapper">
-                <textarea id="id-textarea-chat-room" class="comment-textbox comment-box" placeholder="Input message..."></textarea>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CREATE TIMELINE PLAN MODAL -->
-<div id="popupEventForm" class="modal fade">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Add new Timeline Plan item</h4>
-            </div>
-            <div class="modal-body">
-                <form id="EventForm">
-                    <input type="hidden" id="eventID">
-                    <input type="text" id="eventTitle" class="form-control" placeholder="Title"><br />
-                    <input type="text" id="eventDate" class="form-control" placeholder="Start date" readonly><br />
-                    <input type="text" id="eventTime" class="form-control" placeholder="Start time" readonly><br />
-                    <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)"><br />
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CREATE GENERAL PLAN MODAL -->
-<div id="create-general-plan-modal" class="modal fade">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Add new General Plan item</h4>
-            </div>
-            <div class="modal-body">
-                <div id="general-plan-event-form">
-                    <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion">
-                    <span id="g-plan-work-portion-error" style="color:red; display:none"></span>
-                    <br />
-                    <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea>
-                    <span id="g-plan-note-error" style="color:red; display:none"></span>
-                    <br />
-                    <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
-                    <span id="g-plan-assignee-error" style="color:red; display:none"></span>
-                    <br />
-                    <input type="hidden" id="g-plan-assignee-hidden" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
-                    <br />
-                    <input type="text" id="g-plan-start" class="form-control" placeholder="Start time">
-                    <span id="g-plan-start-error" style="color:red; display:none"></span>
-                    <br />
+                    @for (int index = 0; index < listMessage.Count; index++)
+                    {
+                        <li class="@String.Format("{0}", userId == listUserOwnMessage[index].UserId ? "self" : "other")">
+                            <div class="avatar">
+                                <img src="@listUserOwnMessage[index].Avatar" />
+                            </div>
+                            <div class="messages" style="border-bottom: #19B5FF 3px solid">
+                                <p>@listMessage[index].Content</p>
+                                <time datetime="@listMessage[index].DateCreated"><a href="/User/Index/@listUserOwnMessage[index].UserId" class="hover-card-user">@String.Format("{0} {1}", @listUserOwnMessage[index].FirstName, @listUserOwnMessage[index].LastName)</a> @listMessage[index].DateCreated</time>
+                            </div>
+                        </li>
+                    }
+                </ol>
+                <div class="room-detail-chat-type comment-textbox-wrapper">
+                    <textarea id="id-textarea-chat-room" class="comment-textbox comment-box" placeholder="Input message..."></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" id="g-plan-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-                <button type="button" id="g-plan-btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
-            </div>
         </div>
-    </div>
+    }
 </div>
 
-<!-- CREATE/EDIT ESTIMATION MODAL -->
-<div id="estimation-plan-modal" class="modal fade">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Add new Estimation item</h4>
-            </div>
-            <div class="modal-body">
-                <div id="estimation-plan-event-form">
-                    <input type="hidden" id="estimation-id" value="-1"><br />
-                    <input type="text" id="estimation-payment" class="form-control" placeholder="Payment">
-                    <span id="estimation-payment-error" style="color:red; display:none"></span><br />
-                    <input type="text" id="estimation-price" class="form-control" placeholder="Price">
-                    <span id="estimation-price-error" style="color:red; display:none"></span><br />
-                    <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name">
-                    <span id="estimation-payer-error" style="color:red; display:none"></span><br />
-                    <input type="hidden" id="estimation-payer-hidden" class="form-control" placeholder="&#64;payer-name"><br />
+@if (renderPage)
+{
+
+
+    <!-- CREATE TIMELINE PLAN MODAL -->
+    <div id="popupEventForm" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Add new Timeline Plan item</h4>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="estimation-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-                <button type="button" id="estimation-btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+                <div class="modal-body">
+                    <form id="EventForm">
+                        <input type="hidden" id="eventID">
+                        <input type="text" id="eventTitle" class="form-control" placeholder="Title">
+                        <span id="eventTitle-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="eventDate" class="form-control" placeholder="Start date" readonly>
+                        <span id="eventDate-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="eventTime" class="form-control" placeholder="Start time" readonly>
+                        <span id="eventTime-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="eventDuration" class="form-control" placeholder="Plan length (in hours)">
+                        <span id="eventDuration-error" style="color:red; display:none"></span><br />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
+                    <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- CREATE GENERAL PLAN MODAL -->
+    <div id="create-general-plan-modal" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Add new General Plan item</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="general-plan-event-form">
+                        <input type="text" id="g-plan-work-portion" class="form-control" placeholder="Work portion">
+                        <span id="g-plan-work-portion-error" style="color:red; display:none"></span>
+                        <br />
+                        <textarea id="g-plan-note" class="form-control" placeholder="More detail (optional)"></textarea>
+                        <span id="g-plan-note-error" style="color:red; display:none"></span>
+                        <br />
+                        <input type="text" id="g-plan-assignee" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
+                        <span id="g-plan-assignee-error" style="color:red; display:none"></span>
+                        <br />
+                        <input type="hidden" id="g-plan-assignee-hidden" class="form-control" placeholder="Assgin by tagging a &#64;member-name">
+                        <br />
+                        <input type="text" id="g-plan-start" class="form-control" placeholder="Start time" readonly>
+                        <span id="g-plan-start-error" style="color:red; display:none"></span>
+                        <br />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="g-plan-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
+                    <button type="button" id="g-plan-btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATE/EDIT ESTIMATION MODAL -->
+    <div id="estimation-plan-modal" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Add new Estimation item</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="estimation-plan-event-form">
+                        <input type="hidden" id="estimation-id" value="-1"><br />
+                        <input type="text" id="estimation-payment" class="form-control" placeholder="Payment">
+                        <span id="estimation-payment-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="estimation-price" class="form-control" placeholder="Price">
+                        <span id="estimation-price-error" style="color:red; display:none"></span><br />
+                        <input type="text" id="estimation-payer" class="form-control" placeholder="&#64;payer-name">
+                        <span id="estimation-payer-error" style="color:red; display:none"></span><br />
+                        <input type="hidden" id="estimation-payer-hidden" class="form-control" placeholder="&#64;payer-name"><br />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="estimation-btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
+                    <button type="button" id="estimation-btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <script src="~/Scripts/jquery.montage.min.js"></script>
-<!--REQUEST JOIN MODAL-->
-<div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Request join</h4>
-            </div>
+@if (renderPage)
+{
+    <!--REQUEST JOIN MODAL-->
+    <div class="modal fade" id="view-request-join-modal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 40px">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Request join</h4>
+                </div>
 
-            <div class="modal-body">
-                <table data-toggle="table" data-height="299">
-                    <thead>
-                        <tr>
-                            <th data-align="center">Avatar</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int index = 0; index < listUserRequestJoinRoom.Count; index++)
-                        {
-                            <tr data-index="@index">
-                                <td style=""><img height="50" alt="User" src="@listUserRequestJoinRoom[index].Avatar" class="circle-image"></td>
-                                <td style=""><a href="/User/Index/@listUserRequestJoinRoom[index].UserId">@listUserRequestJoinRoom[index].FirstName @listUserRequestJoinRoom[index].LastName</a></td>
-                                <td style="">@listUserRequestJoinRoom[index].Email</td>
-                                <td style="">
-                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-success accept-request-join-btn'>Accept</button>
-                                    <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-danger decline-request-join-btn' style='margin-left: 5px;'>Decline</button>
-                                </td>
+                <div class="modal-body">
+                    <table data-toggle="table" data-height="299">
+                        <thead>
+                            <tr>
+                                <th data-align="center">Avatar</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Action</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button data-es="Close" data-dismiss="modal" class="btn btn-primary" type="button">Close</button>
+                        </thead>
+                        <tbody>
+                            @for (int index = 0; index < listUserRequestJoinRoom.Count; index++)
+                            {
+                                <tr data-index="@index">
+                                    <td style=""><img height="50" alt="User" src="@listUserRequestJoinRoom[index].Avatar" class="circle-image"></td>
+                                    <td style=""><a href="/User/Index/@listUserRequestJoinRoom[index].UserId">@listUserRequestJoinRoom[index].FirstName @listUserRequestJoinRoom[index].LastName</a></td>
+                                    <td style="">@listUserRequestJoinRoom[index].Email</td>
+                                    <td style="">
+                                        <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-success accept-request-join-btn'>Accept</button>
+                                        <button type='button' role="@listUserRequestJoinRoom[index].UserId" class='btn btn-danger decline-request-join-btn' style='margin-left: 5px;'>Decline</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button data-es="Close" data-dismiss="modal" class="btn btn-primary" type="button">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
+}
+@Scripts.Render("~/bundles/datepicker")
 <script>
     function estimationActionFormatter(value, row, index) {
         return [
@@ -839,6 +921,11 @@
         return listFriendId;
     }
     $(document).ready(function () {
+        
+        $('#g-plan-start').datepicker({
+            format: "yyyy-mm-dd"
+        });
+
         commonModule.likePost();
         commonModule.dislikePost();
 
@@ -861,11 +948,14 @@
 
         // Clear when click Btn Cancel
         $("#estimation-plan-modal").on('hide.bs.modal', function () {
-            
-
             $("#estimation-price-error").hide();
             $("#estimation-payer-error").hide();
             $("#estimation-payment-error").hide();
+        });
+
+        // Clear when click Btn Cancel
+        $("#popupEventForm").on('hide.bs.modal', function () {
+            $("#eventDuration-error").hide();
         });
 
         $("#estimation-btnPopupCancel").click(function(evt) {
@@ -1095,7 +1185,7 @@
             }
             // check format
             if (assignee == null || assignee.length == 0) {
-                $("#g-plan-assignee-error").html("User is tagged not exist or wrong format. The right's format are <b>@@username: </b>");
+                $("#g-plan-assignee-error").html("Tagged user does not exist or in wrong format. The right's format are <b>@@username: </b>");
                 $("#g-plan-assignee-error").show();
                 evt.stopPropagation();
                 return;
@@ -1180,37 +1270,37 @@
             var payerid = findIdListTagging($('#estimation-payer').val())[0];
             $(this).attr("data-dismiss", "a");
             // validate
-            // check empty
+            // check empty payment
             if ($("#estimation-payment").val().trim().length == 0) {
                 $("#estimation-payment-error").text("Payment must not be empty!");
                 $("#estimation-payment-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check empty
+            // check empty price
             if ($("#estimation-price").val().trim().length == 0) {
                 $("#estimation-price-error").text("Price must not be empty!");
                 $("#estimation-price-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check format
+            // check format price
             if (!commonModule.isDouble($("#estimation-price").val())) {
                 $("#estimation-price-error").text("Price must be a number!");
                 $("#estimation-price-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check empty
+            // check empty payer
             if ($("#estimation-payer").val().trim().length == 0) {
                 $("#estimation-payer-error").text("Payer must not be empty!");
                 $("#estimation-payer-error").show();
                 evt.stopPropagation();
                 return;
             }
-            // check format
+            // check format payer
             if (payerid == -1) {
-                $("#estimation-payer-error").html("User is tagged not exist or wrong format. The right's format are <b>@@username: </b>");
+                $("#estimation-payer-error").html("Tagged user does not exist or in wrong format. The right's format are <b>@@username: </b>");
                 $("#estimation-payer-error").show();
                 evt.stopPropagation();
                 return;

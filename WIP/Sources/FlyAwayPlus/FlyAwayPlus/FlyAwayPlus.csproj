@@ -311,6 +311,8 @@
     <Content Include="Content\HomePage\grid-layout.css" />
     <Content Include="Content\HomePage\home.css" />
     <Content Include="Content\Fancy\jquery.fancybox.css" />
+    <Content Include="Scripts\FileSaver\FileSaver.min.js" />
+    <Content Include="Scripts\html2canvas\html2canvas.min.js" />
     <Content Include="Scripts\jquery.cropit.js" />
     <Content Include="Content\jquery.fs.stepper.css" />
     <Content Include="Content\jquery.Jcrop.min.css" />
@@ -346,11 +348,14 @@
     <Content Include="Scripts\images-loaded.min.js" />
     <Content Include="Scripts\jquery.montage.min.js" />
     <Content Include="Scripts\jquery.tooltipster.js" />
+    <Content Include="Scripts\jsPDF-AutoTable\jspdf.plugin.autotable.js" />
+    <Content Include="Scripts\jsPDF\jspdf.min.js" />
     <Content Include="Scripts\markerWithLabel.js" />
     <Content Include="Scripts\md5.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\player_api.js" />
     <Content Include="Scripts\sweetalert.min.js" />
+    <Content Include="Scripts\tableExport.min.js" />
     <Content Include="Scripts\www-widgetapi.js" />
     <Content Include="Scripts\youtube-upload.js" />
     <Content Include="Scripts\jquery.elastic.source.js" />

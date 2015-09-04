@@ -155,23 +155,42 @@ img {
 
 .vertical-space-10 {
     height: 10px;
-    width: 100%;
+    width: 100% !important;
+    display: block;
+    float: left;
+    background-color: transparent;
 }
 
 .vertical-space-15 {
     height: 15px;
-    width: 100%;
+    width: 100% !important;
+    display: block;
+    float: left;
     background-color: transparent;
 }
 
 .vertical-space-20 {
     height: 20px;
-    width: 100%;
+    width: 100% !important;
+    display: block;
+    float: left;
+    background-color: transparent;
 }
 
 .vertical-space-25 {
     height: 25px;
-    width: 100%;
+    width: 100% !important;
+    display: block;
+    float: left;
+    background-color: transparent;
+}
+
+.vertical-space-30 {
+    height: 30px;
+    width: 100% !important;
+    display: block;
+    float: left;
+    background-color: transparent;
 }
 
 .frame-container {
@@ -874,6 +893,7 @@ img {
         width: 400px;
         z-index: -1;
         display: none;
+        left: -65px !important;
     }
 
         .notification-li .notification-container:before {
@@ -886,7 +906,7 @@ img {
             border: 10px solid black;
             border-color: transparent transparent white;
             margin-top: -20px;
-            margin-left: 188px;
+            margin-left: 250px;
         }
 
         .notification-li .notification-container .notification-title {
@@ -1490,63 +1510,43 @@ textarea {
             background-position: right 10px center;
         }
 
-.room-list-filter-tab .field-from {
-    width: 263px;
-}
-
-.room-list-filter-tab .field-to {
-    width: 262px;
-}
-
-.room-list-filter-tab .field-date {
-    width: 150px;
-}
-
-.room-list-filter-tab .field-adult {
-    width: 115px;
-}
-
-.room-list-filter-tab .form-submit {
-    width: 170px;
-}
-
-.form-cn .select {
-    position: relative;
-}
-
-    .form-cn .select span {
-        display: block;
-        padding-right: 20px;
-        cursor: pointer;
-        -moz-text-overflow: ellipsis;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+    .form-cn .select {
+        position: relative;
     }
 
-        .form-cn .select span:after {
-            content: '\f107';
-            position: absolute;
-            right: 0;
-            font-family: FontAwesome;
-            top: 50%;
-            -webkit-transform: translate(0,-50%);
-            -moz-transform: translate(0,-50%);
-            -ms-transform: translate(0,-50%);
-            -o-transform: translate(0,-50%);
+        .form-cn .select span {
+            display: block;
+            padding-right: 20px;
+            cursor: pointer;
+            -moz-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
-    .form-cn .select select {
-        cursor: pointer;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border: none;
-        outline: 0;
-        top: 0;
-        -ms-opacity: 0;
-        opacity: 0;
-    }
+            .form-cn .select span:after {
+                content: '\f107';
+                position: absolute;
+                right: 0;
+                font-family: FontAwesome;
+                top: 50%;
+                -webkit-transform: translate(0,-50%);
+                -moz-transform: translate(0,-50%);
+                -ms-transform: translate(0,-50%);
+                -o-transform: translate(0,-50%);
+            }
+
+        .form-cn .select select {
+            cursor: pointer;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: 0;
+            top: 0;
+            -ms-opacity: 0;
+            opacity: 0;
+        }
 
 .form-field {
     position: relative;
@@ -1721,7 +1721,9 @@ textarea {
 .user-info .name-user, .hover-card .information .name-user {
     -moz-text-overflow: ellipsis;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    -moz-word-break: break-word;
+    -o-word-break: break-word;
+    word-wrap: break-word;
     overflow: hidden;
     font-weight: bold;
 }
@@ -1944,5 +1946,16 @@ textarea {
 .board-post-content {
     -moz-word-break: break-all;
     -o-word-break: break-all;
-    word-break: break-all
+    word-break: break-all;
+}
+
+.not-join-room-noti {
+    text-align: center;
+    color: #95A5A5;
+}
+
+.profile-no-content {
+    text-align: center!important;
+    width: 100%!important;
+    position: inherit!important;
 }
