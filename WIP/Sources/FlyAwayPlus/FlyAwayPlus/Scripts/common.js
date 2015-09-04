@@ -389,6 +389,11 @@
         return false;
     };
 
+    var sentFriendRequestNow = function(fromUserId, toUserId) {
+        $.connection.hub.start().done(function () {
+            $.connection.friendHub.server.sendFriendRequest(fromUserId, toUserId);
+        });
+    };
     return {
         convertTime: convertTime,
         callAjax: callAjax,
@@ -403,7 +408,8 @@
         likePost: likePost,
         dislikePost: dislikePost,
         isDate: isDate,
-        isDouble: isDouble
+        isDouble: isDouble,
+        sentFriendRequestNow: sentFriendRequestNow
     }
 })();
 

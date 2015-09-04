@@ -915,6 +915,7 @@ else
             };
 
             commonModule.callAjax(controller, data, null);
+            commonModule.sentFriendRequestNow(parseInt('@userSession.UserId'), parseInt('@Model.UserId'));
         };
 
         var unfriend = function () {

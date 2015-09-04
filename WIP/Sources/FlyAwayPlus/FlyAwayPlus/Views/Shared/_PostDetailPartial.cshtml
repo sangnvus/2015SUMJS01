@@ -19,10 +19,10 @@
             <a class="commenter-edit"><span class="glyphicon glyphicon-edit"></span></a>
         }
     </div>
-    <div class="comment-content">
+    <div class="comment-content" id="id-comment-content-@Model.CommentId">
         <p class="comment-content-word" style="word-break:break-all;">
-            @Html.Raw(Html.Encode(@Model.Content).Replace("\n", "<br />"))
+            @Html.Raw(Html.Encode(@Model.Content).Replace("\\n", "<br />"))
         </p>
-        <textarea role="@Model.CommentId" style="height: 30px; width:100%; resize: none; overflow: hidden; display:none;">@Html.Raw(Html.Encode(@Model.Content).Replace("\n", "<br />"))</textarea>
+        <textarea role="@Model.CommentId" style="height: 30px; width:100%; resize: none; overflow: hidden; display:none;">@Html.Raw(Html.Encode(@Model.Content).Replace("\\n", "<br />"))</textarea>
     </div>
 </div>

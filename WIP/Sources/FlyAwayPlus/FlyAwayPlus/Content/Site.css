@@ -893,6 +893,7 @@ img {
         width: 400px;
         z-index: -1;
         display: none;
+        left: -65px !important;
     }
 
         .notification-li .notification-container:before {
@@ -905,7 +906,7 @@ img {
             border: 10px solid black;
             border-color: transparent transparent white;
             margin-top: -20px;
-            margin-left: 188px;
+            margin-left: 250px;
         }
 
         .notification-li .notification-container .notification-title {

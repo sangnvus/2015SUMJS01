@@ -134,7 +134,7 @@
             url: controller,
             data: data,
             success: function (data, textstatus) {
-                var value = data;
+                var value = data.split('&lt;br /&gt;').join('\\n');
                 var pattern = /@([ \S]*?):/g;
                 var tagFriend = value.match(pattern);
                 var username = "";
@@ -210,12 +210,12 @@
                             value = value.split(tagFriend[index]).join(replaceUser);
                         }
                     }
-
                     $(parent).find("p").text("").append(value);
                     $(parent).find("p").show();
                 }
                 else {
-                    alert("comment's content must not empty!");
+                    swal({ title: "Warning!", text: "comment's content must not empty!", type: "warning", showConfirmButton: true });
+                    //alert("comment's content must not empty!");
                 }
             }
             else {
@@ -265,7 +265,6 @@
     };
 
     var editCommentEvent = function (selector) {
-        // aaaa
         var checkOutFocus = false;
 
         var obj = $(".commenter-edit");
