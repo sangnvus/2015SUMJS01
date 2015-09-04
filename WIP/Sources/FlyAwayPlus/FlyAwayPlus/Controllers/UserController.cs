@@ -257,9 +257,11 @@ namespace FlyAwayPlus.Controllers
             return Json(success);
         }
 
-        public bool IsFriend(int userId, int otherUserId)
+        public string IsFriend(int userId, int otherUserId)
         {
-            return GraphDatabaseHelpers.Instance.IsFriend(userId, otherUserId);
+            return GraphDatabaseHelpers.Instance.IsFriend(userId, otherUserId)
+                   ? "friend"
+                   : GraphDatabaseHelpers.Instance.GetFriendType(userId, otherUserId);
         }
 
         public JsonResult SendRequestFriend(int userId, int otherUserId)

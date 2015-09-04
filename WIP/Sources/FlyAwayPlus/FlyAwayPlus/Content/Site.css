@@ -1800,7 +1800,7 @@ textarea {
                 margin: 0 5px;
             }
 
-        .hover-card .information .add-friend-btn {
+        .hover-card .information .user-interact-btn {
             position: absolute;
             top: 90px;
             text-align: center;
@@ -1816,7 +1816,7 @@ textarea {
             cursor: pointer;
         }
 
-            .hover-card .information .add-friend-btn:hover {
+            .hover-card .information .user-interact-btn:hover {
                 background-color: #3597DC;
             }
 

@@ -99,15 +99,15 @@
                 {
                     using (Html.BeginForm("Search", "Search", FormMethod.Get, new { @class = "nav nav-bar navbar-left" }))
                     {
-                    <div class="nav-search-wrapper">
-                        <div class="search-bar">
-                            <input type="text"
-                                   name="keyword"
-                                   id="id-search-input"
-                                   placeholder="Search for places, tour rooms, people..." />
-                            <input id="id-search-input-btn" type="submit" value="Search" />
+                        <div class="nav-search-wrapper">
+                            <div class="search-bar">
+                                <input type="text"
+                                       name="keyword"
+                                       id="id-search-input"
+                                       placeholder="Search for places, tour rooms, people..." />
+                                <input id="id-search-input-btn" type="submit" value="Search" />
+                            </div>
                         </div>
-                    </div>
                     }
 
                     @Html.Partial("_PostPartial")
@@ -123,7 +123,7 @@
         @Html.Partial("_TagFriendPartial")
         if (Session["authenicated"] != null && !Session["authenicated"].ToString().IsEmpty())
         {
-        @Html.Partial("_ChatConversation")
+            @Html.Partial("_ChatConversation")
         }
     }
     else
@@ -145,9 +145,9 @@
         <link href="~/Content/tooltipster.css" rel="stylesheet" />
         <script src="~/Scripts/jquery.tooltipster.js"></script>
         <script>
-            var notSeenActivityEvent = function() {
+            var notSeenActivityEvent = function () {
                 $(".cls-not-view").each(function () {
-                    $(this).click(function(evt) {
+                    $(this).click(function (evt) {
                         if (evt.handled !== true) {
                             evt.handled = true;
                             //$(this).removeClass("cls-not-view").addClass("cls-view");
@@ -173,7 +173,7 @@
                 initializeTooltip();
 
                 // clear all notification
-                $("#id-clear-all-noti-btn").click(function(evt) {
+                $("#id-clear-all-noti-btn").click(function (evt) {
                     if (evt.handled !== true) {
                         evt.handled = true;
 
@@ -193,15 +193,16 @@
                                 async: "false",
                                 url: "/User/ViewNotification/",
                                 data: data,
-                                success: function(success) {
+                                success: function (success) {
                                     //console.log(success);
                                 }
                             });
                         });
                         $(this).off("click");
                     }
-                })
-                $(document).on('click', '.add-friend-btn', function () {
+                });
+
+                $(document).on('click', '.user-interact-btn', function () {
                     var currentUserId = $('#curent-user-id').attr('href');
                     currentUserId = currentUserId.substr(12, currentUserId.length - 12);
 
@@ -214,21 +215,15 @@
                     };
 
                     if ($(this).text() === 'Add friend') {
-                        $(this).css('background-color', '#2DCC70').text('Friend request sent');
+                        $(this).css('background-color', '#2DCC70').text('Cancel friend request');
+                        commonModule.callAjax("/User/SendRequestFriend", data, null);
+                        commonModule.sentFriendRequestNow(parseInt(currentUserId), parseInt(otherUserId));
+                    } else if ($(this).text() === 'Cancel friend request') {
+                        $(this).css('background-color', '#3bafda').text('Add friend');
                         commonModule.callAjax("/User/CancelRequestFriend/", data, null);
-                    } else {
-                        if (currentUserId === otherUserId) {
-                            $(this).css('background-color', '#3bafda').text('This is you!');
-                        } else {
-                            $(this).css('background-color', '#3bafda').text('Add friend');
-                        }
-
-                        if ($(this).text() === 'Friend request sent') {
-                            commonModule.callAjax("/User/SendRequestFriend/", data, null);
-                            commonModule.sentFriendRequestNow(parseInt(currentUserId), parseInt(otherUserId));
-                        } else if ($(this).text() === 'Unfriend') {
-                            commonModule.callAjax("/User/Unfriend/", data, null);
-                        }
+                    } else if ($(this).text() === 'Unfriend') {
+                        $(this).css('background-color', '#3bafda').text('Add friend');
+                        commonModule.callAjax("/User/Unfriend/", data, null);
                     }
                 });
                 $("#btn-notification").click(function () {
@@ -275,7 +270,7 @@
                 var notificationHubProxy = notificationHubProxy || $.connection.notificationHub;
                 var friendHubProxy = friendHubProxy || $.connection.friendHub;
 
-                friendHubProxy.client.receiveFriendRequest = function(fromUser) {
+                friendHubProxy.client.receiveFriendRequest = function (fromUser) {
                     friend = JSON.parse(fromUser);
                     var count = parseInt($("#id-btn-friend-request").find("span").text());
 
@@ -298,7 +293,7 @@
                     tmp += "<hr />";
                     $("#idFriendRequest").prepend(tmp);
 
-                    $("#id-btn-friend-accept" + friend["UserId"]).click(function(evt) {
+                    $("#id-btn-friend-accept" + friend["UserId"]).click(function (evt) {
                         var controller = "/User/AddFriend";
                         var data = {
                             userID: parseInt('@Session["UserId"]'),
@@ -311,7 +306,7 @@
                         evt.preventDefault();
                     });
 
-                    $("#id-btn-friend-decline" + friend["UserId"]).click(function(evt) {
+                    $("#id-btn-friend-decline" + friend["UserId"]).click(function (evt) {
                         var controller = "/User/DeclineRequestFriend";
                         var data = {
                             userId: friend["UserId"],
@@ -594,15 +589,18 @@
                                     userId: currentUserId,
                                     otherUserId: otherUserId
                                 }
-                            })).done(function (otherUser, mutualFriendCount, placeCount, isFriend) {
+                            })).done(function (otherUser, mutualFriendCount, placeCount, friendType) {
                                 tooltipContent = '<div class="hover-card"><div class="profile"><div class="avatar"><img src="' + otherUser[0].Avatar + '" alt="Avatar"></div></div><div class="information"><a href="' + origin.attr('href') + '"><div class="name-user">' + otherUser[0].FirstName + ' ' + otherUser[0].LastName + '</div></a><div class="dark-divider"></div><ul><li>';
 
                                 tooltipContent += mutualFriendCount[0];
-                                tooltipContent += ' mutual friends</li><li>' + placeCount[0] + ' places traveled</li></ul><div><div class="add-friend-btn">';
-                                if (isFriend[0].toString() === 'True') {
+                                tooltipContent += ' mutual friends</li><li>' + placeCount[0] + ' places traveled</li></ul><div><div class="user-interact-btn">';
+                                if (friendType[0].toString() === 'friend') {
                                     //alert('un');
                                     tooltipContent += 'Unfriend';
-                                } else {
+                                } else if (friendType[0].toString() === 'request') {
+                                    tooltipContent += 'Cancel friend request';
+                                }
+                                else if (friendType[0].toString() === 'none') {
                                     //alert('ad');
                                     if (currentUserId === otherUserId) {
                                         tooltipContent += 'This is you!';
