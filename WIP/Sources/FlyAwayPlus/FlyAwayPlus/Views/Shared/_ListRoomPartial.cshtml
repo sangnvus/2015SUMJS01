@@ -1,4 +1,6 @@
-﻿@using FlyAwayPlus.Models
+﻿<link href="~/Content/RoomPage/room-detail.css" rel="stylesheet" />
+
+@using FlyAwayPlus.Models
 @{
     var listRoom = ViewData["listRoom"] as List<Room>;
     var listAdminRoom = ViewData["listAdminRoom"] as List<User>;
@@ -28,6 +30,16 @@
                     @listRoom[index].RoomName
                 </h3>
             </div>
+            <ul class="room-detail-infor-milestones">
+                <li>
+                    <i class="fa fa-at"></i>
+                    <p><b>START PLACE:</b></p>&nbsp; <span>@listRoom[index].StartLocation</span>
+                </li>
+                <li>
+                    <i class="fa fa-at"></i>
+                    <p><b>DESTINATION:</b></p>&nbsp; <span>@listRoom[index].DestinationLocation</span>
+                </li>
+            </ul>
             <div class="divider"></div>
             <div class="room-list-description">
                 @listRoom[index].Description

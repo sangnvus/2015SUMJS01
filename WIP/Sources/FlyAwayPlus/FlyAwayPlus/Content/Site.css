@@ -1959,3 +1959,7 @@ textarea {
     width: 100%!important;
     position: inherit!important;
 }
+
+.table>thead:first-child>tr:first-child>th {
+    background-color: #53A3CD
+}

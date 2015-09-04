@@ -171,7 +171,7 @@ namespace FlyAwayPlus.Helpers
         {
             _client.Connect();
             int friend = _client.Cypher.Match("(u:user {UserId:{userId}})-[r:FRIEND]-(u1: user{UserId: {otherUserId})")
-                                     .WithParams(new Dictionary<string, object> { { "userId", userId }, { "otherUserId", otherUserId } })
+                                     .WithParams(new {userId = userId, otherUserId = otherUserId })
                                     .Return<int>("COUNT(r)")
                                     .Results.Single();
 
