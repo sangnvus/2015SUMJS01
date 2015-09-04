@@ -656,9 +656,9 @@ else
                 },
                 success: function (data) {
                     if (data == true) {
-                        alert("This user has been reported!");
+                        swal("Done!", "This user has been reported!", "success");
                     } else {
-                        alert("You have already report this user!");
+                        swal("Oops...", "You have already report this user!", "error");
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

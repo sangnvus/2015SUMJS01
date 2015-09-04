@@ -332,7 +332,7 @@ namespace FlyAwayPlus.Controllers
                               .ToArray());
 
                 GraphDatabaseHelpers.Instance.ResetPassword(email, md5(newPassword));
-                MailHelpers.Instance.SendMailResetPassword(email, newPassword);
+                MailHelpers.Instance.SendMailResetPassword(email, newPassword, user);
                 return Json(true);
             }
             else

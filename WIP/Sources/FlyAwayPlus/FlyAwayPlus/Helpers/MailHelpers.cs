@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System;
+using FlyAwayPlus.Models;
 
 namespace FlyAwayPlus.Helpers
 {
@@ -92,13 +93,24 @@ namespace FlyAwayPlus.Helpers
             }
         }
 
-        public void SendMailResetPassword(string email, string newPassword)
+        public void SendMailResetPassword(string email, string newPassword, User u)
         {
             try
             {
                 var message = new MailMessage(SenderId, email, "Reset password FlyAwayPlus",
                         "Your new password: " + newPassword);
                 _smtp.Send(message);
+
+                _mail.To.Add(email);
+                _mail.Subject = "Your account at FlyAwayPlus has been reset password";
+                _mail.Body = "Hello " + u.FirstName + " " + u.LastName + "," +
+                            "<br/> We are administrator of <a href='http://flyaway.ga/'>FlyAwayPlus website</a>." +
+                            "<br/> <br/> We would like to inform you that" +
+                            "<br/> <br/> Your account has been reset password." +
+                            "<br/> Your new password is: " + newPassword +
+                            "<br/> If you have any questions, please reply this email." +
+                            "<br/> <br/> Thank you, <br/> <a href='http://flyaway.ga/'>FAP - FlyAwayPlus</a>";
+                _smtp.Send(_mail);
 
             }
             catch (Exception ex)
