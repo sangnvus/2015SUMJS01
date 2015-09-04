@@ -177,6 +177,7 @@
 
             commonModule.callAjax(controller, data, null);
 
+            commonModule.sentFriendRequestNow(parseInt('@Session["UserId"]'), otherId);
             $(this).closest("li").find(".cls-sent-request").show();
             $(this).hide();
             evt.preventDefault();
