@@ -558,7 +558,7 @@ else
         // Edit cover.
         $('#image-cropper').cropit({
             imageState: {
-                src: '@(string.IsNullOrWhiteSpace(userSession.CoverUrl) ? "/Images/background/nhatrang.jpg" : userSession.CoverUrl + "?" + @DateTime.Now.TimeOfDay.TotalMilliseconds)'
+                src: '@(string.IsNullOrWhiteSpace(userSession.CoverUrl) ? "/Images/background/nhatrang.jpg" : Model.CoverUrl + "?" + @DateTime.Now.TimeOfDay.TotalMilliseconds)'
             },
             onImageError: function () {
                 swal("Oops...", "An error occured. Please try again or contact admin for help.", "error");
